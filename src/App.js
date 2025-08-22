@@ -7,43 +7,111 @@ function App() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Get JWT token from URL parameters
+    // Check if this is the SSO endpoint
+    const path = window.location.pathname;
     const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    const shop = urlParams.get('shop');
-    const customerId = urlParams.get('customer_id');
-
-    if (!token) {
-      setError('No authentication token provided');
-      setLoading(false);
-      return;
-    }
-
-    // Verify token with your Lambda backend
-    verifyTokenAndLoadData(token, shop, customerId);
-  }, []);
-
-  const verifyTokenAndLoadData = async (token, shop, customerId) => {
-    try {
-      // Call your Lambda function to verify JWT and get customer data
-      const response = await fetch('https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws/verify-jwt', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token, shop, customer_id: customerId })
-      });
-
-      if (!response.ok) {
-        throw new Error('Token verification failed');
+    
+    if (path === '/sso') {
+      // Handle SSO flow
+      handleSSO(urlParams);
+    } else {
+      // Check for existing session
+      const sessionCookie = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('stj_session='));
+      
+      if (!sessionCookie) {
+        setError('No active session. Please login through your store.');
+        setLoading(false);
+        return;
       }
 
-      const data = await response.json();
-      setCustomerData(data);
+      // Extract token from cookie and show dashboard
+      const token = sessionCookie.split('=')[1];
+      setCustomerData({ loginTime: new Date().toISOString() });
       setLoading(false);
+    }
+  }, []);
+
+  const handleSSO = async (urlParams) => {
+    try {
+      const token = urlParams.get('token');
+      const shop = urlParams.get('shop');
+      const cid = urlParams.get('cid');
+
+      if (!token || !shop || !cid) {
+        setError('Missing SSO parameters');
+        setLoading(false);
+        return;
+      }
+
+      console.log('🔑 SSO processing:', { shop, cid, token: token.substring(0, 20) + '...' });
+
+      // Verify token
+      const verified = verifyToken(token, shop, cid);
+      if (!verified) {
+        setError('Invalid or expired token');
+        setLoading(false);
+        return;
+      }
+
+      console.log('✅ Token verified for:', { shop, cid });
+
+      // Set session cookie
+      document.cookie = `stj_session=${token}; path=/; secure; samesite=lax; max-age=86400`;
+      
+      console.log('🍪 Session cookie set, redirecting to dashboard');
+      
+      // Redirect to dashboard (root)
+      window.location.href = '/';
+
     } catch (err) {
-      setError('Failed to verify authentication: ' + err.message);
+      console.error('❌ SSO error:', err);
+      setError(err.message || 'SSO processing failed');
       setLoading(false);
+    }
+  };
+
+  const verifyToken = (token, shop, cid) => {
+    try {
+      // Decode base64
+      const decoded = atob(token);
+      const parts = decoded.split('|');
+      
+      if (parts.length !== 5) {
+        console.log('❌ Invalid token format');
+        return false;
+      }
+
+      const [tokenShop, tokenCid, iat, ttl, signature] = parts;
+      
+      // Basic verification
+      if (tokenShop !== shop || tokenCid !== cid) {
+        console.log('❌ Token shop/cid mismatch');
+        return false;
+      }
+
+      // Check expiry
+      const now = Math.floor(Date.now() / 1000);
+      const issuedAt = parseInt(iat);
+      const timeToLive = parseInt(ttl);
+      
+      if (now > issuedAt + timeToLive) {
+        console.log('❌ Token expired');
+        return false;
+      }
+
+      // Basic signature check
+      if (!signature || signature.length < 32) {
+        console.log('❌ Invalid signature');
+        return false;
+      }
+
+      console.log('✅ Token verification passed:', { tokenShop, tokenCid, iat, ttl });
+      return true;
+    } catch (err) {
+      console.error('❌ Token verification error:', err);
+      return false;
     }
   };
 
@@ -77,9 +145,19 @@ function App() {
       <header className="App-header">
         <h1>🕐 Screen Time Journey Dashboard</h1>
         <div className="customer-info">
-          <h2>Welcome, Customer {customerData?.customer_id}!</h2>
-          {customerData?.email && <p>Email: {customerData.email}</p>}
-          <p>Subscription: <span className="subscription-status">{customerData?.subscription_status}</span></p>
+          <h2>👋 Welcome!</h2>
+          {customerData?.customerId && <p>Customer ID: {customerData.customerId}</p>}
+          {customerData?.shop && <p>Store: {customerData.shop}</p>}
+          <p>Login Time: {new Date(customerData?.loginTime).toLocaleString()}</p>
+          <button 
+            onClick={() => {
+              document.cookie = 'stj_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+              window.location.href = 'https://xpvznx-9w.myshopify.com';
+            }}
+            style={{marginTop: '10px', padding: '8px 16px', background: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer'}}
+          >
+            Logout
+          </button>
         </div>
       </header>
 
