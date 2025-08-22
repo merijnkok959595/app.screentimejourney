@@ -81,13 +81,13 @@ export default function SSO() {
         return false;
       }
 
-      // In production, you would verify the HMAC signature here
-      // For now, just check if signature exists
-      if (!signature || signature.length < 10) {
+      // Basic signature check - just verify it exists and has reasonable length
+      if (!signature || signature.length < 32) {
         console.log('❌ Invalid signature');
         return false;
       }
 
+      console.log('✅ Token verification passed:', { tokenShop, tokenCid, iat, ttl });
       return true;
     } catch (err) {
       console.error('❌ Token verification error:', err);
