@@ -11,14 +11,20 @@ function App() {
     const path = window.location.pathname;
     const urlParams = new URLSearchParams(window.location.search);
     
+    console.log('🌐 App loaded:', { path, search: window.location.search, href: window.location.href });
+    
     if (path === '/sso') {
+      console.log('🔑 SSO path detected, handling SSO flow');
       // Handle SSO flow
       handleSSO(urlParams);
     } else {
+      console.log('📱 Dashboard path, checking for existing session');
       // Check for existing session
       const sessionCookie = document.cookie
         .split('; ')
         .find(row => row.startsWith('stj_session='));
+      
+      console.log('🍪 Session cookie:', sessionCookie ? 'found' : 'not found');
       
       if (!sessionCookie) {
         setError('No active session. Please login through your store.');
@@ -127,11 +133,21 @@ function App() {
   }
 
   if (error) {
+    console.error('❌ Error state:', error);
     return (
       <div className="App">
         <div className="error">
           <h2>⚠️ Authentication Error</h2>
           <p>{error}</p>
+          <details style={{marginTop: '10px', padding: '10px', backgroundColor: '#f8f9fa', border: '1px solid #dee2e6', borderRadius: '4px'}}>
+            <summary>Debug Info</summary>
+            <pre style={{fontSize: '12px', marginTop: '10px'}}>
+              Path: {window.location.pathname}{'\n'}
+              Search: {window.location.search}{'\n'}
+              Full URL: {window.location.href}{'\n'}
+              User Agent: {navigator.userAgent}
+            </pre>
+          </details>
           <button onClick={() => window.location.href = 'https://www.screentimejourney.com'}>
             Return to Store
           </button>
