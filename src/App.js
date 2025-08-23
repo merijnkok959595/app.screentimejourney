@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import './styles/brand-theme.css';
 
 function App() {
   const [customerData, setCustomerData] = useState(null);
@@ -158,65 +159,89 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>🕐 Screen Time Journey Dashboard</h1>
-        <div className="customer-info">
-          <h2>👋 Welcome!</h2>
-          {customerData?.customerId && <p>Customer ID: {customerData.customerId}</p>}
-          {customerData?.shop && <p>Store: {customerData.shop}</p>}
-          <p>Login Time: {new Date(customerData?.loginTime).toLocaleString()}</p>
-          <button 
-            onClick={() => {
-              document.cookie = 'stj_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-              window.location.href = 'https://xpvznx-9w.myshopify.com';
-            }}
-            style={{marginTop: '10px', padding: '8px 16px', background: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer'}}
-          >
-            Logout
-          </button>
-        </div>
-      </header>
+      <div className="container">
+        <header className="header">
+          <img 
+            src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/ChatGPT_Image_Aug_23_2025_at_11_37_50_AM.png?v=1755941892" 
+            alt="Screen Time Journey Logo" 
+            style={{maxHeight: '80px', marginBottom: '16px'}}
+          />
+          <h1 className="header-title">Screen Time Journey</h1>
+          <p className="header-subtitle">Your Digital Wellness Dashboard</p>
+          
+          <div className="customer-info" style={{marginTop: '24px', padding: '16px', background: 'var(--brand-background)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--brand-separator)'}}>
+            <h2 style={{fontFamily: 'var(--font-heading)', fontSize: '1.5rem', marginBottom: '12px'}}>👋 Welcome!</h2>
+            {customerData?.customerId && <p>Customer ID: {customerData.customerId}</p>}
+            {customerData?.shop && <p>Store: {customerData.shop}</p>}
+            <p>Login Time: {new Date(customerData?.loginTime).toLocaleString()}</p>
+            <button 
+              className="btn-secondary"
+              onClick={() => {
+                document.cookie = 'stj_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+                window.location.href = 'https://xpvznx-9w.myshopify.com';
+              }}
+              style={{marginTop: '12px'}}
+            >
+              Logout
+            </button>
+          </div>
+        </header>
 
-      <main className="dashboard-content">
-        <div className="dashboard-grid">
-          <div className="dashboard-card">
-            <h3>📊 Your Screen Time</h3>
-            <div className="metric">
-              <span className="metric-value">2h 34m</span>
-              <span className="metric-label">Today</span>
+        <main className="dashboard">
+          <div className="grid grid-2">
+            <div className="card">
+              <div className="card-header">
+                <h3 className="card-title">📊 Your Screen Time</h3>
+                <p className="card-description">Track your daily usage</p>
+              </div>
+              <div style={{textAlign: 'center', padding: '20px 0'}}>
+                <div style={{fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--brand-primary)', fontFamily: 'var(--font-heading)'}}>2h 34m</div>
+                <div style={{fontSize: '0.9rem', color: 'var(--brand-text)', opacity: 0.7}}>Today</div>
+              </div>
+            </div>
+
+            <div className="card">
+              <div className="card-header">
+                <h3 className="card-title">🎯 Daily Goal</h3>
+                <p className="card-description">Your target for today</p>
+              </div>
+              <div style={{textAlign: 'center', padding: '20px 0'}}>
+                <div style={{fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--brand-primary)', fontFamily: 'var(--font-heading)'}}>3h 00m</div>
+                <div style={{fontSize: '0.9rem', color: 'var(--brand-text)', opacity: 0.7}}>Target</div>
+              </div>
+            </div>
+
+            <div className="card">
+              <div className="card-header">
+                <h3 className="card-title">📱 Most Used App</h3>
+                <p className="card-description">Your biggest time consumer</p>
+              </div>
+              <div style={{textAlign: 'center', padding: '20px 0'}}>
+                <div style={{fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--brand-primary)', fontFamily: 'var(--font-heading)'}}>Instagram</div>
+                <div style={{fontSize: '0.9rem', color: 'var(--brand-text)', opacity: 0.7}}>45 minutes</div>
+              </div>
+            </div>
+
+            <div className="card">
+              <div className="card-header">
+                <h3 className="card-title">🔥 Streak</h3>
+                <p className="card-description">Days under your goal</p>
+              </div>
+              <div style={{textAlign: 'center', padding: '20px 0'}}>
+                <div style={{fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--brand-primary)', fontFamily: 'var(--font-heading)'}}>7 days</div>
+                <div style={{fontSize: '0.9rem', color: 'var(--brand-text)', opacity: 0.7}}>Under goal</div>
+              </div>
             </div>
           </div>
 
-          <div className="dashboard-card">
-            <h3>🎯 Daily Goal</h3>
-            <div className="metric">
-              <span className="metric-value">3h 00m</span>
-              <span className="metric-label">Target</span>
-            </div>
-          </div>
+          <hr className="separator" />
 
-          <div className="dashboard-card">
-            <h3>📱 Most Used App</h3>
-            <div className="metric">
-              <span className="metric-value">Instagram</span>
-              <span className="metric-label">45 minutes</span>
-            </div>
+          <div style={{display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap'}}>
+            <button className="btn-primary">Set New Goal</button>
+            <button className="btn-secondary">View Weekly Report</button>
           </div>
-
-          <div className="dashboard-card">
-            <h3>🔥 Streak</h3>
-            <div className="metric">
-              <span className="metric-value">7 days</span>
-              <span className="metric-label">Under goal</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="action-buttons">
-          <button className="primary-button">Set New Goal</button>
-          <button className="secondary-button">View Weekly Report</button>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 }
