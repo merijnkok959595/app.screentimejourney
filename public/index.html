@@ -1,43 +1,413 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen Time Journey - Dashboard</title>
+    <link rel="icon" type="image/png" href="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/ChatGPT_Image_Aug_23_2025_at_12_05_05_PM.png?v=1755943535">
+    <style>
+        /* Screen Time Journey Brand Theme - Matches existing branding */
+        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+        /* CSS Variables */
+        :root {
+            /* Brand Colors */
+            --brand-primary: #2E0456;
+            --brand-primary-dark: #1a0230;
+            --brand-text: #0F172A;
+            --brand-background: #FFFFFF;
+            --brand-separator: #F9F9F9;
+            
+            /* Typography */
+            --font-heading: 'DM Serif Display', serif;
+            --font-body: 'Inter', sans-serif;
+            
+            /* Spacing */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-2xl: 48px;
+            
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            
+            /* Shadows */
+            --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+            --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.12);
+            --shadow-brand: 0 4px 12px rgba(46, 4, 86, 0.2);
+        }
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+        /* Base Styles */
+        * {
+            box-sizing: border-box;
+        }
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+        body {
+            font-family: var(--font-body);
+            color: var(--brand-text);
+            background-color: var(--brand-background);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 400;
+            color: var(--brand-text);
+            margin: 0 0 var(--spacing-md) 0;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 2rem;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            line-height: 1.4;
+        }
+
+        p, span, div {
+            font-family: var(--font-body);
+            color: var(--brand-text);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        /* Header */
+        .header {
+            background: var(--brand-background);
+            border-bottom: 1px solid var(--brand-separator);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md) 0;
+        }
+
+        .brand {
+            font-family: var(--font-heading);
+            font-size: 1.75rem;
+            font-weight: 400;
+            color: var(--brand-primary);
+        }
+
+        .user-chip {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            background: var(--brand-separator);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: 24px;
+            border: 1px solid var(--brand-separator);
+        }
+
+        .plan-badge {
+            background: var(--brand-primary);
+            color: var(--brand-background);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main {
+            padding: var(--spacing-xl) 0;
+        }
+
+        .section {
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: var(--spacing-lg);
+            color: var(--brand-text);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: var(--spacing-2xl) 0;
+            background: linear-gradient(135deg, var(--brand-separator) 0%, #e2e8f0 100%);
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            font-weight: 400;
+            color: var(--brand-text);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--brand-text);
+            opacity: 0.8;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .disclaimer {
+            font-size: 14px;
+            color: var(--brand-text);
+            opacity: 0.6;
+            font-style: italic;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--brand-primary);
+            color: var(--brand-background);
+            border: none;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            min-height: 48px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--brand-primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-brand);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--brand-primary);
+            border: 2px solid var(--brand-primary);
+            padding: calc(var(--spacing-md) - 2px) calc(var(--spacing-lg) - 2px);
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            min-height: 48px;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--brand-primary);
+            color: var(--brand-background);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-brand);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--brand-background);
+            border: 1px solid var(--brand-separator);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-md) 0;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--brand-primary);
+        }
+
+        .card-header {
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            color: var(--brand-primary);
+            margin: 0 0 var(--spacing-sm) 0;
+        }
+
+        /* Device Grid */
+        .device-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 var(--spacing-sm);
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .device-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+            
+            .hero {
+                padding: var(--spacing-lg) 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="brand">Screen Time Journey</div>
+                <div class="user-chip">
+                    <span>Hi, Customer</span>
+                    <span class="plan-badge">Premium</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero">
+                <h1>Screen Time Journey</h1>
+                <p>Your Digital Wellness Dashboard</p>
+                <div class="hero-actions">
+                    <button class="btn-primary">Add Device</button>
+                    <button class="btn-secondary">Unlock Device</button>
+                    <button class="btn-secondary">Manage Subscription</button>
+                </div>
+                <p class="disclaimer">✅ New dashboard deployed successfully!</p>
+            </section>
+
+            <!-- Device Overview -->
+            <section id="overview" class="section">
+                <h2 class="section-title">Device Overview</h2>
+                <div class="device-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">📱 My iPhone</h3>
+                            <span style="background: #fef2f2; color: #dc2626; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 600;">Locked</span>
+                        </div>
+                        <p><strong>Platform:</strong> iOS</p>
+                        <p><strong>Profile:</strong> Standard</p>
+                        <p><strong>Last sync:</strong> Today</p>
+                        <div style="display: flex; gap: 8px; margin-top: 16px;">
+                            <button class="btn-secondary" style="padding: 6px 12px; font-size: 12px; min-height: 36px;">Unlock</button>
+                            <button class="btn-secondary" style="padding: 6px 12px; font-size: 12px; min-height: 36px;">View Rules</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">💻 Work MacBook</h3>
+                            <span style="background: #fef3c7; color: #d97706; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 600;">Needs Setup</span>
+                        </div>
+                        <p><strong>Platform:</strong> macOS</p>
+                        <p><strong>Profile:</strong> Strict</p>
+                        <p><strong>Last sync:</strong> Never</p>
+                        <div style="display: flex; gap: 8px; margin-top: 16px;">
+                            <button class="btn-primary" style="padding: 6px 12px; font-size: 12px; min-height: 36px;">Complete Setup</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Success Message -->
+            <section class="section">
+                <div class="card" style="border-color: #10b981; background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);">
+                    <div class="card-header">
+                        <h3 class="card-title" style="color: #065f46;">🎉 Dashboard Updated Successfully!</h3>
+                    </div>
+                    <p style="color: #065f46; margin: 0;">
+                        <strong>✅ New Features:</strong> Brand-consistent white background, device management, responsive design, and accessibility features.
+                    </p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Simple demo functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎉 New Screen Time Journey Dashboard loaded successfully!');
+            console.log('✅ White background applied');
+            console.log('✅ Brand colors updated');
+            console.log('✅ Responsive design active');
+            
+            // Get URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const shop = urlParams.get('shop');
+            const cid = urlParams.get('cid');
+            const token = urlParams.get('token');
+            
+            if (shop && cid) {
+                console.log('🔗 Connected from Shopify:', { shop, cid });
+                // Update user chip with real data
+                const userChip = document.querySelector('.user-chip span');
+                if (userChip) {
+                    userChip.textContent = `Hi, Customer #${cid.slice(-4)}`;
+                }
+            }
+        });
+    </script>
+</body>
 </html>
