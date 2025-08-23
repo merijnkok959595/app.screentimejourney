@@ -3,21 +3,18 @@ frontend:
   phases:
     preBuild:
       commands:
-        - echo "Installing dependencies..."
-        - npm ci 2>/dev/null || echo "No package.json found, skipping npm install"
+        - echo "Installing React dependencies..."
+        - npm ci
     build:
       commands:
-        - echo "Building Screen Time Journey Dashboard..."
-        - echo "No build step required for static HTML/CSS/JS"
-        - echo "Files are ready for deployment"
+        - echo "Building React app..."
+        - npm run build
     postBuild:
       commands:
-        - echo "Post-build phase complete"
+        - echo "React build complete"
   artifacts:
-    baseDirectory: .
+    baseDirectory: build
     files:
-      - dashboard_template_unified.html
-      - dashboard_styles.css
       - '**/*'
   cache:
     paths:
