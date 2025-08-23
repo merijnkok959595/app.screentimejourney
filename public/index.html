@@ -11,10 +11,10 @@
             --bg: #f9f9f9;              /* light gray background */
             --fg: #111111;
             --muted: #6b7280;           /* subdued text */
-            --accent: #111111;          /* match Shopify's solid dark CTA feel */
+            --accent: #2E0456;          /* brand purple for buttons and announcement */
             --accent-fg: #ffffff;
             --card: #ffffff;            /* white cards */
-            --ring: rgba(17,17,17,.2);
+            --ring: rgba(46, 4, 86, .2);
 
             --radius: 14px;             /* soft corners like Shopify cards */
             --shadow: 0 6px 24px rgba(0,0,0,.06);
@@ -153,6 +153,12 @@
             font-weight: 500;
         }
 
+        /* Header styles */
+        .main-header {
+            background: #ffffff;
+            border-bottom: 1px solid #eeeeee;
+        }
+
         /* Logo styles */
         .logo {
             height: 40px;
@@ -182,10 +188,12 @@
     </div>
 
     <!-- Header with logo and return button -->
-    <header class="container" style="padding: var(--space-5) 0;">
-        <div style="display:flex; align-items:center; justify-content:space-between;">
-            <img src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/ChatGPT_Image_Aug_23_2025_at_11_37_50_AM.png?v=1755941892" alt="Screen Time Journey" class="logo">
-            <a class="btn" href="https://screentimejourney.com">Return to website</a>
+    <header class="main-header">
+        <div class="container" style="padding: var(--space-5) 0;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+                <img src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/ChatGPT_Image_Aug_23_2025_at_11_37_50_AM.png?v=1755941892" alt="Screen Time Journey" class="logo">
+                <a class="btn" href="https://screentimejourney.com">Return to website</a>
+            </div>
         </div>
     </header>
 
