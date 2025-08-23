@@ -12,6 +12,8 @@ frontend:
     postBuild:
       commands:
         - echo "React build complete"
+        - echo "Copying dashboard.html to build directory"
+        - cp public/dashboard.html build/dashboard.html
   artifacts:
     baseDirectory: build
     files:
