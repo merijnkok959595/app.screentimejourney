@@ -1,0 +1,25 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - echo "Installing dependencies..."
+        - npm ci 2>/dev/null || echo "No package.json found, skipping npm install"
+    build:
+      commands:
+        - echo "Building Screen Time Journey Dashboard..."
+        - echo "No build step required for static HTML/CSS/JS"
+        - echo "Files are ready for deployment"
+    postBuild:
+      commands:
+        - echo "Post-build phase complete"
+  artifacts:
+    baseDirectory: .
+    files:
+      - dashboard_template_unified.html
+      - dashboard_styles.css
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+
