@@ -2339,10 +2339,57 @@ function App() {
 
   if (loading || milestonesLoading) {
     return (
-      <div className="App">
-        <div className="loading">
-          <div className="spinner"></div>
-          <p>{milestonesLoading ? 'Loading milestone data...' : 'Loading your dashboard...'}</p>
+      <div className="App" style={{ background: 'var(--page-bg)', minHeight: '100vh' }}>
+        <header className="header">
+          <div className="container header-inner">
+            <a className="header-logo" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">
+              <img 
+                src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/Untitled-20250823-230641-6751-undefinedx.png?v=1755983241" 
+                alt="Screen Time Journey Logo" 
+                style={{maxHeight: '64px', marginBottom: '8px', filter: 'brightness(0) invert(1)'}}
+              />
+            </a>
+            <h1 className="header-title">Loading...</h1>
+            <div className="header-actions">
+              <div className="header-buttons-desktop" style={{ display: 'flex', gap: '8px' }}>
+                <a className="btn-inverted" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">Return to website</a>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div className="container">
+          <main className="dashboard">
+            <div className="card" style={{ maxWidth: '400px', margin: '0 auto', textAlign: 'center' }}>
+              <div style={{ padding: 'var(--spacing-xl)' }}>
+                <div style={{ marginBottom: 'var(--spacing-lg)' }}>
+                  <div className="spinner" style={{ 
+                    width: '60px', 
+                    height: '60px',
+                    border: '4px solid var(--brand-separator)',
+                    borderTop: '4px solid var(--brand-primary)',
+                    margin: '0 auto var(--spacing-lg) auto'
+                  }}></div>
+                </div>
+                
+                <h3 style={{ 
+                  fontFamily: 'var(--font-heading)', 
+                  color: 'var(--brand-text)', 
+                  marginBottom: 'var(--spacing-md)',
+                  fontSize: '1.5rem'
+                }}>
+                  {milestonesLoading ? 'Loading milestone data...' : 'Loading your dashboard...'}
+                </h3>
+                
+                <p style={{ 
+                  color: 'var(--text-muted)', 
+                  fontSize: '0.95rem' 
+                }}>
+                  Please wait while we prepare your screen time journey dashboard.
+                </p>
+              </div>
+            </div>
+          </main>
         </div>
       </div>
     );
@@ -2351,28 +2398,130 @@ function App() {
   if (error) {
     console.error('❌ Error state:', error);
     return (
-      <div className="App">
-        <div className="error">
-          <h2>⚠️ Authentication Error</h2>
-          <p>{error}</p>
-          <details style={{marginTop: '10px', padding: '10px', backgroundColor: '#f8f9fa', border: '1px solid #dee2e6', borderRadius: '4px'}}>
-            <summary>Debug Info</summary>
-            <pre style={{fontSize: '12px', marginTop: '10px'}}>
-              Path: {window.location.pathname}{'\n'}
-              Search: {window.location.search}{'\n'}
-              Full URL: {window.location.href}{'\n'}
-              User Agent: {navigator.userAgent}
-            </pre>
-          </details>
-          <button onClick={() => {
-            // Try to extract shop domain from URL params or use fallback
-            const urlParams = new URLSearchParams(window.location.search);
-            const shop = urlParams.get('shop');
-            const storeUrl = shop ? `https://${shop}` : 'https://www.screentimejourney.com';
-            window.location.href = storeUrl;
-          }}>
-            Return to Store
-          </button>
+      <div className="App" style={{ background: 'var(--page-bg)', minHeight: '100vh' }}>
+        <header className="header">
+          <div className="container header-inner">
+            <a className="header-logo" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">
+              <img 
+                src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/Untitled-20250823-230641-6751-undefinedx.png?v=1755983241" 
+                alt="Screen Time Journey Logo" 
+                style={{maxHeight: '64px', marginBottom: '8px', filter: 'brightness(0) invert(1)'}}
+              />
+            </a>
+            <h1 className="header-title">Authentication Error</h1>
+            <div className="header-actions">
+              <div className="header-buttons-desktop" style={{ display: 'flex', gap: '8px' }}>
+                <a className="btn-inverted" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">Return to website</a>
+              </div>
+              
+              {/* Mobile hamburger menu */}
+              <div className="header-mobile-menu">
+                <button 
+                  className="mobile-menu-toggle"
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  aria-label="Toggle menu"
+                >
+                  <span className="hamburger-line"></span>
+                  <span className="hamburger-line"></span>
+                  <span className="hamburger-line"></span>
+                </button>
+                
+                {mobileMenuOpen && (
+                  <div className="mobile-menu-dropdown">
+                    <a 
+                      className="mobile-menu-item" 
+                      href="https://www.screentimejourney.com" 
+                      target="_self" 
+                      rel="noopener noreferrer"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Return to website
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div className="container">
+          <main className="dashboard">
+            <div className="card" style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
+              <div className="card-header">
+                <h3 className="card-title" style={{ color: 'var(--destructive)', marginBottom: 'var(--spacing-md)' }}>
+                  🔒 Access Denied
+                </h3>
+              </div>
+              
+              <div style={{ padding: 'var(--spacing-lg)' }}>
+                <p style={{ 
+                  fontSize: '1.1rem', 
+                  color: 'var(--brand-text)', 
+                  marginBottom: 'var(--spacing-lg)',
+                  lineHeight: '1.6'
+                }}>
+                  {error}
+                </p>
+                
+                <p style={{ 
+                  fontSize: '0.95rem', 
+                  color: 'var(--text-muted)', 
+                  marginBottom: 'var(--spacing-xl)' 
+                }}>
+                  Please return to your store and try accessing the dashboard again through the customer account area.
+                </p>
+
+                <div style={{ display: 'flex', gap: 'var(--spacing-md)', justifyContent: 'center', flexWrap: 'wrap' }}>
+                  <button 
+                    className="btn btn--primary"
+                    onClick={() => {
+                      // Try to extract shop domain from URL params or use fallback
+                      const urlParams = new URLSearchParams(window.location.search);
+                      const shop = urlParams.get('shop');
+                      const storeUrl = shop ? `https://${shop}` : 'https://www.screentimejourney.com';
+                      window.location.href = storeUrl;
+                    }}
+                    style={{ minWidth: '140px' }}
+                  >
+                    Return to Store
+                  </button>
+                  
+                  <button 
+                    className="btn btn--secondary"
+                    onClick={() => window.location.reload()}
+                    style={{ minWidth: '140px' }}
+                  >
+                    Try Again
+                  </button>
+                </div>
+
+                <details style={{
+                  marginTop: 'var(--spacing-xl)', 
+                  padding: 'var(--spacing-md)', 
+                  backgroundColor: '#f8f9fa', 
+                  border: '1px solid var(--brand-separator)', 
+                  borderRadius: 'var(--radius-md)',
+                  textAlign: 'left'
+                }}>
+                  <summary style={{ cursor: 'pointer', fontWeight: '500', color: 'var(--text-muted)' }}>
+                    Technical Details
+                  </summary>
+                  <pre style={{
+                    fontSize: '12px', 
+                    marginTop: 'var(--spacing-sm)', 
+                    color: 'var(--text-muted)',
+                    whiteSpace: 'pre-wrap',
+                    wordBreak: 'break-word'
+                  }}>
+                    Path: {window.location.pathname}{'\n'}
+                    Search: {window.location.search}{'\n'}
+                    Full URL: {window.location.href}{'\n'}
+                    User Agent: {navigator.userAgent}
+                  </pre>
+                </details>
+              </div>
+            </div>
+          </main>
         </div>
       </div>
     );
