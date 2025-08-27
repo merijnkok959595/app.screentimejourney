@@ -507,7 +507,7 @@ function App() {
       console.log('✅ HMAC verified, checking customer entitlement via Lambda');
 
       // Call Lambda to verify customer and get entitlement status
-      const lambdaUrl = 'https://4ozlnbqgvl.execute-api.eu-north-1.amazonaws.com/prod';
+      const lambdaUrl = 'https://lc5d0u74gd.execute-api.eu-north-1.amazonaws.com/default';
       const response = await fetch(`${lambdaUrl}?${urlParams.toString()}`, {
         method: 'GET',
         headers: {
@@ -701,7 +701,7 @@ function App() {
         return;
       }
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://4ozlnbqgvl.execute-api.eu-north-1.amazonaws.com/prod'}/get_milestones`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://lc5d0u74gd.execute-api.eu-north-1.amazonaws.com/default'}/get_milestones`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -841,7 +841,7 @@ function App() {
       
       for (const flowKey of flowKeys) {
         try {
-          const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://4ozlnbqgvl.execute-api.eu-north-1.amazonaws.com/prod'}/get_system_config`, {
+          const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://lc5d0u74gd.execute-api.eu-north-1.amazonaws.com/default'}/get_system_config`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -898,7 +898,7 @@ function App() {
       
       if (!isLocalDev) {
         // In production, store pincode in stj_password table via API
-        const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://4ozlnbqgvl.execute-api.eu-north-1.amazonaws.com/prod'}/store_pincode`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://lc5d0u74gd.execute-api.eu-north-1.amazonaws.com/default'}/store_pincode`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -975,7 +975,7 @@ function App() {
         
       } else {
         // In production, call the backend API
-        const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://4ozlnbqgvl.execute-api.eu-north-1.amazonaws.com/prod'}/generate_vpn_profile`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://lc5d0u74gd.execute-api.eu-north-1.amazonaws.com/default'}/generate_vpn_profile`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1192,7 +1192,7 @@ function App() {
         
       } else {
         // In production, call the backend API to generate audio with existing pincode
-        const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://4ozlnbqgvl.execute-api.eu-north-1.amazonaws.com/prod'}/generate_audio`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://lc5d0u74gd.execute-api.eu-north-1.amazonaws.com/default'}/generate_audio`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1365,7 +1365,7 @@ function App() {
       formData.append('surrender_text', currentFlow.steps[currentFlowStep - 1].surrender_text || surrenderText);
 
       // Submit to backend for ChatGPT validation
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://4ozlnbqgvl.execute-api.eu-north-1.amazonaws.com/prod'}/validate_surrender`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://lc5d0u74gd.execute-api.eu-north-1.amazonaws.com/default'}/validate_surrender`, {
         method: 'POST',
         body: formData
       });
@@ -1410,7 +1410,7 @@ function App() {
         return;
       }
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://4ozlnbqgvl.execute-api.eu-north-1.amazonaws.com/prod'}/send_unlock_email`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://lc5d0u74gd.execute-api.eu-north-1.amazonaws.com/default'}/send_unlock_email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1491,7 +1491,7 @@ function App() {
         return;
       }
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://44rqhfqqrjz57zd2q7lw2d63mi0akcdj.lambda-url.eu-west-1.on.aws'}/cancel_subscription`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://lc5d0u74gd.execute-api.eu-north-1.amazonaws.com/default'}/cancel_subscription`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1566,7 +1566,7 @@ function App() {
         return;
       }
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://44rqhfqqrjz57zd2q7lw2d63mi0akcdj.lambda-url.eu-west-1.on.aws'}/update_notifications`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://lc5d0u74gd.execute-api.eu-north-1.amazonaws.com/default'}/update_notifications`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1783,7 +1783,7 @@ function App() {
       }
       
       // Call backend API to get profile data
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://44rqhfqqrjz57zd2q7lw2d63mi0akcdj.lambda-url.eu-west-1.on.aws'}/get_profile`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://lc5d0u74gd.execute-api.eu-north-1.amazonaws.com/default'}/get_profile`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1860,7 +1860,7 @@ function App() {
       }
       
       // Call backend API to update profile
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://44rqhfqqrjz57zd2q7lw2d63mi0akcdj.lambda-url.eu-west-1.on.aws'}/update_profile`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://lc5d0u74gd.execute-api.eu-north-1.amazonaws.com/default'}/update_profile`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1934,7 +1934,7 @@ function App() {
     
     try {
       // Call backend API to check username availability
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://44rqhfqqrjz57zd2q7lw2d63mi0akcdj.lambda-url.eu-west-1.on.aws'}/check_username`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://lc5d0u74gd.execute-api.eu-north-1.amazonaws.com/default'}/check_username`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1998,7 +1998,7 @@ function App() {
       }
       
       // Call backend API to send WhatsApp verification code
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://44rqhfqqrjz57zd2q7lw2d63mi0akcdj.lambda-url.eu-west-1.on.aws'}/send_whatsapp_code`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://lc5d0u74gd.execute-api.eu-north-1.amazonaws.com/default'}/send_whatsapp_code`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -2057,7 +2057,7 @@ function App() {
       }
       
       // Call backend API to verify WhatsApp code
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://44rqhfqqrjz57zd2q7lw2d63mi0akcdj.lambda-url.eu-west-1.on.aws'}/verify_whatsapp_code`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://lc5d0u74gd.execute-api.eu-north-1.amazonaws.com/default'}/verify_whatsapp_code`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -2099,7 +2099,7 @@ function App() {
       }
       
       // Call backend API for final check
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://44rqhfqqrjz57zd2q7lw2d63mi0akcdj.lambda-url.eu-west-1.on.aws'}/check_username`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://lc5d0u74gd.execute-api.eu-north-1.amazonaws.com/default'}/check_username`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -2180,7 +2180,7 @@ function App() {
       console.log('💾 Saving profile:', profileData);
       
       // Call backend API to save profile
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://44rqhfqqrjz57zd2q7lw2d63mi0akcdj.lambda-url.eu-west-1.on.aws'}/save_profile`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://lc5d0u74gd.execute-api.eu-north-1.amazonaws.com/default'}/save_profile`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
