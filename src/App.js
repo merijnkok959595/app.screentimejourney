@@ -210,6 +210,11 @@ function App() {
   const [profileLoading, setProfileLoading] = useState(false);
   const [profileError, setProfileError] = useState('');
   
+  // Milestone data state
+  const [milestones, setMilestones] = useState(DEFAULT_MILESTONES);
+  const [milestonesLoading, setMilestonesLoading] = useState(true);
+  const [milestonesError, setMilestonesError] = useState(null);
+  
   // Device management state
   const [devices, setDevices] = useState([
     {
@@ -690,6 +695,45 @@ function App() {
     }
   };
 
+  // Function to fetch milestone data
+  const fetchMilestoneData = async () => {
+    try {
+      const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      
+      if (isLocalDev) {
+        console.log('🔧 Local dev: Using default milestones');
+        setMilestones(DEFAULT_MILESTONES);
+        return;
+      }
+
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://4ozlnbqgvl.execute-api.eu-north-1.amazonaws.com/prod'}/get_milestones`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ gender: 'male' })
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success && result.milestones) {
+        setMilestones(result.milestones);
+        setMilestonesError(null);
+        console.log('✅ Milestone data loaded from API');
+      } else {
+        throw new Error(result.error || 'Failed to load milestones');
+      }
+      
+    } catch (error) {
+      console.error('❌ Error fetching milestone data:', error);
+      setMilestonesError(error.message);
+      // Fallback to default milestones
+      setMilestones(DEFAULT_MILESTONES);
+    } finally {
+      setMilestonesLoading(false);
+    }
+  };
+
   // Function to fetch device flows from stj_system table
   const fetchDeviceFlows = async () => {
     try {
@@ -802,7 +846,7 @@ function App() {
       
       for (const flowKey of flowKeys) {
         try {
-          const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://44rqhfqqrjz57zd2q7lw2d63mi0akcdj.lambda-url.eu-west-1.on.aws'}/get_system_config`, {
+          const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://4ozlnbqgvl.execute-api.eu-north-1.amazonaws.com/prod'}/get_system_config`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -859,7 +903,7 @@ function App() {
       
       if (!isLocalDev) {
         // In production, store pincode in stj_password table via API
-        const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://44rqhfqqrjz57zd2q7lw2d63mi0akcdj.lambda-url.eu-west-1.on.aws'}/store_pincode`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://4ozlnbqgvl.execute-api.eu-north-1.amazonaws.com/prod'}/store_pincode`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -936,7 +980,7 @@ function App() {
         
       } else {
         // In production, call the backend API
-        const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://44rqhfqqrjz57zd2q7lw2d63mi0akcdj.lambda-url.eu-west-1.on.aws'}/generate_vpn_profile`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://4ozlnbqgvl.execute-api.eu-north-1.amazonaws.com/prod'}/generate_vpn_profile`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1153,7 +1197,7 @@ function App() {
         
       } else {
         // In production, call the backend API to generate audio with existing pincode
-        const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://44rqhfqqrjz57zd2q7lw2d63mi0akcdj.lambda-url.eu-west-1.on.aws'}/generate_audio`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://4ozlnbqgvl.execute-api.eu-north-1.amazonaws.com/prod'}/generate_audio`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1326,7 +1370,7 @@ function App() {
       formData.append('surrender_text', currentFlow.steps[currentFlowStep - 1].surrender_text || surrenderText);
 
       // Submit to backend for ChatGPT validation
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://44rqhfqqrjz57zd2q7lw2d63mi0akcdj.lambda-url.eu-west-1.on.aws'}/validate_surrender`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://4ozlnbqgvl.execute-api.eu-north-1.amazonaws.com/prod'}/validate_surrender`, {
         method: 'POST',
         body: formData
       });
@@ -1371,7 +1415,7 @@ function App() {
         return;
       }
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://44rqhfqqrjz57zd2q7lw2d63mi0akcdj.lambda-url.eu-west-1.on.aws'}/send_unlock_email`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://4ozlnbqgvl.execute-api.eu-north-1.amazonaws.com/prod'}/send_unlock_email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
