@@ -1,0 +1,837 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: #F9F9F9;
+  min-height: 100vh;
+  color: #333;
+}
+
+html, #root {
+  background: #F9F9F9;
+}
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.App-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.App-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.customer-info {
+  margin-top: 1rem;
+}
+
+.customer-info h2 {
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.subscription-status {
+  background: #4CAF50;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.dashboard-content {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.dashboard-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.dashboard-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: #555;
+}
+
+.metric {
+  text-align: center;
+}
+
+.metric-value {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #667eea;
+  margin-bottom: 0.5rem;
+}
+
+.metric-label {
+  font-size: 0.9rem;
+  color: #777;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Base button styles */
+.btn, .primary-button, .secondary-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  outline: none;
+}
+
+/* Primary button styling - Use brand purple like header background */
+.modal .btn--primary, 
+.modal button.btn--primary,
+.btn--primary.btn--full,
+.btn--primary, 
+.primary-button {
+  background: var(--brand-primary) !important; /* Use the same purple as header */
+  background-color: var(--brand-primary) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.modal .btn--primary:hover, 
+.modal button.btn--primary:hover,
+.btn--primary.btn--full:hover,
+.btn--primary:hover, 
+.primary-button:hover {
+  background: var(--brand-primary-dark) !important; /* Darker purple on hover */
+  background-color: var(--brand-primary-dark) !important;
+  transform: translateY(-1px); /* Subtle lift instead of -2px */
+  box-shadow: 0 2px 8px rgba(46, 4, 86, 0.2); /* Much lighter shadow */
+}
+
+/* Secondary button styling - outlined style */
+.btn--secondary, .secondary-button {
+  background: transparent !important;
+  color: #6b7280 !important;
+  border: 2px solid #d1d5db !important;
+}
+
+.btn--secondary:hover, .secondary-button:hover {
+  background: #f9fafb !important;
+  color: #374151 !important;
+  border-color: #9ca3af !important;
+  transform: translateY(-1px);
+}
+
+/* Disabled states */
+.btn--primary:disabled, .primary-button:disabled {
+  background: #d1d5db !important;
+  color: #9ca3af !important;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn--secondary:disabled, .secondary-button:disabled {
+  background: #f9fafb !important;
+  color: #d1d5db !important;
+  border-color: #e5e7eb !important;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.loading, .error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+  padding: 2rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading p {
+  color: white;
+  font-size: 1.2rem;
+}
+
+.error {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  max-width: 500px;
+  margin: 2rem auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.error h2 {
+  color: #e74c3c;
+  margin-bottom: 1rem;
+}
+
+.error button {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+}
+
+.error button:hover {
+  background: #5a6fd8;
+}
+
+/* Onboarding UI Improvements */
+.input-container {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.input--valid {
+  border-color: #10b981 !important;
+  background-color: #f0fdf4;
+}
+
+.input--invalid {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2;
+}
+
+.input-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+}
+
+.input-icon.valid {
+  color: #10b981;
+}
+
+.input-icon.invalid {
+  color: #ef4444;
+}
+
+/* Radio Button Styles */
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1rem 0;
+  align-items: flex-start; /* Align radio buttons to the left */
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: white;
+  width: 100%; /* Full width for better click area */
+  text-align: left; /* Left align text */
+}
+
+.radio-option:hover {
+  border-color: #667eea;
+  background-color: #f8faff;
+}
+
+.radio-option input[type="radio"] {
+  display: none;
+}
+
+.radio-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #d1d5db;
+  border-radius: 50%;
+  margin-right: 12px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.radio-option input[type="radio"]:checked + .radio-custom {
+  border-color: #667eea;
+  background-color: #667eea;
+}
+
+.radio-option input[type="radio"]:checked + .radio-custom::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.radio-label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.radio-option input[type="radio"]:checked ~ .radio-label {
+  color: #667eea;
+}
+
+/* Phone Input Styles */
+.phone-input-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+
+.country-select {
+  flex: 0 0 auto;
+  width: 100px;
+  padding: 12px 8px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.country-select:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.phone-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.phone-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Button Improvements */
+.btn--full, .btn--primary.btn--full, .btn--secondary.btn--full {
+  width: 100%;
+  margin-bottom: 0.25rem;
+}
+
+.link-only {
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  margin-top: 0.5rem;
+  text-align: center;
+  width: 100%;
+  display: block;
+}
+
+.link-only:hover {
+  color: #374151;
+  text-decoration: underline;
+}
+
+/* Back button styling */
+.link-back {
+  background: none;
+  border: none;
+  color: var(--brand-primary);
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  width: 100%;
+  display: block;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  /* Offset to visually align with "Next" text (accounting for → arrow) */
+  transform: translateX(-10px);
+}
+
+.link-back:hover {
+  color: var(--brand-primary-dark);
+  text-decoration: underline;
+}
+
+.link-back:disabled {
+  color: #d1d5db;
+  cursor: not-allowed;
+}
+
+.link-back:disabled:hover {
+  color: #d1d5db;
+  text-decoration: none;
+}
+
+/* Error message styling */
+.error-message {
+  color: #ef4444;
+  font-size: 14px;
+  margin: 0.5rem 0 0 0;
+  padding: 0;
+  text-align: left;
+}
+
+/* Step indicator styling */
+.step-indicator {
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* Inline link styling */
+.link-inline {
+  background: none;
+  border: none;
+  color: var(--brand-primary);
+  font-size: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-left: 0.5rem;
+  padding: 0;
+  transition: color 0.2s ease;
+  font-weight: 500;
+}
+
+.link-inline:hover {
+  color: var(--brand-primary-dark);
+  text-decoration: underline;
+}
+
+/* Disabled link styling */
+.link-subtle:disabled {
+  color: #d1d5db;
+  cursor: not-allowed;
+}
+
+.link-subtle:disabled:hover {
+  color: #d1d5db;
+  text-decoration: none;
+}
+
+/* Code Input */
+.code-input {
+  text-align: center;
+  font-size: 20px;
+  letter-spacing: 4px;
+  font-weight: 500;
+  padding: 14px 16px;
+  margin-bottom: 1.5rem;
+  background: #f9fafb;
+  border: 2px solid #e5e7eb;
+}
+
+.code-input:focus {
+  background: white;
+  border-color: var(--brand-primary);
+}
+
+/* Modal Footer Improvements */
+.modal__footer {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Verification Options */
+.verification-options {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.link-subtle {
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.link-subtle:hover {
+  color: #374151;
+  background: #f3f4f6;
+}
+
+.separator {
+  color: #d1d5db;
+  font-size: 12px;
+  margin: 0 4px;
+}
+
+@media (max-width: 768px) {
+  .App-header {
+    padding: 1.5rem;
+  }
+  
+  .App-header h1 {
+    font-size: 2rem;
+  }
+  
+  .dashboard-content {
+    padding: 1rem;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .primary-button, .secondary-button {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+/* =================================================================
+   MODAL SPACING SYSTEM - Consistent margins and padding
+   ================================================================= */
+
+/* Modal structure spacing */
+.modal__header {
+  margin-bottom: 1.5rem !important;
+}
+
+.modal__footer {
+  margin-top: 1.5rem !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Input and form elements spacing */
+.input-container {
+  margin-bottom: 1rem;
+}
+
+.input, .code-input {
+  margin-bottom: 0 !important;
+}
+
+/* Radio group spacing */
+.radio-group {
+  margin-bottom: 1rem;
+}
+
+/* Phone input group spacing */
+.phone-input-group {
+  margin-bottom: 1rem;
+}
+
+/* Helper text spacing */
+.helper {
+  margin: 0.75rem 0 1rem 0 !important;
+  padding: 0 !important;
+  color: #374151 !important;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Error message spacing */
+.error-message {
+  margin: 0.5rem 0 0 0 !important;
+  padding: 0 !important;
+}
+
+/* Button spacing in modal */
+.modal .btn--primary, 
+.modal .btn--secondary {
+  margin-bottom: 0.5rem !important;
+}
+
+/* Back button spacing */
+.link-back {
+  margin: 0 !important;
+  padding: 8px 0 !important;
+}
+
+/* Step indicator spacing */
+.step-indicator {
+  margin-bottom: 0.5rem !important;
+}
+
+/* Audio Guide Styling */
+.audio-guide-container {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 2px solid #0ea5e9;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.audio-guide-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #0ea5e9, #06b6d4, #0ea5e9);
+  background-size: 200% 100%;
+  animation: audioWave 2s ease-in-out infinite;
+}
+
+@keyframes audioWave {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.audio-guide-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.audio-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: #0ea5e9;
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  animation: audioPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes audioPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.audio-pincode-display {
+  background: #ffffff;
+  border: 2px solid #e0f2fe;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 4px rgba(14, 165, 233, 0.1);
+}
+
+.audio-pincode-number {
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0369a1;
+  letter-spacing: 4px;
+  margin-bottom: 4px;
+  text-shadow: 0 1px 2px rgba(14, 165, 233, 0.2);
+}
+
+.audio-play-button {
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  border: none;
+  color: white;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+  transition: all 0.3s ease;
+}
+
+.audio-play-button:hover {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  box-shadow: 0 6px 16px rgba(14, 165, 233, 0.4);
+  transform: translateY(-2px);
+}
+
+.audio-play-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
+}
+
+.audio-regenerate-link {
+  color: #0ea5e9;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.audio-regenerate-link:hover {
+  background: #e0f2fe;
+  color: #0284c7;
+  text-decoration: none;
+}
+
+/* Audio Visualizer for Voice Recording */
+.audio-visualizer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  height: 40px;
+  padding: 8px;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  border: 1px solid #f87171;
+  border-radius: 8px;
+  margin: 12px 0;
+}
+
+.audio-bar {
+  width: 4px;
+  background: linear-gradient(to top, #dc2626 0%, #ef4444 50%, #f87171 100%);
+  border-radius: 2px;
+  transition: height 0.1s ease;
+  min-height: 4px;
+  opacity: 0.7;
+}
+
+.audio-bar.active {
+  opacity: 1;
+  box-shadow: 0 0 4px rgba(220, 38, 38, 0.5);
+}
+
+.recording-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  border: 1px solid #f87171;
+  border-radius: 6px;
+  margin: 8px 0;
+}
+
+.recording-pulse {
+  width: 8px;
+  height: 8px;
+  background: #dc2626;
+  border-radius: 50%;
+  animation: recordingPulse 1s ease-in-out infinite;
+}
+
+@keyframes recordingPulse {
+  0%, 100% { 
+    opacity: 1; 
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.3; 
+    transform: scale(1.2);
+  }
+}
+
+.recording-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #991b1b;
+}
+
+/* Microphone permission indicator */
+.mic-permission {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #0369a1;
+  margin-bottom: 12px;
+}

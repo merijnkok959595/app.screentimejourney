@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen Time Journey - Dashboard</title>
+    <link rel="icon" type="image/png" href="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/ChatGPT_Image_Aug_23_2025_at_12_05_05_PM.png?v=1755943535">
+    <style>
+        /* Screen Time Journey Brand Theme - Matches existing branding */
+        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+        /* CSS Variables */
+        :root {
+            /* Brand Colors */
+            --brand-primary: #2E0456;
+            --brand-primary-dark: #1a0230;
+            --brand-text: #0F172A;
+            --brand-background: #FFFFFF;
+            --brand-separator: #F9F9F9;
+            
+            /* Typography */
+            --font-heading: 'DM Serif Display', serif;
+            --font-body: 'Inter', sans-serif;
+            
+            /* Spacing */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-2xl: 48px;
+            
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            
+            /* Shadows */
+            --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+            --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.12);
+            --shadow-brand: 0 4px 12px rgba(46, 4, 86, 0.2);
+        }
+
+        /* Base Styles */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--brand-text);
+            background-color: var(--brand-background);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 400;
+            color: var(--brand-text);
+            margin: 0 0 var(--spacing-md) 0;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 2rem;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            line-height: 1.4;
+        }
+
+        p, span, div {
+            font-family: var(--font-body);
+            color: var(--brand-text);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        /* Header */
+        .header {
+            background: var(--brand-background);
+            border-bottom: 1px solid var(--brand-separator);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md) 0;
+        }
+
+        .brand {
+            font-family: var(--font-heading);
+            font-size: 1.75rem;
+            font-weight: 400;
+            color: var(--brand-primary);
+        }
+
+        .user-chip {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            background: var(--brand-separator);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: 24px;
+            border: 1px solid var(--brand-separator);
+        }
+
+        .plan-badge {
+            background: var(--brand-primary);
+            color: var(--brand-background);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Sub Navigation */
+        .sub-nav {
+            background: var(--brand-separator);
+            border-bottom: 1px solid var(--brand-separator);
+            position: sticky;
+            top: 73px;
+            z-index: 99;
+        }
+
+        .sub-nav-content {
+            display: flex;
+            gap: var(--spacing-xl);
+            padding: var(--spacing-sm) 0;
+            overflow-x: auto;
+        }
+
+        .sub-nav a {
+            color: var(--brand-text);
+            opacity: 0.7;
+            text-decoration: none;
+            font-weight: 500;
+            padding: var(--spacing-sm) 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .sub-nav a:hover,
+        .sub-nav a.active {
+            color: var(--brand-primary);
+            opacity: 1;
+            border-bottom-color: var(--brand-primary);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--brand-primary);
+            color: var(--brand-background);
+            border: none;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            min-height: 48px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--brand-primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-brand);
+        }
+
+        .btn-primary:focus {
+            outline: 2px solid var(--brand-primary);
+            outline-offset: 2px;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--brand-primary);
+            border: 2px solid var(--brand-primary);
+            padding: calc(var(--spacing-md) - 2px) calc(var(--spacing-lg) - 2px);
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            min-height: 48px;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--brand-primary);
+            color: var(--brand-background);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-brand);
+        }
+
+        .btn-secondary:focus {
+            outline: 2px solid var(--brand-primary);
+            outline-offset: 2px;
+        }
+
+        .btn-danger {
+            background-color: transparent;
+            color: #dc2626;
+            border: 2px solid #dc2626;
+            padding: calc(var(--spacing-md) - 2px) calc(var(--spacing-lg) - 2px);
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            min-height: 48px;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc2626;
+            color: var(--brand-background);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+        }
+
+        .btn-small {
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-size: 14px;
+            min-height: 36px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--brand-background);
+            border: 1px solid var(--brand-separator);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-md) 0;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--brand-primary);
+        }
+
+        .card-header {
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            color: var(--brand-primary);
+            margin: 0 0 var(--spacing-sm) 0;
+        }
+
+        .card-description {
+            font-family: var(--font-body);
+            color: var(--brand-text);
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        /* Main Content */
+        .main {
+            padding: var(--spacing-xl) 0;
+        }
+
+        .section {
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: var(--spacing-lg);
+            color: var(--brand-text);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: var(--spacing-2xl) 0;
+            background: linear-gradient(135deg, var(--brand-separator) 0%, #e2e8f0 100%);
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            font-weight: 400;
+            color: var(--brand-text);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--brand-text);
+            opacity: 0.8;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .disclaimer {
+            font-size: 14px;
+            color: var(--brand-text);
+            opacity: 0.6;
+            font-style: italic;
+        }
+
+        /* Device Grid */
+        .device-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .device-card {
+            position: relative;
+        }
+
+        .device-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .device-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            background: var(--brand-separator);
+        }
+
+        .device-info h3 {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 400;
+            color: var(--brand-text);
+            margin: 0;
+        }
+
+        .device-info p {
+            font-size: 14px;
+            color: var(--brand-text);
+            opacity: 0.7;
+            margin: 0;
+        }
+
+        .status-badge {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+            position: absolute;
+            top: var(--spacing-lg);
+            right: var(--spacing-lg);
+        }
+
+        .status-locked {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .status-unlocked {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+
+        .status-setup {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .device-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-md);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            color: var(--brand-text);
+            opacity: 0.7;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: var(--spacing-md);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--brand-background);
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--brand-separator);
+        }
+
+        .modal-header {
+            padding: var(--spacing-lg) var(--spacing-lg) 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--brand-text);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--brand-text);
+            opacity: 0.7;
+            padding: var(--spacing-xs);
+            border-radius: var(--radius-sm);
+        }
+
+        .modal-close:hover {
+            opacity: 1;
+            background: var(--brand-separator);
+        }
+
+        .modal-body {
+            padding: var(--spacing-lg);
+        }
+
+        .modal-footer {
+            padding: 0 var(--spacing-lg) var(--spacing-lg);
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: flex-end;
+        }
+
+        /* Stepper */
+        .stepper {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            background: var(--brand-separator);
+            color: var(--brand-text);
+            opacity: 0.7;
+        }
+
+        .step.active .step-number {
+            background: var(--brand-primary);
+            color: var(--brand-background);
+            opacity: 1;
+        }
+
+        .step.completed .step-number {
+            background: #10b981;
+            color: var(--brand-background);
+            opacity: 1;
+        }
+
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background: var(--brand-separator);
+            margin: 0 var(--spacing-md);
+        }
+
+        .step.completed .step-line {
+            background: #10b981;
+        }
+
+        .step:last-child .step-line {
+            display: none;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .form-label {
+            display: block;
+            font-family: var(--font-body);
+            font-weight: 500;
+            margin-bottom: var(--spacing-sm);
+            color: var(--brand-text);
+            font-size: 14px;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 1px solid var(--brand-separator);
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-size: 16px;
+            background: var(--brand-background);
+            color: var(--brand-text);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(46, 4, 86, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Platform Selection */
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .platform-option {
+            padding: var(--spacing-lg) var(--spacing-md);
+            border: 2px solid var(--brand-separator);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--brand-background);
+        }
+
+        .platform-option:hover {
+            border-color: var(--brand-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .platform-option.selected {
+            border-color: var(--brand-primary);
+            background: var(--brand-separator);
+        }
+
+        .platform-option .icon {
+            font-size: 32px;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        /* Separators */
+        .separator {
+            height: 1px;
+            background-color: var(--brand-separator);
+            margin: var(--spacing-lg) 0;
+            border: none;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: var(--spacing-md);
+            right: var(--spacing-md);
+            z-index: 1100;
+        }
+
+        .toast {
+            background: var(--brand-background);
+            border: 1px solid var(--brand-separator);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            min-width: 300px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .toast.error {
+            border-left: 4px solid #dc2626;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: var(--spacing-xl) 0;
+            border-top: 1px solid var(--brand-separator);
+            margin-top: var(--spacing-2xl);
+        }
+
+        .footer a {
+            color: var(--brand-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 var(--spacing-sm);
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .device-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sub-nav-content {
+                gap: var(--spacing-lg);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+            
+            .hero {
+                padding: var(--spacing-lg) 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="brand">Screen Time Journey</div>
+                <div class="user-chip">
+                    <span>Hi, {{CustomerName}}</span>
+                    <span class="plan-badge">Premium</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sub Navigation -->
+    <nav class="sub-nav">
+        <div class="container">
+            <div class="sub-nav-content">
+                <a href="#overview" class="nav-link active">Overview</a>
+                <a href="#add-device" class="nav-link">Add Device</a>
+                <a href="#unlock" class="nav-link">Unlock Device</a>
+                <a href="#subscription" class="nav-link">Subscription</a>
+                <a href="#account" class="nav-link">Account</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero">
+                <h1>Screen Time Journey</h1>
+                <p>Your Digital Wellness Dashboard</p>
+                <div class="hero-actions">
+                    <button class="btn-primary" data-testid="add-device-btn" onclick="openWizard('add-device', 1)">Add Device</button>
+                    <button class="btn-secondary" data-testid="unlock-device-btn" onclick="openWizard('unlock', 1)">Unlock Device</button>
+                    <button class="btn-secondary" onclick="scrollToSection('subscription')">Manage Subscription</button>
+                </div>
+                <p class="disclaimer">All data is placeholder. Connect later.</p>
+            </section>
+
+            <!-- Device Overview -->
+            <section id="overview" class="section">
+                <h2 class="section-title">Device Overview</h2>
+                <div id="device-grid" class="device-grid">
+                    <!-- Devices will be rendered here -->
+                </div>
+                <div id="empty-state" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon">📱</div>
+                    <h3>No devices yet</h3>
+                    <p>Add your first device to start your screen time journey</p>
+                    <button class="btn-primary" onclick="openWizard('add-device', 1)">Add Device</button>
+                </div>
+            </section>
+
+            <!-- Subscription Section -->
+            <section id="subscription" class="section">
+                <h2 class="section-title">Subscription</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Premium Plan</h3>
+                        <span class="plan-badge">Active</span>
+                    </div>
+                    <p><strong>Next billing:</strong> March 15, 2025</p>
+                    <p><strong>Payment method:</strong> •••• 4242</p>
+                    <hr class="separator">
+                    <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                        <button class="btn-secondary btn-small">Manage Subscription</button>
+                        <button class="btn-secondary btn-small">Update Payment</button>
+                    </div>
+                    <p style="font-size: 14px; color: var(--brand-text); opacity: 0.7; margin-top: 16px;">
+                        Will integrate Shopify Customer Portal later
+                    </p>
+                </div>
+            </section>
+
+            <!-- Account Section -->
+            <section id="account" class="section">
+                <h2 class="section-title">Account & Settings</h2>
+                
+                <!-- Profile Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Profile Information</h3>
+                        <button class="btn-secondary btn-small" onclick="editProfile()">Edit</button>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+                        <div>
+                            <strong>Name:</strong> {{CustomerName}}
+                        </div>
+                        <div>
+                            <strong>Email:</strong> customer@example.com
+                        </div>
+                        <div>
+                            <strong>WhatsApp:</strong> +1 (555) 123-4567
+                        </div>
+                        <div>
+                            <strong>Timezone:</strong> America/New_York
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Commitment Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Your Commitment</h3>
+                        <button class="btn-secondary btn-small" onclick="reviewCommitment()">Review/Update</button>
+                    </div>
+                    <div id="commitment-display">
+                        <p><strong>Why stop screen time:</strong> I want to be more present with my family</p>
+                        <p><strong>How it will change your life:</strong> I'll have more quality time and better relationships</p>
+                        <p><strong>Who this is for:</strong> My children and spouse</p>
+                    </div>
+                </div>
+
+                <!-- Notifications Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Notifications</h3>
+                    </div>
+                    <div style="display: grid; gap: 16px;">
+                        <label style="display: flex; align-items: center; gap: 12px;">
+                            <input type="checkbox" checked> Daily check-in reminders
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 12px;">
+                            <input type="checkbox" checked> Weekly progress reports
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 12px;">
+                            <input type="checkbox"> Relapse SOS alerts
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 12px;">
+                            <input type="checkbox" checked> Unlock request approvals
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="card" style="border-color: #dc2626;">
+                    <div class="card-header">
+                        <h3 class="card-title" style="color: #dc2626;">Danger Zone</h3>
+                    </div>
+                    <p style="color: var(--brand-text); opacity: 0.8; margin-bottom: 16px;">
+                        This will permanently delete your account and all associated data.
+                    </p>
+                    <button class="btn-danger btn-small" onclick="deleteAccount()">Delete Account</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <a href="https://www.screentimejourney.com">Return to Store</a>
+        </div>
+    </footer>
+
+    <!-- Add Device Wizard Modal -->
+    <div id="add-device-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="add-device-title" data-testid="add-device-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="add-device-title" class="modal-title">Add Device</h2>
+                <button class="modal-close" onclick="closeWizard()" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="stepper">
+                    <div class="step active" id="add-step-1">
+                        <div class="step-number" aria-current="step">1</div>
+                        <div class="step-line"></div>
+                    </div>
+                    <div class="step" id="add-step-2">
+                        <div class="step-number">2</div>
+                        <div class="step-line"></div>
+                    </div>
+                    <div class="step" id="add-step-3">
+                        <div class="step-number">3</div>
+                        <div class="step-line"></div>
+                    </div>
+                    <div class="step" id="add-step-4">
+                        <div class="step-number">4</div>
+                    </div>
+                </div>
+
+                <!-- Step 1: Choose Platform -->
+                <div id="add-device-step-1" class="wizard-step">
+                    <h3>Choose Platform</h3>
+                    <div class="platform-grid">
+                        <div class="platform-option" data-platform="ios">
+                            <div class="icon">📱</div>
+                            <div>iOS</div>
+                        </div>
+                        <div class="platform-option" data-platform="android">
+                            <div class="icon">🤖</div>
+                            <div>Android</div>
+                        </div>
+                        <div class="platform-option" data-platform="other">
+                            <div class="icon">💻</div>
+                            <div>Other</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Link Instructions -->
+                <div id="add-device-step-2" class="wizard-step" style="display: none;">
+                    <h3>Link Your Device</h3>
+                    <div id="link-instructions">
+                        <!-- Dynamic content based on platform -->
+                    </div>
+                    <div style="background: var(--brand-separator); padding: 16px; border-radius: 8px; text-align: center; margin: 16px 0;">
+                        <strong>Link Code:</strong> <span id="link-code" style="font-family: monospace; font-size: 18px;">ABC123</span>
+                    </div>
+                </div>
+
+                <!-- Step 3: Verify & Configure -->
+                <div id="add-device-step-3" class="wizard-step" style="display: none;">
+                    <h3>Verify & Configure</h3>
+                    <div class="form-group">
+                        <label class="form-label" for="verify-code">Enter verification code</label>
+                        <input type="text" id="verify-code" class="form-input" placeholder="Enter code from your device">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="device-name">Device name</label>
+                        <input type="text" id="device-name" class="form-input" placeholder="My iPhone">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="rule-profile">Rule profile</label>
+                        <select id="rule-profile" class="form-select">
+                            <option value="strict">Strict - Maximum protection</option>
+                            <option value="standard" selected>Standard - Balanced approach</option>
+                            <option value="custom">Custom - Configure manually</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Step 4: Confirmation -->
+                <div id="add-device-step-4" class="wizard-step" style="display: none;">
+                    <h3>Ready to Lock</h3>
+                    <div style="background: var(--brand-separator); padding: 16px; border-radius: 8px;">
+                        <h4>Device Summary</h4>
+                        <p><strong>Name:</strong> <span id="summary-name">My iPhone</span></p>
+                        <p><strong>Platform:</strong> <span id="summary-platform">iOS</span></p>
+                        <p><strong>Profile:</strong> <span id="summary-profile">Standard</span></p>
+                    </div>
+                    <p style="margin-top: 16px;">Your device will be locked immediately after setup.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="add-back-btn" class="btn-secondary" onclick="previousStep('add-device')" style="display: none;">Back</button>
+                <button class="btn-secondary" onclick="closeWizard()">Cancel</button>
+                <button id="add-next-btn" class="btn-primary" onclick="nextStep('add-device')" disabled>Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unlock Device Wizard Modal -->
+    <div id="unlock-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="unlock-title" data-testid="unlock-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="unlock-title" class="modal-title">Unlock Device</h2>
+                <button class="modal-close" onclick="closeWizard()" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="stepper">
+                    <div class="step active" id="unlock-step-1">
+                        <div class="step-number" aria-current="step">1</div>
+                        <div class="step-line"></div>
+                    </div>
+                    <div class="step" id="unlock-step-2">
+                        <div class="step-number">2</div>
+                        <div class="step-line"></div>
+                    </div>
+                    <div class="step" id="unlock-step-3">
+                        <div class="step-number">3</div>
+                    </div>
+                </div>
+
+                <!-- Step 1: Request -->
+                <div id="unlock-step-1" class="wizard-step">
+                    <h3>Request Unlock</h3>
+                    <div class="form-group">
+                        <label class="form-label" for="unlock-device">Choose device</label>
+                        <select id="unlock-device" class="form-select">
+                            <option value="">Select a device...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="unlock-reason">Reason for unlock</label>
+                        <textarea id="unlock-reason" class="form-textarea" placeholder="Why do you need to unlock this device?"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="unlock-duration">Duration</label>
+                        <select id="unlock-duration" class="form-select">
+                            <option value="15">15 minutes</option>
+                            <option value="30">30 minutes</option>
+                            <option value="60">1 hour</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Step 2: Confirm -->
+                <div id="unlock-step-2" class="wizard-step" style="display: none;">
+                    <h3>Confirm Unlock</h3>
+                    <div style="background: var(--brand-separator); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+                        <p><strong>Device:</strong> <span id="confirm-device">My iPhone</span></p>
+                        <p><strong>Duration:</strong> <span id="confirm-duration">30 minutes</span></p>
+                        <p><strong>Reason:</strong> <span id="confirm-reason">Emergency call</span></p>
+                    </div>
+                    <p>Confirm in WhatsApp or enter your verification code:</p>
+                    <div class="form-group">
+                        <label class="form-label" for="unlock-otp">Verification code (optional)</label>
+                        <input type="text" id="unlock-otp" class="form-input" placeholder="Enter 6-digit code">
+                    </div>
+                </div>
+
+                <!-- Step 3: Active Unlock -->
+                <div id="unlock-step-3" class="wizard-step" style="display: none;">
+                    <h3>Device Unlocked</h3>
+                    <div style="text-align: center; padding: 24px;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">🔓</div>
+                        <h4>Your device is now unlocked</h4>
+                        <div style="font-size: 24px; font-weight: bold; color: var(--brand-primary); margin: 16px 0;">
+                            <span id="countdown-timer">29:59</span>
+                        </div>
+                        <p>Time remaining</p>
+                        <div style="display: flex; gap: 12px; justify-content: center; margin-top: 24px;">
+                            <button class="btn-secondary btn-small" onclick="extendUnlock()">Extend</button>
+                            <button class="btn-danger btn-small" onclick="endUnlock()">End Early</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="unlock-back-btn" class="btn-secondary" onclick="previousStep('unlock')" style="display: none;">Back</button>
+                <button class="btn-secondary" onclick="closeWizard()">Cancel</button>
+                <button id="unlock-next-btn" class="btn-primary" onclick="nextStep('unlock')" disabled>Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" role="status" aria-live="polite"></div>
+
+    <script>
+        // Global state
+        let currentWizard = null;
+        let currentStep = 1;
+        let devices = [];
+        let selectedPlatform = '';
+        let unlockTimer = null;
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            handleDeepLinks();
+        });
+
+        function initializeApp() {
+            // Load data from localStorage
+            loadDevices();
+            loadCommitment();
+            
+            // Seed with mock devices if empty
+            if (devices.length === 0) {
+                seedMockDevices();
+            }
+            
+            renderDevices();
+            updateNavigation();
+        }
+
+        function handleDeepLinks() {
+            const hash = window.location.hash;
+            const params = new URLSearchParams(window.location.search);
+            
+            // Handle wizard query params
+            const wizard = params.get('w');
+            const step = parseInt(params.get('step')) || 1;
+            
+            if (wizard && (wizard === 'add-device' || wizard === 'unlock')) {
+                openWizard(wizard, step);
+            }
+            
+            // Handle section navigation
+            if (hash) {
+                const section = document.querySelector(hash);
+                if (section) {
+                    section.scrollIntoView({ behavior: 'smooth' });
+                    updateActiveNavLink(hash.substring(1));
+                }
+            }
+        }
+
+        // Device management
+        function loadDevices() {
+            const stored = localStorage.getItem('stj_devices');
+            devices = stored ? JSON.parse(stored) : [];
+        }
+
+        function saveDevices() {
+            localStorage.setItem('stj_devices', JSON.stringify(devices));
+        }
+
+        function seedMockDevices() {
+            devices = [
+                {
+                    id: 'device-1',
+                    name: 'My iPhone',
+                    platform: 'ios',
+                    status: 'locked',
+                    lastSync: new Date().toISOString(),
+                    profile: 'standard'
+                },
+                {
+                    id: 'device-2',
+                    name: 'Work MacBook',
+                    platform: 'other',
+                    status: 'setup',
+                    lastSync: null,
+                    profile: 'strict'
+                }
+            ];
+            saveDevices();
+        }
+
+        function renderDevices() {
+            const grid = document.getElementById('device-grid');
+            const emptyState = document.getElementById('empty-state');
+            
+            if (devices.length === 0) {
+                grid.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            grid.style.display = 'grid';
+            emptyState.style.display = 'none';
+            
+            grid.innerHTML = devices.map(device => `
+                <div class="card device-card">
+                    <span class="status-badge status-${device.status}">${getStatusText(device.status)}</span>
+                    <div class="device-header">
+                        <div class="device-icon ${device.platform}">
+                            ${getPlatformIcon(device.platform)}
+                        </div>
+                        <div class="device-info">
+                            <h3>${device.name}</h3>
+                            <p>${device.platform.toUpperCase()} • ${device.profile} profile</p>
+                            <p>Last sync: ${device.lastSync ? new Date(device.lastSync).toLocaleDateString() : 'Never'}</p>
+                        </div>
+                    </div>
+                    <div class="device-actions">
+                        ${device.status === 'locked' ? `<button class="btn-secondary btn-small" onclick="unlockDevice('${device.id}')">Unlock</button>` : ''}
+                        <button class="btn-secondary btn-small" onclick="viewRules('${device.id}')">View Rules</button>
+                        <button class="btn-secondary btn-small" onclick="renameDevice('${device.id}')">Rename</button>
+                        <button class="btn-danger btn-small" onclick="removeDevice('${device.id}')">Remove</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Update unlock device dropdown
+            updateUnlockDeviceOptions();
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'locked': 'Locked',
+                'unlocked': 'Unlocked',
+                'setup': 'Needs Setup'
+            };
+            return statusMap[status] || status;
+        }
+
+        function getPlatformIcon(platform) {
+            const iconMap = {
+                'ios': '📱',
+                'android': '🤖',
+                'other': '💻'
+            };
+            return iconMap[platform] || '📱';
+        }
+
+        function updateUnlockDeviceOptions() {
+            const select = document.getElementById('unlock-device');
+            const lockedDevices = devices.filter(d => d.status === 'locked');
+            
+            select.innerHTML = '<option value="">Select a device...</option>' + 
+                lockedDevices.map(device => `<option value="${device.id}">${device.name}</option>`).join('');
+        }
+
+        // Wizard management
+        function openWizard(type, step = 1) {
+            currentWizard = type;
+            currentStep = step;
+            
+            const modal = document.getElementById(type === 'add-device' ? 'add-device-modal' : 'unlock-modal');
+            modal.classList.add('active');
+            
+            // Focus management
+            const firstInput = modal.querySelector('input, select, button');
+            if (firstInput) firstInput.focus();
+            
+            updateWizardStep(type, step);
+            
+            // Update URL
+            const url = new URL(window.location);
+            url.searchParams.set('w', type);
+            url.searchParams.set('step', step);
+            window.history.replaceState({}, '', url);
+        }
+
+        function closeWizard() {
+            if (currentWizard) {
+                const modal = document.getElementById(currentWizard === 'add-device' ? 'add-device-modal' : 'unlock-modal');
+                modal.classList.remove('active');
+                
+                // Clear URL params
+                const url = new URL(window.location);
+                url.searchParams.delete('w');
+                url.searchParams.delete('step');
+                window.history.replaceState({}, '', url);
+            }
+            
+            currentWizard = null;
+            currentStep = 1;
+            selectedPlatform = '';
+            
+            // Clear unlock timer
+            if (unlockTimer) {
+                clearInterval(unlockTimer);
+                unlockTimer = null;
+            }
+        }
+
+        function nextStep(wizardType) {
+            if (wizardType === 'add-device') {
+                if (currentStep === 1 && !selectedPlatform) {
+                    toast('Please select a platform', 'error');
+                    return;
+                }
+                if (currentStep === 3) {
+                    const code = document.getElementById('verify-code').value.trim();
+                    const name = document.getElementById('device-name').value.trim();
+                    if (!code || !name) {
+                        toast('Please fill in all fields', 'error');
+                        return;
+                    }
+                }
+                if (currentStep === 4) {
+                    // Finish and add device
+                    addMockDevice();
+                    closeWizard();
+                    return;
+                }
+            } else if (wizardType === 'unlock') {
+                if (currentStep === 1) {
+                    const device = document.getElementById('unlock-device').value;
+                    const reason = document.getElementById('unlock-reason').value.trim();
+                    if (!device || !reason) {
+                        toast('Please select a device and provide a reason', 'error');
+                        return;
+                    }
+                }
+                if (currentStep === 2) {
+                    // Start unlock
+                    startUnlockCountdown();
+                }
+                if (currentStep === 3) {
+                    // End unlock process
+                    endUnlock();
+                    return;
+                }
+            }
+            
+            currentStep++;
+            updateWizardStep(wizardType, currentStep);
+        }
+
+        function previousStep(wizardType) {
+            if (currentStep > 1) {
+                currentStep--;
+                updateWizardStep(wizardType, currentStep);
+            }
+        }
+
+        function updateWizardStep(wizardType, step) {
+            const prefix = wizardType === 'add-device' ? 'add' : 'unlock';
+            const maxSteps = wizardType === 'add-device' ? 4 : 3;
+            
+            // Update stepper
+            for (let i = 1; i <= maxSteps; i++) {
+                const stepEl = document.getElementById(`${prefix}-step-${i}`);
+                const stepContent = document.getElementById(`${wizardType}-step-${i}`);
+                
+                if (i < step) {
+                    stepEl.classList.add('completed');
+                    stepEl.classList.remove('active');
+                } else if (i === step) {
+                    stepEl.classList.add('active');
+                    stepEl.classList.remove('completed');
+                    stepEl.querySelector('.step-number').setAttribute('aria-current', 'step');
+                } else {
+                    stepEl.classList.remove('active', 'completed');
+                    stepEl.querySelector('.step-number').removeAttribute('aria-current');
+                }
+                
+                if (stepContent) {
+                    stepContent.style.display = i === step ? 'block' : 'none';
+                }
+            }
+            
+            // Update buttons
+            const backBtn = document.getElementById(`${prefix}-back-btn`);
+            const nextBtn = document.getElementById(`${prefix}-next-btn`);
+            
+            backBtn.style.display = step > 1 ? 'inline-flex' : 'none';
+            
+            if (wizardType === 'add-device') {
+                if (step === 1) {
+                    nextBtn.disabled = !selectedPlatform;
+                    nextBtn.textContent = 'Next';
+                } else if (step === 4) {
+                    nextBtn.disabled = false;
+                    nextBtn.textContent = 'Finish & Lock Now';
+                } else {
+                    nextBtn.disabled = false;
+                    nextBtn.textContent = 'Next';
+                }
+            } else if (wizardType === 'unlock') {
+                if (step === 1) {
+                    nextBtn.disabled = false;
+                    nextBtn.textContent = 'Next';
+                } else if (step === 2) {
+                    nextBtn.textContent = 'Confirm Unlock';
+                } else if (step === 3) {
+                    nextBtn.style.display = 'none';
+                }
+            }
+            
+            // Handle step-specific logic
+            if (wizardType === 'add-device' && step === 2) {
+                updateLinkInstructions();
+                generateLinkCode();
+            } else if (wizardType === 'add-device' && step === 4) {
+                updateDeviceSummary();
+            } else if (wizardType === 'unlock' && step === 2) {
+                updateUnlockConfirmation();
+            }
+        }
+
+        // Platform selection
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.platform-option')) {
+                const option = e.target.closest('.platform-option');
+                const platform = option.dataset.platform;
+                
+                // Clear previous selection
+                document.querySelectorAll('.platform-option').forEach(opt => opt.classList.remove('selected'));
+                
+                // Select current
+                option.classList.add('selected');
+                selectedPlatform = platform;
+                
+                // Enable next button
+                document.getElementById('add-next-btn').disabled = false;
+            }
+        });
+
+        function updateLinkInstructions() {
+            const instructions = document.getElementById('link-instructions');
+            const instructionMap = {
+                'ios': '<p>1. Open Settings on your iPhone</p><p>2. Go to Screen Time → App Limits</p><p>3. Enter the link code below</p>',
+                'android': '<p>1. Open Settings on your Android device</p><p>2. Go to Digital Wellbeing & parental controls</p><p>3. Enter the link code below</p>',
+                'other': '<p>1. Download our desktop app</p><p>2. Run the installer</p><p>3. Enter the link code below</p>'
+            };
+            instructions.innerHTML = instructionMap[selectedPlatform] || '';
+        }
+
+        function generateLinkCode() {
+            const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+            document.getElementById('link-code').textContent = code;
+        }
+
+        function updateDeviceSummary() {
+            const name = document.getElementById('device-name').value || 'Unnamed Device';
+            const profile = document.getElementById('rule-profile').value;
+            
+            document.getElementById('summary-name').textContent = name;
+            document.getElementById('summary-platform').textContent = selectedPlatform.toUpperCase();
+            document.getElementById('summary-profile').textContent = profile.charAt(0).toUpperCase() + profile.slice(1);
+        }
+
+        function updateUnlockConfirmation() {
+            const deviceId = document.getElementById('unlock-device').value;
+            const duration = document.getElementById('unlock-duration').value;
+            const reason = document.getElementById('unlock-reason').value;
+            
+            const device = devices.find(d => d.id === deviceId);
+            
+            document.getElementById('confirm-device').textContent = device ? device.name : '';
+            document.getElementById('confirm-duration').textContent = duration === 'custom' ? 'Custom' : `${duration} minutes`;
+            document.getElementById('confirm-reason').textContent = reason;
+        }
+
+        function addMockDevice() {
+            const name = document.getElementById('device-name').value || 'New Device';
+            const profile = document.getElementById('rule-profile').value;
+            
+            const newDevice = {
+                id: `device-${Date.now()}`,
+                name: name,
+                platform: selectedPlatform,
+                status: 'locked',
+                lastSync: new Date().toISOString(),
+                profile: profile
+            };
+            
+            devices.push(newDevice);
+            saveDevices();
+            renderDevices();
+            
+            toast(`${name} has been added and locked`, 'success');
+        }
+
+        // Unlock functionality
+        function unlockDevice(deviceId) {
+            // Pre-fill the unlock form
+            document.getElementById('unlock-device').value = deviceId;
+            openWizard('unlock', 1);
+        }
+
+        function startUnlockCountdown() {
+            const duration = parseInt(document.getElementById('unlock-duration').value) || 30;
+            let timeLeft = duration * 60; // Convert to seconds
+            
+            const timer = document.getElementById('countdown-timer');
+            
+            unlockTimer = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timer.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    endUnlock();
+                }
+                timeLeft--;
+            }, 1000);
+            
+            // Update device status
+            const deviceId = document.getElementById('unlock-device').value;
+            const device = devices.find(d => d.id === deviceId);
+            if (device) {
+                device.status = 'unlocked';
+                saveDevices();
+                renderDevices();
+            }
+            
+            toast('Device unlocked successfully', 'success');
+        }
+
+        function endUnlock() {
+            if (unlockTimer) {
+                clearInterval(unlockTimer);
+                unlockTimer = null;
+            }
+            
+            // Update device status back to locked
+            const deviceId = document.getElementById('unlock-device').value;
+            const device = devices.find(d => d.id === deviceId);
+            if (device) {
+                device.status = 'locked';
+                saveDevices();
+                renderDevices();
+            }
+            
+            closeWizard();
+            toast('Device locked successfully', 'success');
+        }
+
+        function extendUnlock() {
+            toast('Unlock extended by 15 minutes', 'success');
+        }
+
+        // Device actions
+        function viewRules(deviceId) {
+            const device = devices.find(d => d.id === deviceId);
+            toast(`Viewing rules for ${device.name}`, 'success');
+        }
+
+        function renameDevice(deviceId) {
+            const device = devices.find(d => d.id === deviceId);
+            const newName = prompt('Enter new device name:', device.name);
+            if (newName && newName.trim()) {
+                device.name = newName.trim();
+                saveDevices();
+                renderDevices();
+                toast('Device renamed successfully', 'success');
+            }
+        }
+
+        function removeDevice(deviceId) {
+            if (confirm('Are you sure you want to remove this device?')) {
+                devices = devices.filter(d => d.id !== deviceId);
+                saveDevices();
+                renderDevices();
+                toast('Device removed successfully', 'success');
+            }
+        }
+
+        // Account functions
+        function editProfile() {
+            toast('Profile editing will be available soon', 'success');
+        }
+
+        function reviewCommitment() {
+            toast('Commitment review will be available soon', 'success');
+        }
+
+        function deleteAccount() {
+            if (confirm('Are you sure you want to delete your account? This cannot be undone.')) {
+                localStorage.clear();
+                devices = [];
+                renderDevices();
+                toast('Account data cleared (demo mode)', 'success');
+            }
+        }
+
+        // Commitment management
+        function loadCommitment() {
+            const stored = localStorage.getItem('stj_commitment');
+            if (stored) {
+                const commitment = JSON.parse(stored);
+                document.getElementById('commitment-display').innerHTML = `
+                    <p><strong>Why stop screen time:</strong> ${commitment.q1}</p>
+                    <p><strong>How it will change your life:</strong> ${commitment.q2}</p>
+                    <p><strong>Who this is for:</strong> ${commitment.q3}</p>
+                `;
+            }
+        }
+
+        // Navigation
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+                updateActiveNavLink(sectionId);
+            }
+        }
+
+        function updateNavigation() {
+            // Update active nav link based on scroll position
+            const sections = ['overview', 'subscription', 'account'];
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(sectionId => {
+                    const section = document.getElementById(sectionId);
+                    if (section) {
+                        const rect = section.getBoundingClientRect();
+                        if (rect.top <= 150) {
+                            current = sectionId;
+                        }
+                    }
+                });
+                
+                updateActiveNavLink(current);
+            });
+            
+            // Handle nav link clicks
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const href = link.getAttribute('href');
+                    if (href.startsWith('#')) {
+                        const sectionId = href.substring(1);
+                        if (sectionId === 'add-device') {
+                            openWizard('add-device', 1);
+                        } else if (sectionId === 'unlock') {
+                            openWizard('unlock', 1);
+                        } else {
+                            scrollToSection(sectionId);
+                        }
+                    }
+                });
+            });
+        }
+
+        function updateActiveNavLink(activeSection) {
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === `#${activeSection}`) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+
+        // Toast notifications
+        function toast(message, variant = 'success') {
+            const container = document.querySelector('.toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${variant}`;
+            toast.innerHTML = `
+                <span>${variant === 'success' ? '✅' : '❌'}</span>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && currentWizard) {
+                closeWizard();
+            }
+        });
+
+        // Focus trap for modals
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab' && currentWizard) {
+                const modal = document.getElementById(currentWizard === 'add-device' ? 'add-device-modal' : 'unlock-modal');
+                const focusableElements = modal.querySelectorAll('button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                const firstElement = focusableElements[0];
+                const lastElement = focusableElements[focusableElements.length - 1];
+                
+                if (e.shiftKey) {
+                    if (document.activeElement === firstElement) {
+                        e.preventDefault();
+                        lastElement.focus();
+                    }
+                } else {
+                    if (document.activeElement === lastElement) {
+                        e.preventDefault();
+                        firstElement.focus();
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
