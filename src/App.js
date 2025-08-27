@@ -212,7 +212,7 @@ function App() {
   
   // Milestone data state
   const [milestones, setMilestones] = useState(DEFAULT_MILESTONES);
-  const [milestonesLoading, setMilestonesLoading] = useState(true);
+  const [milestonesLoading, setMilestonesLoading] = useState(false);
   const [milestonesError, setMilestonesError] = useState(null);
   
   // Device management state
@@ -237,11 +237,6 @@ function App() {
   const [showAddDevice, setShowAddDevice] = useState(false);
   const [newDeviceName, setNewDeviceName] = useState('');
   const [newDeviceType, setNewDeviceType] = useState('iOS');
-  
-  // Milestone data state
-  const [milestones, setMilestones] = useState(DEFAULT_MILESTONES);
-  const [milestonesLoading, setMilestonesLoading] = useState(false);
-  const [milestonesError, setMilestonesError] = useState('');
   
   // Device flow state
   const [deviceFlows, setDeviceFlows] = useState({});
@@ -1734,49 +1729,7 @@ function App() {
     setUnlockPincode(null);
   };
 
-  // Function to fetch milestone data from stj_system table
-  const fetchMilestoneData = async () => {
-    try {
-      setMilestonesLoading(true);
-      setMilestonesError('');
-      
-      // Check if this is local development
-      const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      
-      if (isLocalDev) {
-        // In local development, use default milestones
-        console.log('🔧 Local dev: Using default milestone data');
-        setMilestonesLoading(false);
-        return;
-      }
-      
-      // Call backend API to get milestone data from stj_system table
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://44rqhfqqrjz57zd2q7lw2d63mi0akcdj.lambda-url.eu-west-1.on.aws'}/get_system_config`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ config_key: 'milestones' })
-      });
-      
-      const result = await response.json();
-      
-      if (response.ok && result.success && result.data) {
-        setMilestones(result.data);
-        console.log('✅ Milestone data loaded from stj_system:', result.data.length, 'milestones');
-      } else {
-        throw new Error(result.error || 'Failed to load milestone data');
-      }
-      
-    } catch (error) {
-      console.error('❌ Error fetching milestone data:', error);
-      setMilestonesError(error.message || 'Failed to load milestone data');
-      // Keep using default milestones on error
-      console.log('🔄 Falling back to default milestone data');
-    } finally {
-      setMilestonesLoading(false);
-    }
-  };
+
 
   // Function to fetch complete profile data from backend
   const fetchProfileData = async () => {
