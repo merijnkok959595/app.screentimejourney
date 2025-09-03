@@ -1109,15 +1109,27 @@ function App() {
           },
           body: JSON.stringify({
             device_type: deviceFormData.device_type,
-            device_name: deviceFormData.device_name
+            device_name: deviceFormData.device_name,
+            customer_id: customerData?.customerId || 'dev_user_123'
           })
         });
         
         const result = await response.json();
         
         if (response.ok && result.success) {
-          setVpnProfileData(result.profileData);
-          console.log('✅ VPN profile generated:', result.profileData);
+          // Transform backend response to match frontend expectation
+          const profileData = {
+            deviceType: result.device_type,
+            hasPincode: result.has_pincode,
+            pincode: result.pincode,
+            profileUUID: result.profile_uuid,
+            filename: result.filename,
+            downloadUrl: result.download_url,
+            s3_url: result.s3_url,
+            profileContent: null // Not needed for frontend display
+          };
+          setVpnProfileData(profileData);
+          console.log('✅ VPN profile generated:', profileData);
         } else {
           throw new Error(result.error || 'Failed to generate VPN profile');
         }
@@ -1319,25 +1331,31 @@ function App() {
         
       } else {
         // In production, call the backend API to generate audio with existing pincode
-        const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/generate_audio`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/generate_audio_guide`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            device_type: deviceFormData.device_type,
             device_name: deviceFormData.device_name,
-            user_id: customerData?.customerId || 'dev_user_123',
-            pincode: pincode, // Use the shared pincode
-            uuid: uuid // Use the shared UUID
+            customer_id: customerData?.customerId || 'dev_user_123',
+            pincode: pincode // Use the shared pincode or backend will generate new one
           })
         });
         
         const result = await response.json();
         
         if (response.ok && result.success) {
-          setAudioGuideData(result.audioData);
-          console.log('✅ Audio guide generated:', result.audioData);
+          // Transform backend response to match frontend expectation
+          const audioData = {
+            pincode: result.pincode,
+            digits: result.digits,
+            audioUrl: 'generated-audio', // The TTS Lambda handles audio creation
+            instructions: `Generated pincode: ${result.pincode}. Click Settings, then Screen Time, then Lock Screen Time settings. Follow the audio instructions to enter: ${result.digits.first}, ${result.digits.second}, ${result.digits.third}, ${result.digits.fourth}.`,
+            executionId: result.execution_id
+          };
+          setAudioGuideData(audioData);
+          console.log('✅ Audio guide generated:', audioData);
         } else {
           throw new Error(result.error || 'Failed to generate audio guide');
         }
