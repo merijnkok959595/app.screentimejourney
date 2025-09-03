@@ -2196,7 +2196,11 @@ function App() {
       
       if (response.ok && result.success) {
         setWhatsappLinked(true);
-        await saveProfile(); // Proceed to save profile
+        console.log('✅ WhatsApp verified and saved to profile:', result.phone);
+        
+        // The backend has already saved the WhatsApp data to the profile
+        // Just proceed to save the rest of the profile (username, gender)
+        await saveProfile();
       } else {
         setWhatsappError(result.error || 'Invalid verification code. Please try again.');
       }
@@ -2277,10 +2281,15 @@ function App() {
       const profileData = {
         customer_id: customerId,
         username: newUsername.trim(),
-        gender: newGender,
-        whatsapp: whatsappLinked ? `${newCountryCode}${newWhatsapp}`.replace(/\s/g, '') : '',
-        whatsapp_opt_in: whatsappLinked // Store opt-in status
+        gender: newGender
       };
+      
+      // Only include WhatsApp data if user is skipping verification
+      // (Verified WhatsApp data is already saved by the verification endpoint)
+      if (!whatsappLinked) {
+        profileData.whatsapp = ''; // Empty for users who skip
+        profileData.whatsapp_opt_in = false; // No opt-in for users who skip
+      }
       
       console.log('💾 Saving profile:', profileData);
       
