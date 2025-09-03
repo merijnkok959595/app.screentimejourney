@@ -1632,21 +1632,24 @@ function App() {
       const result = await response.json();
 
       if (response.ok && result.success) {
-        if (result.approved) {
-          // Generate unlock pincode
-          const pincode = result.pincode || Math.floor(1000 + Math.random() * 9000).toString();
-          setUnlockPincode(pincode);
+        if (result.has_surrendered && result.pincode) {
+          // Use the pincode from the backend
+          setUnlockPincode(result.pincode);
           setSurrenderApproved(true);
           
-          console.log('🔓 Surrender approved! Pincode generated:', pincode);
+          console.log('🔓 Surrender approved! Pincode generated:', result.pincode);
+          console.log('📝 Transcript:', result.transcript);
+          
+          // Show success feedback
+          alert(`✅ ${result.feedback}`);
           
           // Send email with pincode
-          await sendUnlockEmail(pincode);
+          await sendUnlockEmail(result.pincode);
           
           // Move to step 3 (pincode display)
           setCurrentFlowStep(3);
         } else {
-          alert('❌ Surrender not approved. Please record the complete text clearly.');
+          alert(`❌ ${result.feedback || 'Surrender not approved. Please record the complete text clearly.'}`);
         }
       } else {
         throw new Error(result.error || 'Failed to validate surrender');
@@ -4102,16 +4105,16 @@ function App() {
                               {currentFlow.steps[currentFlowStep - 1].body}
                             </p>
                             
-                            <div style={{background: '#fee2e2', border: '2px solid #fecaca', borderRadius: '8px', padding: '20px', marginBottom: '24px'}}>
-                              <h4 style={{margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600', color: '#991b1b'}}>
+                            <div style={{background: 'rgba(255,255,255,0.6)', border: '2px solid rgba(0,0,0,0.1)', borderRadius: '8px', padding: '20px', marginBottom: '24px'}}>
+                              <h4 style={{margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600', color: '#374151'}}>
                                 🎙️ Record in voice memo:
                               </h4>
-                              <div style={{background: '#fef2f2', padding: '16px', borderRadius: '6px', border: '1px solid #fecaca', marginBottom: '16px'}}>
-                                <p style={{margin: 0, fontSize: '14px', lineHeight: '1.6', color: '#7f1d1d', fontStyle: 'italic'}}>
+                              <div style={{background: 'rgba(255,255,255,0.8)', padding: '16px', borderRadius: '6px', border: '1px solid rgba(0,0,0,0.1)', marginBottom: '16px'}}>
+                                <p style={{margin: 0, fontSize: '14px', lineHeight: '1.6', color: '#4b5563', fontStyle: 'italic'}}>
                                   "{currentFlow.steps[currentFlowStep - 1].surrender_text || surrenderText}"
                                 </p>
                               </div>
-                              <p style={{margin: '0', fontSize: '14px', color: '#991b1b', fontWeight: '500'}}>
+                              <p style={{margin: '0', fontSize: '14px', color: '#6b7280', fontWeight: '500'}}>
                                 👉 Please record a voice message of yourself reading the text above out loud to receive your unlock.
                               </p>
                             </div>
