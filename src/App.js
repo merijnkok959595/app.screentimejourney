@@ -400,7 +400,7 @@ function App() {
       console.log('🔧 Local development mode - bypassing authentication');
       setCustomerData({ 
         loginTime: new Date().toISOString(),
-        customerId: 'dev_customer_123',
+        customerId: '8885250982135',  // Use existing customer with devices
         shop: 'local-dev.myshopify.com',
         isLocalDev: true,
         username: ''
