@@ -385,23 +385,11 @@ function App() {
   useEffect(() => {
     console.log('🔍 Device loading useEffect triggered:', {
       hasCustomerData: !!customerData,
-      customerId: customerData?.customerId,
-      extractedId: extractCustomerId()
+      customerId: customerData?.customerId
     });
     
-    if (customerData?.customerId) {
-      console.log('✅ Loading devices with customerData.customerId:', customerData.customerId);
-      loadDevicesFromBackend();
-    } else {
-      const extractedId = extractCustomerId();
-      if (extractedId) {
-        console.log('✅ Loading devices with extracted ID:', extractedId);
-        // Set temporary customerData for device loading
-        setCustomerData({ customerId: extractedId, loginTime: new Date().toISOString() });
-      } else {
-        console.warn('⚠️ No customer ID available - cannot load devices');
-      }
-    }
+    // Always try to load devices (the function handles customer ID extraction internally)
+    loadDevicesFromBackend();
   }, [customerData?.customerId]);
 
   useEffect(() => {
@@ -1075,8 +1063,28 @@ function App() {
       
       const { pincode, uuid: profileUUID } = pincodeData;
       
-      // Get customer ID for VPN profile generation
-      const customerId = customerData?.customerId || extractCustomerId();
+      // Get customer ID for VPN profile generation (using working account section pattern)
+      let customerId = customerData?.customerId;
+      
+      if (!customerId) {
+        // Extract customer ID from session cookie (same as account section)
+        const sessionCookie = document.cookie
+          .split('; ')
+          .find(row => row.startsWith('stj_session='));
+        
+        if (sessionCookie) {
+          try {
+            const cookieValue = sessionCookie.split('=')[1];
+            const tokenData = JSON.parse(cookieValue);
+            const decoded = atob(tokenData.token);
+            const parts = decoded.split('|');
+            customerId = parts[1]; // customer_id is the second part
+            console.log('✅ VPN: Extracted customer ID from session:', customerId);
+          } catch (err) {
+            console.error('❌ VPN: Failed to extract customer ID from session:', err);
+          }
+        }
+      }
       
       if (!customerId) {
         console.error('❌ No customer ID available for VPN profile generation');
@@ -1333,6 +1341,36 @@ function App() {
         console.log('🔧 Local dev: Generated audio guide:', audioData);
         
       } else {
+        // Get customer ID for audio guide generation (using working account section pattern)
+        let customerId = customerData?.customerId;
+        
+        if (!customerId) {
+          // Extract customer ID from session cookie (same as account section)
+          const sessionCookie = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('stj_session='));
+          
+          if (sessionCookie) {
+            try {
+              const cookieValue = sessionCookie.split('=')[1];
+              const tokenData = JSON.parse(cookieValue);
+              const decoded = atob(tokenData.token);
+              const parts = decoded.split('|');
+              customerId = parts[1]; // customer_id is the second part
+              console.log('✅ Audio: Extracted customer ID from session:', customerId);
+            } catch (err) {
+              console.error('❌ Audio: Failed to extract customer ID from session:', err);
+            }
+          }
+        }
+        
+        if (!customerId) {
+          console.error('❌ No customer ID available for audio guide generation');
+          alert('Authentication required. Please login through Shopify first.');
+          setAudioGenerating(false);
+          return;
+        }
+        
         // In production, call the backend API to generate audio with existing pincode
         const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/generate_audio_guide`, {
           method: 'POST',
@@ -1341,7 +1379,7 @@ function App() {
           },
           body: JSON.stringify({
             device_name: deviceFormData.device_name,
-            customer_id: customerData?.customerId || extractCustomerId(), // Use existing customer for demo
+            customer_id: customerId,
             pincode: pincode // Use the shared pincode or backend will generate new one
           })
         });
@@ -2651,8 +2689,28 @@ function App() {
       
       console.log('✅ Final username check passed, proceeding with save...');
       
-      // CRITICAL: Use centralized customer ID extraction
-      const customerId = extractCustomerId();
+      // CRITICAL: Use centralized customer ID extraction (same as account section)
+      let customerId = customerData?.customerId;
+      
+      if (!customerId) {
+        // Extract customer ID from session cookie (same as account section)
+        const sessionCookie = document.cookie
+          .split('; ')
+          .find(row => row.startsWith('stj_session='));
+        
+        if (sessionCookie) {
+          try {
+            const cookieValue = sessionCookie.split('=')[1];
+            const tokenData = JSON.parse(cookieValue);
+            const decoded = atob(tokenData.token);
+            const parts = decoded.split('|');
+            customerId = parts[1]; // customer_id is the second part
+            console.log('✅ Save Profile: Extracted customer ID from session:', customerId);
+          } catch (err) {
+            console.error('❌ Save Profile: Failed to extract customer ID from session:', err);
+          }
+        }
+      }
       
       if (!customerId) {
         alert('Unable to save profile: Customer ID not found');
@@ -2741,7 +2799,27 @@ function App() {
 
   // Load devices from backend on app startup
   const loadDevicesFromBackend = async () => {
-    const customerId = customerData?.customerId || extractCustomerId();
+    let customerId = customerData?.customerId;
+    
+    if (!customerId) {
+      // Extract customer ID from session cookie (same as account section)
+      const sessionCookie = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('stj_session='));
+      
+      if (sessionCookie) {
+        try {
+          const cookieValue = sessionCookie.split('=')[1];
+          const tokenData = JSON.parse(cookieValue);
+          const decoded = atob(tokenData.token);
+          const parts = decoded.split('|');
+          customerId = parts[1]; // customer_id is the second part
+          console.log('✅ Devices: Extracted customer ID from session:', customerId);
+        } catch (err) {
+          console.error('❌ Devices: Failed to extract customer ID from session:', err);
+        }
+      }
+    }
     
     if (!customerId) {
       console.warn('⚠️ No customer ID available, cannot load devices');
@@ -2812,6 +2890,34 @@ function App() {
     };
     
     try {
+      // Get customer ID for device addition (using working account section pattern)
+      let customerId = customerData?.customerId;
+      
+      if (!customerId) {
+        // Extract customer ID from session cookie (same as account section)
+        const sessionCookie = document.cookie
+          .split('; ')
+          .find(row => row.startsWith('stj_session='));
+        
+        if (sessionCookie) {
+          try {
+            const cookieValue = sessionCookie.split('=')[1];
+            const tokenData = JSON.parse(cookieValue);
+            const decoded = atob(tokenData.token);
+            const parts = decoded.split('|');
+            customerId = parts[1]; // customer_id is the second part
+            console.log('✅ Add Device: Extracted customer ID from session:', customerId);
+          } catch (err) {
+            console.error('❌ Add Device: Failed to extract customer ID from session:', err);
+          }
+        }
+      }
+      
+      if (!customerId) {
+        alert('❌ Failed to add device: Customer not found\nPlease try again or contact support if the issue persists.');
+        return;
+      }
+      
       // Always save to backend for persistence
       const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/add_device`, {
         method: 'POST',
@@ -2819,7 +2925,7 @@ function App() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          customer_id: customerData?.customerId || extractCustomerId(), // Use existing customer for demo
+          customer_id: customerId,
           device: newDevice
         })
       });
