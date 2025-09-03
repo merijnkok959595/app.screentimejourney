@@ -2953,12 +2953,12 @@ function App() {
                 
                 {/* Current WhatsApp Display */}
                 {profileData?.whatsapp && (
-                  <div style={{ marginBottom: '1rem', padding: '12px', backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px' }}>
+                  <div style={{ marginBottom: '1rem', padding: '12px', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                       <div>
                         <strong>Current: {profileData.whatsapp}</strong>
                         {profileData.whatsapp_opt_in && (
-                          <span style={{ marginLeft: '8px', color: '#10b981', fontSize: '14px' }}>✓ Verified</span>
+                          <span style={{ marginLeft: '8px', color: '#64748b', fontSize: '14px' }}>✓ Verified</span>
                         )}
                       </div>
                       <button 
@@ -3130,8 +3130,8 @@ function App() {
                 <label className="form-label">Your Commitment</label>
                 
                 {/* Current Commitment Display */}
-                {profileData?.commitment_data && (
-                  <div style={{ marginBottom: '1rem', padding: '16px', backgroundColor: '#f8fafc', border: '2px solid #e2e8f0', borderRadius: '12px' }}>
+                {profileData?.commitment_data && !profileEditData.showCommitmentEdit && (
+                  <div style={{ marginBottom: '1rem', padding: '16px', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
                     <div style={{ marginBottom: '12px' }}>
                       <strong style={{ color: '#1e293b', fontSize: '14px' }}>What you want to change:</strong>
                       <p style={{ margin: '4px 0 0 0', color: '#475569' }}>"{profileData.commitment_data.q1}"</p>
@@ -3144,12 +3144,6 @@ function App() {
                       <strong style={{ color: '#1e293b', fontSize: '14px' }}>Who you're doing this for:</strong>
                       <p style={{ margin: '4px 0 0 0', color: '#475569' }}>"{profileData.commitment_data.q3}"</p>
                     </div>
-                    {profileData.commitment_data.surrender_text && (
-                      <div style={{ marginTop: '16px', padding: '12px', backgroundColor: '#fef7cd', border: '1px solid #fcd34d', borderRadius: '8px' }}>
-                        <strong style={{ color: '#92400e', fontSize: '14px' }}>Your Commitment Statement:</strong>
-                        <p style={{ margin: '4px 0 0 0', color: '#b45309', fontStyle: 'italic' }}>"{profileData.commitment_data.surrender_text}"</p>
-                      </div>
-                    )}
                     
                     <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ fontSize: '12px', color: '#64748b' }}>Click edit to update your commitment</span>
@@ -3171,10 +3165,10 @@ function App() {
                   </div>
                 )}
 
-                {/* Commitment Edit Form */}
+                {/* Commitment Edit Form - Inline */}
                 {profileEditData.showCommitmentEdit && (
-                  <div style={{ padding: '16px', backgroundColor: '#fefefe', border: '2px solid #3b82f6', borderRadius: '12px' }}>
-                    <h4 style={{ margin: '0 0 16px 0', color: '#1e40af', fontSize: '16px' }}>Update Your Commitment</h4>
+                  <div style={{ marginBottom: '1rem', padding: '16px', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
+                    <h4 style={{ margin: '0 0 16px 0', color: '#374151', fontSize: '16px' }}>Update Your Commitment</h4>
                     
                     <div style={{ marginBottom: '16px' }}>
                       <label className="form-label">What do you want to quit or change?</label>
@@ -3285,6 +3279,11 @@ function App() {
                                 commitmentValidating: false
                               }));
                               setProfileError('');
+                              
+                              // If validation is successful, update the display values immediately
+                              if (result.is_passionate) {
+                                console.log('✅ Commitment validated successfully, updating preview');
+                              }
                             } else {
                               setProfileError(result.error || 'Failed to validate commitment');
                               setProfileEditData(prev => ({...prev, commitmentValidating: false}));
@@ -3328,14 +3327,18 @@ function App() {
                               const result = await response.json();
                               
                               if (response.ok && result.success) {
+                                // Reset edit state and refresh data
                                 setProfileEditData(prev => ({
                                   ...prev, 
                                   showCommitmentEdit: false,
                                   commitmentValidation: null,
-                                  commitmentSaving: false
+                                  commitmentSaving: false,
+                                  commitmentQ1: '',
+                                  commitmentQ2: '',
+                                  commitmentQ3: ''
                                 }));
                                 setProfileError('');
-                                // Refresh profile data
+                                // Refresh profile data to show updated values
                                 fetchProfileData();
                               } else {
                                 setProfileError(result.error || 'Failed to save commitment');
@@ -3360,9 +3363,10 @@ function App() {
                           ...prev, 
                           showCommitmentEdit: false,
                           commitmentValidation: null,
-                          commitmentQ1: '',
-                          commitmentQ2: '',
-                          commitmentQ3: ''
+                          // Reset to original values on cancel
+                          commitmentQ1: profileData?.commitment_data?.q1 || '',
+                          commitmentQ2: profileData?.commitment_data?.q2 || '',
+                          commitmentQ3: profileData?.commitment_data?.q3 || ''
                         }))}
                         disabled={profileEditData.commitmentValidating || profileEditData.commitmentSaving}
                       >
@@ -4180,6 +4184,78 @@ function App() {
                   disabled={devices.length >= 3}
                 >
                   Add Device {devices.length >= 3 ? '(Max reached)' : ''}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Account Information (50%) + Commitment Form (50%) */}
+          <div className="grid grid-2" style={{marginBottom: '32px', alignItems: 'stretch'}}>
+            <div className="card card--equal" style={{display: 'flex', flexDirection: 'column'}}>
+              <div className="card-header">
+                <h3 className="card-title">Account</h3>
+              </div>
+              <div style={{margin: '0 0 16px 0'}}>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
+                  <span style={{fontSize: '14px', color: '#374151'}}>Email</span>
+                  <span style={{
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    color: '#6b7280',
+                    fontFamily: 'monospace'
+                  }}>
+                    merijn@risottini.com (read-only)
+                  </span>
+                </div>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
+                  <span style={{fontSize: '14px', color: '#374151'}}>Username</span>
+                  <span style={{
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    color: '#374151'
+                  }}>
+                    @theking
+                  </span>
+                </div>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
+                  <span style={{fontSize: '14px', color: '#374151'}}>Gender</span>
+                  <span style={{
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    color: '#374151'
+                  }}>
+                    🙋‍♂️ Man
+                  </span>
+                </div>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0'}}>
+                  <span style={{fontSize: '14px', color: '#374151'}}>WhatsApp</span>
+                  <span style={{
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    color: '#374151',
+                    fontFamily: 'monospace'
+                  }}>
+                    +31627207989
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="card card--equal" style={{display: 'flex', flexDirection: 'column'}}>
+              <div className="card-header">
+                <h3 className="card-title">Commitment Form</h3>
+              </div>
+              <div style={{margin: '0 0 16px 0', textAlign: 'center', padding: '20px'}}>
+                <div style={{fontSize: '3rem', marginBottom: '12px'}}>📝</div>
+                <p style={{fontSize: '14px', color: '#6b7280', marginBottom: '16px'}}>
+                  Fill out your personal commitment to begin your screen time journey
+                </p>
+                <button 
+                  className="btn btn--primary btn--full"
+                  style={{fontSize: '14px'}}
+                  onClick={() => {/* Add commitment form handler */}}
+                >
+                  Start Commitment Form
                 </button>
               </div>
             </div>
