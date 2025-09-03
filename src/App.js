@@ -1259,20 +1259,38 @@ function App() {
       return;
     }
     
-    // Create blob and download
-    const blob = new Blob([vpnProfileData.profileContent], { 
-      type: 'application/x-apple-aspen-config' 
-    });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = vpnProfileData.filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-    
-    console.log('📱 Profile downloaded:', vpnProfileData.filename);
+    // Use the S3 URL for direct download and auto-open
+    if (vpnProfileData.s3_url || vpnProfileData.downloadUrl) {
+      const profileUrl = vpnProfileData.s3_url || vpnProfileData.downloadUrl;
+      
+      // Open the profile URL directly - iOS/macOS will handle it
+      window.open(profileUrl, '_blank');
+      
+      // Also trigger download
+      const link = document.createElement('a');
+      link.href = profileUrl;
+      link.download = vpnProfileData.filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      console.log('📱 Profile opened and downloaded:', vpnProfileData.filename);
+    } else {
+      // Fallback to blob method
+      const blob = new Blob([vpnProfileData.profileContent], { 
+        type: 'application/x-apple-aspen-config' 
+      });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = vpnProfileData.filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      console.log('📱 Profile downloaded (fallback):', vpnProfileData.filename);
+    }
   };
 
   // Audio Guide generation functions
@@ -2740,7 +2758,7 @@ function App() {
       id: `device_${Date.now()}`,
       name: deviceFormData.device_name.trim(),
       icon: deviceIcons[deviceFormData.device_type] || '📱',
-      status: 'setup_complete',
+      status: 'locked',
       addedDate: new Date().toISOString(),
       type: deviceFormData.device_type,
       setup_completed_at: new Date().toISOString()
@@ -2786,7 +2804,7 @@ function App() {
     const device = devices.find(d => d.id === deviceId);
     if (!device) return;
     
-    if (device.status === 'locked' || device.status === 'setup_complete') {
+    if (device.status === 'locked' || device.status === 'setup_complete' || device.status === 'monitoring') {
       // Confirm unlock action
       const confirmed = window.confirm(`Unlock ${device.name}? This will allow screen time for 30 minutes.`);
       if (confirmed) {
@@ -4542,10 +4560,10 @@ function App() {
                         </div>
                       </div>
                       <div style={{display: 'flex', gap: '6px', alignItems: 'center'}}>
-                        {(device.status === 'locked' || device.status === 'monitoring') && (
+                        {(device.status === 'locked' || device.status === 'monitoring' || device.status === 'setup_complete') && (
                           <button 
                             className="btn btn--secondary btn--sm"
-                            onClick={() => startDeviceFlow('device_unlock_flow', device.id)}
+                            onClick={() => unlockDevice(device.id)}
                             style={{fontSize: '12px', padding: '4px 8px'}}
                           >
                             Unlock
