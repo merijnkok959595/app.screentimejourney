@@ -1072,17 +1072,41 @@ function App() {
           .split('; ')
           .find(row => row.startsWith('stj_session='));
         
+        console.log('🔍 VPN: Session cookie found:', !!sessionCookie);
+        
         if (sessionCookie) {
           try {
             const cookieValue = sessionCookie.split('=')[1];
-            const tokenData = JSON.parse(cookieValue);
+            console.log('🔍 VPN: Cookie value length:', cookieValue?.length);
+            
+            // Try with URL decoding first (like working account section)
+            let decodedValue;
+            try {
+              decodedValue = decodeURIComponent(cookieValue);
+              console.log('🔍 VPN: URL decoded value:', decodedValue);
+            } catch (decodeErr) {
+              console.log('🔍 VPN: No URL decoding needed, using raw value');
+              decodedValue = cookieValue;
+            }
+            
+            const tokenData = JSON.parse(decodedValue);
+            console.log('🔍 VPN: Token data keys:', Object.keys(tokenData));
+            
             const decoded = atob(tokenData.token);
+            console.log('🔍 VPN: Base64 decoded token:', decoded);
+            
             const parts = decoded.split('|');
+            console.log('🔍 VPN: Token parts:', parts);
+            
             customerId = parts[1]; // customer_id is the second part
             console.log('✅ VPN: Extracted customer ID from session:', customerId);
           } catch (err) {
             console.error('❌ VPN: Failed to extract customer ID from session:', err);
+            console.error('❌ VPN: Cookie value that failed:', sessionCookie);
           }
+        } else {
+          console.log('❌ VPN: No stj_session cookie found');
+          console.log('🔍 VPN: All cookies:', document.cookie);
         }
       }
       
@@ -2807,17 +2831,41 @@ function App() {
         .split('; ')
         .find(row => row.startsWith('stj_session='));
       
+      console.log('🔍 Devices: Session cookie found:', !!sessionCookie);
+      
       if (sessionCookie) {
         try {
           const cookieValue = sessionCookie.split('=')[1];
-          const tokenData = JSON.parse(cookieValue);
+          console.log('🔍 Devices: Cookie value length:', cookieValue?.length);
+          
+          // Try with URL decoding first (like working account section)
+          let decodedValue;
+          try {
+            decodedValue = decodeURIComponent(cookieValue);
+            console.log('🔍 Devices: URL decoded value:', decodedValue);
+          } catch (decodeErr) {
+            console.log('🔍 Devices: No URL decoding needed, using raw value');
+            decodedValue = cookieValue;
+          }
+          
+          const tokenData = JSON.parse(decodedValue);
+          console.log('🔍 Devices: Token data keys:', Object.keys(tokenData));
+          
           const decoded = atob(tokenData.token);
+          console.log('🔍 Devices: Base64 decoded token:', decoded);
+          
           const parts = decoded.split('|');
+          console.log('🔍 Devices: Token parts:', parts);
+          
           customerId = parts[1]; // customer_id is the second part
           console.log('✅ Devices: Extracted customer ID from session:', customerId);
         } catch (err) {
           console.error('❌ Devices: Failed to extract customer ID from session:', err);
+          console.error('❌ Devices: Cookie value that failed:', sessionCookie);
         }
+      } else {
+        console.log('❌ Devices: No stj_session cookie found');
+        console.log('🔍 Devices: All cookies:', document.cookie);
       }
     }
     
