@@ -206,10 +206,12 @@ function App() {
     username: '',
     gender: '',
     whatsapp: '',
-    country_code: '+31'
+    country_code: '+31',
+    usernameValidationState: null // null, 'checking', 'available', 'taken'
   });
   const [profileLoading, setProfileLoading] = useState(false);
   const [profileError, setProfileError] = useState('');
+  const [usernameCheckTimeout, setUsernameCheckTimeout] = useState(null);
   
   // Milestone data state
   const [milestones, setMilestones] = useState(DEFAULT_MILESTONES);
@@ -2842,20 +2844,78 @@ function App() {
               {/* Username */}
               <div className="input-container" style={{ marginBottom: '1rem' }}>
                 <label className="form-label">Username</label>
-                <input 
-                  className="input"
-                  placeholder="theking" 
-                  value={profileEditData.username} 
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    const sanitizedValue = value
-                      .toLowerCase()
-                      .replace(/[^a-z0-9]/g, '')
-                      .slice(0, 20);
-                    setProfileEditData(prev => ({...prev, username: sanitizedValue}));
-                  }}
-                />
-                <p className="helper" style={{ margin: '0.5rem 0 0 0' }}>3-20 characters, letters and numbers only.</p>
+                <div style={{ position: 'relative' }}>
+                  <input 
+                    className={`input ${profileEditData.usernameValidationState === 'checking' ? 'input--loading' : 
+                      profileEditData.usernameValidationState === 'available' ? 'input--valid' : 
+                      profileEditData.usernameValidationState === 'taken' ? 'input--invalid' : ''}`}
+                    placeholder="theking" 
+                    value={profileEditData.username} 
+                    onChange={async (e) => {
+                      const value = e.target.value;
+                      const sanitizedValue = value
+                        .toLowerCase()
+                        .replace(/[^a-z0-9]/g, '')
+                        .slice(0, 20);
+                      
+                      setProfileEditData(prev => ({
+                        ...prev, 
+                        username: sanitizedValue,
+                        usernameValidationState: sanitizedValue.length < 3 ? null : 'checking'
+                      }));
+
+                      // Skip validation if username hasn't changed or is too short
+                      if (sanitizedValue === profileData?.username || sanitizedValue.length < 3) {
+                        setProfileEditData(prev => ({...prev, usernameValidationState: null}));
+                        return;
+                      }
+
+                      // Debounced username validation
+                      clearTimeout(usernameCheckTimeout);
+                      const timeoutId = setTimeout(async () => {
+                        try {
+                          const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/check_username`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ username: sanitizedValue })
+                          });
+                          const result = await response.json();
+                          
+                          setProfileEditData(prev => ({
+                            ...prev, 
+                            usernameValidationState: result.available ? 'available' : 'taken'
+                          }));
+                        } catch (error) {
+                          console.error('Username validation error:', error);
+                          setProfileEditData(prev => ({...prev, usernameValidationState: null}));
+                        }
+                      }, 500);
+                      setUsernameCheckTimeout(timeoutId);
+                    }}
+                  />
+                  {profileEditData.usernameValidationState === 'checking' && (
+                    <div className="input-icon" style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)' }}>
+                      <div className="spinner-small"></div>
+                    </div>
+                  )}
+                  {profileEditData.usernameValidationState === 'available' && (
+                    <div className="input-icon" style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: '#10b981' }}>
+                      ✓
+                    </div>
+                  )}
+                  {profileEditData.usernameValidationState === 'taken' && (
+                    <div className="input-icon" style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: '#ef4444' }}>
+                      ✗
+                    </div>
+                  )}
+                </div>
+                <p className="helper" style={{ margin: '0.5rem 0 0 0', color: 
+                  profileEditData.usernameValidationState === 'available' ? '#10b981' : 
+                  profileEditData.usernameValidationState === 'taken' ? '#ef4444' : '#6b7280' }}>
+                  {profileEditData.usernameValidationState === 'taken' ? 'Username already taken' :
+                   profileEditData.usernameValidationState === 'available' ? 'Username available!' :
+                   '3-20 characters, letters and numbers only.'}
+                </p>
               </div>
 
               {/* Gender */}
@@ -2890,30 +2950,447 @@ function App() {
               {/* WhatsApp */}
               <div style={{ marginBottom: '1rem' }}>
                 <label className="form-label">WhatsApp (Optional)</label>
-                <div className="phone-input-group">
-                  <select 
-                    className="country-select" 
-                    value={profileEditData.country_code} 
-                    onChange={(e) => setProfileEditData(prev => ({...prev, country_code: e.target.value}))}
-                  >
-                    <option value="+31">🇳🇱 +31</option>
-                    <option value="+1">🇺🇸 +1</option>
-                    <option value="+44">🇬🇧 +44</option>
-                    <option value="+49">🇩🇪 +49</option>
-                    <option value="+33">🇫🇷 +33</option>
-                    <option value="+34">🇪🇸 +34</option>
-                    <option value="+39">🇮🇹 +39</option>
-                    <option value="+32">🇧🇪 +32</option>
-                  </select>
-                  <input 
-                    className="phone-input" 
-                    placeholder="612345678" 
-                    value={profileEditData.whatsapp}
-                    onChange={(e) => setProfileEditData(prev => ({...prev, whatsapp: e.target.value}))}
-                    type="tel"
-                  />
-                </div>
-                <p className="helper" style={{ margin: '0.5rem 0 0 0' }}>For daily motivation and accountability messages.</p>
+                
+                {/* Current WhatsApp Display */}
+                {profileData?.whatsapp && (
+                  <div style={{ marginBottom: '1rem', padding: '12px', backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div>
+                        <strong>Current: {profileData.whatsapp}</strong>
+                        {profileData.whatsapp_opt_in && (
+                          <span style={{ marginLeft: '8px', color: '#10b981', fontSize: '14px' }}>✓ Verified</span>
+                        )}
+                      </div>
+                      <button 
+                        type="button"
+                        className="btn btn--secondary"
+                        style={{ padding: '4px 8px', fontSize: '12px' }}
+                        onClick={() => setProfileEditData(prev => ({...prev, showWhatsAppEdit: true}))}
+                      >
+                        Change
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* WhatsApp Edit Form */}
+                {(!profileData?.whatsapp || profileEditData.showWhatsAppEdit) && (
+                  <>
+                    <div className="phone-input-group">
+                      <select 
+                        className="country-select" 
+                        value={profileEditData.country_code} 
+                        onChange={(e) => setProfileEditData(prev => ({...prev, country_code: e.target.value}))}
+                      >
+                        <option value="+31">🇳🇱 +31</option>
+                        <option value="+1">🇺🇸 +1</option>
+                        <option value="+44">🇬🇧 +44</option>
+                        <option value="+49">🇩🇪 +49</option>
+                        <option value="+33">🇫🇷 +33</option>
+                        <option value="+34">🇪🇸 +34</option>
+                        <option value="+39">🇮🇹 +39</option>
+                        <option value="+32">🇧🇪 +32</option>
+                      </select>
+                      <input 
+                        className="phone-input" 
+                        placeholder="612345678" 
+                        value={profileEditData.whatsapp}
+                        onChange={(e) => setProfileEditData(prev => ({...prev, whatsapp: e.target.value}))}
+                        type="tel"
+                      />
+                    </div>
+                    
+                    {profileEditData.whatsapp && (
+                      <div style={{ marginTop: '8px' }}>
+                        <button 
+                          type="button"
+                          className="btn btn--primary"
+                          style={{ padding: '6px 12px', fontSize: '14px', marginRight: '8px' }}
+                          onClick={async () => {
+                            const fullPhone = `${profileEditData.country_code}${profileEditData.whatsapp}`.replace(/\s/g, '');
+                            setProfileEditData(prev => ({...prev, verifyingWhatsApp: true}));
+                            
+                            try {
+                              const customerId = extractCustomerId();
+                              const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/send_whatsapp_code`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                  phone_number: fullPhone,
+                                  customer_id: customerId
+                                })
+                              });
+                              const result = await response.json();
+                              
+                              if (response.ok && result.success) {
+                                setProfileEditData(prev => ({...prev, whatsappCodeSent: true, whatsappCode: ''}));
+                              } else {
+                                setProfileError(result.error || 'Failed to send verification code');
+                              }
+                            } catch (error) {
+                              console.error('Error sending verification code:', error);
+                              setProfileError('Failed to send verification code');
+                            } finally {
+                              setProfileEditData(prev => ({...prev, verifyingWhatsApp: false}));
+                            }
+                          }}
+                          disabled={profileEditData.verifyingWhatsApp}
+                        >
+                          {profileEditData.verifyingWhatsApp ? 'Sending...' : 'Send Verification Code'}
+                        </button>
+                        
+                        {profileData?.whatsapp && (
+                          <button 
+                            type="button"
+                            className="btn btn--secondary"
+                            style={{ padding: '6px 12px', fontSize: '14px' }}
+                            onClick={() => setProfileEditData(prev => ({...prev, showWhatsAppEdit: false, whatsapp: '', whatsappCodeSent: false}))}
+                          >
+                            Cancel
+                          </button>
+                        )}
+                      </div>
+                    )}
+                    
+                    {/* Verification Code Input */}
+                    {profileEditData.whatsappCodeSent && (
+                      <div style={{ marginTop: '12px', padding: '12px', backgroundColor: '#fef3c7', border: '1px solid #fbbf24', borderRadius: '8px' }}>
+                        <label className="form-label" style={{ marginBottom: '8px' }}>Enter 6-digit verification code</label>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <input 
+                            type="text"
+                            className="input"
+                            placeholder="123456"
+                            value={profileEditData.whatsappCode || ''}
+                            onChange={(e) => setProfileEditData(prev => ({...prev, whatsappCode: e.target.value.replace(/\D/g, '').slice(0, 6)}))}
+                            style={{ flex: 1 }}
+                          />
+                          <button 
+                            type="button"
+                            className="btn btn--primary"
+                            onClick={async () => {
+                              if (profileEditData.whatsappCode?.length !== 6) return;
+                              
+                              setProfileEditData(prev => ({...prev, verifyingCode: true}));
+                              
+                              try {
+                                const customerId = extractCustomerId();
+                                const fullPhone = `${profileEditData.country_code}${profileEditData.whatsapp}`.replace(/\s/g, '');
+                                
+                                const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/verify_whatsapp_code`, {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  body: JSON.stringify({
+                                    phone_number: fullPhone,
+                                    code: profileEditData.whatsappCode,
+                                    customer_id: customerId,
+                                    username: profileEditData.username || profileData?.username,
+                                    gender: profileEditData.gender || profileData?.gender
+                                  })
+                                });
+                                const result = await response.json();
+                                
+                                if (response.ok && result.success) {
+                                  setProfileEditData(prev => ({
+                                    ...prev, 
+                                    whatsappVerified: true,
+                                    whatsappCodeSent: false,
+                                    showWhatsAppEdit: false
+                                  }));
+                                  setProfileError('');
+                                  // Refresh profile data
+                                  fetchProfileData();
+                                } else {
+                                  setProfileError(result.error || 'Invalid verification code');
+                                }
+                              } catch (error) {
+                                console.error('Error verifying code:', error);
+                                setProfileError('Failed to verify code');
+                              } finally {
+                                setProfileEditData(prev => ({...prev, verifyingCode: false}));
+                              }
+                            }}
+                            disabled={profileEditData.whatsappCode?.length !== 6 || profileEditData.verifyingCode}
+                          >
+                            {profileEditData.verifyingCode ? 'Verifying...' : 'Verify'}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+                
+                <p className="helper" style={{ margin: '0.5rem 0 0 0' }}>
+                  {profileData?.whatsapp ? 'WhatsApp changes require verification for security.' : 'For daily motivation and accountability messages.'}
+                </p>
+              </div>
+
+              {/* Commitment Data Section */}
+              <div style={{ marginBottom: '1rem' }}>
+                <label className="form-label">Your Commitment</label>
+                
+                {/* Current Commitment Display */}
+                {profileData?.commitment_data && (
+                  <div style={{ marginBottom: '1rem', padding: '16px', backgroundColor: '#f8fafc', border: '2px solid #e2e8f0', borderRadius: '12px' }}>
+                    <div style={{ marginBottom: '12px' }}>
+                      <strong style={{ color: '#1e293b', fontSize: '14px' }}>What you want to change:</strong>
+                      <p style={{ margin: '4px 0 0 0', color: '#475569' }}>"{profileData.commitment_data.q1}"</p>
+                    </div>
+                    <div style={{ marginBottom: '12px' }}>
+                      <strong style={{ color: '#1e293b', fontSize: '14px' }}>What you want to gain:</strong>
+                      <p style={{ margin: '4px 0 0 0', color: '#475569' }}>"{profileData.commitment_data.q2}"</p>
+                    </div>
+                    <div style={{ marginBottom: '12px' }}>
+                      <strong style={{ color: '#1e293b', fontSize: '14px' }}>Who you're doing this for:</strong>
+                      <p style={{ margin: '4px 0 0 0', color: '#475569' }}>"{profileData.commitment_data.q3}"</p>
+                    </div>
+                    {profileData.commitment_data.surrender_text && (
+                      <div style={{ marginTop: '16px', padding: '12px', backgroundColor: '#fef7cd', border: '1px solid #fcd34d', borderRadius: '8px' }}>
+                        <strong style={{ color: '#92400e', fontSize: '14px' }}>Your Commitment Statement:</strong>
+                        <p style={{ margin: '4px 0 0 0', color: '#b45309', fontStyle: 'italic' }}>"{profileData.commitment_data.surrender_text}"</p>
+                      </div>
+                    )}
+                    
+                    <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: '12px', color: '#64748b' }}>Click edit to update your commitment</span>
+                      <button 
+                        type="button"
+                        className="btn btn--secondary"
+                        style={{ padding: '6px 12px', fontSize: '14px' }}
+                        onClick={() => setProfileEditData(prev => ({
+                          ...prev, 
+                          showCommitmentEdit: true,
+                          commitmentQ1: profileData.commitment_data.q1 || '',
+                          commitmentQ2: profileData.commitment_data.q2 || '',
+                          commitmentQ3: profileData.commitment_data.q3 || ''
+                        }))}
+                      >
+                        Edit Commitment
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Commitment Edit Form */}
+                {profileEditData.showCommitmentEdit && (
+                  <div style={{ padding: '16px', backgroundColor: '#fefefe', border: '2px solid #3b82f6', borderRadius: '12px' }}>
+                    <h4 style={{ margin: '0 0 16px 0', color: '#1e40af', fontSize: '16px' }}>Update Your Commitment</h4>
+                    
+                    <div style={{ marginBottom: '16px' }}>
+                      <label className="form-label">What do you want to quit or change?</label>
+                      <input 
+                        type="text"
+                        className="input"
+                        placeholder="e.g., quit porn, reduce social media, stop gaming..."
+                        value={profileEditData.commitmentQ1 || ''}
+                        onChange={(e) => setProfileEditData(prev => ({...prev, commitmentQ1: e.target.value}))}
+                      />
+                    </div>
+
+                    <div style={{ marginBottom: '16px' }}>
+                      <label className="form-label">What do you want to gain or achieve?</label>
+                      <input 
+                        type="text"
+                        className="input"
+                        placeholder="e.g., more energy, better relationships, inner peace..."
+                        value={profileEditData.commitmentQ2 || ''}
+                        onChange={(e) => setProfileEditData(prev => ({...prev, commitmentQ2: e.target.value}))}
+                      />
+                    </div>
+
+                    <div style={{ marginBottom: '16px' }}>
+                      <label className="form-label">Who are you doing this for?</label>
+                      <input 
+                        type="text"
+                        className="input"
+                        placeholder="e.g., my family, my future self, my children..."
+                        value={profileEditData.commitmentQ3 || ''}
+                        onChange={(e) => setProfileEditData(prev => ({...prev, commitmentQ3: e.target.value}))}
+                      />
+                    </div>
+
+                    {/* Validation and Preview */}
+                    {profileEditData.commitmentValidating && (
+                      <div style={{ padding: '12px', backgroundColor: '#fef3c7', border: '1px solid #fbbf24', borderRadius: '8px', marginBottom: '16px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div className="spinner-small"></div>
+                          <span style={{ color: '#92400e' }}>Validating your commitment with AI...</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {profileEditData.commitmentValidation && (
+                      <div style={{ 
+                        padding: '12px', 
+                        backgroundColor: profileEditData.commitmentValidation.is_passionate ? '#f0fdf4' : '#fef2f2', 
+                        border: `1px solid ${profileEditData.commitmentValidation.is_passionate ? '#bbf7d0' : '#fecaca'}`, 
+                        borderRadius: '8px', 
+                        marginBottom: '16px' 
+                      }}>
+                        <p style={{ 
+                          margin: '0 0 8px 0', 
+                          color: profileEditData.commitmentValidation.is_passionate ? '#059669' : '#dc2626',
+                          fontWeight: '500'
+                        }}>
+                          {profileEditData.commitmentValidation.feedback}
+                        </p>
+                        {profileEditData.commitmentValidation.surrender_text && (
+                          <>
+                            <strong style={{ color: '#374151', fontSize: '14px' }}>New Commitment Statement:</strong>
+                            <p style={{ 
+                              margin: '4px 0 0 0', 
+                              fontStyle: 'italic',
+                              color: '#4b5563',
+                              padding: '8px',
+                              backgroundColor: 'rgba(255,255,255,0.5)',
+                              borderRadius: '6px'
+                            }}>
+                              "{profileEditData.commitmentValidation.surrender_text}"
+                            </p>
+                          </>
+                        )}
+                      </div>
+                    )}
+
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button 
+                        type="button"
+                        className="btn btn--primary"
+                        style={{ flex: 1 }}
+                        onClick={async () => {
+                          const q1 = profileEditData.commitmentQ1?.trim();
+                          const q2 = profileEditData.commitmentQ2?.trim();
+                          const q3 = profileEditData.commitmentQ3?.trim();
+
+                          if (!q1 || !q2 || !q3) {
+                            setProfileError('Please fill in all commitment fields');
+                            return;
+                          }
+
+                          setProfileEditData(prev => ({...prev, commitmentValidating: true}));
+                          
+                          try {
+                            // Validate with ChatGPT
+                            const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/evaluate_only`, {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ q1, q2, q3 })
+                            });
+                            const result = await response.json();
+                            
+                            if (response.ok && result.ok) {
+                              setProfileEditData(prev => ({
+                                ...prev, 
+                                commitmentValidation: result,
+                                commitmentValidating: false
+                              }));
+                              setProfileError('');
+                            } else {
+                              setProfileError(result.error || 'Failed to validate commitment');
+                              setProfileEditData(prev => ({...prev, commitmentValidating: false}));
+                            }
+                          } catch (error) {
+                            console.error('Commitment validation error:', error);
+                            setProfileError('Failed to validate commitment');
+                            setProfileEditData(prev => ({...prev, commitmentValidating: false}));
+                          }
+                        }}
+                        disabled={profileEditData.commitmentValidating || !profileEditData.commitmentQ1?.trim() || !profileEditData.commitmentQ2?.trim() || !profileEditData.commitmentQ3?.trim()}
+                      >
+                        {profileEditData.commitmentValidating ? 'Validating...' : 'Validate with AI'}
+                      </button>
+                      
+                      {profileEditData.commitmentValidation?.is_passionate && (
+                        <button 
+                          type="button"
+                          className="btn btn--primary"
+                          style={{ backgroundColor: '#10b981' }}
+                          onClick={async () => {
+                            setProfileEditData(prev => ({...prev, commitmentSaving: true}));
+                            
+                            try {
+                              const customerId = extractCustomerId();
+                              const commitmentData = {
+                                q1: profileEditData.commitmentQ1.trim(),
+                                q2: profileEditData.commitmentQ2.trim(),
+                                q3: profileEditData.commitmentQ3.trim(),
+                                surrender_text: profileEditData.commitmentValidation.surrender_text
+                              };
+
+                              const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/update_profile`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                  customer_id: customerId,
+                                  commitment_data: commitmentData
+                                })
+                              });
+                              const result = await response.json();
+                              
+                              if (response.ok && result.success) {
+                                setProfileEditData(prev => ({
+                                  ...prev, 
+                                  showCommitmentEdit: false,
+                                  commitmentValidation: null,
+                                  commitmentSaving: false
+                                }));
+                                setProfileError('');
+                                // Refresh profile data
+                                fetchProfileData();
+                              } else {
+                                setProfileError(result.error || 'Failed to save commitment');
+                                setProfileEditData(prev => ({...prev, commitmentSaving: false}));
+                              }
+                            } catch (error) {
+                              console.error('Commitment save error:', error);
+                              setProfileError('Failed to save commitment');
+                              setProfileEditData(prev => ({...prev, commitmentSaving: false}));
+                            }
+                          }}
+                          disabled={profileEditData.commitmentSaving}
+                        >
+                          {profileEditData.commitmentSaving ? 'Saving...' : 'Save Commitment'}
+                        </button>
+                      )}
+                      
+                      <button 
+                        type="button"
+                        className="btn btn--secondary"
+                        onClick={() => setProfileEditData(prev => ({
+                          ...prev, 
+                          showCommitmentEdit: false,
+                          commitmentValidation: null,
+                          commitmentQ1: '',
+                          commitmentQ2: '',
+                          commitmentQ3: ''
+                        }))}
+                        disabled={profileEditData.commitmentValidating || profileEditData.commitmentSaving}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {!profileData?.commitment_data && !profileEditData.showCommitmentEdit && (
+                  <div style={{ padding: '16px', backgroundColor: '#f1f5f9', border: '1px solid #cbd5e1', borderRadius: '8px', textAlign: 'center' }}>
+                    <p style={{ margin: '0 0 12px 0', color: '#64748b' }}>No commitment data found</p>
+                    <button 
+                      type="button"
+                      className="btn btn--primary"
+                      style={{ padding: '8px 16px', fontSize: '14px' }}
+                      onClick={() => setProfileEditData(prev => ({
+                        ...prev, 
+                        showCommitmentEdit: true,
+                        commitmentQ1: '',
+                        commitmentQ2: '',
+                        commitmentQ3: ''
+                      }))}
+                    >
+                      Create Your Commitment
+                    </button>
+                  </div>
+                )}
               </div>
 
               {profileError && <p className="error-message">{profileError}</p>}
@@ -2921,14 +3398,20 @@ function App() {
               <div className="modal__footer">
                 <button
                   className="btn btn--primary btn--full"
-                  disabled={profileLoading || !profileEditData.username.trim() || !profileEditData.gender}
+                  disabled={
+                    profileLoading || 
+                    !profileEditData.username.trim() || 
+                    !profileEditData.gender ||
+                    profileEditData.usernameValidationState === 'taken' ||
+                    profileEditData.usernameValidationState === 'checking' ||
+                    (profileEditData.username !== profileData?.username && profileEditData.usernameValidationState !== 'available')
+                  }
                   onClick={() => {
+                    // Only update basic profile data (username, gender)
+                    // WhatsApp is updated separately through verification flow
                     const updatedData = {
                       username: profileEditData.username.trim(),
-                      gender: profileEditData.gender,
-                      whatsapp: profileEditData.whatsapp.trim() ? 
-                        `${profileEditData.country_code}${profileEditData.whatsapp}`.replace(/\s/g, '') : 
-                        ''
+                      gender: profileEditData.gender
                     };
                     updateProfileData(updatedData);
                   }}
@@ -3608,8 +4091,24 @@ function App() {
                           username: profileData.username || '',
                           gender: profileData.gender || '',
                           whatsapp: profileData.whatsapp ? profileData.whatsapp.replace(/^\+\d{1,3}/, '') : '',
-                          country_code: profileData.whatsapp ? profileData.whatsapp.match(/^\+\d{1,3}/)?.[0] || '+31' : '+31'
+                          country_code: profileData.whatsapp ? profileData.whatsapp.match(/^\+\d{1,3}/)?.[0] || '+31' : '+31',
+                          usernameValidationState: null,
+                          showWhatsAppEdit: false,
+                          whatsappCodeSent: false,
+                          whatsappCode: '',
+                          verifyingWhatsApp: false,
+                          verifyingCode: false,
+                          whatsappVerified: false,
+                          // Commitment fields
+                          showCommitmentEdit: false,
+                          commitmentQ1: '',
+                          commitmentQ2: '',
+                          commitmentQ3: '',
+                          commitmentValidating: false,
+                          commitmentValidation: null,
+                          commitmentSaving: false
                         });
+                        setProfileError('');
                         setShowProfileEdit(true);
                       }}
                     >
