@@ -1510,7 +1510,20 @@ function App() {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       console.log('✅ Got media stream');
       
-      const recorder = new MediaRecorder(stream);
+      // Choose compatible audio format
+      let options = {};
+      if (MediaRecorder.isTypeSupported('audio/mp4')) {
+        options.mimeType = 'audio/mp4';
+      } else if (MediaRecorder.isTypeSupported('audio/wav')) {
+        options.mimeType = 'audio/wav';
+      } else if (MediaRecorder.isTypeSupported('audio/ogg')) {
+        options.mimeType = 'audio/ogg';
+      } else if (MediaRecorder.isTypeSupported('audio/webm')) {
+        options.mimeType = 'audio/webm';
+      }
+      
+      console.log('🎙️ Using audio format:', options.mimeType || 'default');
+      const recorder = new MediaRecorder(stream, options);
       const chunks = [];
 
       // Reset recording time
@@ -1571,7 +1584,18 @@ function App() {
       };
 
       recorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'audio/webm' });
+        // Use a more compatible audio format
+        let mimeType = 'audio/webm';
+        if (MediaRecorder.isTypeSupported('audio/mp4')) {
+          mimeType = 'audio/mp4';
+        } else if (MediaRecorder.isTypeSupported('audio/wav')) {
+          mimeType = 'audio/wav';
+        } else if (MediaRecorder.isTypeSupported('audio/ogg')) {
+          mimeType = 'audio/ogg';
+        }
+        
+        const blob = new Blob(chunks, { type: mimeType });
+        console.log('🎵 Audio blob created with type:', mimeType, 'size:', blob.size);
         setAudioBlob(blob);
         stream.getTracks().forEach(track => track.stop());
         
