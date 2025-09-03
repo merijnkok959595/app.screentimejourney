@@ -465,13 +465,9 @@ function App() {
           profileComplete: tokenData.profileComplete
         });
         
-        // Show onboarding only if profile is incomplete
-        setShowOnboarding(!tokenData.profileComplete);
+        // Fetch profile data to check if username exists
         setLoading(false);
-        // Fetch profile data for authenticated users
-        if (tokenData.profileComplete) {
-          fetchProfileData();
-        }
+        fetchProfileData();
       } catch (err) {
         console.error('❌ Failed to parse session cookie:', err);
         setError('Invalid session data. Please login again.');
@@ -1782,8 +1778,15 @@ function App() {
       if (response.ok && result.success) {
         setProfileData(result.profile);
         console.log('✅ Profile data loaded successfully');
+        
+        // Show account wall only if username doesn't exist
+        const hasUsername = result.profile?.username && result.profile.username.trim();
+        setShowOnboarding(!hasUsername);
+        console.log(`🔍 Username check: ${hasUsername ? 'exists' : 'missing'} - Account wall: ${!hasUsername ? 'show' : 'hide'}`);
       } else {
-        throw new Error(result.error || 'Failed to load profile data');
+        // If profile doesn't exist, show onboarding
+        setShowOnboarding(true);
+        console.log('📝 Profile not found - showing account wall');
       }
       
     } catch (error) {
@@ -2275,7 +2278,8 @@ function App() {
         customer_id: customerId,
         username: newUsername.trim(),
         gender: newGender,
-        whatsapp: whatsappLinked ? `${newCountryCode}${newWhatsapp}`.replace(/\s/g, '') : ''
+        whatsapp: whatsappLinked ? `${newCountryCode}${newWhatsapp}`.replace(/\s/g, '') : '',
+        whatsapp_opt_in: whatsappLinked // Store opt-in status
       };
       
       console.log('💾 Saving profile:', profileData);
@@ -2673,12 +2677,6 @@ function App() {
                     onClick={() => setOnboardStep(2)}
                   >
                     Next →
-                  </button>
-                  <button 
-                    className="btn btn--secondary btn--full"
-                    onClick={() => setShowOnboarding(false)}
-                  >
-                    Cancel
                   </button>
                 </div>
               </div>
