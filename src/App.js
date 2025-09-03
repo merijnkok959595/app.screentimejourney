@@ -400,7 +400,7 @@ function App() {
       console.log('🔧 Local development mode - bypassing authentication');
       setCustomerData({ 
         loginTime: new Date().toISOString(),
-        customerId: '8885250982135',  // Use existing customer with devices
+        customerId: extractCustomerId(),  // Use centralized customer ID extraction
         shop: 'local-dev.myshopify.com',
         isLocalDev: true,
         username: ''
@@ -966,7 +966,7 @@ function App() {
         uuid: uuid,
         deviceType: deviceFormData.device_type,
         deviceName: deviceFormData.device_name,
-        userId: customerData?.customerId || '8885250982135', // Use existing customer for demo
+        userId: customerData?.customerId || extractCustomerId(),
         createdAt: new Date().toISOString()
       };
       
@@ -987,7 +987,7 @@ function App() {
               uuid: uuid,
               device_type: deviceFormData.device_type,
               device_name: deviceFormData.device_name,
-              user_id: customerData?.customerId || '8885250982135', // Use existing customer for demo
+              user_id: customerData?.customerId || extractCustomerId(),
               method: 'create',
               purpose: 'device_setup'
             })
@@ -1349,7 +1349,7 @@ function App() {
           },
           body: JSON.stringify({
             device_name: deviceFormData.device_name,
-            customer_id: customerData?.customerId || '8885250982135', // Use existing customer for demo
+            customer_id: customerData?.customerId || extractCustomerId(), // Use existing customer for demo
             pincode: pincode // Use the shared pincode or backend will generate new one
           })
         });
@@ -1539,7 +1539,7 @@ function App() {
       // Create FormData for audio upload
       const formData = new FormData();
       formData.append('audio', audioBlob, 'surrender.webm');
-      formData.append('user_id', customerData?.customerId || '8885250982135'); // Use existing customer for demo
+      formData.append('user_id', customerData?.customerId || extractCustomerId());
       formData.append('device_id', currentFlow.deviceId);
       formData.append('surrender_text', currentFlow.steps[currentFlowStep - 1].surrender_text || surrenderText);
 
@@ -2414,11 +2414,11 @@ function App() {
         console.log('🔧 Raw session cookie:', sessionCookie);
       }
       
-      // Method 3: Local Development Fallback
+      // Method 3: Local Development - NO HARDCODED FALLBACK
       const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
       if (isLocalDev && !customerId) {
-        customerId = '8885250982135'; // Real customer ID for development
-        console.log('🔧 LOCAL DEV: Using fallback customer ID:', customerId);
+        console.warn('⚠️ LOCAL DEV: No customer ID found - app will fail gracefully');
+        console.warn('🔧 For local testing, add ?cid=YOUR_CUSTOMER_ID to URL');
       }
       
       if (customerId) {
@@ -2745,13 +2745,17 @@ function App() {
 
   // Load devices from backend on app startup
   const loadDevicesFromBackend = async () => {
-    if (!customerData?.customerId) {
-      console.log('⏳ No customer ID yet, skipping device load');
+    const customerId = customerData?.customerId || extractCustomerId();
+    
+    if (!customerId) {
+      console.warn('⚠️ No customer ID available, cannot load devices');
+      console.warn('🔐 User needs to authenticate through Shopify first');
+      setDevices([]); // Clear devices if no auth
       return;
     }
 
     try {
-      console.log('🔄 Loading devices from backend...');
+      console.log('🔄 Loading devices from backend for customer:', customerId);
       
       const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/get_devices`, {
         method: 'POST',
@@ -2759,7 +2763,7 @@ function App() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          customer_id: customerData.customerId || '8885250982135'
+          customer_id: customerId
         })
       });
 
@@ -2819,7 +2823,7 @@ function App() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          customer_id: customerData?.customerId || '8885250982135', // Use existing customer for demo
+          customer_id: customerData?.customerId || extractCustomerId(), // Use existing customer for demo
           device: newDevice
         })
       });
@@ -2863,7 +2867,7 @@ function App() {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              customer_id: customerData?.customerId || '8885250982135', // Use existing customer for demo
+              customer_id: customerData?.customerId || extractCustomerId(), // Use existing customer for demo
               device_id: deviceId,
               unlock_duration: 30 // 30 minutes
             })
