@@ -164,12 +164,12 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", devices, miles
                 onClick={() => startDeviceFlow('device_setup_flow')}
                 style={{width: '100%'}}
               >
-                📱 Add Device ({devices.length}/3)
+                Add Device ({devices.length}/3)
               </button>
             ) : (
               <div style={{textAlign: 'center', padding: '12px', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '2px dashed #dee2e6'}}>
                 <div style={{color: '#6c757d', fontSize: '14px', fontWeight: '500'}}>
-                  🔒 Maximum Devices Reached ({devices.length}/3)
+                  Maximum Devices Reached ({devices.length}/3)
                 </div>
                 <div style={{color: '#868e96', fontSize: '12px', marginTop: '4px'}}>
                   Remove a device to add a new one
@@ -873,6 +873,73 @@ function App() {
       
     } catch (error) {
       console.error('❌ Error fetching device flows:', error);
+      console.log('🔄 Using fallback flows due to API error');
+      
+      // Use fallback flows when API fails
+      const fallbackFlows = {
+        device_setup_flow: {
+          flow_id: 'device_setup',
+          flow_name: 'Device Setup Guide',
+          total_steps: 4,
+          steps: [
+            {
+              step: 1,
+              title: 'Device Information',
+              body: 'First, let\'s get some basic information about the device you\'re adding to your Screen Time Journey.',
+              step_type: 'form',
+              form_fields: [
+                {
+                  field_type: 'text',
+                  field_name: 'device_name',
+                  label: 'Device Name',
+                  placeholder: 'e.g., iPhone 15 Pro, MacBook Air, Work Laptop',
+                  required: true,
+                  max_length: 50,
+                  help_text: 'Give your device a name that helps you identify it easily'
+                },
+                {
+                  field_type: 'radio',
+                  field_name: 'device_type',
+                  label: 'Device Type',
+                  required: true,
+                  help_text: 'Select the type of device you\'re adding',
+                  options: [
+                    {value: 'iOS', label: 'iPhone/iPad'},
+                    {value: 'macOS', label: 'MacBook/iMac'}
+                  ]
+                }
+              ],
+              action_button: 'Continue to Setup Guide'
+            },
+            {
+              step: 2,
+              title: 'Setup Screentime',
+              body: 'Follow this guide to configure screen time settings on your device.',
+              step_type: 'video',
+              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
+              action_button: 'Next Step'
+            },
+            {
+              step: 3,
+              title: 'Setup Profile',
+              body: 'Configure your device profile settings.',
+              step_type: 'video',
+              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
+              action_button: 'Next Step'
+            },
+            {
+              step: 4,
+              title: 'Setup Pincode',
+              body: 'Set up your device pincode for security.',
+              step_type: 'video',
+              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
+              action_button: 'Complete Setup'
+            }
+          ]
+        }
+      };
+      
+      setDeviceFlows(fallbackFlows);
     } finally {
       setFlowLoading(false);
     }
@@ -1736,10 +1803,83 @@ function App() {
 
   // Function to start a device flow
   const startDeviceFlow = (flowType, deviceId = null) => {
-    const flow = deviceFlows[flowType];
+    let flow = deviceFlows[flowType];
+    
+    // If flow is not found, try to use fallback mock flow
     if (!flow) {
-      console.error('❌ Flow not found:', flowType);
-      return;
+      console.warn('⚠️ Flow not found in deviceFlows, using fallback:', flowType);
+      
+      // Fallback mock flows for when API fails
+      const fallbackFlows = {
+        device_setup_flow: {
+          flow_id: 'device_setup',
+          flow_name: 'Device Setup Guide',
+          total_steps: 4,
+          steps: [
+            {
+              step: 1,
+              title: 'Device Information',
+              body: 'First, let\'s get some basic information about the device you\'re adding to your Screen Time Journey.',
+              step_type: 'form',
+              form_fields: [
+                {
+                  field_type: 'text',
+                  field_name: 'device_name',
+                  label: 'Device Name',
+                  placeholder: 'e.g., iPhone 15 Pro, MacBook Air, Work Laptop',
+                  required: true,
+                  max_length: 50,
+                  help_text: 'Give your device a name that helps you identify it easily'
+                },
+                {
+                  field_type: 'radio',
+                  field_name: 'device_type',
+                  label: 'Device Type',
+                  required: true,
+                  help_text: 'Select the type of device you\'re adding',
+                  options: [
+                    {value: 'iOS', label: 'iPhone/iPad'},
+                    {value: 'macOS', label: 'MacBook/iMac'}
+                  ]
+                }
+              ],
+              action_button: 'Continue to Setup Guide'
+            },
+            {
+              step: 2,
+              title: 'Setup Screentime',
+              body: 'Follow this guide to configure screen time settings on your device.',
+              step_type: 'video',
+              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
+              action_button: 'Next Step'
+            },
+            {
+              step: 3,
+              title: 'Setup Profile',
+              body: 'Configure your device profile settings.',
+              step_type: 'video',
+              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
+              action_button: 'Next Step'
+            },
+            {
+              step: 4,
+              title: 'Setup Pincode',
+              body: 'Set up your device pincode for security.',
+              step_type: 'video',
+              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
+              action_button: 'Complete Setup'
+            }
+          ]
+        }
+      };
+      
+      flow = fallbackFlows[flowType];
+      
+      if (!flow) {
+        console.error('❌ Flow not found even in fallback:', flowType);
+        alert('Sorry, the device setup flow is temporarily unavailable. Please try again later.');
+        return;
+      }
     }
     
     setCurrentFlow({ ...flow, flowType, deviceId });
@@ -4246,7 +4386,7 @@ function App() {
                     style={{width: '100%'}} 
                     onClick={() => startDeviceFlow('device_setup_flow')}
                   >
-                    📱 Add Device ({devices.length}/3)
+                    Add Device ({devices.length}/3)
                   </button>
                 ) : (
                   <div style={{
@@ -4258,7 +4398,7 @@ function App() {
                     fontSize: '12px',
                     color: '#6c757d'
                   }}>
-                    🔒 Maximum reached ({devices.length}/3)
+                    Maximum reached ({devices.length}/3)
                   </div>
                 )}
               </div>
