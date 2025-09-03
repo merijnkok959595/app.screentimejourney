@@ -1,0 +1,585 @@
+/* Screen Time Journey Dashboard Styles
+   Updated to match Shopify store branding
+   Brand Colors: Primary #2E0456 (Purple), Text #0F172A (Dark), Background #FFFFFF */
+
+/* === GOOGLE FONTS IMPORT === */
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+/* === RESET & BASE === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #FFFFFF;
+    min-height: 100vh;
+    color: #0F172A;
+    line-height: 1.6;
+}
+
+/* === LAYOUT === */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.setup-widget {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    background: transparent;
+}
+
+/* === HEADER === */
+.header {
+    text-align: center;
+    color: #0F172A;
+    padding: 40px 0;
+    background: #FFFFFF;
+}
+
+.header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 3em;
+    margin-bottom: 10px;
+    color: #0F172A;
+    font-weight: 400;
+}
+
+.header p {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.2em;
+    opacity: 0.8;
+    color: #0F172A;
+    font-weight: 400;
+}
+
+/* === MAIN DASHBOARD === */
+.dashboard {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 40px;
+    margin: 20px 0;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+    border: 1px solid #F9F9F9;
+}
+
+/* === CARDS === */
+.card {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 24px;
+    margin: 20px 0;
+    border: 1px solid #F9F9F9;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(46, 4, 86, 0.12);
+    border-color: #2E0456;
+}
+
+.card h3 {
+    font-family: 'DM Serif Display', serif;
+    color: #2E0456;
+    margin-bottom: 12px;
+    font-weight: 400;
+    font-size: 1.25rem;
+}
+
+/* === FORM ELEMENTS === */
+.form-section {
+    display: none;
+}
+
+.form-section.active {
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-label {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #0F172A;
+    margin-bottom: 6px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #F9F9F9;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    background: #FFFFFF;
+    color: #0F172A;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #2E0456;
+    box-shadow: 0 0 0 3px rgba(46, 4, 86, 0.1);
+}
+
+.form-textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #F9F9F9;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    background: #FFFFFF;
+    color: #0F172A;
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-textarea:focus {
+    outline: none;
+    border-color: #2E0456;
+    box-shadow: 0 0 0 3px rgba(46, 4, 86, 0.1);
+}
+
+/* === BUTTONS === */
+.btn, .button, .action-btn {
+    background: #2E0456;
+    color: #FFFFFF;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn:hover, .button:hover, .action-btn:hover {
+    background: #1a0230;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 4, 86, 0.3);
+}
+
+.button--primary {
+    background: #2E0456;
+}
+
+.button--primary:hover {
+    background: #1a0230;
+}
+
+.action-btn {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.action-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.action-btn:disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* === SETUP BUTTONS === */
+.setup-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+/* === BACK BUTTON === */
+.back-btn {
+    background: none;
+    border: none;
+    color: #6b7280;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 16px;
+    display: block;
+    text-align: center;
+    width: 100%;
+    padding: 8px;
+    transition: color 0.3s ease;
+}
+
+.back-btn:hover {
+    color: #374151;
+}
+
+/* === STATUS MESSAGES === */
+.status-message {
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 12px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.status-message--success {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #d1fae5;
+}
+
+.status-message--error {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.status-message--info {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #dbeafe;
+}
+
+.error {
+    background: #fee2e2;
+    color: #dc2626;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+/* === LOADING STATES === */
+.loading {
+    text-align: center;
+    padding: 40px;
+}
+
+.loading-spinner, .spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #25D366;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #667eea;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* === RADIO BUTTONS === */
+.radio-option {
+    cursor: pointer;
+    padding: 12px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.radio-option:hover {
+    background-color: #f9fafb;
+}
+
+.radio-option:hover .radio-custom {
+    border-color: #9ca3af;
+}
+
+.radio-option input[type="radio"] {
+    display: none;
+}
+
+.radio-custom {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e5e7eb;
+    border-radius: 50%;
+    margin-right: 12px;
+    position: relative;
+    vertical-align: middle;
+    transition: all 0.3s ease;
+}
+
+.radio-option input[type="radio"]:checked + .radio-custom {
+    border-color: #3b82f6;
+    background-color: #3b82f6;
+}
+
+.radio-option input[type="radio"]:checked + .radio-custom::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+}
+
+/* === PHONE INPUT (International Tel Input) === */
+.iti {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.iti * {
+    box-sizing: border-box;
+}
+
+.iti__hide {
+    display: none;
+}
+
+.iti__v-hide {
+    visibility: hidden;
+}
+
+.iti input,
+.iti input[type=text],
+.iti input[type=tel] {
+    position: relative;
+    z-index: 0;
+    margin: 0 !important;
+    padding-left: 52px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 16px;
+    padding: 12px 12px 12px 52px;
+}
+
+.iti__flag-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1px;
+}
+
+.iti__selected-flag {
+    z-index: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 8px;
+    cursor: pointer;
+}
+
+.iti__arrow {
+    margin-left: 6px;
+    width: 0;
+    height: 0;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-top: 4px solid #555;
+}
+
+.iti__arrow--up {
+    border-top: none;
+    border-bottom: 4px solid #555;
+}
+
+.iti__country-list {
+    position: absolute;
+    z-index: 99999;
+    list-style: none;
+    text-align: left;
+    padding: 0;
+    margin: 0 0 0 -1px;
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+    background: #fff;
+    border: 1px solid #CCC;
+    white-space: nowrap;
+    max-height: 200px;
+    overflow-y: auto;
+    top: 100%;
+    left: 0;
+    width: 300px;
+    border-radius: 8px;
+}
+
+.iti__country {
+    padding: 5px 10px;
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.iti__country--highlight {
+    background: rgba(0,0,0,0.05);
+}
+
+.iti__country-name,
+.iti__dial-code {
+    color: #666;
+}
+
+/* === UTILITY CLASSES === */
+.offscreen-stub {
+    position: fixed;
+    left: -10000px;
+    top: 0;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.grid {
+    display: grid;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+/* === APP PROXY STYLES === */
+.screen-time-journey-proxy {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    padding: 2rem;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.screen-time-journey-proxy h1 {
+    color: #374151;
+    margin-bottom: 1rem;
+}
+
+.screen-time-journey-proxy p {
+    color: #6b7280;
+    line-height: 1.6;
+}
+
+/* === BRAND SPECIFIC COLORS === */
+:root {
+    --primary-purple: #2E0456;    /* Primary button/elements color */
+    --primary-purple-dark: #1a0230; /* Darker shade for hover */
+    --text-primary: #0F172A;      /* Primary text color */
+    --background-white: #FFFFFF;   /* Background */
+    --separator-light: #F9F9F9;   /* Separator lines */
+    --text-medium: #6b7280;
+    --text-light: #9ca3af;
+    --border-light: #F9F9F9;
+    --background-light: #FFFFFF;
+    --success-bg: #ecfdf5;
+    --success-text: #065f46;
+    --error-bg: #fef2f2;
+    --error-text: #dc2626;
+    --info-bg: #eff6ff;
+    --info-text: #2E0456;
+    
+    /* Typography */
+    --font-heading: 'DM Serif Display', serif;
+    --font-body: 'Inter', sans-serif;
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .header h1 {
+        font-size: 2em;
+    }
+    
+    .dashboard {
+        padding: 20px;
+        border-radius: 12px;
+    }
+    
+    .setup-widget {
+        padding: 15px;
+    }
+    
+    .card {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.8em;
+    }
+    
+    .header p {
+        font-size: 1em;
+    }
+    
+    .dashboard {
+        padding: 15px;
+        margin: 10px 0;
+    }
+}
+
+/* === ANIMATIONS === */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.form-section.active {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* === FOCUS STATES === */
+button:focus,
+.btn:focus,
+.button:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* === DARK MODE SUPPORT === */
+@media (prefers-color-scheme: dark) {
+    .card {
+        background: #1f2937;
+        border-left-color: #667eea;
+    }
+    
+    .card h3 {
+        color: #93c5fd;
+    }
+    
+    .dashboard {
+        background: #111827;
+        color: #f9fafb;
+    }
+}
+
