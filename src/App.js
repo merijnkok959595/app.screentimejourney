@@ -1979,27 +1979,31 @@ function App() {
       const nextStep = currentFlowStep + 1;
       setCurrentFlowStep(nextStep);
       
-      // Auto-generate VPN profile when reaching step 3 (Setup Profile) - with error handling
-      if (nextStep === 3 && currentFlow.flowType === 'device_setup_flow' && !vpnProfileData) {
-        console.log('🔧 Auto-generating VPN profile for step 3', { deviceFormData });
-        try {
-          generateVPNProfile();
-        } catch (error) {
-          console.error('❌ Error auto-generating VPN profile:', error);
-          // Continue flow even if VPN profile generation fails
-        }
-      }
+      // Skip auto-generation for now - focus on core device setup flow
+      // Users can manually generate profiles/guides later if needed
+      console.log('📋 Device setup flow continuing to step', nextStep, 'without auto-generation');
       
-      // Auto-generate audio guide when reaching step 4 (Setup Pincode) - with error handling
-      if (nextStep === 4 && currentFlow.flowType === 'device_setup_flow' && !audioGuideData) {
-        console.log('🔧 Auto-generating audio guide for step 4', { deviceFormData });
-        try {
-          generateAudioGuide();
-        } catch (error) {
-          console.error('❌ Error auto-generating audio guide:', error);
-          // Continue flow even if audio guide generation fails
-        }
-      }
+      // // Auto-generate VPN profile when reaching step 3 (Setup Profile) - DISABLED FOR NOW
+      // if (nextStep === 3 && currentFlow.flowType === 'device_setup_flow' && !vpnProfileData) {
+      //   console.log('🔧 Auto-generating VPN profile for step 3', { deviceFormData });
+      //   try {
+      //     generateVPNProfile();
+      //   } catch (error) {
+      //     console.error('❌ Error auto-generating VPN profile:', error);
+      //     // Continue flow even if VPN profile generation fails
+      //   }
+      // }
+      // 
+      // // Auto-generate audio guide when reaching step 4 (Setup Pincode) - DISABLED FOR NOW
+      // if (nextStep === 4 && currentFlow.flowType === 'device_setup_flow' && !audioGuideData) {
+      //   console.log('🔧 Auto-generating audio guide for step 4', { deviceFormData });
+      //   try {
+      //     generateAudioGuide();
+      //   } catch (error) {
+      //     console.error('❌ Error auto-generating audio guide:', error);
+      //     // Continue flow even if audio guide generation fails
+      //   }
+      // }
     } else {
       completeFlow();
     }
