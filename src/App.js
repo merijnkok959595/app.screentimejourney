@@ -2246,7 +2246,7 @@ function App() {
 
   const saveProfile = async () => {
     try {
-      setLoading(true);
+      setProfileLoading(true);
       
       // CRITICAL: Final username availability check to prevent race conditions
       console.log('🔍 Performing final username availability check before saving...');
@@ -2256,7 +2256,7 @@ function App() {
         setUsernameError('Username was just taken by another user. Please choose a different one.');
         setUsernameValid(false);
         setOnboardStep(1); // Go back to username step
-        setLoading(false);
+        setProfileLoading(false);
         return;
       }
       
@@ -2267,7 +2267,7 @@ function App() {
       
       if (!customerId) {
         alert('Unable to save profile: Customer ID not found');
-        setLoading(false);
+        setProfileLoading(false);
         return;
       }
       
@@ -2340,7 +2340,7 @@ function App() {
       console.error('❌ Error saving profile:', error);
       alert('Failed to save profile. Please check your connection and try again.');
     } finally {
-      setLoading(false);
+      setProfileLoading(false);
     }
   };
 
@@ -2761,12 +2761,12 @@ function App() {
                   </button>
                   <button 
                     className="btn btn--secondary btn--full" 
-                    disabled={whatsappLoading}
+                    disabled={whatsappLoading || profileLoading}
                     onClick={async () => {
                       await saveProfile(); // Save without WhatsApp
                     }}
                   >
-                    {whatsappLoading ? 'Please wait...' : 'Skip (not recommended)'}
+                    {profileLoading ? 'Saving profile...' : whatsappLoading ? 'Please wait...' : 'Skip (not recommended)'}
                   </button>
                   <button className="link-back" onClick={() => setOnboardStep(2)}>Back</button>
                 </div>
@@ -2790,10 +2790,10 @@ function App() {
                 <div className="modal__footer">
                   <button
                     className="btn btn--primary btn--full"
-                    disabled={whatsappCode.length !== 6 || whatsappLoading}
+                    disabled={whatsappCode.length !== 6 || whatsappLoading || profileLoading}
                     onClick={verifyWhatsAppCode}
                   >
-                    {whatsappLoading ? 'Verifying...' : 'Verify & Complete'}
+                    {profileLoading ? 'Saving profile...' : whatsappLoading ? 'Verifying...' : 'Verify & Complete'}
                   </button>
                   <button 
                     className="link-back" 
