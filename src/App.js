@@ -1531,13 +1531,14 @@ function App() {
       setAnalyser(analyserNode);
 
       // Animation function for audio bars
+      let animationId;
       const updateAudioLevels = () => {
-        if (analyserNode && isRecording) {
+        if (analyserNode) {
           analyserNode.getByteFrequencyData(dataArray);
           
-          // Create audio level bars (8 bars for visualization)
+          // Create audio level bars (20 bars for visualization)
           const bars = [];
-          const barCount = 8;
+          const barCount = 20;
           const samplesPerBar = Math.floor(bufferLength / barCount);
           
           for (let i = 0; i < barCount; i++) {
@@ -1552,9 +1553,8 @@ function App() {
           
           setAudioLevels(bars);
           
-          if (isRecording) {
-            requestAnimationFrame(updateAudioLevels);
-          }
+          // Continue animation while recording
+          animationId = requestAnimationFrame(updateAudioLevels);
         }
       };
 
@@ -1569,6 +1569,11 @@ function App() {
         setAudioBlob(blob);
         stream.getTracks().forEach(track => track.stop());
         
+        // Stop animation
+        if (animationId) {
+          cancelAnimationFrame(animationId);
+        }
+        
         // Clean up audio context
         if (audioCtx) {
           audioCtx.close();
@@ -1580,7 +1585,7 @@ function App() {
       setMediaRecorder(recorder);
       setIsRecording(true);
       
-      // Start audio visualization
+      // Start audio visualization immediately
       updateAudioLevels();
       
       console.log('🎤 Recording started with audio visualization');
@@ -4370,9 +4375,23 @@ function App() {
                                       gap: '12px'
                                     }}>
                                       <button
-                                        onClick={() => {
-                                          const audio = new Audio(URL.createObjectURL(audioBlob));
-                                          audio.play();
+                                        onClick={async () => {
+                                          try {
+                                            console.log('🎵 Playing audio, blob size:', audioBlob.size, 'bytes');
+                                            const audioUrl = URL.createObjectURL(audioBlob);
+                                            const audio = new Audio(audioUrl);
+                                            
+                                            audio.onloadstart = () => console.log('🔄 Audio loading started');
+                                            audio.oncanplay = () => console.log('✅ Audio can play');
+                                            audio.onerror = (e) => console.error('❌ Audio error:', e);
+                                            audio.onended = () => URL.revokeObjectURL(audioUrl);
+                                            
+                                            await audio.play();
+                                            console.log('🎵 Audio playback started');
+                                          } catch (error) {
+                                            console.error('❌ Error playing audio:', error);
+                                            alert('Failed to play audio. Please try recording again.');
+                                          }
                                         }}
                                         style={{
                                           background: 'linear-gradient(135deg, #22C55E, #16A34A)',
