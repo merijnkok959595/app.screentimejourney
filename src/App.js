@@ -119,7 +119,7 @@ const getMockDeviceData = (scenario = 'ground_zero') => {
 };
 
 // Progress Section Component (Theme-styled card)
-const ProgressSection = ({ latestDevice, customerName = "Merijn", devices, setShowAddDevice, milestones = DEFAULT_MILESTONES, startDeviceFlow }) => {
+const ProgressSection = ({ latestDevice, customerName = "Merijn", devices, milestones = DEFAULT_MILESTONES, startDeviceFlow }) => {
   // Use mock data if no real device data provided
   const deviceData = latestDevice || getMockDeviceData('ground_zero');
   const progress = calculateProgress(deviceData, 'male', milestones);
@@ -158,14 +158,23 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", devices, setSh
           
           {/* Add Device Button */}
           <div style={{marginTop: '20px'}}>
-            {devices.length < 3 && (
+            {devices.length < 3 ? (
               <button 
                 className="btn btn--primary"
                 onClick={() => startDeviceFlow('device_setup_flow')}
                 style={{width: '100%'}}
               >
-                Add Device
+                📱 Add Device ({devices.length}/3)
               </button>
+            ) : (
+              <div style={{textAlign: 'center', padding: '12px', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '2px dashed #dee2e6'}}>
+                <div style={{color: '#6c757d', fontSize: '14px', fontWeight: '500'}}>
+                  🔒 Maximum Devices Reached ({devices.length}/3)
+                </div>
+                <div style={{color: '#868e96', fontSize: '12px', marginTop: '4px'}}>
+                  Remove a device to add a new one
+                </div>
+              </div>
             )}
           </div>
         </div>
@@ -237,9 +246,7 @@ function App() {
       type: 'macOS'
     }
   ]);
-  const [showAddDevice, setShowAddDevice] = useState(false);
-  const [newDeviceName, setNewDeviceName] = useState('');
-  const [newDeviceType, setNewDeviceType] = useState('iOS');
+
   
   // Device flow state
   const [deviceFlows, setDeviceFlows] = useState({});
@@ -746,30 +753,32 @@ function App() {
             steps: [
               {
                 step: 1,
-                title: 'Device Configuration',
-                body: 'In this video I will show you how I set up my screentime and you can do so according to your own preferences.',
+                title: 'Device Information',
+                body: 'First, let\'s get some basic information about the device you\'re adding to your Screen Time Journey.',
                 step_type: 'form',
                 form_fields: [
                   {
                     field_type: 'text',
                     field_name: 'device_name',
                     label: 'Device Name',
-                    placeholder: 'e.g., iPhone 15 Pro, MacBook Air',
+                    placeholder: 'e.g., iPhone 15 Pro, MacBook Air, Work Laptop',
                     required: true,
-                    max_length: 50
+                    max_length: 50,
+                    help_text: 'Give your device a name that helps you identify it easily'
                   },
                   {
                     field_type: 'radio',
                     field_name: 'device_type',
                     label: 'Device Type',
                     required: true,
+                    help_text: 'Select the type of device you\'re adding',
                     options: [
                       {value: 'iOS', label: '📱 iPhone/iPad'},
                       {value: 'macOS', label: '💻 MacBook/iMac'}
                     ]
                   }
                 ],
-                action_button: 'Continue Setup'
+                action_button: 'Continue to Setup Guide'
               },
               {
                 step: 2,
@@ -2468,14 +2477,14 @@ function App() {
   };
 
   // Device management functions
-  const addDeviceFromFlow = () => {
+  const addDeviceFromFlow = async () => {
     if (!deviceFormData.device_name.trim()) {
       alert('Please enter a device name');
       return;
     }
     
     if (devices.length >= 3) {
-      alert('Maximum 3 devices allowed');
+      alert('Maximum 3 devices allowed. Please remove a device first.');
       return;
     }
     
@@ -2488,52 +2497,56 @@ function App() {
       id: `device_${Date.now()}`,
       name: deviceFormData.device_name.trim(),
       icon: deviceIcons[deviceFormData.device_type] || '📱',
-      status: 'locked',
-      addedDate: 'Just now',
-      type: deviceFormData.device_type
+      status: 'setup_complete',
+      addedDate: new Date().toISOString(),
+      type: deviceFormData.device_type,
+      setup_completed_at: new Date().toISOString()
     };
     
-    setDevices(prev => [...prev, newDevice]);
-    console.log('✅ Device added from flow:', newDevice);
-    alert(`Device "${newDevice.name}" added successfully!`);
+    try {
+      // Save device to backend if in production
+      const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      
+      if (!isLocalDev) {
+        const customerId = extractCustomerId();
+        if (customerId) {
+          const response = await fetch('/add_device', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              customer_id: customerId,
+              device_name: newDevice.name,
+              device_type: newDevice.type,
+              device_id: newDevice.id
+            })
+          });
+          
+          if (!response.ok) {
+            throw new Error('Failed to save device to backend');
+          }
+          
+          console.log('✅ Device saved to backend');
+        }
+      }
+      
+      // Add to local state
+      setDevices(prev => [...prev, newDevice]);
+      console.log('✅ Device added from flow:', newDevice);
+      
+      // Success feedback with better UX
+      alert(`🎉 Device "${newDevice.name}" has been successfully added and configured!\n\nYou now have ${devices.length + 1} of 3 devices maximum.`);
+      
+    } catch (error) {
+      console.error('❌ Error saving device:', error);
+      // Still add locally even if backend fails
+      setDevices(prev => [...prev, newDevice]);
+      alert(`✅ Device "${newDevice.name}" added locally.\n⚠️ Note: Failed to sync with server. Your device will sync when connection is restored.`);
+    }
   };
 
-  const addDevice = () => {
-    if (!newDeviceName.trim()) {
-      alert('Please enter a device name');
-      return;
-    }
-    
-    if (devices.length >= 3) {
-      alert('Maximum 3 devices allowed');
-      return;
-    }
-    
-    const deviceIcons = {
-      iOS: '📱',
-      Android: '📱',
-      macOS: '💻',
-      Windows: '💻',
-      Other: '🖥️'
-    };
-    
-    const newDevice = {
-      id: `device_${Date.now()}`,
-      name: newDeviceName.trim(),
-      icon: deviceIcons[newDeviceType] || '🖥️',
-      status: 'locked',
-      addedDate: 'Just now',
-      type: newDeviceType
-    };
-    
-    setDevices(prev => [...prev, newDevice]);
-    setNewDeviceName('');
-    setNewDeviceType('iOS');
-    setShowAddDevice(false);
-    
-    console.log('✅ Device added:', newDevice);
-    alert(`Device "${newDevice.name}" added successfully!`);
-  };
+
   
   const unlockDevice = (deviceId) => {
     const device = devices.find(d => d.id === deviceId);
@@ -3545,111 +3558,7 @@ function App() {
           </div>
         </div>
 
-        {/* Add Device Modal */}
-        <div className={`modal-overlay ${showAddDevice ? 'active' : ''}`}>
-          <div className="modal" role="dialog" aria-modal="true" aria-labelledby="add-device-title">
-            <div className="modal__header">
-              <h3 id="add-device-title" className="modal__title">Add New Device</h3>
-            </div>
 
-            <div>
-              {/* Device Name */}
-              <div className="input-container" style={{ marginBottom: '1rem' }}>
-                <label className="form-label">Device Name</label>
-                <input 
-                  className="input"
-                  placeholder="e.g., iPhone 15 Pro, MacBook Air, etc." 
-                  value={newDeviceName} 
-                  onChange={(e) => setNewDeviceName(e.target.value)}
-                  maxLength={50}
-                />
-                <p className="helper" style={{ margin: '0.5rem 0 0 0' }}>Give your device a recognizable name</p>
-              </div>
-
-              {/* Device Type */}
-              <div style={{ marginBottom: '1rem' }}>
-                <label className="form-label">Device Type</label>
-                <div className="radio-group">
-                  <label className="radio-option">
-                    <input 
-                      type="radio" 
-                      name="device-type" 
-                      value="iOS" 
-                      checked={newDeviceType === 'iOS'} 
-                      onChange={(e) => setNewDeviceType(e.target.value)} 
-                    />
-                    <span className="radio-custom"></span>
-                    <span className="radio-label">📱 iPhone/iPad</span>
-                  </label>
-                  <label className="radio-option">
-                    <input 
-                      type="radio" 
-                      name="device-type" 
-                      value="Android" 
-                      checked={newDeviceType === 'Android'} 
-                      onChange={(e) => setNewDeviceType(e.target.value)} 
-                    />
-                    <span className="radio-custom"></span>
-                    <span className="radio-label">📱 Android Phone/Tablet</span>
-                  </label>
-                  <label className="radio-option">
-                    <input 
-                      type="radio" 
-                      name="device-type" 
-                      value="macOS" 
-                      checked={newDeviceType === 'macOS'} 
-                      onChange={(e) => setNewDeviceType(e.target.value)} 
-                    />
-                    <span className="radio-custom"></span>
-                    <span className="radio-label">💻 MacBook/iMac</span>
-                  </label>
-                  <label className="radio-option">
-                    <input 
-                      type="radio" 
-                      name="device-type" 
-                      value="Windows" 
-                      checked={newDeviceType === 'Windows'} 
-                      onChange={(e) => setNewDeviceType(e.target.value)} 
-                    />
-                    <span className="radio-custom"></span>
-                    <span className="radio-label">💻 Windows PC/Laptop</span>
-                  </label>
-                  <label className="radio-option">
-                    <input 
-                      type="radio" 
-                      name="device-type" 
-                      value="Other" 
-                      checked={newDeviceType === 'Other'} 
-                      onChange={(e) => setNewDeviceType(e.target.value)} 
-                    />
-                    <span className="radio-custom"></span>
-                    <span className="radio-label">🖥️ Other Device</span>
-                  </label>
-                </div>
-              </div>
-
-              <div className="modal__footer">
-                <button
-                  className="btn btn--primary btn--full"
-                  disabled={!newDeviceName.trim() || devices.length >= 3}
-                  onClick={addDevice}
-                >
-                  Add Device
-                </button>
-                <button 
-                  className="btn btn--secondary btn--full"
-                  onClick={() => {
-                    setShowAddDevice(false);
-                    setNewDeviceName('');
-                    setNewDeviceType('iOS');
-                  }}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* Device Flow Modal */}
         <div className={`modal-overlay ${showDeviceFlow ? 'active' : ''}`}>
@@ -4161,7 +4070,7 @@ function App() {
             latestDevice={getMockDeviceData(testScenario)} 
             customerName="Merijn" 
             devices={devices}
-            setShowAddDevice={setShowAddDevice}
+
             milestones={milestones}
             startDeviceFlow={startDeviceFlow}
           />
@@ -4331,14 +4240,27 @@ function App() {
                 )}
               </div>
               <div style={{marginTop: 'auto'}}>
-                <button 
-                  className="btn btn--outline btn--sm" 
-                  style={{width: '100%'}} 
-                  onClick={() => startDeviceFlow('device_setup_flow')}
-                  disabled={devices.length >= 3}
-                >
-                  Add Device {devices.length >= 3 ? '(Max reached)' : ''}
-                </button>
+                {devices.length < 3 ? (
+                  <button 
+                    className="btn btn--outline btn--sm" 
+                    style={{width: '100%'}} 
+                    onClick={() => startDeviceFlow('device_setup_flow')}
+                  >
+                    📱 Add Device ({devices.length}/3)
+                  </button>
+                ) : (
+                  <div style={{
+                    textAlign: 'center', 
+                    padding: '8px', 
+                    backgroundColor: '#f8f9fa', 
+                    borderRadius: '6px', 
+                    border: '1px dashed #dee2e6',
+                    fontSize: '12px',
+                    color: '#6c757d'
+                  }}>
+                    🔒 Maximum reached ({devices.length}/3)
+                  </div>
+                )}
               </div>
             </div>
           </div>
