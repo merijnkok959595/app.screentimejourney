@@ -4065,67 +4065,115 @@ function App() {
               <div className="card-header">
                 <h3 className="card-title">Account</h3>
               </div>
-              
-              {profileLoading ? (
-                <div style={{padding: '20px', textAlign: 'center'}}>
-                  <div className="spinner" style={{margin: '0 auto'}}></div>
-                  <p>Loading profile...</p>
+              <div style={{margin: '0 0 16px 0'}}>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
+                  <span style={{fontSize: '14px', color: '#374151'}}>Email</span>
+                  <span style={{
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    color: '#6b7280',
+                    fontFamily: 'monospace'
+                  }}>
+                    merijn@risottini.com
+                  </span>
                 </div>
-              ) : profileError ? (
-                <div style={{padding: '20px', textAlign: 'center', color: '#ef4444'}}>
-                  <p>❌ {profileError}</p>
-                  <button className="btn btn--secondary btn--sm" onClick={fetchProfileData}>Retry</button>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
+                  <span style={{fontSize: '14px', color: '#374151'}}>Username</span>
+                  <span style={{
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    color: '#374151'
+                  }}>
+                    @theking
+                  </span>
                 </div>
-              ) : profileData ? (
-                <>
-                  <ul className="mb-3" style={{paddingLeft: '16px', margin: 0}}>
-                    <li>Email: {profileData.email} <span style={{color: '#6b7280', fontSize: '12px'}}>(read-only)</span></li>
-                    <li>Username: @{profileData.username}</li>
-                    <li>Gender: {profileData.gender === 'male' ? '🙋‍♂️ Man' : '🙋‍♀️ Woman'}</li>
-                    {profileData.whatsapp && (
-                      <li>WhatsApp: {profileData.whatsapp}</li>
-                    )}
-                  </ul>
-                  <div style={{marginTop: 'auto', display: 'flex', gap: '8px'}}>
-                    <button 
-                      className="btn btn--outline btn--sm" 
-                      style={{flex: 1}}
-                      onClick={() => {
-                        setProfileEditData({
-                          username: profileData.username || '',
-                          gender: profileData.gender || '',
-                          whatsapp: profileData.whatsapp ? profileData.whatsapp.replace(/^\+\d{1,3}/, '') : '',
-                          country_code: profileData.whatsapp ? profileData.whatsapp.match(/^\+\d{1,3}/)?.[0] || '+31' : '+31',
-                          usernameValidationState: null,
-                          showWhatsAppEdit: false,
-                          whatsappCodeSent: false,
-                          whatsappCode: '',
-                          verifyingWhatsApp: false,
-                          verifyingCode: false,
-                          whatsappVerified: false,
-                          // Commitment fields
-                          showCommitmentEdit: false,
-                          commitmentQ1: '',
-                          commitmentQ2: '',
-                          commitmentQ3: '',
-                          commitmentValidating: false,
-                          commitmentValidation: null,
-                          commitmentSaving: false
-                        });
-                        setProfileError('');
-                        setShowProfileEdit(true);
-                      }}
-                    >
-                      Edit profile
-                    </button>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
+                  <span style={{fontSize: '14px', color: '#374151'}}>Gender</span>
+                  <span style={{
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    color: '#374151'
+                  }}>
+                    🙋‍♂️ Man
+                  </span>
+                </div>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
+                  <span style={{fontSize: '14px', color: '#374151'}}>WhatsApp</span>
+                  <span style={{
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    color: '#374151',
+                    fontFamily: 'monospace'
+                  }}>
+                    +31627207989
+                  </span>
+                </div>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
+                  <span style={{fontSize: '14px', color: '#374151'}}>Commitment</span>
+                  <span style={{
+                    fontSize: '12px',
+                    fontWeight: '500',
+                    color: profileData?.commitment_data ? '#059669' : '#6b7280',
+                    backgroundColor: profileData?.commitment_data ? '#f0fdf4' : '#f3f4f6',
+                    padding: '2px 8px',
+                    borderRadius: '8px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px',
+                    border: profileData?.commitment_data ? '1px solid #bbf7d0' : 'none'
+                  }}>
+                    {profileData?.commitment_data ? 'Set ✓' : 'Not Set'}
+                  </span>
+                </div>
+                {profileData?.commitment_data && (
+                  <div style={{padding: '12px 0', borderBottom: '1px solid #f3f4f6'}}>
+                    <div style={{marginBottom: '8px'}}>
+                      <span style={{fontSize: '12px', color: '#6b7280', fontWeight: '500'}}>What to change:</span>
+                      <p style={{margin: '2px 0 0 0', fontSize: '14px', color: '#374151'}}>"{profileData.commitment_data.q1}"</p>
+                    </div>
+                    <div style={{marginBottom: '8px'}}>
+                      <span style={{fontSize: '12px', color: '#6b7280', fontWeight: '500'}}>What to gain:</span>
+                      <p style={{margin: '2px 0 0 0', fontSize: '14px', color: '#374151'}}>"{profileData.commitment_data.q2}"</p>
+                    </div>
+                    <div>
+                      <span style={{fontSize: '12px', color: '#6b7280', fontWeight: '500'}}>Doing this for:</span>
+                      <p style={{margin: '2px 0 0 0', fontSize: '14px', color: '#374151'}}>"{profileData.commitment_data.q3}"</p>
+                    </div>
                   </div>
-                </>
-              ) : (
-                <div style={{padding: '20px', textAlign: 'center'}}>
-                  <p>No profile data available</p>
-                  <button className="btn btn--secondary btn--sm" onClick={fetchProfileData}>Load Profile</button>
-                </div>
-              )}
+                )}
+              </div>
+              <div style={{marginTop: 'auto', display: 'flex', gap: '8px'}}>
+                <button
+                  className="btn btn--outline btn--sm"
+                  style={{flex: 1}}
+                  onClick={() => {
+                    setProfileEditData({
+                      username: profileData?.username || '@theking',
+                      gender: profileData?.gender || 'man',
+                      whatsapp: profileData?.whatsapp ? profileData.whatsapp.replace(/^\+\d{1,3}/, '') : '627207989',
+                      country_code: profileData?.whatsapp ? profileData.whatsapp.match(/^\+\d{1,3}/)?.[0] || '+31' : '+31',
+                      usernameValidationState: null,
+                      showWhatsAppEdit: false,
+                      whatsappCodeSent: false,
+                      whatsappCode: '',
+                      verifyingWhatsApp: false,
+                      verifyingCode: false,
+                      whatsappVerified: false,
+                      // Commitment fields - populate existing data
+                      showCommitmentEdit: false,
+                      commitmentQ1: profileData?.commitment_data?.q1 || '',
+                      commitmentQ2: profileData?.commitment_data?.q2 || '',
+                      commitmentQ3: profileData?.commitment_data?.q3 || '',
+                      commitmentValidating: false,
+                      commitmentValidation: null,
+                      commitmentSaving: false
+                    });
+                    setProfileError('');
+                    setShowProfileEdit(true);
+                  }}
+                >
+                  Edit Profile
+                </button>
+              </div>
             </div>
 
             {/* Devices */}
@@ -4189,88 +4237,6 @@ function App() {
             </div>
           </div>
 
-          {/* Account Information - Single Column */}
-          <div className="card" style={{marginBottom: '32px', maxWidth: '600px', margin: '0 auto 32px auto'}}>
-            <div className="card-header">
-              <h3 className="card-title">Account</h3>
-            </div>
-            <div style={{margin: '0 0 16px 0'}}>
-              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
-                <span style={{fontSize: '14px', color: '#374151'}}>Email</span>
-                <span style={{
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  color: '#6b7280',
-                  fontFamily: 'monospace'
-                }}>
-                  merijn@risottini.com
-                </span>
-              </div>
-              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
-                <span style={{fontSize: '14px', color: '#374151'}}>Username</span>
-                <span style={{
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  color: '#374151'
-                }}>
-                  @theking
-                </span>
-              </div>
-              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
-                <span style={{fontSize: '14px', color: '#374151'}}>Gender</span>
-                <span style={{
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  color: '#374151'
-                }}>
-                  🙋‍♂️ Man
-                </span>
-              </div>
-              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
-                <span style={{fontSize: '14px', color: '#374151'}}>WhatsApp</span>
-                <span style={{
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  color: '#374151',
-                  fontFamily: 'monospace'
-                }}>
-                  +31627207989
-                </span>
-              </div>
-              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0'}}>
-                <span style={{fontSize: '14px', color: '#374151'}}>Commitment</span>
-                <span style={{
-                  fontSize: '12px',
-                  fontWeight: '500',
-                  color: '#6b7280',
-                  backgroundColor: '#f3f4f6',
-                  padding: '2px 8px',
-                  borderRadius: '8px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px'
-                }}>
-                  Not Set
-                </span>
-              </div>
-            </div>
-            <div style={{marginTop: 'auto', display: 'flex', gap: '8px'}}>
-              <button
-                className="btn btn--outline btn--sm"
-                style={{flex: 1}}
-                onClick={() => {
-                  setProfileEditData({
-                    username: profileData?.username || '@theking',
-                    gender: profileData?.gender || 'man',
-                    whatsapp: profileData?.whatsapp || '+31627207989'
-                  });
-                  setProfileError('');
-                  setShowProfileEdit(true);
-                }}
-              >
-                Edit Profile
-              </button>
-            </div>
-          </div>
 
           {/* Subscription (50%) + Notifications (50%) */}
           <div className="grid grid-2" style={{marginBottom: '32px', alignItems: 'stretch'}}>
