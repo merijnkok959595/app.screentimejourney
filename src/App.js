@@ -272,6 +272,7 @@ function App() {
   const [unlockPincode, setUnlockPincode] = useState(null);
   const [recordingTime, setRecordingTime] = useState(0);
   const [recordingTimer, setRecordingTimer] = useState(null);
+  const [animationId, setAnimationId] = useState(null);
 
   // Subscription cancellation state
   const [showCancelFlow, setShowCancelFlow] = useState(false);
@@ -1531,7 +1532,6 @@ function App() {
       setAnalyser(analyserNode);
 
       // Animation function for audio bars
-      let animationId;
       const updateAudioLevels = () => {
         if (analyserNode) {
           analyserNode.getByteFrequencyData(dataArray);
@@ -1554,7 +1554,8 @@ function App() {
           setAudioLevels(bars);
           
           // Continue animation while recording
-          animationId = requestAnimationFrame(updateAudioLevels);
+          const newAnimationId = requestAnimationFrame(updateAudioLevels);
+          setAnimationId(newAnimationId);
         }
       };
 
@@ -1568,11 +1569,6 @@ function App() {
         const blob = new Blob(chunks, { type: 'audio/webm' });
         setAudioBlob(blob);
         stream.getTracks().forEach(track => track.stop());
-        
-        // Stop animation
-        if (animationId) {
-          cancelAnimationFrame(animationId);
-        }
         
         // Clean up audio context
         if (audioCtx) {
@@ -1597,6 +1593,16 @@ function App() {
 
   const stopRecording = () => {
     if (mediaRecorder && isRecording) {
+      console.log('🛑 Stopping recording...');
+      
+      // Stop animation first
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+        setAnimationId(null);
+        console.log('🎬 Animation stopped');
+      }
+      
+      // Stop recording
       mediaRecorder.stop();
       setIsRecording(false);
       setMediaRecorder(null);
@@ -1608,6 +1614,8 @@ function App() {
       }
       
       console.log('🛑 Recording stopped');
+    } else {
+      console.log('⚠️ Cannot stop recording - no active recording found');
     }
   };
 
