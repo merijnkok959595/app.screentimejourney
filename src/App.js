@@ -1077,17 +1077,11 @@ function App() {
         if (sessionCookie) {
           try {
             const cookieValue = sessionCookie.split('=')[1];
-            console.log('🔍 VPN: Cookie value length:', cookieValue?.length);
+            console.log('🔍 VPN: Raw cookie value:', cookieValue);
             
-            // Try with URL decoding first (like working account section)
-            let decodedValue;
-            try {
-              decodedValue = decodeURIComponent(cookieValue);
-              console.log('🔍 VPN: URL decoded value:', decodedValue);
-            } catch (decodeErr) {
-              console.log('🔍 VPN: No URL decoding needed, using raw value');
-              decodedValue = cookieValue;
-            }
+            // ALWAYS decode the cookie value first (it's URL encoded)
+            const decodedValue = decodeURIComponent(cookieValue);
+            console.log('🔍 VPN: URL decoded value:', decodedValue);
             
             const tokenData = JSON.parse(decodedValue);
             console.log('🔍 VPN: Token data keys:', Object.keys(tokenData));
@@ -1377,7 +1371,9 @@ function App() {
           if (sessionCookie) {
             try {
               const cookieValue = sessionCookie.split('=')[1];
-              const tokenData = JSON.parse(cookieValue);
+              // ALWAYS decode the cookie value first (it's URL encoded)
+              const decodedValue = decodeURIComponent(cookieValue);
+              const tokenData = JSON.parse(decodedValue);
               const decoded = atob(tokenData.token);
               const parts = decoded.split('|');
               customerId = parts[1]; // customer_id is the second part
@@ -2725,7 +2721,9 @@ function App() {
         if (sessionCookie) {
           try {
             const cookieValue = sessionCookie.split('=')[1];
-            const tokenData = JSON.parse(cookieValue);
+            // ALWAYS decode the cookie value first (it's URL encoded)
+            const decodedValue = decodeURIComponent(cookieValue);
+            const tokenData = JSON.parse(decodedValue);
             const decoded = atob(tokenData.token);
             const parts = decoded.split('|');
             customerId = parts[1]; // customer_id is the second part
@@ -2836,17 +2834,11 @@ function App() {
       if (sessionCookie) {
         try {
           const cookieValue = sessionCookie.split('=')[1];
-          console.log('🔍 Devices: Cookie value length:', cookieValue?.length);
+          console.log('🔍 Devices: Raw cookie value:', cookieValue);
           
-          // Try with URL decoding first (like working account section)
-          let decodedValue;
-          try {
-            decodedValue = decodeURIComponent(cookieValue);
-            console.log('🔍 Devices: URL decoded value:', decodedValue);
-          } catch (decodeErr) {
-            console.log('🔍 Devices: No URL decoding needed, using raw value');
-            decodedValue = cookieValue;
-          }
+          // ALWAYS decode the cookie value first (it's URL encoded)
+          const decodedValue = decodeURIComponent(cookieValue);
+          console.log('🔍 Devices: URL decoded value:', decodedValue);
           
           const tokenData = JSON.parse(decodedValue);
           console.log('🔍 Devices: Token data keys:', Object.keys(tokenData));
@@ -2950,7 +2942,9 @@ function App() {
         if (sessionCookie) {
           try {
             const cookieValue = sessionCookie.split('=')[1];
-            const tokenData = JSON.parse(cookieValue);
+            // ALWAYS decode the cookie value first (it's URL encoded)
+            const decodedValue = decodeURIComponent(cookieValue);
+            const tokenData = JSON.parse(decodedValue);
             const decoded = atob(tokenData.token);
             const parts = decoded.split('|');
             customerId = parts[1]; // customer_id is the second part
@@ -4729,18 +4723,13 @@ function App() {
                         </div>
                       </div>
                       <div style={{display: 'flex', gap: '6px', alignItems: 'center'}}>
-                        {(device.status === 'locked' || device.status === 'monitoring' || device.status === 'setup_complete') && (
-                          <button 
-                            className="btn btn--secondary btn--sm"
-                            onClick={() => unlockDevice(device.id)}
-                            style={{fontSize: '12px', padding: '4px 8px'}}
-                          >
-                            Unlock
-                          </button>
-                        )}
-                        {device.status === 'unlocked' && (
-                          <span className="badge badge--success" style={{fontSize: '11px'}}>Unlocked</span>
-                        )}
+                        <button 
+                          className="btn btn--secondary btn--sm"
+                          onClick={() => startDeviceFlow('device_unlock_flow', device.id)}
+                          style={{fontSize: '12px', padding: '4px 8px'}}
+                        >
+                          Unlock
+                        </button>
                       </div>
                     </div>
                   ))
