@@ -393,25 +393,7 @@ function App() {
     fetchMilestoneData();
     fetchDeviceFlows();
     
-    // Check if this is local development (localhost)
-    const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    
-    if (isLocalDev) {
-      console.log('🔧 Local development mode - bypassing authentication');
-      setCustomerData({ 
-        loginTime: new Date().toISOString(),
-        customerId: extractCustomerId(),  // Use centralized customer ID extraction
-        shop: 'local-dev.myshopify.com',
-        isLocalDev: true,
-        username: ''
-      });
-      // Show onboarding if no username is set
-      setShowOnboarding(true);
-      setLoading(false);
-      // Also fetch profile data for local dev
-      fetchProfileData();
-      return;
-    }
+    // Production-only: No local development bypass
 
     // Check authentication flows: App Proxy or SSO
     const path = window.location.pathname;
@@ -692,13 +674,6 @@ function App() {
   // Function to fetch milestone data
   const fetchMilestoneData = async () => {
     try {
-      const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      
-      if (isLocalDev) {
-        console.log('🔧 Local dev: Using default milestones');
-        setMilestones(DEFAULT_MILESTONES);
-        return;
-      }
 
       const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/get_milestones`, {
         method: 'POST',
@@ -2414,12 +2389,7 @@ function App() {
         console.log('🔧 Raw session cookie:', sessionCookie);
       }
       
-      // Method 3: Local Development - NO HARDCODED FALLBACK
-      const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      if (isLocalDev && !customerId) {
-        console.warn('⚠️ LOCAL DEV: No customer ID found - app will fail gracefully');
-        console.warn('🔧 For local testing, add ?cid=YOUR_CUSTOMER_ID to URL');
-      }
+      // Production-only: No local development fallbacks
       
       if (customerId) {
         console.log('✅ FINAL CUSTOMER ID:', customerId);
