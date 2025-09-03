@@ -917,6 +917,36 @@ function App() {
               action_button: 'Complete Setup'
             }
           ]
+        },
+        device_unlock_flow: {
+          flow_id: 'device_unlock',
+          flow_name: 'Unlock Device',
+          total_steps: 3,
+          steps: [
+            {
+              step: 1,
+              title: 'Unlock Process',
+              body: 'Watch this video to understand the unlock process and what it means for your journey.',
+              step_type: 'video',
+              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
+              action_button: 'I Understand, Continue'
+            },
+            {
+              step: 2,
+              title: '🔐 Unlock Device',
+              body: 'You are about to unlock your device. This action requires you to acknowledge what you are giving up.',
+              step_type: 'surrender',
+              surrender_text: 'I hereby give up on changing my screen time habits. I give up the chance to be a present family man, live with more presence and purpose, and give attention to my wife and children. I choose distraction over discipline, and I surrender my intention to grow.',
+              action_button: 'Submit Surrender'
+            },
+            {
+              step: 3,
+              title: '🔓 Unlock Code',
+              body: 'Your surrender has been approved. Use the code below to unlock your device for 15 minutes.',
+              step_type: 'pincode_display',
+              action_button: 'Complete Unlock'
+            }
+          ]
         }
       };
       
