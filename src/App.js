@@ -1350,7 +1350,7 @@ function App() {
           const audioData = {
             pincode: result.pincode,
             digits: result.digits,
-            audioUrl: 'generated-audio', // The TTS Lambda handles audio creation
+            audioUrl: result.tts_result?.public_url || null, // Real audio URL from TTS Lambda
             instructions: `Generated pincode: ${result.pincode}. Click Settings, then Screen Time, then Lock Screen Time settings. Follow the audio instructions to enter: ${result.digits.first}, ${result.digits.second}, ${result.digits.third}, ${result.digits.fourth}.`,
             executionId: result.execution_id
           };
@@ -1371,18 +1371,26 @@ function App() {
   
   const playAudioGuide = () => {
     if (!audioGuideData || !audioGuideData.audioUrl) {
-      alert('No audio guide available to play');
+      alert('No audio guide available to play. Please generate an audio guide first.');
       return;
     }
     
+    console.log('🔊 Playing audio guide:', audioGuideData.audioUrl);
+    
     // Create audio element and play
     const audio = new Audio(audioGuideData.audioUrl);
-    audio.play().catch(error => {
-      console.error('❌ Error playing audio:', error);
-      alert('Failed to play audio. Please check your browser settings.');
-    });
     
-    console.log('🔊 Playing audio guide for pincode:', audioGuideData.pincode);
+    // Add event listeners for better debugging
+    audio.addEventListener('loadstart', () => console.log('🎵 Audio loading started'));
+    audio.addEventListener('canplay', () => console.log('🎵 Audio can play'));
+    audio.addEventListener('error', (e) => console.error('🎵 Audio error:', e));
+    
+    audio.play().then(() => {
+      console.log('✅ Audio playing successfully for pincode:', audioGuideData.pincode);
+    }).catch(error => {
+      console.error('❌ Error playing audio:', error);
+      alert(`Failed to play audio: ${error.message}. Please check your browser settings and ensure audio is allowed.`);
+    });
   };
 
   // Voice recording functions for surrender
