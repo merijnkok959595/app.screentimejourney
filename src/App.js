@@ -1466,6 +1466,7 @@ function App() {
     setCancelStep(1);
     setCancelReason('');
     setCancelFeedback('');
+    setCancelSubmitting(false);
   };
 
   const nextCancelStep = () => {
@@ -1478,38 +1479,17 @@ function App() {
     setCancelSubmitting(true);
     
     try {
+      const customerId = extractCustomerId();
       const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
       
       if (isLocalDev) {
         // Mock cancellation for local development
-        console.log('🔧 Local dev: Mock cancellation submitted');
+        console.log('🔧 Local dev: Mock cancellation submitted', {
+          customerId,
+          reason: cancelReason,
+          feedback: cancelFeedback
+        });
         await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API delay
-        
-        alert('✅ Subscription cancelled successfully! You will receive a confirmation email.');
-        closeCancelFlow();
-        return;
-      }
-
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/cancel_subscription`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: customerData?.customerId || 'dev_user_123',
-          customer_email: customerData?.email || 'test@example.com',
-          shop: customerData?.shop || 'test-shop.myshopify.com',
-          subscription_id: customerData?.subscription_id,
-          cancel_reason: cancelReason,
-          feedback: cancelFeedback,
-          cancel_date: new Date().toISOString()
-        })
-      });
-
-      const result = await response.json();
-
-      if (response.ok && result.success) {
-        alert('✅ Subscription cancelled successfully! You will receive a confirmation email.');
         
         // Update local state to reflect cancellation
         setCustomerData(prev => ({
@@ -1517,14 +1497,62 @@ function App() {
           subscription_status: 'cancelled'
         }));
         
-        closeCancelFlow();
+        // Show success message and close modal
+        setCancelStep(4); // Add success step
+        setTimeout(() => {
+          closeCancelFlow();
+        }, 3000);
+        return;
+      }
+
+      // Make API call to cancel subscription via Shopify
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/cancel_subscription`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customer_id: customerId,
+          user_id: customerData?.customerId || customerId,
+          customer_email: customerData?.email || 'test@example.com',
+          shop: customerData?.shop || 'xpvznx-9w.myshopify.com',
+          subscription_id: customerData?.subscription_id,
+          shopify_customer_id: customerData?.shopifyCustomerId,
+          cancel_reason: cancelReason,
+          feedback: cancelFeedback,
+          cancel_date: new Date().toISOString(),
+          // Add Shopify-specific action for backend processing
+          action: 'cancel_shopify_subscription'
+        })
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        console.log('✅ Subscription cancelled successfully:', result);
+        
+        // Update local state to reflect cancellation
+        setCustomerData(prev => ({
+          ...prev,
+          subscription_status: 'cancelled',
+          subscription_cancelled_at: new Date().toISOString()
+        }));
+        
+        // Show success step
+        setCancelStep(4);
+        
+        // Auto-close after showing success message
+        setTimeout(() => {
+          closeCancelFlow();
+        }, 4000);
+        
       } else {
-        throw new Error(result.error || 'Failed to cancel subscription');
+        throw new Error(result.error || 'Failed to cancel subscription. Please contact support.');
       }
 
     } catch (error) {
       console.error('❌ Error cancelling subscription:', error);
-      alert('❌ Failed to cancel subscription. Please try again or contact support.');
+      alert(`❌ Failed to cancel subscription: ${error.message}\n\nPlease try again or contact support at support@screentimejourney.com`);
     } finally {
       setCancelSubmitting(false);
     }
@@ -4514,11 +4542,12 @@ function App() {
         <div className="modal" role="dialog" aria-modal="true" aria-labelledby="cancel-flow-title" style={{maxWidth: '600px'}}>
           <>
             <div className="modal__header">
-              <div className="step-indicator">Step {cancelStep} of 3</div>
+              <div className="step-indicator">{cancelStep === 4 ? 'Complete' : `Step ${cancelStep} of 3`}</div>
               <h3 id="cancel-flow-title" className="modal__title">
                 {cancelStep === 1 && 'We\'re sorry to see you go'}
                 {cancelStep === 2 && 'Help us improve'}
                 {cancelStep === 3 && 'Confirm cancellation'}
+                {cancelStep === 4 && 'Subscription cancelled'}
               </h3>
             </div>
 
@@ -4620,6 +4649,42 @@ function App() {
                   </div>
                 </div>
               )}
+
+              {cancelStep === 4 && (
+                <div style={{textAlign: 'center', marginBottom: '20px'}}>
+                  <div style={{fontSize: '4rem', marginBottom: '24px'}}>✅</div>
+                  
+                  <h4 style={{fontSize: '24px', fontWeight: '600', color: '#059669', marginBottom: '16px'}}>
+                    Subscription Successfully Cancelled
+                  </h4>
+                  
+                  <p style={{fontSize: '16px', lineHeight: '1.5', color: '#374151', marginBottom: '24px'}}>
+                    Your subscription has been cancelled and you will receive a confirmation email shortly.
+                  </p>
+                  
+                  <div style={{background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', padding: '20px', marginBottom: '24px', textAlign: 'left'}}>
+                    <h5 style={{margin: '0 0 12px 0', fontSize: '16px', fontWeight: '600', color: '#059669'}}>
+                      What happens next:
+                    </h5>
+                    <ul style={{margin: 0, paddingLeft: '20px', color: '#374151', lineHeight: '1.6'}}>
+                      <li>You'll continue to have access until your current billing period ends</li>
+                      <li>A confirmation email will be sent to your registered email address</li>
+                      <li>Your progress and data will be preserved for 30 days in case you change your mind</li>
+                      <li>No further charges will be made to your account</li>
+                    </ul>
+                  </div>
+                  
+                  <div style={{background: '#e0f2fe', border: '1px solid #0284c7', borderRadius: '8px', padding: '16px', marginBottom: '20px'}}>
+                    <p style={{margin: 0, fontSize: '14px', color: '#0369a1', fontWeight: '500'}}>
+                      💙 Thank you for being part of the Screen Time Journey community. We hope to see you again soon!
+                    </p>
+                  </div>
+                  
+                  <p style={{fontSize: '14px', color: '#6b7280', margin: 0}}>
+                    Questions? Contact us at <strong>support@screentimejourney.com</strong>
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="modal__footer">
@@ -4696,6 +4761,21 @@ function App() {
                     Back
                   </button>
                 </>
+              )}
+
+              {cancelStep === 4 && (
+                <div style={{textAlign: 'center'}}>
+                  <p style={{fontSize: '14px', color: '#6b7280', margin: '0 0 16px 0'}}>
+                    This window will close automatically in a few seconds...
+                  </p>
+                  <button
+                    className="btn btn--secondary btn--full"
+                    onClick={closeCancelFlow}
+                    style={{width: '100%'}}
+                  >
+                    Close
+                  </button>
+                </div>
               )}
             </div>
           </>
