@@ -1626,6 +1626,13 @@ function App() {
   };
 
   const stopRecording = () => {
+    console.log('🔍 stopRecording called with state:', {
+      mediaRecorder: !!mediaRecorder,
+      isRecording,
+      animationId,
+      recordingTimer: !!recordingTimer
+    });
+    
     if (mediaRecorder && isRecording) {
       console.log('🛑 Stopping recording...');
       
@@ -1637,19 +1644,30 @@ function App() {
       }
       
       // Stop recording
-      mediaRecorder.stop();
+      try {
+        mediaRecorder.stop();
+        console.log('📹 MediaRecorder.stop() called');
+      } catch (error) {
+        console.error('❌ Error stopping mediaRecorder:', error);
+      }
+      
       setIsRecording(false);
       setMediaRecorder(null);
+      console.log('🔄 State updated: isRecording=false, mediaRecorder=null');
       
       // Clear timer
       if (recordingTimer) {
         clearInterval(recordingTimer);
         setRecordingTimer(null);
+        console.log('⏰ Timer cleared');
       }
       
-      console.log('🛑 Recording stopped');
+      console.log('🛑 Recording stopped successfully');
     } else {
-      console.log('⚠️ Cannot stop recording - no active recording found');
+      console.log('⚠️ Cannot stop recording - conditions not met:', {
+        hasMediaRecorder: !!mediaRecorder,
+        isCurrentlyRecording: isRecording
+      });
     }
   };
 
@@ -4800,7 +4818,8 @@ function App() {
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          gap: '8px'
+                          gap: '8px',
+                          width: '100%'
                         }}>
                           <div style={{
                             width: '16px',
@@ -4808,7 +4827,8 @@ function App() {
                             border: '2px solid transparent',
                             borderTop: '2px solid white',
                             borderRadius: '50%',
-                            animation: 'spin 1s linear infinite'
+                            animation: 'spin 1s linear infinite',
+                            flexShrink: 0
                           }}></div>
                           <span>Processing Surrender...</span>
                         </div>
