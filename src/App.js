@@ -5145,4 +5145,4 @@ function App() {
 export default App;
  
 // Simple footer
-// Rendered by the host HTML; add minimal footer div here if needed
+// Rendered by the host HTML; add minimal footer div here if needed// Backend updated with Shopify subscription cancellation API integration Wed Sep  3 13:07:57 CEST 2025
