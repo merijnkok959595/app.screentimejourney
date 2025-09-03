@@ -1549,10 +1549,25 @@ function App() {
     }));
   };
 
+  // Set default notification settings when user validates WhatsApp or email
+  const setDefaultNotificationSettings = () => {
+    setNotificationSettings({
+      email: {
+        weeklyProgress: true,
+        monthlyLeaderboard: true
+      },
+      whatsapp: {
+        weeklyProgress: true,
+        monthlyLeaderboard: true
+      }
+    });
+  };
+
   const submitNotificationSettings = async () => {
     setNotificationsSubmitting(true);
     
     try {
+      const customerId = extractCustomerId();
       const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
       
       if (isLocalDev) {
@@ -1565,15 +1580,42 @@ function App() {
         return;
       }
 
+      // Create individual records for each notification type
+      const notificationRecords = [
+        {
+          notification_type: 'email_weekly',
+          enabled: notificationSettings.email.weeklyProgress,
+          customer_id: customerId,
+          updated_at: new Date().toISOString()
+        },
+        {
+          notification_type: 'email_monthly', 
+          enabled: notificationSettings.email.monthlyLeaderboard,
+          customer_id: customerId,
+          updated_at: new Date().toISOString()
+        },
+        {
+          notification_type: 'whatsapp_weekly',
+          enabled: notificationSettings.whatsapp.weeklyProgress,
+          customer_id: customerId,
+          updated_at: new Date().toISOString()
+        },
+        {
+          notification_type: 'whatsapp_monthly',
+          enabled: notificationSettings.whatsapp.monthlyLeaderboard,
+          customer_id: customerId,
+          updated_at: new Date().toISOString()
+        }
+      ];
+
       const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/update_notifications`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user_id: customerData?.customerId || 'dev_user_123',
-          notification_settings: notificationSettings,
-          updated_at: new Date().toISOString()
+          customer_id: customerId,
+          notification_records: notificationRecords
         })
       });
 
@@ -2159,6 +2201,10 @@ function App() {
           if (whatsappCode === '123456') {
             setWhatsappLinked(true);
             console.log('🔧 Local dev: WhatsApp verification successful');
+            
+            // Set default notification settings when WhatsApp is verified
+            setDefaultNotificationSettings();
+            
             await saveProfile(); // Proceed to save profile
           } else {
             setWhatsappLoading(false);
@@ -2199,6 +2245,9 @@ function App() {
       if (response.ok && result.success) {
         setWhatsappLinked(true);
         console.log('✅ WhatsApp verified and saved to profile:', result.phone);
+        
+        // Set default notification settings when WhatsApp is verified
+        setDefaultNotificationSettings();
         
         // The backend has already saved the WhatsApp data to the profile
         // Just proceed to save the rest of the profile (username, gender)
@@ -4114,14 +4163,12 @@ function App() {
                     fontSize: '12px',
                     fontWeight: '500',
                     color: profileData?.commitment_data ? '#059669' : '#6b7280',
-                    backgroundColor: profileData?.commitment_data ? '#f0fdf4' : '#f3f4f6',
+                    backgroundColor: '#f9fafb',
                     padding: '2px 8px',
-                    borderRadius: '8px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px',
-                    border: profileData?.commitment_data ? '1px solid #bbf7d0' : 'none'
+                    borderRadius: '12px',
+                    border: '1px solid #e5e7eb'
                   }}>
-                    {profileData?.commitment_data ? 'Set ✓' : 'Not Set'}
+                    {profileData?.commitment_data ? 'Set ✓' : 'Not Set ✗'}
                   </span>
                 </div>
                 {profileData?.commitment_data && (
