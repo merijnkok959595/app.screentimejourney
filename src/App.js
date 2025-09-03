@@ -4788,10 +4788,37 @@ function App() {
                     <button
                       className="btn btn--primary btn--full"
                       onClick={nextFlowStep}
+                      disabled={surrenderSubmitting}
+                      style={{
+                        opacity: surrenderSubmitting ? 0.7 : 1,
+                        cursor: surrenderSubmitting ? 'not-allowed' : 'pointer',
+                        position: 'relative'
+                      }}
                     >
-                      {currentFlow.steps && currentFlow.steps[currentFlowStep - 1] 
-                        ? currentFlow.steps[currentFlowStep - 1].action_button 
-                        : 'Next Step'} →
+                      {surrenderSubmitting ? (
+                        <div style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '8px'
+                        }}>
+                          <div style={{
+                            width: '16px',
+                            height: '16px',
+                            border: '2px solid transparent',
+                            borderTop: '2px solid white',
+                            borderRadius: '50%',
+                            animation: 'spin 1s linear infinite'
+                          }}></div>
+                          <span>Processing Surrender...</span>
+                        </div>
+                      ) : (
+                        <>
+                          {currentFlow.steps && currentFlow.steps[currentFlowStep - 1] 
+                            ? currentFlow.steps[currentFlowStep - 1].action_button 
+                            : 'Next Step'} →
+                        </>
+                      )}
                     </button>
                     
                     {/* Dynamic Cancel/Back Button */}
