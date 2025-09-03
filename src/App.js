@@ -196,6 +196,7 @@ function App() {
   const [whatsappLinked, setWhatsappLinked] = useState(false);
   const [whatsappError, setWhatsappError] = useState('');
   const [resendCooldown, setResendCooldown] = useState(0);
+  const [whatsappLoading, setWhatsappLoading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   // Profile management state
@@ -1986,7 +1987,7 @@ function App() {
     }
 
     try {
-      setLoading(true);
+      setWhatsappLoading(true);
       
       // Check if this is local development
       const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -1997,12 +1998,50 @@ function App() {
           setWhatsappCodeSent(true);
           setResendCooldown(60); // Start 60-second cooldown
           setOnboardStep(4); // Move to verification step
-          setLoading(false);
+          setWhatsappLoading(false);
           console.log(`🔧 Local dev: Simulated sending code to ${newCountryCode}${newWhatsapp}`);
           alert(`Demo: Verification code "123456" sent to ${newCountryCode}${newWhatsapp}`);
         }, 1000);
         return;
       }
+      
+      // Extract customer ID from URL params or cookie (same logic as saveProfile)
+      const urlParams = new URLSearchParams(window.location.search);
+      let customerId = urlParams.get('cid') || urlParams.get('logged_in_customer_id');
+      
+      if (!customerId) {
+        // Try to get from session cookie
+        const sessionCookie = document.cookie
+          .split('; ')
+          .find(row => row.startsWith('stj_session='));
+        
+        if (sessionCookie) {
+          try {
+            const sessionValue = sessionCookie.split('=')[1];
+            const tokenData = JSON.parse(atob(sessionValue));
+            const decoded = atob(tokenData.token);
+            const parts = decoded.split('|');
+            customerId = parts[1]; // customer_id is the second part
+          } catch (err) {
+            console.error('❌ Failed to extract customer ID from session:', err);
+          }
+        }
+      }
+      
+      // For local development, use a real customer ID
+      // isLocalDev already declared above
+      if (isLocalDev && !customerId) {
+        customerId = '8885250982135'; // Real customer ID for development
+        console.log('🔧 Local dev: Using real customer ID for WhatsApp:', customerId);
+      }
+      
+      if (!customerId) {
+        alert('Unable to send verification code: Customer ID not found');
+        setWhatsappLoading(false);
+        return;
+      }
+      
+      console.log('📱 Sending WhatsApp code with customer ID:', customerId);
       
       // Call backend API to send WhatsApp verification code
       const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/send_whatsapp_code`, {
@@ -2012,7 +2051,7 @@ function App() {
         },
         body: JSON.stringify({ 
           phone_number: `${newCountryCode}${newWhatsapp}`.replace(/\s/g, ''),
-          customer_id: `temp_${Date.now()}`
+          customer_id: customerId
         })
       });
       
@@ -2031,7 +2070,7 @@ function App() {
       console.error('❌ Error sending WhatsApp code:', error);
       alert('Failed to send verification code. Please check your connection and try again.');
     } finally {
-      setLoading(false);
+      setWhatsappLoading(false);
     }
   };
 
@@ -2044,7 +2083,7 @@ function App() {
     }
 
     try {
-      setLoading(true);
+      setWhatsappLoading(true);
       
       // Check if this is local development
       const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -2057,12 +2096,50 @@ function App() {
             console.log('🔧 Local dev: WhatsApp verification successful');
             await saveProfile(); // Proceed to save profile
           } else {
-            setLoading(false);
+            setWhatsappLoading(false);
             setWhatsappError('Invalid code. Use "123456" for demo');
           }
         }, 500);
         return;
       }
+      
+      // Extract customer ID from URL params or cookie (same logic as saveProfile)
+      const urlParams = new URLSearchParams(window.location.search);
+      let customerId = urlParams.get('cid') || urlParams.get('logged_in_customer_id');
+      
+      if (!customerId) {
+        // Try to get from session cookie
+        const sessionCookie = document.cookie
+          .split('; ')
+          .find(row => row.startsWith('stj_session='));
+        
+        if (sessionCookie) {
+          try {
+            const sessionValue = sessionCookie.split('=')[1];
+            const tokenData = JSON.parse(atob(sessionValue));
+            const decoded = atob(tokenData.token);
+            const parts = decoded.split('|');
+            customerId = parts[1]; // customer_id is the second part
+          } catch (err) {
+            console.error('❌ Failed to extract customer ID from session:', err);
+          }
+        }
+      }
+      
+      // For local development, use a real customer ID
+      // isLocalDev already declared above
+      if (isLocalDev && !customerId) {
+        customerId = '8885250982135'; // Real customer ID for development
+        console.log('🔧 Local dev: Using real customer ID for verification:', customerId);
+      }
+      
+      if (!customerId) {
+        alert('Unable to verify code: Customer ID not found');
+        setWhatsappLoading(false);
+        return;
+      }
+      
+      console.log('🔍 Verifying WhatsApp code with customer ID:', customerId);
       
       // Call backend API to verify WhatsApp code
       const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/verify_whatsapp_code`, {
@@ -2073,7 +2150,7 @@ function App() {
         body: JSON.stringify({ 
           phone_number: `${newCountryCode}${newWhatsapp}`.replace(/\s/g, ''),
           code: whatsappCode,
-          customer_id: `temp_${Date.now()}`,
+          customer_id: customerId,
           username: newUsername || 'tempuser',
           gender: newGender || 'other'
         })
@@ -2092,7 +2169,7 @@ function App() {
       console.error('❌ Error verifying WhatsApp code:', error);
       setWhatsappError('Failed to verify code. Please check your connection and try again.');
     } finally {
-      setLoading(false);
+      setWhatsappLoading(false);
     }
   };
 
@@ -2671,14 +2748,20 @@ function App() {
                 <div className="modal__footer">
                   <button
                     className="btn btn--primary btn--full"
-                    disabled={!newWhatsapp.trim()}
+                    disabled={!newWhatsapp.trim() || whatsappLoading}
                     onClick={sendWhatsAppCode}
                   >
-                    Validate
+                    {whatsappLoading ? 'Sending code...' : 'Validate'}
                   </button>
-                  <button className="btn btn--secondary btn--full" onClick={async () => {
-                    await saveProfile(); // Save without WhatsApp
-                  }}>Skip (not recommended)</button>
+                  <button 
+                    className="btn btn--secondary btn--full" 
+                    disabled={whatsappLoading}
+                    onClick={async () => {
+                      await saveProfile(); // Save without WhatsApp
+                    }}
+                  >
+                    {whatsappLoading ? 'Please wait...' : 'Skip (not recommended)'}
+                  </button>
                   <button className="link-back" onClick={() => setOnboardStep(2)}>Back</button>
                 </div>
               </div>
@@ -2701,10 +2784,10 @@ function App() {
                 <div className="modal__footer">
                   <button
                     className="btn btn--primary btn--full"
-                    disabled={whatsappCode.length !== 6}
+                    disabled={whatsappCode.length !== 6 || whatsappLoading}
                     onClick={verifyWhatsAppCode}
                   >
-                    Verify & Complete
+                    {whatsappLoading ? 'Verifying...' : 'Verify & Complete'}
                   </button>
                   <button 
                     className="link-back" 
