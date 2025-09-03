@@ -270,6 +270,8 @@ function App() {
   const [analyser, setAnalyser] = useState(null);
   const [surrenderApproved, setSurrenderApproved] = useState(false);
   const [unlockPincode, setUnlockPincode] = useState(null);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const [recordingTimer, setRecordingTimer] = useState(null);
 
   // Subscription cancellation state
   const [showCancelFlow, setShowCancelFlow] = useState(false);
@@ -1506,6 +1508,15 @@ function App() {
       const recorder = new MediaRecorder(stream);
       const chunks = [];
 
+      // Reset recording time
+      setRecordingTime(0);
+      
+      // Start timer
+      const timer = setInterval(() => {
+        setRecordingTime(prev => prev + 1);
+      }, 1000);
+      setRecordingTimer(timer);
+
       // Set up audio visualization
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const analyserNode = audioCtx.createAnalyser();
@@ -1584,6 +1595,13 @@ function App() {
       mediaRecorder.stop();
       setIsRecording(false);
       setMediaRecorder(null);
+      
+      // Clear timer
+      if (recordingTimer) {
+        clearInterval(recordingTimer);
+        setRecordingTimer(null);
+      }
+      
       console.log('🛑 Recording stopped');
     }
   };
@@ -4119,58 +4137,163 @@ function App() {
                               </p>
                             </div>
                             
-                            {/* Recording Controls */}
-                            <div style={{marginBottom: '20px'}}>
+                            {/* Professional Recording Interface */}
+                            <div style={{
+                              background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1))',
+                              border: '2px solid rgba(99, 102, 241, 0.2)',
+                              borderRadius: '16px',
+                              padding: '24px',
+                              marginBottom: '24px',
+                              textAlign: 'center'
+                            }}>
                               {!audioBlob ? (
                                 <div>
-                                  {/* Audio Visualizer - only show when recording */}
-                                  {isRecording && (
-                                    <>
-                                      <div className="recording-indicator">
-                                        <div className="recording-pulse"></div>
-                                        <span className="recording-text">🔴 Recording in progress...</span>
+                                  {/* Recording Status and Timer */}
+                                  <div style={{marginBottom: '20px'}}>
+                                    {isRecording ? (
+                                      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px'}}>
+                                        {/* Recording Status */}
+                                        <div style={{
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          gap: '8px',
+                                          fontSize: '16px',
+                                          fontWeight: '600',
+                                          color: '#DC2626'
+                                        }}>
+                                          <div style={{
+                                            width: '12px',
+                                            height: '12px',
+                                            backgroundColor: '#DC2626',
+                                            borderRadius: '50%',
+                                            animation: 'pulse 1.5s ease-in-out infinite'
+                                          }}></div>
+                                          Recording in progress...
+                                        </div>
+                                        
+                                        {/* Timer */}
+                                        <div style={{
+                                          fontSize: '24px',
+                                          fontWeight: '700',
+                                          color: '#374151',
+                                          fontFamily: 'monospace'
+                                        }}>
+                                          {recordingTime}s
+                                        </div>
+                                        
+                                        {/* Audio Visualizer */}
+                                        <div style={{
+                                          display: 'flex',
+                                          alignItems: 'end',
+                                          gap: '3px',
+                                          height: '60px',
+                                          justifyContent: 'center',
+                                          marginTop: '8px'
+                                        }}>
+                                          {Array.from({length: 20}, (_, i) => (
+                                            <div
+                                              key={i}
+                                              style={{
+                                                width: '4px',
+                                                backgroundColor: audioLevels[i % audioLevels.length] > 20 ? '#6366F1' : '#E5E7EB',
+                                                borderRadius: '2px',
+                                                height: `${Math.max(8, (audioLevels[i % audioLevels.length] || 10) * 0.8)}px`,
+                                                transition: 'all 0.1s ease',
+                                                animation: audioLevels[i % audioLevels.length] > 20 ? 'bounce 0.3s ease' : 'none'
+                                              }}
+                                            />
+                                          ))}
+                                        </div>
                                       </div>
-                                      <div className="audio-visualizer">
-                                        {audioLevels.map((level, index) => (
-                                          <div 
-                                            key={index}
-                                            className={`audio-bar ${level > 20 ? 'active' : ''}`}
-                                            style={{height: `${level}%`}}
-                                          />
-                                        ))}
-                                        {/* Fill with empty bars if no levels yet */}
-                                        {audioLevels.length === 0 && Array.from({length: 8}, (_, i) => (
-                                          <div 
-                                            key={i}
-                                            className="audio-bar"
-                                            style={{height: '10%'}}
-                                          />
-                                        ))}
+                                    ) : (
+                                      <div style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        gap: '12px'
+                                      }}>
+                                        <div style={{
+                                          width: '80px',
+                                          height: '80px',
+                                          borderRadius: '50%',
+                                          background: 'linear-gradient(135deg, #6366F1, #8B5CF6)',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          marginBottom: '8px'
+                                        }}>
+                                          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                                            <path d="M12 19v4"/>
+                                            <path d="M8 23h8"/>
+                                          </svg>
+                                        </div>
+                                        <h3 style={{
+                                          margin: 0,
+                                          fontSize: '18px',
+                                          fontWeight: '600',
+                                          color: '#374151'
+                                        }}>
+                                          Ready to Record
+                                        </h3>
+                                        <p style={{
+                                          margin: 0,
+                                          fontSize: '14px',
+                                          color: '#6B7280',
+                                          maxWidth: '280px'
+                                        }}>
+                                          Tap the button below to start recording your surrender statement
+                                        </p>
                                       </div>
-                                    </>
-                                  )}
+                                    )}
+                                  </div>
                                   
+                                  {/* Record Button */}
                                   <button
-                                    className={`btn ${isRecording ? 'btn--secondary' : 'btn--outline'} btn--sm`}
                                     onClick={isRecording ? stopRecording : startRecording}
-                                    style={{width: '100%', marginBottom: '8px'}}
+                                    style={{
+                                      background: isRecording 
+                                        ? 'linear-gradient(135deg, #DC2626, #B91C1C)'
+                                        : 'linear-gradient(135deg, #6366F1, #8B5CF6)',
+                                      border: 'none',
+                                      borderRadius: '12px',
+                                      padding: '14px 28px',
+                                      fontSize: '16px',
+                                      fontWeight: '600',
+                                      color: 'white',
+                                      cursor: 'pointer',
+                                      transition: 'all 0.2s ease',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '8px',
+                                      margin: '0 auto',
+                                      boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)',
+                                      width: 'auto',
+                                      minWidth: '160px'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                      e.target.style.transform = 'translateY(-2px)';
+                                      e.target.style.boxShadow = '0 6px 16px rgba(99, 102, 241, 0.4)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.target.style.transform = 'translateY(0px)';
+                                      e.target.style.boxShadow = '0 4px 12px rgba(99, 102, 241, 0.3)';
+                                    }}
                                   >
                                     {isRecording ? (
                                       <>
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px'}}>
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                           <rect x="6" y="6" width="12" height="12"/>
                                         </svg>
-                                        🔴 Stop Recording
+                                        Stop Recording
                                       </>
                                     ) : (
                                       <>
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px'}}>
-                                          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-                                          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                                          <path d="M12 19v4"/>
-                                          <path d="M8 23h8"/>
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                          <circle cx="12" cy="12" r="3"/>
                                         </svg>
-                                        🎤 Start Recording
+                                        Start Recording
                                       </>
                                     )}
                                   </button>
@@ -4187,22 +4310,141 @@ function App() {
                                   )}
                                 </div>
                               ) : (
-                                <div>
-                                  <div style={{background: '#d1fae5', border: '1px solid #6ee7b7', borderRadius: '6px', padding: '12px', marginBottom: '12px'}}>
-                                    <p style={{margin: 0, fontSize: '14px', color: '#065f46', fontWeight: '500'}}>
-                                      ✅ Recording completed. Ready to submit.
-                                    </p>
+                                <div style={{
+                                  background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.1))',
+                                  border: '2px solid rgba(34, 197, 94, 0.3)',
+                                  borderRadius: '16px',
+                                  padding: '24px'
+                                }}>
+                                  {/* Success Message */}
+                                  <div style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    gap: '16px',
+                                    marginBottom: '24px'
+                                  }}>
+                                    <div style={{
+                                      width: '60px',
+                                      height: '60px',
+                                      borderRadius: '50%',
+                                      background: 'linear-gradient(135deg, #22C55E, #16A34A)',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center'
+                                    }}>
+                                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
+                                        <path d="M20 6L9 17l-5-5"/>
+                                      </svg>
+                                    </div>
+                                    <div style={{textAlign: 'center'}}>
+                                      <h3 style={{
+                                        margin: '0 0 8px 0',
+                                        fontSize: '18px',
+                                        fontWeight: '600',
+                                        color: '#15803D'
+                                      }}>
+                                        Recording Complete!
+                                      </h3>
+                                      <p style={{
+                                        margin: 0,
+                                        fontSize: '14px',
+                                        color: '#16A34A'
+                                      }}>
+                                        Duration: {recordingTime} seconds
+                                      </p>
+                                    </div>
                                   </div>
-                                  <button
-                                    className="btn btn--outline btn--sm"
-                                    onClick={() => {
-                                      setAudioBlob(null);
-                                      setIsRecording(false);
-                                    }}
-                                    style={{width: '100%'}}
-                                  >
-                                    🔄 Record Again
-                                  </button>
+                                  
+                                  {/* Audio Player Preview */}
+                                  <div style={{
+                                    background: 'rgba(255, 255, 255, 0.8)',
+                                    borderRadius: '12px',
+                                    padding: '16px',
+                                    marginBottom: '20px',
+                                    border: '1px solid rgba(34, 197, 94, 0.2)'
+                                  }}>
+                                    <div style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '12px'
+                                    }}>
+                                      <button
+                                        onClick={() => {
+                                          const audio = new Audio(URL.createObjectURL(audioBlob));
+                                          audio.play();
+                                        }}
+                                        style={{
+                                          background: 'linear-gradient(135deg, #22C55E, #16A34A)',
+                                          border: 'none',
+                                          borderRadius: '50%',
+                                          width: '40px',
+                                          height: '40px',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          cursor: 'pointer',
+                                          transition: 'transform 0.2s ease'
+                                        }}
+                                        onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}
+                                        onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                                      >
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                                          <polygon points="5,3 19,12 5,21"/>
+                                        </svg>
+                                      </button>
+                                      <div style={{flex: 1}}>
+                                        <div style={{
+                                          fontSize: '14px',
+                                          fontWeight: '500',
+                                          color: '#374151',
+                                          marginBottom: '4px'
+                                        }}>
+                                          Surrender Recording
+                                        </div>
+                                        <div style={{
+                                          fontSize: '12px',
+                                          color: '#6B7280'
+                                        }}>
+                                          Tap play to review your recording
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Action Buttons */}
+                                  <div style={{
+                                    display: 'flex',
+                                    gap: '12px'
+                                  }}>
+                                    <button
+                                      onClick={() => {
+                                        setAudioBlob(null);
+                                        setIsRecording(false);
+                                        setRecordingTime(0);
+                                      }}
+                                      style={{
+                                        flex: 1,
+                                        background: 'transparent',
+                                        border: '2px solid rgba(34, 197, 94, 0.3)',
+                                        borderRadius: '10px',
+                                        padding: '12px 16px',
+                                        fontSize: '14px',
+                                        fontWeight: '600',
+                                        color: '#16A34A',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s ease'
+                                      }}
+                                      onMouseEnter={(e) => {
+                                        e.target.style.background = 'rgba(34, 197, 94, 0.1)';
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        e.target.style.background = 'transparent';
+                                      }}
+                                    >
+                                      🔄 Record Again
+                                    </button>
+                                  </div>
                                 </div>
                               )}
                             </div>
