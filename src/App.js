@@ -1738,33 +1738,11 @@ function App() {
       setProfileLoading(true);
       setProfileError('');
       
-      // Extract customer ID from session
-      let customerId = null;
-      const sessionCookie = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('stj_session='));
-      
-      if (sessionCookie) {
-        try {
-          const cookieValue = sessionCookie.split('=')[1];
-          const tokenData = JSON.parse(cookieValue);
-          const decoded = atob(tokenData.token);
-          const parts = decoded.split('|');
-          customerId = parts[1]; // customer_id is the second part
-        } catch (err) {
-          console.error('❌ Failed to extract customer ID from session:', err);
-        }
-      }
+      // CRITICAL: Use centralized customer ID extraction
+      const customerId = extractCustomerId();
       
       if (!customerId) {
-        // For local development, use a real customer ID from DynamoDB
-        const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        if (isLocalDev) {
-          customerId = '8885250982135'; // Real customer ID for development
-          console.log('🔧 Local dev: Using real customer ID:', customerId);
-        } else {
-          throw new Error('Customer ID not found');
-        }
+        throw new Error('Customer ID not found');
       }
       
       // Check if this is local development
@@ -1822,23 +1800,8 @@ function App() {
       setProfileLoading(true);
       setProfileError('');
       
-      // Extract customer ID from session
-      let customerId = null;
-      const sessionCookie = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('stj_session='));
-      
-      if (sessionCookie) {
-        try {
-          const cookieValue = sessionCookie.split('=')[1];
-          const tokenData = JSON.parse(cookieValue);
-          const decoded = atob(tokenData.token);
-          const parts = decoded.split('|');
-          customerId = parts[1];
-        } catch (err) {
-          console.error('❌ Failed to extract customer ID from session:', err);
-        }
-      }
+      // CRITICAL: Use centralized customer ID extraction
+      const customerId = extractCustomerId();
       
       if (!customerId) {
         throw new Error('Customer ID not found');
@@ -1973,6 +1936,128 @@ function App() {
     }
   };
 
+  // =============================================================================
+  // CUSTOMER ID EXTRACTION - CENTRALIZED
+  // =============================================================================
+  
+  const extractCustomerId = () => {
+    /**
+     * CRITICAL: Centralized customer ID extraction for ALL functions
+     * This ensures consistent mapping to Shopify customer_id in DynamoDB
+     */
+    try {
+      console.log('🔍 EXTRACTING CUSTOMER ID - Starting extraction process');
+      
+      // Method 1: URL Parameters (most reliable for fresh redirects)
+      const urlParams = new URLSearchParams(window.location.search);
+      let customerId = urlParams.get('cid') || urlParams.get('logged_in_customer_id');
+      
+      console.log('🔍 URL Parameters:', {
+        cid: urlParams.get('cid'),
+        logged_in_customer_id: urlParams.get('logged_in_customer_id'),
+        currentURL: window.location.href
+      });
+      
+      if (customerId) {
+        console.log('✅ CUSTOMER ID FOUND in URL:', customerId);
+        return customerId;
+      }
+      
+      // Method 2: Session Cookie (for subsequent page loads)
+      const sessionCookie = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('stj_session='));
+      
+      if (!sessionCookie) {
+        console.error('❌ NO SESSION COOKIE FOUND');
+        console.log('🔧 Available cookies:', document.cookie);
+        return null;
+      }
+      
+      console.log('🍪 Session cookie found, attempting extraction...');
+      
+      try {
+        const sessionValue = sessionCookie.split('=')[1];
+        console.log('🔧 Session value length:', sessionValue.length);
+        
+        let tokenData = null;
+        
+        // Try multiple decoding methods (handles different cookie formats)
+        const decodingMethods = [
+          () => JSON.parse(decodeURIComponent(sessionValue)), // Most common
+          () => JSON.parse(sessionValue), // Direct JSON
+          () => JSON.parse(atob(sessionValue)) // Base64 encoded
+        ];
+        
+        for (let i = 0; i < decodingMethods.length; i++) {
+          try {
+            tokenData = decodingMethods[i]();
+            console.log(`✅ Session decoded with method ${i + 1}:`, {
+              hasToken: !!tokenData.token,
+              hasCustomerId: !!tokenData.customer_id,
+              keys: Object.keys(tokenData)
+            });
+            break;
+          } catch (err) {
+            console.log(`⚠️ Decoding method ${i + 1} failed:`, err.message);
+          }
+        }
+        
+        if (!tokenData) {
+          throw new Error('All decoding methods failed');
+        }
+        
+        // Extract customer ID from different session formats
+        if (tokenData.token) {
+          // SSO Token format: shop|customer_id|iat|ttl|profile_flag|signature
+          try {
+            const decoded = atob(tokenData.token);
+            const parts = decoded.split('|');
+            customerId = parts[1]; // customer_id is the second part
+            console.log('✅ CUSTOMER ID EXTRACTED from token:', customerId);
+            console.log('🔧 Token parts:', parts);
+          } catch (err) {
+            console.error('❌ Failed to decode token:', err);
+          }
+        } else if (tokenData.customer_id) {
+          // Direct customer_id format
+          customerId = tokenData.customer_id;
+          console.log('✅ CUSTOMER ID FOUND direct:', customerId);
+        } else {
+          console.error('❌ No customer_id found in token data:', tokenData);
+        }
+        
+      } catch (err) {
+        console.error('❌ Session cookie parsing failed:', err);
+        console.log('🔧 Raw session cookie:', sessionCookie);
+      }
+      
+      // Method 3: Local Development Fallback
+      const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      if (isLocalDev && !customerId) {
+        customerId = '8885250982135'; // Real customer ID for development
+        console.log('🔧 LOCAL DEV: Using fallback customer ID:', customerId);
+      }
+      
+      if (customerId) {
+        console.log('✅ FINAL CUSTOMER ID:', customerId);
+        return customerId;
+      } else {
+        console.error('❌ CUSTOMER ID EXTRACTION FAILED');
+        console.log('🔧 Final debug info:', {
+          url: window.location.href,
+          cookies: document.cookie,
+          sessionCookie: !!sessionCookie
+        });
+        return null;
+      }
+      
+    } catch (error) {
+      console.error('❌ CRITICAL ERROR in customer ID extraction:', error);
+      return null;
+    }
+  };
+
   const sendWhatsAppCode = async () => {
     setWhatsappError(''); // Clear any previous errors
     
@@ -2005,35 +2090,8 @@ function App() {
         return;
       }
       
-      // Extract customer ID from URL params or cookie (same logic as saveProfile)
-      const urlParams = new URLSearchParams(window.location.search);
-      let customerId = urlParams.get('cid') || urlParams.get('logged_in_customer_id');
-      
-      if (!customerId) {
-        // Try to get from session cookie
-        const sessionCookie = document.cookie
-          .split('; ')
-          .find(row => row.startsWith('stj_session='));
-        
-        if (sessionCookie) {
-          try {
-            const sessionValue = sessionCookie.split('=')[1];
-            const tokenData = JSON.parse(atob(sessionValue));
-            const decoded = atob(tokenData.token);
-            const parts = decoded.split('|');
-            customerId = parts[1]; // customer_id is the second part
-          } catch (err) {
-            console.error('❌ Failed to extract customer ID from session:', err);
-          }
-        }
-      }
-      
-      // For local development, use a real customer ID
-      // isLocalDev already declared above
-      if (isLocalDev && !customerId) {
-        customerId = '8885250982135'; // Real customer ID for development
-        console.log('🔧 Local dev: Using real customer ID for WhatsApp:', customerId);
-      }
+      // CRITICAL: Use centralized customer ID extraction
+      const customerId = extractCustomerId();
       
       if (!customerId) {
         alert('Unable to send verification code: Customer ID not found');
@@ -2042,6 +2100,8 @@ function App() {
       }
       
       console.log('📱 Sending WhatsApp code with customer ID:', customerId);
+      console.log('🌐 Current URL:', window.location.href);
+      console.log('🍪 All cookies:', document.cookie);
       
       // Call backend API to send WhatsApp verification code
       const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/send_whatsapp_code`, {
@@ -2103,35 +2163,8 @@ function App() {
         return;
       }
       
-      // Extract customer ID from URL params or cookie (same logic as saveProfile)
-      const urlParams = new URLSearchParams(window.location.search);
-      let customerId = urlParams.get('cid') || urlParams.get('logged_in_customer_id');
-      
-      if (!customerId) {
-        // Try to get from session cookie
-        const sessionCookie = document.cookie
-          .split('; ')
-          .find(row => row.startsWith('stj_session='));
-        
-        if (sessionCookie) {
-          try {
-            const sessionValue = sessionCookie.split('=')[1];
-            const tokenData = JSON.parse(atob(sessionValue));
-            const decoded = atob(tokenData.token);
-            const parts = decoded.split('|');
-            customerId = parts[1]; // customer_id is the second part
-          } catch (err) {
-            console.error('❌ Failed to extract customer ID from session:', err);
-          }
-        }
-      }
-      
-      // For local development, use a real customer ID
-      // isLocalDev already declared above
-      if (isLocalDev && !customerId) {
-        customerId = '8885250982135'; // Real customer ID for development
-        console.log('🔧 Local dev: Using real customer ID for verification:', customerId);
-      }
+      // CRITICAL: Use centralized customer ID extraction
+      const customerId = extractCustomerId();
       
       if (!customerId) {
         alert('Unable to verify code: Customer ID not found');
@@ -2229,40 +2262,13 @@ function App() {
       
       console.log('✅ Final username check passed, proceeding with save...');
       
-      // Extract customer ID from URL params or cookie
-      const urlParams = new URLSearchParams(window.location.search);
-      let customerId = urlParams.get('cid');
+      // CRITICAL: Use centralized customer ID extraction
+      const customerId = extractCustomerId();
       
       if (!customerId) {
-        // Try to extract from session cookie
-        const sessionCookie = document.cookie
-          .split('; ')
-          .find(row => row.startsWith('stj_session='));
-        
-        if (sessionCookie) {
-          try {
-            const cookieValue = sessionCookie.split('=')[1];
-            const tokenData = JSON.parse(cookieValue);
-            const decoded = atob(tokenData.token);
-            const parts = decoded.split('|');
-            customerId = parts[1]; // customer_id is the second part
-          } catch (err) {
-            console.error('❌ Failed to extract customer ID from session:', err);
-          }
-        }
-      }
-      
-      if (!customerId) {
-        // For local development, use a real customer ID from DynamoDB
-        const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        if (isLocalDev) {
-          customerId = '8885250982135'; // Real customer ID for development
-          console.log('🔧 Local dev: Using real customer ID for save:', customerId);
-        } else {
-          alert('Unable to save profile: Customer ID not found');
-          setLoading(false);
-          return;
-        }
+        alert('Unable to save profile: Customer ID not found');
+        setLoading(false);
+        return;
       }
       
       const profileData = {
