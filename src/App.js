@@ -164,12 +164,12 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", devices, miles
                 onClick={() => startDeviceFlow('device_setup_flow')}
                 style={{width: '100%'}}
               >
-                Add Device ({devices.length}/3)
+                {devices.length === 0 ? 'Start Now' : 'Add Device'}
               </button>
             ) : (
               <div style={{textAlign: 'center', padding: '12px', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '2px dashed #dee2e6'}}>
                 <div style={{color: '#6c757d', fontSize: '14px', fontWeight: '500'}}>
-                  Maximum Devices Reached ({devices.length}/3)
+                  Maximum Devices Reached
                 </div>
                 <div style={{color: '#868e96', fontSize: '12px', marginTop: '4px'}}>
                   Remove a device to add a new one
@@ -229,6 +229,9 @@ function App() {
   
   // Device management state
   const [devices, setDevices] = useState([]); // Start empty, load from backend
+  
+  // Audio management state
+  const [currentAudio, setCurrentAudio] = useState(null);
 
   
   // Device flow state
@@ -957,7 +960,7 @@ function App() {
         uuid: uuid,
         deviceType: deviceFormData.device_type,
         deviceName: deviceFormData.device_name,
-        userId: customerData?.customerId || 'dev_user_123',
+        userId: customerData?.customerId || '8885250982135', // Use existing customer for demo
         createdAt: new Date().toISOString()
       };
       
@@ -978,7 +981,7 @@ function App() {
               uuid: uuid,
               device_type: deviceFormData.device_type,
               device_name: deviceFormData.device_name,
-              user_id: customerData?.customerId || 'dev_user_123',
+              user_id: customerData?.customerId || '8885250982135', // Use existing customer for demo
               method: 'create',
               purpose: 'device_setup'
             })
@@ -1322,7 +1325,7 @@ function App() {
           },
           body: JSON.stringify({
             device_name: deviceFormData.device_name,
-            customer_id: customerData?.customerId || 'dev_user_123',
+            customer_id: customerData?.customerId || '8885250982135', // Use existing customer for demo
             pincode: pincode // Use the shared pincode or backend will generate new one
           })
         });
@@ -1359,6 +1362,13 @@ function App() {
       return;
     }
     
+    // Stop any currently playing audio
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+      setCurrentAudio(null);
+    }
+    
     console.log('🔊 Playing audio guide:', audioGuideData.audioUrl);
     
     // Create audio element and play
@@ -1368,11 +1378,19 @@ function App() {
     audio.addEventListener('loadstart', () => console.log('🎵 Audio loading started'));
     audio.addEventListener('canplay', () => console.log('🎵 Audio can play'));
     audio.addEventListener('error', (e) => console.error('🎵 Audio error:', e));
+    audio.addEventListener('ended', () => {
+      console.log('🎵 Audio finished playing');
+      setCurrentAudio(null);
+    });
+    
+    // Track the current audio
+    setCurrentAudio(audio);
     
     audio.play().then(() => {
       console.log('✅ Audio playing successfully for pincode:', audioGuideData.pincode);
     }).catch(error => {
       console.error('❌ Error playing audio:', error);
+      setCurrentAudio(null);
       alert(`Failed to play audio: ${error.message}. Please check your browser settings and ensure audio is allowed.`);
     });
   };
@@ -1497,7 +1515,7 @@ function App() {
       // Create FormData for audio upload
       const formData = new FormData();
       formData.append('audio', audioBlob, 'surrender.webm');
-      formData.append('user_id', customerData?.customerId || 'dev_user_123');
+      formData.append('user_id', customerData?.customerId || '8885250982135'); // Use existing customer for demo
       formData.append('device_id', currentFlow.deviceId);
       formData.append('surrender_text', currentFlow.steps[currentFlowStep - 1].surrender_text || surrenderText);
 
@@ -2036,6 +2054,13 @@ function App() {
         // Unlock device after unlock flow completion
         unlockDevice(currentFlow.deviceId);
       }
+    }
+    
+    // Stop any playing audio when flow completes
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+      setCurrentAudio(null);
     }
     
     setShowDeviceFlow(false);
@@ -2729,7 +2754,7 @@ function App() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          customer_id: customerData?.customerId || 'dev_user_123',
+          customer_id: customerData?.customerId || '8885250982135', // Use existing customer for demo
           device: newDevice
         })
       });
@@ -2773,7 +2798,7 @@ function App() {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              customer_id: customerData?.customerId || 'dev_user_123',
+              customer_id: customerData?.customerId || '8885250982135', // Use existing customer for demo
               device_id: deviceId,
               unlock_duration: 30 // 30 minutes
             })
@@ -4110,13 +4135,16 @@ function App() {
                           
                           {/* Audio Guide for Setup Pincode step (step 4) */}
                           {currentFlowStep === 4 && (
-                            <div className="audio-guide-container" style={{marginBottom: '20px', padding: '16px'}}>
-                              <div className="audio-guide-header">
-                                <div className="audio-icon">🎵</div>
-                                <h4 style={{margin: '0', fontSize: '16px', fontWeight: '600', color: '#0369a1'}}>
-                                  Audio Pincode Guide
-                                </h4>
+                            <div className="card" style={{marginBottom: '20px'}}>
+                              <div className="card-header">
+                                <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+                                  <div className="audio-icon">🎵</div>
+                                  <h4 className="card-title" style={{margin: '0'}}>
+                                    Audio Pincode Guide
+                                  </h4>
+                                </div>
                               </div>
+                              <div className="card-body">
                               
                               {!audioGuideData ? (
                                 <div>
@@ -4142,41 +4170,43 @@ function App() {
                                 </div>
                               ) : (
                                 <div>
-                                  <div className="audio-pincode-display">
-                                    <div className="audio-pincode-number">{audioGuideData.pincode}</div>
-                                    <p style={{margin: '0', fontSize: '12px', color: '#6b7280'}}>
-                                      🎧 Listen to the audio guide for step-by-step instructions
+                                  <div style={{textAlign: 'center', marginBottom: '16px'}}>
+                                    <p style={{margin: '0', fontSize: '14px', color: 'var(--text-secondary)'}}>
+                                      🎧 Your audio guide is ready! Listen for step-by-step pincode instructions.
+                                    </p>
+                                    <p style={{margin: '8px 0 0 0', fontSize: '12px', color: 'var(--text-muted)'}}>
+                                      🔒 Pincode is securely generated - no need to memorize it
                                     </p>
                                   </div>
                                   
                                   <button
-                                    className="btn btn--sm audio-play-button"
+                                    className="btn btn--primary btn--sm"
                                     onClick={playAudioGuide}
                                     style={{width: '100%', marginBottom: '8px'}}
                                   >
-                                    <>
-                                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px'}}>
-                                        <polygon points="5 3,19 12,5 21,5 3"/>
-                                      </svg>
-                                      🔊 Play Audio Guide
-                                    </>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px'}}>
+                                      <polygon points="5 3,19 12,5 21,5 3"/>
+                                    </svg>
+                                    🔊 Play Audio Guide
                                   </button>
                                   
                                   <button
-                                    className="audio-regenerate-link"
-                                    onClick={generateAudioGuide}
-                                    style={{width: '100%', border: 'none', background: 'none'}}
+                                    className="btn btn--outline btn--sm"
+                                    onClick={() => {
+                                      setAudioGuideData(null);
+                                      console.log('🔄 Audio guide cleared, user can generate new one');
+                                    }}
+                                    style={{width: '100%', fontSize: '12px'}}
                                   >
-                                    <>
-                                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '6px'}}>
-                                        <path d="M1 4v6h6"/>
-                                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
-                                      </svg>
-                                      🔄 Generate New Code
-                                    </>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '6px'}}>
+                                      <path d="M1 4v6h6"/>
+                                      <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                                    </svg>
+                                    🔄 Generate New Code
                                   </button>
                                 </div>
                               )}
+                              </div>
                             </div>
                           )}
                         </>
@@ -4248,7 +4278,12 @@ function App() {
                       className="link-back"
                       onClick={() => {
                         if (currentFlowStep === 1) {
-                          // Cancel on first step
+                          // Cancel on first step - stop any playing audio
+                          if (currentAudio) {
+                            currentAudio.pause();
+                            currentAudio.currentTime = 0;
+                            setCurrentAudio(null);
+                          }
                           setShowDeviceFlow(false);
                           setCurrentFlow(null);
                           setCurrentFlowStep(1);
@@ -4258,9 +4293,9 @@ function App() {
                           });
                           setDeviceFormErrors({});
                           setVpnProfileData(null);
-    setAudioGuideData(null);
-    setSharedPincode(null);
-    setAudioBlob(null);
+                          setAudioGuideData(null);
+                          setSharedPincode(null);
+                          setAudioBlob(null);
     setIsRecording(false);
     setSurrenderSubmitting(false);
     setSurrenderApproved(false);
@@ -4482,7 +4517,7 @@ function App() {
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                   <h3 className="card-title" style={{margin: 0}}>My Devices</h3>
                   <span style={{fontSize: '14px', color: '#6b7280', fontWeight: '500'}}>
-                    {devices.length}/3
+                    {devices.length} device{devices.length === 1 ? '' : 's'}
                   </span>
                 </div>
               </div>
@@ -4531,7 +4566,7 @@ function App() {
                     style={{width: '100%'}} 
                     onClick={() => startDeviceFlow('device_setup_flow')}
                   >
-                    Add Device ({devices.length}/3)
+                    Add Device
                   </button>
                 ) : (
                   <div style={{
@@ -4543,7 +4578,7 @@ function App() {
                     fontSize: '12px',
                     color: '#6c757d'
                   }}>
-                    Maximum reached ({devices.length}/3)
+                    Maximum reached
                   </div>
                 )}
               </div>
