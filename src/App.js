@@ -383,8 +383,24 @@ function App() {
 
   // Load devices when customer data is available
   useEffect(() => {
+    console.log('🔍 Device loading useEffect triggered:', {
+      hasCustomerData: !!customerData,
+      customerId: customerData?.customerId,
+      extractedId: extractCustomerId()
+    });
+    
     if (customerData?.customerId) {
+      console.log('✅ Loading devices with customerData.customerId:', customerData.customerId);
       loadDevicesFromBackend();
+    } else {
+      const extractedId = extractCustomerId();
+      if (extractedId) {
+        console.log('✅ Loading devices with extracted ID:', extractedId);
+        // Set temporary customerData for device loading
+        setCustomerData({ customerId: extractedId, loginTime: new Date().toISOString() });
+      } else {
+        console.warn('⚠️ No customer ID available - cannot load devices');
+      }
     }
   }, [customerData?.customerId]);
 
@@ -392,6 +408,15 @@ function App() {
     // Load milestone data and device flows when app starts
     fetchMilestoneData();
     fetchDeviceFlows();
+    
+    // Debug: Log current URL and authentication state
+    console.log('🌐 App initialization debug:', {
+      url: window.location.href,
+      hostname: window.location.hostname,
+      search: window.location.search,
+      cookies: document.cookie,
+      hasSessionCookie: document.cookie.includes('stj_session=')
+    });
     
     // Production-only: No local development bypass
 
@@ -1050,57 +1075,49 @@ function App() {
       
       const { pincode, uuid: profileUUID } = pincodeData;
       
-      // Check if this is local development
-      const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      // Get customer ID for VPN profile generation
+      const customerId = customerData?.customerId || extractCustomerId();
       
-      if (isLocalDev) {
-        // In local development, create mock profile data
+      if (!customerId) {
+        console.error('❌ No customer ID available for VPN profile generation');
+        alert('Authentication required. Please login through Shopify first.');
+        setProfileGenerating(false);
+        return;
+      }
+      
+      console.log('🔧 Generating VPN profile for customer:', customerId);
+      
+      // Call the backend API
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/generate_vpn_profile`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          device_type: deviceFormData.device_type,
+          device_name: deviceFormData.device_name,
+          customer_id: customerId
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok && result.success) {
+        // Transform backend response to match frontend expectation
         const profileData = {
-          deviceType: deviceFormData.device_type,
-          hasPincode: deviceFormData.device_type === 'macOS',
-          pincode: deviceFormData.device_type === 'macOS' ? pincode : null,
-          profileUUID: profileUUID,
-          filename: `${deviceFormData.device_type.toLowerCase()}-screentimetransformation-${profileUUID}.mobileconfig`,
-          downloadUrl: `#demo-profile-${deviceFormData.device_type}`, // Demo URL for local dev
-          profileContent: generateProfileContent(deviceFormData.device_type, pincode, profileUUID)
+          deviceType: result.result.device_type,
+          hasPincode: result.result.has_pincode,
+          pincode: result.result.pincode,
+          profileUUID: result.result.profile_uuid,
+          filename: result.result.filename,
+          downloadUrl: result.result.download_url,
+          s3_url: result.result.s3_url,
+          profileContent: null // Not needed for frontend display
         };
-        
         setVpnProfileData(profileData);
-        console.log('🔧 Local dev: Generated VPN profile:', profileData);
-        
+        console.log('✅ VPN profile generated:', profileData);
       } else {
-        // In production, call the backend API
-        const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/generate_vpn_profile`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            device_type: deviceFormData.device_type,
-            device_name: deviceFormData.device_name,
-            customer_id: customerData?.customerId || 'dev_user_123'
-          })
-        });
-        
-        const result = await response.json();
-        
-        if (response.ok && result.success) {
-          // Transform backend response to match frontend expectation
-          const profileData = {
-            deviceType: result.device_type,
-            hasPincode: result.has_pincode,
-            pincode: result.pincode,
-            profileUUID: result.profile_uuid,
-            filename: result.filename,
-            downloadUrl: result.download_url,
-            s3_url: result.s3_url,
-            profileContent: null // Not needed for frontend display
-          };
-          setVpnProfileData(profileData);
-          console.log('✅ VPN profile generated:', profileData);
-        } else {
-          throw new Error(result.error || 'Failed to generate VPN profile');
-        }
+        throw new Error(result.error || 'Failed to generate VPN profile');
       }
       
     } catch (error) {
@@ -2390,6 +2407,15 @@ function App() {
       }
       
       // Production-only: No local development fallbacks
+      // TEMPORARY: Allow manual customer ID via URL for testing (?test_customer_id=xxx)
+      if (!customerId) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const testCustomerId = urlParams.get('test_customer_id');
+        if (testCustomerId) {
+          customerId = testCustomerId;
+          console.log('🧪 TESTING: Using manual customer ID from URL:', customerId);
+        }
+      }
       
       if (customerId) {
         console.log('✅ FINAL CUSTOMER ID:', customerId);
