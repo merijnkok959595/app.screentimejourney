@@ -381,11 +381,17 @@ function App() {
     };
   }, [mobileMenuOpen]);
 
+  // Load devices when customer data is available
+  useEffect(() => {
+    if (customerData?.customerId) {
+      loadDevicesFromBackend();
+    }
+  }, [customerData?.customerId]);
+
   useEffect(() => {
     // Load milestone data and device flows when app starts
     fetchMilestoneData();
     fetchDeviceFlows();
-    loadDevicesFromBackend();
     
     // Check if this is local development (localhost)
     const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -2737,6 +2743,47 @@ function App() {
     }
   };
 
+  // Load devices from backend on app startup
+  const loadDevicesFromBackend = async () => {
+    if (!customerData?.customerId) {
+      console.log('⏳ No customer ID yet, skipping device load');
+      return;
+    }
+
+    try {
+      console.log('🔄 Loading devices from backend...');
+      
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/get_devices`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customer_id: customerData.customerId || '8885250982135'
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      
+      if (result.success && result.devices) {
+        console.log(`✅ Loaded ${result.devices.length} devices from backend:`, result.devices);
+        setDevices(result.devices);
+      } else {
+        console.log('📱 No devices found in backend, starting with empty array');
+        setDevices([]);
+      }
+      
+    } catch (error) {
+      console.error('❌ Error loading devices from backend:', error);
+      // Don't show error to user, just start with empty array
+      setDevices([]);
+    }
+  };
+
   // Device management functions
   const addDeviceFromFlow = async () => {
     if (!deviceFormData.device_name.trim()) {
@@ -2785,9 +2832,9 @@ function App() {
       const result = await response.json();
       console.log('✅ Device saved to backend:', result);
       
-      // Add to local state
-      setDevices(prev => [...prev, newDevice]);
-      console.log('✅ Device added from flow:', newDevice);
+      // Reload devices from backend to ensure persistence
+      await loadDevicesFromBackend();
+      console.log('✅ Device added from flow and reloaded from backend:', newDevice);
       
       // Success feedback with better UX
       alert(`🎉 Device "${newDevice.name}" has been successfully added and configured!\n\nYou now have ${devices.length + 1} of 3 devices maximum.`);
@@ -2866,38 +2913,6 @@ function App() {
       alert(`${device.name} is currently ${device.status}`);
     }
   };
-
-  // Function to load devices from backend
-  const loadDevicesFromBackend = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/get_devices`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          customer_id: customerData?.customerId || 'dev_user_123'
-        })
-      });
-      
-      if (response.ok) {
-        const result = await response.json();
-        console.log('✅ Devices loaded from backend:', result);
-        
-        if (result.success && result.devices) {
-          setDevices(result.devices);
-        }
-      } else {
-        console.log('ℹ️ No devices found or customer not found, using empty device list');
-        setDevices([]);
-      }
-    } catch (error) {
-      console.error('❌ Error loading devices:', error);
-      // Keep default empty devices on error
-      setDevices([]);
-    }
-  };
-
 
   if (loading || milestonesLoading) {
     return (
