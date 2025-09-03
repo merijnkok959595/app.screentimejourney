@@ -228,24 +228,7 @@ function App() {
   const [milestonesError, setMilestonesError] = useState(null);
   
   // Device management state
-  const [devices, setDevices] = useState([
-    {
-      id: 'device_1',
-      name: 'iPhone 15 Pro',
-      icon: '📱',
-      status: 'locked',
-      addedDate: '2 days ago',
-      type: 'iOS'
-    },
-    {
-      id: 'device_2', 
-      name: 'MacBook Air',
-      icon: '💻',
-      status: 'locked',
-      addedDate: '1 week ago',
-      type: 'macOS'
-    }
-  ]);
+  const [devices, setDevices] = useState([]); // Start empty, load from backend
 
   
   // Device flow state
@@ -399,6 +382,7 @@ function App() {
     // Load milestone data and device flows when app starts
     fetchMilestoneData();
     fetchDeviceFlows();
+    loadDevicesFromBackend();
     
     // Check if this is local development (localhost)
     const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -2738,32 +2722,25 @@ function App() {
     };
     
     try {
-      // Save device to backend if in production
-      const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      // Always save to backend for persistence
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/add_device`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customer_id: customerData?.customerId || 'dev_user_123',
+          device: newDevice
+        })
+      });
       
-      if (!isLocalDev) {
-        const customerId = extractCustomerId();
-        if (customerId) {
-          const response = await fetch('/add_device', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              customer_id: customerId,
-              device_name: newDevice.name,
-              device_type: newDevice.type,
-              device_id: newDevice.id
-            })
-          });
-          
-          if (!response.ok) {
-            throw new Error('Failed to save device to backend');
-          }
-          
-          console.log('✅ Device saved to backend');
-        }
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save device to backend');
       }
+      
+      const result = await response.json();
+      console.log('✅ Device saved to backend:', result);
       
       // Add to local state
       setDevices(prev => [...prev, newDevice]);
@@ -2774,35 +2751,109 @@ function App() {
       
     } catch (error) {
       console.error('❌ Error saving device:', error);
-      // Still add locally even if backend fails
-      setDevices(prev => [...prev, newDevice]);
-      alert(`✅ Device "${newDevice.name}" added locally.\n⚠️ Note: Failed to sync with server. Your device will sync when connection is restored.`);
+      alert(`❌ Failed to add device: ${error.message}\n\nPlease try again or contact support if the issue persists.`);
     }
   };
 
 
   
-  const unlockDevice = (deviceId) => {
+  const unlockDevice = async (deviceId) => {
     const device = devices.find(d => d.id === deviceId);
     if (!device) return;
     
-    if (device.status === 'locked') {
-      // Simulate unlock confirmation
-      const confirmed = window.confirm(`Unlock ${device.name}? This will allow screen time for a limited period.`);
+    if (device.status === 'locked' || device.status === 'setup_complete') {
+      // Confirm unlock action
+      const confirmed = window.confirm(`Unlock ${device.name}? This will allow screen time for 30 minutes.`);
       if (confirmed) {
-        setDevices(prev => prev.map(d => 
-          d.id === deviceId 
-            ? { ...d, status: 'unlocked', lastUnlock: new Date().toLocaleString() }
-            : d
-        ));
-        console.log('🔓 Device unlocked:', device.name);
-        alert(`${device.name} has been unlocked temporarily`);
+        try {
+          // Call backend API to unlock device
+          const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/unlock_device`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              customer_id: customerData?.customerId || 'dev_user_123',
+              device_id: deviceId,
+              unlock_duration: 30 // 30 minutes
+            })
+          });
+          
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to unlock device');
+          }
+          
+          const result = await response.json();
+          console.log('✅ Device unlocked on backend:', result);
+          
+          // Update local state
+          setDevices(prev => prev.map(d => 
+            d.id === deviceId 
+              ? { 
+                  ...d, 
+                  status: 'unlocked', 
+                  unlocked_at: result.unlocked_at,
+                  unlock_expires_at: result.unlock_expires_at,
+                  unlock_duration_minutes: result.unlock_duration_minutes,
+                  lastUnlock: new Date().toLocaleString()
+                }
+              : d
+          ));
+          
+          console.log('🔓 Device unlocked:', device.name);
+          alert(`${device.name} has been unlocked for ${result.unlock_duration_minutes} minutes`);
+          
+          // Set timer to update UI when unlock expires (visual feedback only)
+          setTimeout(() => {
+            setDevices(prev => prev.map(d => 
+              d.id === deviceId 
+                ? { ...d, status: 'locked' }
+                : d
+            ));
+            console.log('🔒 Device auto-locked:', device.name);
+          }, result.unlock_duration_minutes * 60 * 1000);
+          
+        } catch (error) {
+          console.error('❌ Error unlocking device:', error);
+          alert(`❌ Failed to unlock device: ${error.message}`);
+        }
       }
     } else {
       alert(`${device.name} is currently ${device.status}`);
     }
   };
-  
+
+  // Function to load devices from backend
+  const loadDevicesFromBackend = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/get_devices`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customer_id: customerData?.customerId || 'dev_user_123'
+        })
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        console.log('✅ Devices loaded from backend:', result);
+        
+        if (result.success && result.devices) {
+          setDevices(result.devices);
+        }
+      } else {
+        console.log('ℹ️ No devices found or customer not found, using empty device list');
+        setDevices([]);
+      }
+    } catch (error) {
+      console.error('❌ Error loading devices:', error);
+      // Keep default empty devices on error
+      setDevices([]);
+    }
+  };
 
 
   if (loading || milestonesLoading) {
