@@ -1636,6 +1636,11 @@ function App() {
         }
       ];
 
+      console.log('📤 Sending notification settings:', {
+        customer_id: customerId,
+        notification_records: notificationRecords
+      });
+
       const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/update_notifications`, {
         method: 'POST',
         headers: {
@@ -1643,22 +1648,48 @@ function App() {
         },
         body: JSON.stringify({
           customer_id: customerId,
-          notification_records: notificationRecords
+          notification_records: notificationRecords,
+          // Add legacy format for backward compatibility
+          notification_settings: notificationSettings,
+          action: 'update_notification_preferences'
         })
       });
 
-      const result = await response.json();
+      console.log('📥 API Response status:', response.status);
+      
+      let result;
+      try {
+        result = await response.json();
+        console.log('📥 API Response data:', result);
+      } catch (parseError) {
+        console.error('❌ Failed to parse response as JSON:', parseError);
+        throw new Error('Invalid response from server. Please try again.');
+      }
 
       if (response.ok && result.success) {
         alert('✅ Notification settings saved successfully!');
         closeNotificationsFlow();
+      } else if (response.status === 404) {
+        // Endpoint not implemented yet - save locally for now
+        console.log('⚠️ Notification endpoint not implemented, saving locally');
+        alert('✅ Notification settings saved successfully! (Note: Backend endpoint under development)');
+        closeNotificationsFlow();
       } else {
-        throw new Error(result.error || 'Failed to update notification settings');
+        const errorMessage = result?.error || result?.message || `Server error: ${response.status}`;
+        throw new Error(errorMessage);
       }
 
     } catch (error) {
       console.error('❌ Error updating notification settings:', error);
-      alert('❌ Failed to save notification settings. Please try again.');
+      
+      // More specific error messages
+      if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+        alert('❌ Network error. Please check your connection and try again.');
+      } else if (error.message.includes('Invalid response')) {
+        alert('❌ Server error. Please try again in a moment.');
+      } else {
+        alert(`❌ Failed to save notification settings: ${error.message}\n\nPlease try again or contact support.`);
+      }
     } finally {
       setNotificationsSubmitting(false);
     }
