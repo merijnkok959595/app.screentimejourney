@@ -3208,7 +3208,7 @@ function App() {
                       <div style={{ padding: '12px', backgroundColor: '#fef3c7', border: '1px solid #fbbf24', borderRadius: '8px', marginBottom: '16px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                           <div className="spinner-small"></div>
-                          <span style={{ color: '#92400e' }}>Validating your commitment with AI...</span>
+                          <span style={{ color: '#92400e' }}>Validating your commitment...</span>
                         </div>
                       </div>
                     )}
@@ -3296,7 +3296,7 @@ function App() {
                         }}
                         disabled={profileEditData.commitmentValidating || !profileEditData.commitmentQ1?.trim() || !profileEditData.commitmentQ2?.trim() || !profileEditData.commitmentQ3?.trim()}
                       >
-                        {profileEditData.commitmentValidating ? 'Validating...' : 'Validate with AI'}
+                        {profileEditData.commitmentValidating ? 'Validating...' : 'Validate'}
                       </button>
                       
                       {profileEditData.commitmentValidation?.is_passionate && (
@@ -4189,75 +4189,86 @@ function App() {
             </div>
           </div>
 
-          {/* Account Information (50%) + Commitment Form (50%) */}
-          <div className="grid grid-2" style={{marginBottom: '32px', alignItems: 'stretch'}}>
-            <div className="card card--equal" style={{display: 'flex', flexDirection: 'column'}}>
-              <div className="card-header">
-                <h3 className="card-title">Account</h3>
+          {/* Account Information - Single Column */}
+          <div className="card" style={{marginBottom: '32px', maxWidth: '600px', margin: '0 auto 32px auto'}}>
+            <div className="card-header">
+              <h3 className="card-title">Account</h3>
+            </div>
+            <div style={{margin: '0 0 16px 0'}}>
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
+                <span style={{fontSize: '14px', color: '#374151'}}>Email</span>
+                <span style={{
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  color: '#6b7280',
+                  fontFamily: 'monospace'
+                }}>
+                  merijn@risottini.com
+                </span>
               </div>
-              <div style={{margin: '0 0 16px 0'}}>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
-                  <span style={{fontSize: '14px', color: '#374151'}}>Email</span>
-                  <span style={{
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    color: '#6b7280',
-                    fontFamily: 'monospace'
-                  }}>
-                    merijn@risottini.com (read-only)
-                  </span>
-                </div>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
-                  <span style={{fontSize: '14px', color: '#374151'}}>Username</span>
-                  <span style={{
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    color: '#374151'
-                  }}>
-                    @theking
-                  </span>
-                </div>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
-                  <span style={{fontSize: '14px', color: '#374151'}}>Gender</span>
-                  <span style={{
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    color: '#374151'
-                  }}>
-                    🙋‍♂️ Man
-                  </span>
-                </div>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0'}}>
-                  <span style={{fontSize: '14px', color: '#374151'}}>WhatsApp</span>
-                  <span style={{
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    color: '#374151',
-                    fontFamily: 'monospace'
-                  }}>
-                    +31627207989
-                  </span>
-                </div>
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
+                <span style={{fontSize: '14px', color: '#374151'}}>Username</span>
+                <span style={{
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  color: '#374151'
+                }}>
+                  @theking
+                </span>
+              </div>
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
+                <span style={{fontSize: '14px', color: '#374151'}}>Gender</span>
+                <span style={{
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  color: '#374151'
+                }}>
+                  🙋‍♂️ Man
+                </span>
+              </div>
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
+                <span style={{fontSize: '14px', color: '#374151'}}>WhatsApp</span>
+                <span style={{
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  color: '#374151',
+                  fontFamily: 'monospace'
+                }}>
+                  +31627207989
+                </span>
+              </div>
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0'}}>
+                <span style={{fontSize: '14px', color: '#374151'}}>Commitment</span>
+                <span style={{
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  color: '#6b7280',
+                  backgroundColor: '#f3f4f6',
+                  padding: '2px 8px',
+                  borderRadius: '8px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}>
+                  Not Set
+                </span>
               </div>
             </div>
-
-            <div className="card card--equal" style={{display: 'flex', flexDirection: 'column'}}>
-              <div className="card-header">
-                <h3 className="card-title">Commitment Form</h3>
-              </div>
-              <div style={{margin: '0 0 16px 0', textAlign: 'center', padding: '20px'}}>
-                <div style={{fontSize: '3rem', marginBottom: '12px'}}>📝</div>
-                <p style={{fontSize: '14px', color: '#6b7280', marginBottom: '16px'}}>
-                  Fill out your personal commitment to begin your screen time journey
-                </p>
-                <button 
-                  className="btn btn--primary btn--full"
-                  style={{fontSize: '14px'}}
-                  onClick={() => {/* Add commitment form handler */}}
-                >
-                  Start Commitment Form
-                </button>
-              </div>
+            <div style={{marginTop: 'auto', display: 'flex', gap: '8px'}}>
+              <button
+                className="btn btn--outline btn--sm"
+                style={{flex: 1}}
+                onClick={() => {
+                  setProfileEditData({
+                    username: profileData?.username || '@theking',
+                    gender: profileData?.gender || 'man',
+                    whatsapp: profileData?.whatsapp || '+31627207989'
+                  });
+                  setProfileError('');
+                  setShowProfileEdit(true);
+                }}
+              >
+                Edit Profile
+              </button>
             </div>
           </div>
 
