@@ -1983,94 +1983,69 @@ function App() {
     setLogs(prev => [newLog, ...prev]);
   };
 
-
-
   // Function to start a device flow
   const startDeviceFlow = (flowType, deviceId = null) => {
-    let flow = deviceFlows[flowType];
+    console.log('🎬 Attempting to start flow:', flowType, 'for device:', deviceId);
+    console.log('📋 Available flows:', Object.keys(deviceFlows));
     
-    // If flow is not found, try to use fallback mock flow
+    const flow = deviceFlows[flowType];
     if (!flow) {
+      console.error('❌ Flow not found:', flowType);
       console.warn('⚠️ Flow not found in deviceFlows, using fallback:', flowType);
       
-      // Fallback mock flows for when API fails
-      const fallbackFlows = {
-        device_setup_flow: {
-          flow_id: 'device_setup',
-          flow_name: 'Device Setup Guide',
-          total_steps: 4,
+      // Check if we have fallback flows available
+      if (flowType === 'device_unlock_flow') {
+        console.log('🔄 Using fallback unlock flow');
+        const fallbackFlow = {
+          flow_id: 'device_unlock',
+          flow_name: 'Unlock Device',
+          total_steps: 3,
           steps: [
             {
               step: 1,
-              title: 'Device Information',
-              body: 'First, let\'s get some basic information about the device you\'re adding to your Screen Time Journey.',
-              step_type: 'form',
-              form_fields: [
-                {
-                  field_type: 'text',
-                  field_name: 'device_name',
-                  label: 'Device Name',
-                  placeholder: 'e.g., iPhone 15 Pro, MacBook Air, Work Laptop',
-                  required: true,
-                  max_length: 50,
-                  help_text: 'Give your device a name that helps you identify it easily'
-                },
-                {
-                  field_type: 'radio',
-                  field_name: 'device_type',
-                  label: 'Device Type',
-                  required: true,
-                  help_text: 'Select the type of device you\'re adding',
-                  options: [
-                    {value: 'iOS', label: 'iPhone/iPad'},
-                    {value: 'macOS', label: 'MacBook/iMac'}
-                  ]
-                }
-              ],
-              action_button: 'Continue to Setup Guide'
+              title: 'Unlock Process',
+              body: 'Watch this video to understand the unlock process and what it means for your journey.',
+              step_type: 'video',
+              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
+              action_button: 'I Understand, Continue'
             },
             {
               step: 2,
-              title: 'Setup Screentime',
-              body: 'Follow this guide to configure screen time settings on your device.',
-              step_type: 'video',
-              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
-              action_button: 'Next Step'
+              title: '🔐 Unlock Device',
+              body: 'You are about to unlock your device. This action requires you to acknowledge what you are giving up.',
+              step_type: 'surrender',
+              surrender_text: 'I hereby give up on changing my screen time habits. I give up the chance to be a present family man, live with more presence and purpose, and give attention to my wife and children. I choose distraction over discipline, and I surrender my intention to grow.',
+              action_button: 'Submit Surrender'
             },
             {
               step: 3,
-              title: 'Setup Profile',
-              body: 'Configure your device profile settings.',
-              step_type: 'video',
-              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
-              action_button: 'Next Step'
-            },
-            {
-              step: 4,
-              title: 'Setup Pincode',
-              body: 'Set up your device pincode for security.',
-              step_type: 'video',
-              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
-              action_button: 'Complete Setup'
+              title: '🔓 Unlock Code',
+              body: 'Your surrender has been approved. Use the code below to unlock your device for 15 minutes.',
+              step_type: 'pincode_display',
+              action_button: 'Complete Unlock'
             }
           ]
-        }
-      };
-      
-      flow = fallbackFlows[flowType];
-      
-      if (!flow) {
-        console.error('❌ Flow not found even in fallback:', flowType);
-        alert('Sorry, the device setup flow is temporarily unavailable. Please try again later.');
+        };
+        
+        setCurrentFlow({ ...fallbackFlow, flowType, deviceId });
+        setCurrentFlowStep(1);
+        setShowDeviceFlow(true);
+        console.log('✅ Started fallback unlock flow:', fallbackFlow.flow_name);
         return;
       }
+      
+      console.error('❌ Flow not found even in fallback:', flowType);
+      alert('Sorry, the device flow is temporarily unavailable. Please try again later.');
+      return;
     }
     
     setCurrentFlow({ ...flow, flowType, deviceId });
     setCurrentFlowStep(1);
     setShowDeviceFlow(true);
-    console.log('🎬 Starting flow:', flow.flow_name);
+    console.log('✅ Started flow:', flow.flow_name);
   };
+
+
 
   // Function to navigate flow steps
   const nextFlowStep = () => {
@@ -3034,6 +3009,36 @@ function App() {
       const confirmed = window.confirm(`Unlock ${device.name}? This will allow screen time for 30 minutes.`);
       if (confirmed) {
         try {
+          // Get customer ID for device unlock (using working pattern from addDeviceFromFlow)
+          let customerId = customerData?.customerId;
+          
+          if (!customerId) {
+            // Extract customer ID from session cookie (same as addDeviceFromFlow)
+            const sessionCookie = document.cookie
+              .split('; ')
+              .find(row => row.startsWith('stj_session='));
+            
+            if (sessionCookie) {
+              try {
+                const cookieValue = sessionCookie.split('=')[1];
+                // ALWAYS decode the cookie value first (it's URL encoded)
+                const decodedValue = decodeURIComponent(cookieValue);
+                const tokenData = JSON.parse(decodedValue);
+                const decoded = atob(tokenData.token);
+                const parts = decoded.split('|');
+                customerId = parts[1]; // customer_id is the second part
+                console.log('✅ Unlock Device: Extracted customer ID from session:', customerId);
+              } catch (err) {
+                console.error('❌ Unlock Device: Failed to extract customer ID from session:', err);
+              }
+            }
+          }
+          
+          if (!customerId) {
+            alert('❌ Failed to unlock device: Customer not found\nPlease try again or contact support if the issue persists.');
+            return;
+          }
+          
           // Call backend API to unlock device
           const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/unlock_device`, {
             method: 'POST',
@@ -3041,7 +3046,7 @@ function App() {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              customer_id: customerData?.customerId || extractCustomerId(), // Use existing customer for demo
+              customer_id: customerId,
               device_id: deviceId,
               unlock_duration: 30 // 30 minutes
             })
@@ -3055,19 +3060,8 @@ function App() {
           const result = await response.json();
           console.log('✅ Device unlocked on backend:', result);
           
-          // Update local state
-          setDevices(prev => prev.map(d => 
-            d.id === deviceId 
-              ? { 
-                  ...d, 
-                  status: 'unlocked', 
-                  unlocked_at: result.unlocked_at,
-                  unlock_expires_at: result.unlock_expires_at,
-                  unlock_duration_minutes: result.unlock_duration_minutes,
-                  lastUnlock: new Date().toLocaleString()
-                }
-              : d
-          ));
+          // Reload devices from backend to ensure persistence
+          await loadDevicesFromBackend();
           
           console.log('🔓 Device unlocked:', device.name);
           alert(`${device.name} has been unlocked for ${result.unlock_duration_minutes} minutes`);
