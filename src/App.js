@@ -1505,7 +1505,11 @@ function App() {
   // Voice recording functions for surrender
   const startRecording = async () => {
     try {
+      console.log('🎤 Starting recording...');
+      
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      console.log('✅ Got media stream');
+      
       const recorder = new MediaRecorder(stream);
       const chunks = [];
 
@@ -1517,6 +1521,7 @@ function App() {
         setRecordingTime(prev => prev + 1);
       }, 1000);
       setRecordingTimer(timer);
+      console.log('⏰ Timer started');
 
       // Set up audio visualization
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1578,8 +1583,13 @@ function App() {
       };
 
       recorder.start();
+      console.log('📹 MediaRecorder started');
+      
       setMediaRecorder(recorder);
+      console.log('💾 MediaRecorder set in state');
+      
       setIsRecording(true);
+      console.log('🔴 isRecording set to TRUE');
       
       // Start audio visualization immediately
       updateAudioLevels();
@@ -4264,7 +4274,17 @@ function App() {
                                   
                                   {/* Record Button */}
                                   <button
-                                    onClick={isRecording ? stopRecording : startRecording}
+                                    onClick={(e) => {
+                                      console.log('🎯 Button clicked! isRecording:', isRecording);
+                                      console.log('🎯 mediaRecorder:', mediaRecorder);
+                                      if (isRecording) {
+                                        console.log('📞 Calling stopRecording...');
+                                        stopRecording();
+                                      } else {
+                                        console.log('📞 Calling startRecording...');
+                                        startRecording();
+                                      }
+                                    }}
                                     style={{
                                       background: isRecording 
                                         ? 'linear-gradient(135deg, #DC2626, #B91C1C)'
