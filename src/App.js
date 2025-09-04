@@ -1475,6 +1475,11 @@ function App() {
       return;
     }
     
+    if (audioGuideData.audioUrl === 'production-no-tts') {
+      alert('Audio playback feature is coming soon! For now, please use the pincode and instructions shown below for manual entry.');
+      return;
+    }
+    
     // Stop any currently playing audio
     if (currentAudio) {
       currentAudio.pause();
