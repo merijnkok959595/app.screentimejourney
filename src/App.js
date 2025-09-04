@@ -3084,7 +3084,57 @@ function App() {
     }
   };
 
+  // Auto-unlock device when reaching pincode display step
+  useEffect(() => {
+    if (showDeviceFlow && currentFlow && currentFlowStep === 3 && 
+        currentFlow.steps[currentFlowStep - 1]?.step_type === 'pincode_display' &&
+        currentFlow.deviceId && currentFlow.flowType === 'device_unlock_flow') {
+      
+      console.log('🔓 Auto-unlocking device on pincode display:', currentFlow.deviceId);
+      
+      // Auto-unlock the device without confirmation
+      const autoUnlockDevice = async () => {
+        try {
+          const device = devices.find(d => d.id === currentFlow.deviceId);
+          if (!device) {
+            console.log('⚠️ Device not found for auto-unlock:', currentFlow.deviceId);
+            return;
+          }
+          
+          console.log('🔓 Auto-unlocking device:', device.name);
+          
+          // Call backend API to unlock device
+          const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/unlock_device`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              customer_id: customerData?.customerId || extractCustomerId(),
+              device_id: currentFlow.deviceId
+            })
+          });
 
+          if (response.ok) {
+            const result = await response.json();
+            console.log('✅ Device auto-unlocked successfully:', result);
+            
+            // Remove device from list automatically
+            setDevices(prev => prev.filter(d => d.id !== currentFlow.deviceId));
+            console.log('🗑️ Device automatically removed from monitoring');
+            
+          } else {
+            console.error('❌ Failed to auto-unlock device:', response.status);
+          }
+        } catch (error) {
+          console.error('❌ Error during auto-unlock:', error);
+        }
+      };
+      
+      // Execute auto-unlock after a brief delay to ensure UI is ready
+      setTimeout(autoUnlockDevice, 1000);
+    }
+  }, [showDeviceFlow, currentFlow, currentFlowStep, devices, customerData]);
   
   const unlockDevice = async (deviceId) => {
     const device = devices.find(d => d.id === deviceId);
@@ -4546,31 +4596,44 @@ function App() {
                           {/* Pincode Display Step */}
                           <div style={{textAlign: 'center', marginBottom: '20px'}}>
                             <p style={{fontSize: '18px', lineHeight: '1.5', color: '#374151', marginBottom: '24px'}}>
-                              {currentFlow.steps[currentFlowStep - 1].body}
+                              Device unlocked successfully. Use the appropriate code below:
                             </p>
                             
-                            <div style={{padding: '24px', background: '#d1fae5', border: '2px solid #34d399', borderRadius: '12px', marginBottom: '24px'}}>
-                              <h4 style={{margin: '0 0 16px 0', fontSize: '20px', fontWeight: '600', color: '#065f46'}}>
-                                🔓 Your Unlock Code
+                            {/* MDM Profile Pincode (if profile was used) */}
+                            {vpnProfileData?.pincode && (
+                              <div style={{padding: '20px', background: 'rgba(255,255,255,0.8)', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '8px', marginBottom: '16px'}}>
+                                <h4 style={{margin: '0 0 12px 0', fontSize: '16px', fontWeight: '600', color: '#374151'}}>
+                                  🔧 MDM Profile Removal Code
+                                </h4>
+                                <div style={{background: '#ffffff', border: '1px solid #d1d5db', borderRadius: '6px', padding: '16px', marginBottom: '12px'}}>
+                                  <div style={{fontFamily: 'monospace', fontSize: '28px', fontWeight: '700', color: '#374151', letterSpacing: '4px'}}>
+                                    {vpnProfileData.pincode}
+                                  </div>
+                                </div>
+                                <p style={{margin: '0', fontSize: '13px', color: '#6b7280'}}>
+                                  Use this code to remove the MDM profile when needed
+                                </p>
+                              </div>
+                            )}
+                            
+                            {/* Screen Time Unlock Code */}
+                            <div style={{padding: '20px', background: 'rgba(255,255,255,0.8)', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '8px', marginBottom: '16px'}}>
+                              <h4 style={{margin: '0 0 12px 0', fontSize: '16px', fontWeight: '600', color: '#374151'}}>
+                                📱 Screen Time Unlock Code
                               </h4>
-                              
-                              <div style={{background: '#ffffff', border: '2px solid #10b981', borderRadius: '8px', padding: '20px', marginBottom: '16px'}}>
-                                <div style={{fontFamily: 'monospace', fontSize: '36px', fontWeight: '700', color: '#059669', letterSpacing: '8px'}}>
+                              <div style={{background: '#ffffff', border: '1px solid #d1d5db', borderRadius: '6px', padding: '16px', marginBottom: '12px'}}>
+                                <div style={{fontFamily: 'monospace', fontSize: '28px', fontWeight: '700', color: '#374151', letterSpacing: '4px'}}>
                                   {unlockPincode || '----'}
                                 </div>
                               </div>
-                              
-                              <p style={{margin: '0 0 12px 0', fontSize: '14px', color: '#047857', fontWeight: '500'}}>
-                                📧 A copy has been sent to your email
-                              </p>
-                              <p style={{margin: '0', fontSize: '13px', color: '#047857'}}>
-                                Enter this code on your device to unlock for 15 minutes
+                              <p style={{margin: '0', fontSize: '13px', color: '#6b7280'}}>
+                                Enter this code on your device to unlock screen time for 15 minutes
                               </p>
                             </div>
                             
-                            <div style={{background: '#fef3c7', border: '1px solid #f59e0b', borderRadius: '8px', padding: '16px', marginBottom: '20px'}}>
-                              <p style={{margin: 0, fontSize: '14px', color: '#92400e', fontWeight: '500'}}>
-                                ⚠️ Remember: This unlock comes with the acknowledgment of what you're giving up in your journey.
+                            <div style={{background: 'rgba(249, 250, 251, 0.8)', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '14px', marginBottom: '20px'}}>
+                              <p style={{margin: 0, fontSize: '13px', color: '#6b7280', fontWeight: '500'}}>
+                                ✅ Your device has been automatically unlocked and removed from monitoring
                               </p>
                             </div>
                           </div>
@@ -4754,8 +4817,8 @@ function App() {
                   )}
 
                   <div className="modal__footer">
-                    {/* Download Profile Button for Setup Profile step (step 3) */}
-                    {currentFlowStep === 3 && (
+                    {/* Download Profile Button for Setup Profile step (step 3) - not for pincode display */}
+                    {currentFlowStep === 3 && currentFlow.steps[currentFlowStep - 1]?.step_type !== 'pincode_display' && (
                       <div style={{marginBottom: '4px', width: '100%'}}>
                         {!vpnProfileData ? (
                           <button
@@ -4802,43 +4865,45 @@ function App() {
                       </div>
                     )}
                     
-                    {/* Primary Action Button */}
-                    <button
-                      className="btn btn--primary btn--full"
-                      onClick={nextFlowStep}
-                      disabled={surrenderSubmitting}
-                      style={{
-                        opacity: surrenderSubmitting ? 0.7 : 1,
-                        cursor: surrenderSubmitting ? 'not-allowed' : 'pointer',
-                        position: 'relative',
-                        display: surrenderSubmitting ? 'flex' : 'block',
-                        alignItems: surrenderSubmitting ? 'center' : 'initial',
-                        justifyContent: surrenderSubmitting ? 'center' : 'initial',
-                        textAlign: surrenderSubmitting ? 'center' : 'center'
-                      }}
-                    >
-                      {surrenderSubmitting ? (
-                        <>
-                          <div style={{
-                            width: '16px',
-                            height: '16px',
-                            border: '2px solid transparent',
-                            borderTop: '2px solid white',
-                            borderRadius: '50%',
-                            animation: 'spin 1s linear infinite',
-                            marginRight: '8px',
-                            flexShrink: 0
-                          }}></div>
-                          <span>Processing Surrender...</span>
-                        </>
-                      ) : (
-                        <>
-                          {currentFlow.steps && currentFlow.steps[currentFlowStep - 1] 
-                            ? currentFlow.steps[currentFlowStep - 1].action_button 
-                            : 'Next Step'} →
-                        </>
-                      )}
-                    </button>
+                    {/* Primary Action Button - hide for pincode display */}
+                    {currentFlow.steps[currentFlowStep - 1]?.step_type !== 'pincode_display' && (
+                      <button
+                        className="btn btn--primary btn--full"
+                        onClick={nextFlowStep}
+                        disabled={surrenderSubmitting}
+                        style={{
+                          opacity: surrenderSubmitting ? 0.7 : 1,
+                          cursor: surrenderSubmitting ? 'not-allowed' : 'pointer',
+                          position: 'relative',
+                          display: surrenderSubmitting ? 'flex' : 'block',
+                          alignItems: surrenderSubmitting ? 'center' : 'initial',
+                          justifyContent: surrenderSubmitting ? 'center' : 'initial',
+                          textAlign: surrenderSubmitting ? 'center' : 'center'
+                        }}
+                      >
+                        {surrenderSubmitting ? (
+                          <>
+                            <div style={{
+                              width: '16px',
+                              height: '16px',
+                              border: '2px solid transparent',
+                              borderTop: '2px solid white',
+                              borderRadius: '50%',
+                              animation: 'spin 1s linear infinite',
+                              marginRight: '8px',
+                              flexShrink: 0
+                            }}></div>
+                            <span>Processing Surrender...</span>
+                          </>
+                        ) : (
+                          <>
+                            {currentFlow.steps && currentFlow.steps[currentFlowStep - 1] 
+                              ? currentFlow.steps[currentFlowStep - 1].action_button 
+                              : 'Next Step'} →
+                          </>
+                        )}
+                      </button>
+                    )}
                     
                     {/* Dynamic Cancel/Back Button */}
                     <button 
