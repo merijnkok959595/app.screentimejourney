@@ -2118,6 +2118,72 @@ function App() {
         setShowDeviceFlow(true);
         console.log('✅ Started fallback unlock flow:', fallbackFlow.flow_name);
         return;
+      } else if (flowType === 'device_setup_flow') {
+        console.log('🔄 Using fallback device setup flow');
+        const fallbackFlow = {
+          flow_id: 'device_setup',
+          flow_name: 'Device Setup Guide',
+          total_steps: 4,
+          steps: [
+            {
+              step: 1,
+              title: 'Device Information',
+              body: 'First, let\'s get some basic information about the device you\'re adding to your Screen Time Journey.',
+              step_type: 'form',
+              form_fields: [
+                {
+                  field_type: 'text',
+                  field_name: 'device_name',
+                  label: 'Device Name',
+                  placeholder: 'e.g., iPhone 15 Pro, MacBook Air, Work Laptop',
+                  required: true,
+                  max_length: 50,
+                  help_text: 'Give your device a name that helps you identify it easily'
+                },
+                {
+                  field_type: 'radio',
+                  field_name: 'device_type',
+                  label: 'Device Type',
+                  required: true,
+                  help_text: 'Select the type of device you\'re adding',
+                  options: [
+                    {value: 'iOS', label: 'iPhone/iPad'},
+                    {value: 'macOS', label: 'MacBook/iMac'}
+                  ]
+                }
+              ],
+              action_button: 'Continue to Setup Guide'
+            },
+            {
+              step: 2,
+              title: 'Understanding Digital Wellness',
+              body: 'Before we proceed, please watch this important video about your Screen Time Journey.',
+              step_type: 'video',
+              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
+              action_button: 'I\'ve Watched the Video'
+            },
+            {
+              step: 3,
+              title: 'Download Profile',
+              body: 'Download and install the configuration profile on your device to start your Screen Time Journey.',
+              step_type: 'download',
+              action_button: 'Generate Profile'
+            },
+            {
+              step: 4,
+              title: 'Setup Complete',
+              body: 'Congratulations! Your device has been added to your Screen Time Journey. You can now monitor and manage your digital wellness.',
+              step_type: 'confirmation',
+              action_button: 'Complete Setup'
+            }
+          ]
+        };
+        
+        setCurrentFlow({ ...fallbackFlow, flowType, deviceId });
+        setCurrentFlowStep(1);
+        setShowDeviceFlow(true);
+        console.log('✅ Started fallback device setup flow:', fallbackFlow.flow_name);
+        return;
       }
       
       console.error('❌ Flow not found even in fallback:', flowType);
