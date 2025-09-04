@@ -4810,17 +4810,15 @@ function App() {
                       style={{
                         opacity: surrenderSubmitting ? 0.7 : 1,
                         cursor: surrenderSubmitting ? 'not-allowed' : 'pointer',
-                        position: 'relative'
+                        position: 'relative',
+                        display: surrenderSubmitting ? 'flex' : 'block',
+                        alignItems: surrenderSubmitting ? 'center' : 'initial',
+                        justifyContent: surrenderSubmitting ? 'center' : 'initial',
+                        textAlign: surrenderSubmitting ? 'center' : 'center'
                       }}
                     >
                       {surrenderSubmitting ? (
-                        <div style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: '8px',
-                          width: '100%'
-                        }}>
+                        <>
                           <div style={{
                             width: '16px',
                             height: '16px',
@@ -4828,10 +4826,11 @@ function App() {
                             borderTop: '2px solid white',
                             borderRadius: '50%',
                             animation: 'spin 1s linear infinite',
+                            marginRight: '8px',
                             flexShrink: 0
                           }}></div>
                           <span>Processing Surrender...</span>
-                        </div>
+                        </>
                       ) : (
                         <>
                           {currentFlow.steps && currentFlow.steps[currentFlowStep - 1] 
