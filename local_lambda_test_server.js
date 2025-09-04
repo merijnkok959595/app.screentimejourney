@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+ to g#!/usr/bin/env node
 
 /**
  * Local Lambda Test Server
@@ -123,6 +123,7 @@ process.on('SIGINT', () => {
     console.log('\n👋 Shutting down Local Lambda Test Server...');
     process.exit(0);
 });
+
 
 
 

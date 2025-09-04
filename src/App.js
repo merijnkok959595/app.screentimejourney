@@ -1476,7 +1476,7 @@ function App() {
     }
     
     if (audioGuideData.audioUrl === 'production-no-tts') {
-      alert('Audio playback feature is coming soon! For now, please use the pincode and instructions shown below for manual entry.');
+      alert('Audio generation is temporarily unavailable. Please use the pincode and instructions shown below for manual entry.');
       return;
     }
     
