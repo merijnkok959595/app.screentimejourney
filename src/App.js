@@ -3119,9 +3119,32 @@ function App() {
             const result = await response.json();
             console.log('✅ Device auto-unlocked successfully:', result);
             
-            // Remove device from list automatically
-            setDevices(prev => prev.filter(d => d.id !== currentFlow.deviceId));
-            console.log('🗑️ Device automatically removed from monitoring');
+            // Now remove device permanently from DynamoDB
+            console.log('🗑️ Removing device from DynamoDB...');
+            const removeResponse = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/remove_device`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                customer_id: customerData?.customerId || extractCustomerId(),
+                device_id: currentFlow.deviceId
+              })
+            });
+            
+            if (removeResponse.ok) {
+              const removeResult = await removeResponse.json();
+              console.log('✅ Device permanently removed from DynamoDB:', removeResult);
+              
+              // Remove device from local state
+              setDevices(prev => prev.filter(d => d.id !== currentFlow.deviceId));
+              console.log('🗑️ Device removed from local state');
+              
+            } else {
+              console.error('❌ Failed to remove device from DynamoDB:', removeResponse.status);
+              // Still remove from local state even if backend fails
+              setDevices(prev => prev.filter(d => d.id !== currentFlow.deviceId));
+            }
             
           } else {
             console.error('❌ Failed to auto-unlock device:', response.status);
@@ -4240,23 +4263,18 @@ function App() {
                             
                             <div style={{background: 'rgba(255,255,255,0.6)', border: '2px solid rgba(0,0,0,0.1)', borderRadius: '8px', padding: '20px', marginBottom: '24px'}}>
                               <h4 style={{margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600', color: '#374151'}}>
-                                🎙️ Record in voice memo:
+                                🎙️ Record your surrender statement:
                               </h4>
-                              <div style={{background: 'rgba(255,255,255,0.8)', padding: '16px', borderRadius: '6px', border: '1px solid rgba(0,0,0,0.1)', marginBottom: '16px'}}>
-                                <p style={{margin: 0, fontSize: '14px', lineHeight: '1.6', color: '#4b5563', fontStyle: 'italic'}}>
-                                  "{currentFlow.steps[currentFlowStep - 1].surrender_text || surrenderText}"
-                                </p>
-                              </div>
                               <p style={{margin: '0', fontSize: '14px', color: '#6b7280', fontWeight: '500'}}>
-                                👉 Please record a voice message of yourself reading the text above out loud to receive your unlock.
+                                👉 Please record a voice message acknowledging your surrender to receive your unlock code.
                               </p>
                             </div>
                             
                             {/* Professional Recording Interface */}
                             <div style={{
-                              background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1))',
-                              border: '2px solid rgba(99, 102, 241, 0.2)',
-                              borderRadius: '16px',
+                              background: 'rgba(249, 250, 251, 0.8)',
+                              border: '1px solid rgba(0, 0, 0, 0.1)',
+                              borderRadius: '12px',
                               padding: '24px',
                               marginBottom: '24px',
                               textAlign: 'center'
@@ -4274,12 +4292,12 @@ function App() {
                                           gap: '8px',
                                           fontSize: '16px',
                                           fontWeight: '600',
-                                          color: '#DC2626'
+                                          color: '#374151'
                                         }}>
                                           <div style={{
                                             width: '12px',
                                             height: '12px',
-                                            backgroundColor: '#DC2626',
+                                            backgroundColor: '#6B7280',
                                             borderRadius: '50%',
                                             animation: 'pulse 1.5s ease-in-out infinite'
                                           }}></div>
@@ -4310,7 +4328,7 @@ function App() {
                                               key={i}
                                               style={{
                                                 width: '4px',
-                                                backgroundColor: audioLevels[i % audioLevels.length] > 20 ? '#6366F1' : '#E5E7EB',
+                                                backgroundColor: audioLevels[i % audioLevels.length] > 20 ? '#6B7280' : '#E5E7EB',
                                                 borderRadius: '2px',
                                                 height: `${Math.max(8, (audioLevels[i % audioLevels.length] || 10) * 0.8)}px`,
                                                 transition: 'all 0.1s ease',
@@ -4331,7 +4349,7 @@ function App() {
                                           width: '80px',
                                           height: '80px',
                                           borderRadius: '50%',
-                                          background: 'linear-gradient(135deg, #6366F1, #8B5CF6)',
+                                          background: 'linear-gradient(135deg, #6B7280, #9CA3AF)',
                                           display: 'flex',
                                           alignItems: 'center',
                                           justifyContent: 'center',
@@ -4379,8 +4397,8 @@ function App() {
                                     }}
                                     style={{
                                       background: isRecording 
-                                        ? 'linear-gradient(135deg, #DC2626, #B91C1C)'
-                                        : 'linear-gradient(135deg, #6366F1, #8B5CF6)',
+                                        ? 'linear-gradient(135deg, #6B7280, #9CA3AF)'
+                                        : 'linear-gradient(135deg, #374151, #6B7280)',
                                       border: 'none',
                                       borderRadius: '12px',
                                       padding: '14px 28px',
@@ -4393,17 +4411,17 @@ function App() {
                                       alignItems: 'center',
                                       gap: '8px',
                                       margin: '0 auto',
-                                      boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)',
+                                      boxShadow: '0 4px 12px rgba(107, 114, 128, 0.2)',
                                       width: 'auto',
                                       minWidth: '160px'
                                     }}
                                     onMouseEnter={(e) => {
                                       e.target.style.transform = 'translateY(-2px)';
-                                      e.target.style.boxShadow = '0 6px 16px rgba(99, 102, 241, 0.4)';
+                                      e.target.style.boxShadow = '0 6px 16px rgba(107, 114, 128, 0.3)';
                                     }}
                                     onMouseLeave={(e) => {
                                       e.target.style.transform = 'translateY(0px)';
-                                      e.target.style.boxShadow = '0 4px 12px rgba(99, 102, 241, 0.3)';
+                                      e.target.style.boxShadow = '0 4px 12px rgba(107, 114, 128, 0.2)';
                                     }}
                                   >
                                     {isRecording ? (
@@ -4594,8 +4612,8 @@ function App() {
                       ) : currentFlow.steps[currentFlowStep - 1].step_type === 'pincode_display' ? (
                         <>
                           {/* Pincode Display Step */}
-                          <div style={{textAlign: 'center', marginBottom: '20px'}}>
-                            <p style={{fontSize: '18px', lineHeight: '1.5', color: '#374151', marginBottom: '24px'}}>
+                          <div style={{marginBottom: '20px'}}>
+                            <p style={{fontSize: '18px', lineHeight: '1.5', color: '#374151', marginBottom: '24px', textAlign: 'left'}}>
                               Device unlocked successfully. Use the appropriate code below:
                             </p>
                             
@@ -4631,10 +4649,54 @@ function App() {
                               </p>
                             </div>
                             
-                            <div style={{background: 'rgba(249, 250, 251, 0.8)', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '14px', marginBottom: '20px'}}>
+                            <div style={{background: 'rgba(249, 250, 251, 0.8)', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '14px', marginBottom: '24px'}}>
                               <p style={{margin: 0, fontSize: '13px', color: '#6b7280', fontWeight: '500'}}>
                                 ✅ Your device has been automatically unlocked and removed from monitoring
                               </p>
+                            </div>
+                            
+                            {/* Return to Dashboard Button */}
+                            <div style={{textAlign: 'center'}}>
+                              <button
+                                onClick={() => {
+                                  setShowDeviceFlow(false);
+                                  setCurrentFlow(null);
+                                  setCurrentFlowStep(1);
+                                  // Clear any flow-related state
+                                  setAudioBlob(null);
+                                  setUnlockPincode(null);
+                                  setSurrenderApproved(false);
+                                }}
+                                style={{
+                                  background: 'linear-gradient(135deg, #374151, #6B7280)',
+                                  border: 'none',
+                                  borderRadius: '8px',
+                                  padding: '12px 24px',
+                                  fontSize: '14px',
+                                  fontWeight: '600',
+                                  color: 'white',
+                                  cursor: 'pointer',
+                                  transition: 'all 0.2s ease',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '8px',
+                                  margin: '0 auto',
+                                  boxShadow: '0 2px 8px rgba(107, 114, 128, 0.2)'
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.target.style.transform = 'translateY(-1px)';
+                                  e.target.style.boxShadow = '0 4px 12px rgba(107, 114, 128, 0.3)';
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.target.style.transform = 'translateY(0px)';
+                                  e.target.style.boxShadow = '0 2px 8px rgba(107, 114, 128, 0.2)';
+                                }}
+                              >
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                  <path d="M3 12h18m-9-9l-9 9 9 9"/>
+                                </svg>
+                                Return to Dashboard
+                              </button>
                             </div>
                           </div>
                         </>
@@ -4875,10 +4937,10 @@ function App() {
                           opacity: surrenderSubmitting ? 0.7 : 1,
                           cursor: surrenderSubmitting ? 'not-allowed' : 'pointer',
                           position: 'relative',
-                          display: surrenderSubmitting ? 'flex' : 'block',
-                          alignItems: surrenderSubmitting ? 'center' : 'initial',
-                          justifyContent: surrenderSubmitting ? 'center' : 'initial',
-                          textAlign: surrenderSubmitting ? 'center' : 'center'
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          textAlign: 'center'
                         }}
                       >
                         {surrenderSubmitting ? (
