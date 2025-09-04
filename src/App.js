@@ -1008,7 +1008,7 @@ function App() {
               uuid: uuid,
               device_type: deviceFormData.device_type,
               device_name: deviceFormData.device_name,
-              user_id: customerData?.customerId || extractCustomerId(),
+              customer_id: customerData?.customerId || extractCustomerId(),
               method: 'create',
               purpose: 'device_setup'
             })
@@ -1432,6 +1432,7 @@ function App() {
           },
           body: JSON.stringify({
             device_name: deviceFormData.device_name,
+            device_type: deviceFormData.device_type,
             customer_id: customerId,
             pincode: pincode // Use the shared pincode or backend will generate new one
           })
