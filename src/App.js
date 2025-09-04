@@ -4258,15 +4258,20 @@ function App() {
                           {/* Surrender Step Content */}
                           <div style={{marginBottom: '20px', textAlign: 'center'}}>
                             <p style={{fontSize: '18px', lineHeight: '1.5', color: '#374151', marginBottom: '24px'}}>
-                              {currentFlow.steps[currentFlowStep - 1].body}
+                              Complete your surrender to unlock your device.
                             </p>
                             
                             <div style={{background: 'rgba(255,255,255,0.6)', border: '2px solid rgba(0,0,0,0.1)', borderRadius: '8px', padding: '20px', marginBottom: '24px'}}>
                               <h4 style={{margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600', color: '#374151'}}>
                                 🎙️ Record your surrender statement:
                               </h4>
+                              <div style={{background: 'rgba(255,255,255,0.8)', padding: '16px', borderRadius: '6px', border: '1px solid rgba(0,0,0,0.1)', marginBottom: '16px'}}>
+                                <p style={{margin: 0, fontSize: '14px', lineHeight: '1.6', color: '#4b5563', fontStyle: 'italic'}}>
+                                  "{currentFlow.steps[currentFlowStep - 1].surrender_text || surrenderText}"
+                                </p>
+                              </div>
                               <p style={{margin: '0', fontSize: '14px', color: '#6b7280', fontWeight: '500'}}>
-                                👉 Please record a voice message acknowledging your surrender to receive your unlock code.
+                                👉 Please record a voice message reading the text above out loud to receive your unlock code.
                               </p>
                             </div>
                             
@@ -4471,7 +4476,7 @@ function App() {
                                       width: '60px',
                                       height: '60px',
                                       borderRadius: '50%',
-                                      background: 'linear-gradient(135deg, #22C55E, #16A34A)',
+                                      background: 'linear-gradient(135deg, #6B7280, #9CA3AF)',
                                       display: 'flex',
                                       alignItems: 'center',
                                       justifyContent: 'center'
@@ -4485,14 +4490,14 @@ function App() {
                                         margin: '0 0 8px 0',
                                         fontSize: '18px',
                                         fontWeight: '600',
-                                        color: '#15803D'
+                                        color: '#374151'
                                       }}>
                                         Recording Complete!
                                       </h3>
                                       <p style={{
                                         margin: 0,
                                         fontSize: '14px',
-                                        color: '#16A34A'
+                                        color: '#6B7280'
                                       }}>
                                         Duration: {recordingTime} seconds
                                       </p>
@@ -4505,7 +4510,7 @@ function App() {
                                     borderRadius: '12px',
                                     padding: '16px',
                                     marginBottom: '20px',
-                                    border: '1px solid rgba(34, 197, 94, 0.2)'
+                                    border: '1px solid rgba(0, 0, 0, 0.1)'
                                   }}>
                                     <div style={{
                                       display: 'flex',
@@ -4532,7 +4537,7 @@ function App() {
                                           }
                                         }}
                                         style={{
-                                          background: 'linear-gradient(135deg, #22C55E, #16A34A)',
+                                          background: 'linear-gradient(135deg, #6B7280, #9CA3AF)',
                                           border: 'none',
                                           borderRadius: '50%',
                                           width: '40px',
@@ -4583,17 +4588,17 @@ function App() {
                                       style={{
                                         flex: 1,
                                         background: 'transparent',
-                                        border: '2px solid rgba(34, 197, 94, 0.3)',
+                                        border: '2px solid rgba(107, 114, 128, 0.3)',
                                         borderRadius: '10px',
                                         padding: '12px 16px',
                                         fontSize: '14px',
                                         fontWeight: '600',
-                                        color: '#16A34A',
+                                        color: '#6B7280',
                                         cursor: 'pointer',
                                         transition: 'all 0.2s ease'
                                       }}
                                       onMouseEnter={(e) => {
-                                        e.target.style.background = 'rgba(34, 197, 94, 0.1)';
+                                        e.target.style.background = 'rgba(107, 114, 128, 0.1)';
                                       }}
                                       onMouseLeave={(e) => {
                                         e.target.style.background = 'transparent';
