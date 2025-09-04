@@ -4257,21 +4257,28 @@ function App() {
                         <>
                           {/* Surrender Step Content */}
                           <div style={{marginBottom: '20px', textAlign: 'center'}}>
-                            <p style={{fontSize: '18px', lineHeight: '1.5', color: '#374151', marginBottom: '24px'}}>
-                              Complete your surrender to unlock your device.
-                            </p>
                             
                             <div style={{background: 'rgba(255,255,255,0.6)', border: '2px solid rgba(0,0,0,0.1)', borderRadius: '8px', padding: '20px', marginBottom: '24px'}}>
-                              <h4 style={{margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600', color: '#374151'}}>
-                                🎙️ Record your surrender statement:
+                              <h4 style={{margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600', color: '#374151', display: 'flex', alignItems: 'center', gap: '8px'}}>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                  <path d="m12 1-3 3-3-3v6c0 3 6 5 6 5s6-2 6-5V1l-3 3-3-3Z"/>
+                                  <path d="M6 19h12"/>
+                                  <path d="M6 23h12"/>
+                                </svg>
+                                Record your surrender statement:
                               </h4>
                               <div style={{background: 'rgba(255,255,255,0.8)', padding: '16px', borderRadius: '6px', border: '1px solid rgba(0,0,0,0.1)', marginBottom: '16px'}}>
                                 <p style={{margin: 0, fontSize: '14px', lineHeight: '1.6', color: '#4b5563', fontStyle: 'italic'}}>
                                   "{currentFlow.steps[currentFlowStep - 1].surrender_text || surrenderText}"
                                 </p>
                               </div>
-                              <p style={{margin: '0', fontSize: '14px', color: '#6b7280', fontWeight: '500'}}>
-                                👉 Please record a voice message reading the text above out loud to receive your unlock code.
+                              <p style={{margin: '0', fontSize: '14px', color: '#6b7280', fontWeight: '500', display: 'flex', alignItems: 'flex-start', gap: '6px'}}>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginTop: '2px', flexShrink: 0}}>
+                                  <path d="M9 12l2 2 4-4"/>
+                                  <path d="M21 12c.552 0 1-.448 1-1V8c0-.552-.448-1-1-1s-1 .448-1 1v3c0 .552.448 1 1 1z"/>
+                                  <path d="M3 12c-.552 0-1-.448-1-1V8c0-.552.448-1 1-1s1 .448 1 1v3c0 .552-.448 1-1 1z"/>
+                                </svg>
+                                Please record a voice message reading the text above out loud to receive your unlock code.
                               </p>
                             </div>
                             
@@ -4459,8 +4466,8 @@ function App() {
                                 </div>
                               ) : (
                                 <div style={{
-                                  background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.1))',
-                                  border: '2px solid rgba(34, 197, 94, 0.3)',
+                                  background: 'rgba(249, 250, 251, 0.8)',
+                                  border: '1px solid rgba(0, 0, 0, 0.1)',
                                   borderRadius: '16px',
                                   padding: '24px'
                                 }}>
@@ -4604,7 +4611,12 @@ function App() {
                                         e.target.style.background = 'transparent';
                                       }}
                                     >
-                                      🔄 Record Again
+                                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '6px'}}>
+                                        <polyline points="23 4 23 10 17 10"/>
+                                        <polyline points="1 20 1 14 7 14"/>
+                                        <path d="m3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                                      </svg>
+                                      Record Again
                                     </button>
                                   </div>
                                 </div>
@@ -4660,49 +4672,6 @@ function App() {
                               </p>
                             </div>
                             
-                            {/* Return to Dashboard Button */}
-                            <div style={{textAlign: 'center'}}>
-                              <button
-                                onClick={() => {
-                                  setShowDeviceFlow(false);
-                                  setCurrentFlow(null);
-                                  setCurrentFlowStep(1);
-                                  // Clear any flow-related state
-                                  setAudioBlob(null);
-                                  setUnlockPincode(null);
-                                  setSurrenderApproved(false);
-                                }}
-                                style={{
-                                  background: 'linear-gradient(135deg, #374151, #6B7280)',
-                                  border: 'none',
-                                  borderRadius: '8px',
-                                  padding: '12px 24px',
-                                  fontSize: '14px',
-                                  fontWeight: '600',
-                                  color: 'white',
-                                  cursor: 'pointer',
-                                  transition: 'all 0.2s ease',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '8px',
-                                  margin: '0 auto',
-                                  boxShadow: '0 2px 8px rgba(107, 114, 128, 0.2)'
-                                }}
-                                onMouseEnter={(e) => {
-                                  e.target.style.transform = 'translateY(-1px)';
-                                  e.target.style.boxShadow = '0 4px 12px rgba(107, 114, 128, 0.3)';
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.target.style.transform = 'translateY(0px)';
-                                  e.target.style.boxShadow = '0 2px 8px rgba(107, 114, 128, 0.2)';
-                                }}
-                              >
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                  <path d="M3 12h18m-9-9l-9 9 9 9"/>
-                                </svg>
-                                Return to Dashboard
-                              </button>
-                            </div>
                           </div>
                         </>
                       ) : currentFlow.steps[currentFlowStep - 1].step_type === 'form' ? (
@@ -4972,12 +4941,12 @@ function App() {
                       </button>
                     )}
                     
-                    {/* Dynamic Cancel/Back Button */}
+                    {/* Dynamic Cancel/Back/Close Button */}
                     <button 
                       className="link-back"
                       onClick={() => {
-                        if (currentFlowStep === 1) {
-                          // Cancel on first step - stop any playing audio
+                        if (currentFlowStep === 1 || currentFlow.steps[currentFlowStep - 1]?.step_type === 'pincode_display') {
+                          // Cancel on first step or Close on pincode display - stop any playing audio
                           if (currentAudio) {
                             currentAudio.pause();
                             currentAudio.currentTime = 0;
@@ -5007,7 +4976,11 @@ function App() {
                       }}
                       style={{marginTop: '8px'}}
                     >
-                      {currentFlowStep === 1 ? 'Cancel' : 'Back'}
+                      {currentFlowStep === 1 
+                        ? 'Cancel' 
+                        : currentFlow.steps[currentFlowStep - 1]?.step_type === 'pincode_display' 
+                          ? 'Close' 
+                          : 'Back'}
                     </button>
                   </div>
                 </div>
