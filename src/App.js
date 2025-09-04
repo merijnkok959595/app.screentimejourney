@@ -1465,8 +1465,13 @@ function App() {
   };
   
   const playAudioGuide = () => {
-    if (!audioGuideData || !audioGuideData.audioUrl) {
+    if (!audioGuideData) {
       alert('No audio guide available to play. Please generate an audio guide first.');
+      return;
+    }
+    
+    if (!audioGuideData.audioUrl || audioGuideData.audioUrl === 'demo-audio' || audioGuideData.audioUrl === null) {
+      alert('Audio playback is not available in demo mode. The pincode and instructions are shown below for manual entry.');
       return;
     }
     
