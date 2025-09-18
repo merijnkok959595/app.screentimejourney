@@ -12,7 +12,7 @@ const DEFAULT_MILESTONES = [
     "emoji": "🪨",
     "description": "Every journey starts from the ground. You've chosen to rise from where you stand.",
     "milestone_day": 0,
-    "media_url": "https://wati-files.s3.eu-north-1.amazonaws.com/male_level_0_groundzero.jpg",
+    "media_url": "https://wati-files.s3.eu-north-1.amazonaws.com/Milestones/male_level_0_groundzero.jpg",
     "next_level_title": "Fighter",
     "next_level_emoji": "🥊",
     "days_to_next": 7,
@@ -26,7 +26,7 @@ const DEFAULT_MILESTONES = [
     "emoji": "🥊",
     "description": "You've stepped into the fight. Each day you stay the course, your strength builds silently.",
     "milestone_day": 14,
-    "media_url": "https://wati-files.s3.eu-north-1.amazonaws.com/male_level_1_fighter.jpg",
+    "media_url": "https://wati-files.s3.eu-north-1.amazonaws.com/Milestones/male_level_1_fighter.jpg",
     "next_level_title": "King",
     "next_level_emoji": "👑",
     "days_to_next": 351,
@@ -40,7 +40,7 @@ const DEFAULT_MILESTONES = [
     "emoji": "👑",
     "description": "You've walked the path fully. Quiet strength and clarity mark the way you stand today.",
     "milestone_day": 365,
-    "media_url": "https://wati-files.s3.eu-north-1.amazonaws.com/male_level_10_theking.jpg",
+    "media_url": "https://wati-files.s3.eu-north-1.amazonaws.com/Milestones/male_level_10_theking.jpg",
     "next_level_title": null,
     "next_level_emoji": null,
     "days_to_next": null,
@@ -1155,7 +1155,8 @@ function App() {
         body: JSON.stringify({
           device_type: deviceFormData.device_type,
           device_name: deviceFormData.device_name,
-          customer_id: customerId
+          customer_id: customerId,
+          pincode: pincodeData.pincode  // Pass the shared pincode for macOS devices
         })
       });
       
