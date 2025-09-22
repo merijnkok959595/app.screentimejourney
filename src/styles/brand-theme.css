@@ -113,6 +113,7 @@
 .footer-bottom {
   border-top: 1px solid rgba(255,255,255,0.15);
   padding: 2.5rem 0 0 0;
+  margin-top: 2rem;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
@@ -126,8 +127,12 @@
   gap: 1.5rem;
   font-family: var(--font-body);
   font-size: 0.875rem;
-  color: rgba(255,255,255,0.8);
   font-weight: 500;
+}
+
+.footer-policies > span {
+  color: #FFFFFF;
+  font-weight: 600;
 }
 
 .footer-policy-links {

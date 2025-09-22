@@ -3332,7 +3332,7 @@ function App() {
               <img 
                 src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/stj_favi_inverted_yellow_extra.png?v=1757864432" 
                 alt="Screen Time Journey Logo" 
-                style={{maxHeight: '64px', marginBottom: '8px', filter: 'brightness(0) invert(1)'}}
+                style={{maxHeight: '64px', marginBottom: '8px'}}
               />
             </a>
             <h1 className="header-title">Loading...</h1>
@@ -3391,7 +3391,7 @@ function App() {
               <img 
                 src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/stj_favi_inverted_yellow_extra.png?v=1757864432" 
                 alt="Screen Time Journey Logo" 
-                style={{maxHeight: '64px', marginBottom: '8px', filter: 'brightness(0) invert(1)'}}
+                style={{maxHeight: '64px', marginBottom: '8px'}}
               />
             </a>
             <h1 className="header-title">Authentication Error</h1>
@@ -5073,7 +5073,7 @@ function App() {
               <img 
                 src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/stj_favi_inverted_yellow_extra.png?v=1757864432" 
                 alt="Screen Time Journey Logo" 
-                style={{maxHeight: '64px', marginBottom: '8px', filter: 'brightness(0) invert(1)'}}
+                style={{maxHeight: '64px', marginBottom: '8px'}}
               />
             </a>
             <h1 className="header-title">Account Dashboard</h1>
