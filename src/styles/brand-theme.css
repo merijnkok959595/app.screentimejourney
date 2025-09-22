@@ -411,7 +411,7 @@ p, span, div {
 
 .card-title {
   font-family: var(--font-heading);
-  font-size: 1.5rem;
+  font-size: 2.4em;
   color: var(--brand-text);
   margin: 0 0 var(--spacing-sm) 0;
 }

@@ -132,7 +132,7 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", devices, miles
   return (
     <div className="card">
       <div className="card-header">
-        <h3 className="card-title">Screen Time Journey</h3>
+        <h3 className="card-title">Screentime Journey</h3>
 
       </div>
 
