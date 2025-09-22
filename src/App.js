@@ -3330,7 +3330,7 @@ function App() {
           <div className="container header-inner">
             <a className="header-logo" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">
               <img 
-                src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/Untitled-20250823-230641-6751-undefinedx.png?v=1755983241" 
+                src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/stj_favi_inverted_yellow_extra.png?v=1757864432" 
                 alt="Screen Time Journey Logo" 
                 style={{maxHeight: '64px', marginBottom: '8px', filter: 'brightness(0) invert(1)'}}
               />
@@ -3389,7 +3389,7 @@ function App() {
           <div className="container header-inner">
             <a className="header-logo" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">
               <img 
-                src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/Untitled-20250823-230641-6751-undefinedx.png?v=1755983241" 
+                src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/stj_favi_inverted_yellow_extra.png?v=1757864432" 
                 alt="Screen Time Journey Logo" 
                 style={{maxHeight: '64px', marginBottom: '8px', filter: 'brightness(0) invert(1)'}}
               />
@@ -5071,7 +5071,7 @@ function App() {
           <div className="container header-inner">
             <a className="header-logo" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">
               <img 
-                src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/Untitled-20250823-230641-6751-undefinedx.png?v=1755983241" 
+                src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/stj_favi_inverted_yellow_extra.png?v=1757864432" 
                 alt="Screen Time Journey Logo" 
                 style={{maxHeight: '64px', marginBottom: '8px', filter: 'brightness(0) invert(1)'}}
               />
@@ -5512,7 +5512,7 @@ function App() {
           <div>
             <a href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">
               <img 
-                src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/Untitled-20250823-230641-6751-undefinedx.png?v=1755983241" 
+                src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/stj_favi_inverted_yellow_extra.png?v=1757864432" 
                 alt="Screen Time Journey Logo" 
                 style={{maxHeight: '40px', filter: 'brightness(0) invert(1)'}}
               />
