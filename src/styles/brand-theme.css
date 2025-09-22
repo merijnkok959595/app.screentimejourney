@@ -95,19 +95,6 @@
 .footer-link:hover { 
   color: #FFFFFF;
   text-decoration: none;
-  transform: translateX(2px);
-}
-
-.footer-link:hover::before {
-  content: '';
-  position: absolute;
-  left: -8px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 3px;
-  background: #FFFFFF;
-  border-radius: 50%;
 }
 
 .footer-bottom {
@@ -154,21 +141,6 @@
 .footer-policy-link:hover {
   color: #FFFFFF;
   text-decoration: none;
-}
-
-.footer-policy-link::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: #FFFFFF;
-  transition: width 0.3s ease;
-}
-
-.footer-policy-link:hover::after {
-  width: 100%;
 }
 
 /* Mobile Responsiveness */
