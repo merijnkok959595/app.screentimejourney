@@ -4501,9 +4501,14 @@ function App() {
                   <div className="step-indicator">Step {currentFlowStep} of {currentFlow.total_steps || currentFlow.steps?.length || 3}</div>
                   <h3 id="device-flow-title" className="modal__title">
                     {currentFlow.steps && currentFlow.steps[currentFlowStep - 1] 
-                      ? currentFlow.steps[currentFlowStep - 1].title 
+                      ? (currentFlowStep === 3 ? 'Optional: VPN Profile' : currentFlow.steps[currentFlowStep - 1].title)
                       : currentFlow.flow_name}
                   </h3>
+                  {currentFlowStep === 3 && (
+                    <p style={{margin: '8px 0 0 0', fontSize: '14px', color: '#6b7280', fontWeight: '500'}}>
+                      ❗ Setup dummy pincode first. = ❗ Extra and optional step for extra protection against porn.
+                    </p>
+                  )}
                 </div>
 
                 <div>
