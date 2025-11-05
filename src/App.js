@@ -341,7 +341,7 @@ function AudioPlayer({ audioUrl }) {
         </button>
 
         {/* Progress Bar and Time */}
-        <div style={{flex: 1}}>
+        <div style={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
           <div
             onClick={handleSeek}
             style={{
@@ -350,7 +350,7 @@ function AudioPlayer({ audioUrl }) {
               borderRadius: '3px',
               cursor: 'pointer',
               position: 'relative',
-              marginBottom: '6px'
+              marginBottom: '8px'
             }}
           >
             <div
@@ -367,8 +367,9 @@ function AudioPlayer({ audioUrl }) {
           <div style={{
             display: 'flex',
             justifyContent: 'space-between',
-            fontSize: '12px',
-            color: '#6B7280'
+            fontSize: '11px',
+            color: '#9CA3AF',
+            marginTop: '-2px'
           }}>
             <span>{formatTime(currentTime)}</span>
             <span>{formatTime(duration)}</span>
@@ -5276,7 +5277,7 @@ function App() {
                                     style={{
                                       background: 'transparent',
                                       border: 'none',
-                                      color: '#6B7280',
+                                      color: '#7C3AED',
                                       textDecoration: 'underline',
                                       cursor: 'pointer',
                                       fontSize: '14px',
