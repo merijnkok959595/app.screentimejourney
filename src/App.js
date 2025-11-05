@@ -876,7 +876,7 @@ function App() {
               {
                 step: 3,
                 title: 'Setup Profile',
-                body: '‼️ Setup dummy pincode first.',
+                body: '❗ Extra and optional step for extra protection against porn.',
                 step_type: 'video',
                 media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
                 action_button: 'Next Step'
@@ -4504,11 +4504,6 @@ function App() {
                       ? (currentFlowStep === 3 ? 'Optional: VPN Profile' : currentFlow.steps[currentFlowStep - 1].title)
                       : currentFlow.flow_name}
                   </h3>
-                  {currentFlowStep === 3 && (
-                    <p style={{margin: '8px 0 0 0', fontSize: '14px', color: '#6b7280', fontWeight: '500'}}>
-                      ❗ Setup dummy pincode first. = ❗ Extra and optional step for extra protection against porn.
-                    </p>
-                  )}
                 </div>
 
                 <div>
