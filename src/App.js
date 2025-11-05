@@ -1951,7 +1951,6 @@ function App() {
         console.log('🔧 Local dev: Mock notification settings saved', notificationSettings);
         await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API delay
         
-        alert('✅ Notification settings saved successfully!');
         closeNotificationsFlow();
         return;
       }
@@ -1985,12 +1984,11 @@ function App() {
       }
 
       if (response.ok && result.success) {
-        alert('✅ Notification settings saved successfully!');
+        console.log('✅ Notification settings saved successfully');
         closeNotificationsFlow();
       } else if (response.status === 404) {
         // Endpoint not implemented yet - save locally for now
         console.log('⚠️ Notification endpoint not implemented, saving locally');
-        alert('✅ Notification settings saved successfully! (Note: Backend endpoint under development)');
         closeNotificationsFlow();
       } else {
         const errorMessage = result?.error || result?.message || `Server error: ${response.status}`;
