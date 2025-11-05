@@ -350,7 +350,7 @@ function AudioPlayer({ audioUrl }) {
               borderRadius: '3px',
               cursor: 'pointer',
               position: 'relative',
-              marginBottom: '8px'
+              marginBottom: '4px'
             }}
           >
             <div
@@ -367,9 +367,8 @@ function AudioPlayer({ audioUrl }) {
           <div style={{
             display: 'flex',
             justifyContent: 'space-between',
-            fontSize: '11px',
-            color: '#9CA3AF',
-            marginTop: '-2px'
+            fontSize: '10px',
+            color: '#9CA3AF'
           }}>
             <span>{formatTime(currentTime)}</span>
             <span>{formatTime(duration)}</span>
@@ -1095,6 +1094,16 @@ function App() {
           
           if (response.ok && result.success && result.data) {
             flows[flowKey] = result.data;
+            
+            // HOTFIX: Ensure step 4 body is always empty (override any API data)
+            if (flows[flowKey].steps && flows[flowKey].steps.length >= 4) {
+              const step4 = flows[flowKey].steps.find(s => s.step === 4);
+              if (step4) {
+                step4.body = '';
+                console.log('🔧 Forced step 4 body to empty string');
+              }
+            }
+            
             console.log(`✅ Loaded ${flowKey}:`, result.data.flow_name);
           }
         } catch (error) {
@@ -5277,7 +5286,7 @@ function App() {
                                     style={{
                                       background: 'transparent',
                                       border: 'none',
-                                      color: '#7C3AED',
+                                      color: '#440B6C',
                                       textDecoration: 'underline',
                                       cursor: 'pointer',
                                       fontSize: '14px',
