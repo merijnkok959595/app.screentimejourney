@@ -198,12 +198,12 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
 
         <div style={{paddingBottom: '8px'}}>
           <h2 className="journey-greeting journey-greeting--big">Hi {firstName},</h2>
-          <p className="journey-line">You are among the top <strong>{percentile}% in the world 🌍</strong></p>
-          <p className="journey-line">Right now, you are <strong>{currentLevel.title} {currentLevel.emoji}</strong> with <strong>{daysInFocus} days in focus</strong>.</p>
+          <p className="journey-line" style={{marginBottom: '12px'}}>You are among the top <strong>{percentile}%</strong> in the world 🌍</p>
+          <p className="journey-line" style={{marginBottom: '12px'}}>Right now, you are <strong>{currentLevel.title} {currentLevel.emoji}</strong> with <strong>{daysInFocus}</strong> days in focus.</p>
           {currentLevel.next_level_title && (
-            <p className="journey-line journey-line--next">Next up: <strong>{currentLevel.next_level_title} {currentLevel.next_level_emoji}</strong> in <strong>{daysToNext} days</strong>.</p>
+            <p className="journey-line journey-line--next" style={{marginBottom: '12px'}}>Next up: <strong>{currentLevel.next_level_title} {currentLevel.next_level_emoji}</strong> in <strong>{daysToNext}</strong> days.</p>
           )}
-          <p className="journey-line journey-line--path">You're on your path to <strong>{userGender === 'male' ? 'King' : 'Queen'} 👑</strong> in <strong>{finalGoalDays} days</strong>.</p>
+          <p className="journey-line journey-line--path">You're on your path to <strong>{userGender === 'male' ? 'King' : 'Queen'} 👑</strong> in <strong>{finalGoalDays}</strong> days.</p>
           
           {/* Add Device Button */}
           <div style={{marginTop: '20px'}}>
@@ -739,6 +739,7 @@ function App() {
 
   // Function to fetch milestone data
   const fetchMilestoneData = async () => {
+    setMilestonesLoading(true);
     try {
       const apiUrl = process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws';
       
@@ -5315,16 +5316,23 @@ function App() {
           )}
           
           {/* Journey progress - full width */}
-          <ProgressSection 
-            latestDevice={null}
-            customerName={profileData?.username || customerData?.username || "Friend"}
-            customerEmail={profileData?.email || customerData?.email || ""}
-            customerGender={profileData?.gender || customerData?.gender || "male"}
-            percentile={percentile}
-            devices={devices}
-            milestones={milestones}
-            startDeviceFlow={startDeviceFlow}
-          />
+          {(profileLoading || milestonesLoading) ? (
+            <div className="card" style={{padding: '40px', textAlign: 'center'}}>
+              <div className="spinner" style={{width: '40px', height: '40px', margin: '0 auto 16px'}}></div>
+              <p style={{color: '#6b7280', margin: 0}}>Loading your journey...</p>
+            </div>
+          ) : (
+            <ProgressSection 
+              latestDevice={null}
+              customerName={profileData?.username || customerData?.username || "Friend"}
+              customerEmail={profileData?.email || customerData?.email || ""}
+              customerGender={profileData?.gender || customerData?.gender || "male"}
+              percentile={percentile}
+              devices={devices}
+              milestones={milestones}
+              startDeviceFlow={startDeviceFlow}
+            />
+          )}
 
           {/* Account (50%) + Devices (50%) */}
           <div className="grid grid-2" style={{marginBottom: '32px', alignItems: 'stretch'}}>
