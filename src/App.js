@@ -5927,7 +5927,7 @@ function App() {
 
                 {/* WhatsApp Notifications */}
                 <div>
-                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px', background: '#f0fdf4', borderRadius: '12px', border: '1px solid #bbf7d0'}}>
+                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px', background: '#f9fafb', borderRadius: '12px', border: '1px solid #e5e7eb'}}>
                     <div>
                       <div style={{fontWeight: '600', color: '#374151', marginBottom: '4px', fontSize: '16px'}}>
                         💬 WhatsApp Notifications
