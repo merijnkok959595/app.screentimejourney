@@ -260,14 +260,28 @@ function AudioPlayer({ audioUrl }) {
     };
   }, []);
 
-  const togglePlay = () => {
+  const togglePlay = async () => {
     const audio = audioRef.current;
-    if (isPlaying) {
-      audio.pause();
-    } else {
-      audio.play();
+    if (!audio) {
+      console.error('❌ Audio element not found');
+      return;
     }
-    setIsPlaying(!isPlaying);
+
+    try {
+      if (isPlaying) {
+        audio.pause();
+        setIsPlaying(false);
+      } else {
+        console.log('🎵 Attempting to play audio:', audioUrl);
+        await audio.play();
+        setIsPlaying(true);
+        console.log('✅ Audio playing');
+      }
+    } catch (error) {
+      console.error('❌ Audio playback error:', error);
+      alert('Failed to play audio. The audio may still be loading. Please try again in a moment.');
+      setIsPlaying(false);
+    }
   };
 
   const handleSeek = (e) => {
@@ -1315,21 +1329,16 @@ function App() {
     setProfileGenerating(true);
     
     try {
-      // Use shared pincode if available, or generate new one
-      let pincodeData = sharedPincode;
-      if (!pincodeData) {
-        console.log('📋 No shared pincode, generating new one...');
-        pincodeData = await generateAndStorePincode();
-        if (!pincodeData) {
-          console.error('❌ Failed to generate pincode for VPN profile');
-          setProfileGenerating(false);
-          return;
-        }
-      } else {
-        console.log('✅ Using existing shared pincode');
+      // Use shared pincode (should be set from audio guide generation)
+      if (!sharedPincode || !sharedPincode.pincode) {
+        console.error('❌ No shared pincode available. Audio guide must be generated first.');
+        alert('Please generate an audio guide first before creating the VPN profile.');
+        setProfileGenerating(false);
+        return;
       }
       
-      const { pincode, uuid: profileUUID } = pincodeData;
+      console.log('✅ Using shared pincode for VPN profile');
+      const pincode = sharedPincode.pincode;
       
       // Get customer ID for VPN profile generation (using working account section pattern)
       let customerId = customerData?.customerId;
@@ -1398,7 +1407,7 @@ function App() {
           device_name: deviceFormData.device_name,
           customer_id: customerId,
           device_id: deviceId,  // NEW: Pass device_id for tracking
-          pincode: pincodeData.pincode  // Pass the shared pincode for macOS devices
+          pincode: pincode  // Pass the shared pincode for macOS devices
         })
       });
       
@@ -1414,6 +1423,7 @@ function App() {
           filename: result.result.filename,
           downloadUrl: result.result.download_url,
           s3_url: result.result.s3_url,
+          profile_url: result.result.s3_profile_url || result.result.s3_url, // Store for device tracking
           profileContent: null // Not needed for frontend display
         };
         setVpnProfileData(profileData);
@@ -1603,17 +1613,8 @@ function App() {
     setAudioGenerating(true);
     
     try {
-      // Use shared pincode if available, or generate new one
-      let pincodeData = sharedPincode;
-      if (!pincodeData) {
-        pincodeData = await generateAndStorePincode();
-        if (!pincodeData) {
-          setAudioGenerating(false);
-          return;
-        }
-      }
-      
-      const { pincode, uuid } = pincodeData;
+      // Generate a new pincode (backend will store it)
+      const pincode = Math.floor(1000 + Math.random() * 9000).toString();
       const [first, second, third, fourth] = pincode.split('');
       
       // Check if this is local development
@@ -1625,13 +1626,13 @@ function App() {
           pincode: pincode,
           digits: { first, second, third, fourth },
           audioUrl: 'demo-audio', // Special flag for local dev
-          uuid: uuid,
           deviceType: deviceFormData.device_type,
           instructions: `Generated pincode: ${pincode}. Click Settings, then Screen Time, then Lock Screen Time settings. Follow the audio instructions to enter: ${first}, ${second}, ${third}, ${fourth}.`,
           isLocalDemo: true
         };
         
         setAudioGuideData(audioData);
+        setSharedPincode({ pincode, deviceType: deviceFormData.device_type });
         console.log('🔧 Local dev: Generated audio guide:', audioData);
         
       } else {
@@ -1667,7 +1668,7 @@ function App() {
           return;
         }
         
-        // In production, call the backend API to generate audio with existing pincode
+        // In production, call the backend API to generate audio (backend will generate and store pincode)
         const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/generate_audio_guide`, {
           method: 'POST',
           headers: {
@@ -1677,7 +1678,8 @@ function App() {
             device_name: deviceFormData.device_name,
             device_type: deviceFormData.device_type,
             customer_id: customerId,
-            pincode: pincode // Use the shared pincode or backend will generate new one
+            device_id: currentDeviceId, // Pass the device ID for tracking
+            pincode: pincode // Send generated pincode to backend
           })
         });
         
@@ -1688,11 +1690,18 @@ function App() {
           const audioData = {
             pincode: result.pincode,
             digits: result.digits,
-            audioUrl: result.tts_result?.public_url || null, // Real audio URL from TTS Lambda
+            audioUrl: result.audio_url || result.tts_result?.public_url || null, // Real audio URL from backend
+            audio_url: result.audio_url, // Store for device tracking
             instructions: `Generated pincode: ${result.pincode}. Click Settings, then Screen Time, then Lock Screen Time settings. Follow the audio instructions to enter: ${result.digits.first}, ${result.digits.second}, ${result.digits.third}, ${result.digits.fourth}.`,
             executionId: result.execution_id
           };
+          
           setAudioGuideData(audioData);
+          setSharedPincode({ 
+            pincode: result.pincode, 
+            deviceType: deviceFormData.device_type,
+            audio_url: result.audio_url 
+          });
           console.log('✅ Audio guide generated:', audioData);
         } else {
           throw new Error(result.error || 'Failed to generate audio guide');
@@ -5228,9 +5237,11 @@ function App() {
                           </div>
                           
                           {/* Body Text for video steps */}
-                          <p style={{marginBottom: '20px', fontSize: '16px', lineHeight: '1.5', textAlign: 'left', color: '#374151'}}>
-                            {currentFlow.steps[currentFlowStep - 1].body}
-                          </p>
+                          {currentFlow.steps[currentFlowStep - 1].body && (
+                            <p style={{marginBottom: '20px', fontSize: '16px', lineHeight: '1.5', textAlign: 'left', color: '#374151'}}>
+                              {currentFlow.steps[currentFlowStep - 1].body}
+                            </p>
+                          )}
                           
                           {/* Audio Guide for Setup Pincode step (step 4) */}
                           {currentFlowStep === 4 && (
@@ -5255,7 +5266,29 @@ function App() {
                                   </button>
                                 </div>
                               ) : (
-                                <AudioPlayer audioUrl={audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url} />
+                                <div>
+                                  <AudioPlayer audioUrl={audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url} />
+                                  <button
+                                    onClick={() => {
+                                      setAudioGuideData(null);
+                                      console.log('🔄 Regenerating audio guide');
+                                    }}
+                                    style={{
+                                      background: 'transparent',
+                                      border: 'none',
+                                      color: '#6B7280',
+                                      textDecoration: 'underline',
+                                      cursor: 'pointer',
+                                      fontSize: '14px',
+                                      padding: '8px 0',
+                                      marginTop: '8px',
+                                      width: '100%',
+                                      textAlign: 'center'
+                                    }}
+                                  >
+                                    Generate new code
+                                  </button>
+                                </div>
                               )}
                             </div>
                           )}
