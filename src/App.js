@@ -780,7 +780,8 @@ function App() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ customer_id: customerId })
+        body: JSON.stringify({ customer_id: customerId }),
+        signal: AbortSignal.timeout(5000) // 5 second timeout
       });
 
       const result = await response.json();
@@ -789,12 +790,12 @@ function App() {
         setPercentile(result.percentile);
         console.log(`✅ Percentile calculated: Top ${result.percentile}%`);
       } else {
-        console.log('⚠️ Failed to calculate percentile, using default');
+        console.log('⚠️ Failed to calculate percentile, using default 6%');
       }
       
     } catch (error) {
-      console.error('❌ Error fetching percentile:', error);
-      // Keep default percentile of 6%
+      console.error('❌ Error fetching percentile (non-critical):', error.message);
+      // Keep default percentile of 6% - this is non-critical, app continues to work
     }
   };
 
