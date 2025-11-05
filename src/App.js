@@ -1093,18 +1093,23 @@ function App() {
           const result = await response.json();
           
           if (response.ok && result.success && result.data) {
-            flows[flowKey] = result.data;
-            
-            // HOTFIX: Ensure step 4 body is always empty (override any API data)
-            if (flows[flowKey].steps && flows[flowKey].steps.length >= 4) {
-              const step4 = flows[flowKey].steps.find(s => s.step === 4);
-              if (step4) {
-                step4.body = '';
-                console.log('🔧 Forced step 4 body to empty string');
+            // Validate flow structure
+            if (result.data.steps && Array.isArray(result.data.steps) && result.data.steps.length > 0) {
+              flows[flowKey] = result.data;
+              
+              // HOTFIX: Ensure step 4 body is always empty (override any API data)
+              if (flows[flowKey].steps && flows[flowKey].steps.length >= 4) {
+                const step4 = flows[flowKey].steps.find(s => s.step === 4);
+                if (step4) {
+                  step4.body = '';
+                  console.log('🔧 Forced step 4 body to empty string');
+                }
               }
+              
+              console.log(`✅ Loaded ${flowKey}:`, result.data.flow_name, `(${result.data.steps.length} steps)`);
+            } else {
+              console.error(`❌ Invalid flow structure for ${flowKey}:`, result.data);
             }
-            
-            console.log(`✅ Loaded ${flowKey}:`, result.data.flow_name);
           }
         } catch (error) {
           console.error(`❌ Error fetching ${flowKey}:`, error);
@@ -2307,9 +2312,9 @@ function App() {
     console.log('📋 Available flows:', Object.keys(deviceFlows));
     
     const flow = deviceFlows[flowType];
-    if (!flow) {
-      console.error('❌ Flow not found:', flowType);
-      console.warn('⚠️ Flow not found in deviceFlows, using fallback:', flowType);
+    if (!flow || !flow.steps || !Array.isArray(flow.steps) || flow.steps.length === 0) {
+      console.error('❌ Flow not found or invalid:', flowType, flow);
+      console.warn('⚠️ Flow not found in deviceFlows or invalid structure, using fallback:', flowType);
       
       // Check if we have fallback flows available
       if (flowType === 'device_unlock_flow') {
