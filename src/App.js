@@ -314,6 +314,9 @@ function App() {
   // Shared pincode state - ONE pincode for both VPN and audio
   const [sharedPincode, setSharedPincode] = useState(null);
   
+  // Shared device_id for tracking across the entire setup flow
+  const [currentDeviceId, setCurrentDeviceId] = useState(null);
+  
   // Voice surrender state
   const [surrenderText, setSurrenderText] = useState('');
   const [isRecording, setIsRecording] = useState(false);
@@ -884,7 +887,7 @@ function App() {
               {
                 step: 4,
                 title: 'Setup Pincode',
-                body: '‼️ Setup secret pincode',
+                body: '',
                 step_type: 'video',
                 media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
                 action_button: 'Complete Setup'
@@ -1247,6 +1250,12 @@ function App() {
       
       console.log('🔧 Generating VPN profile for customer:', customerId);
       
+      // Generate device_id early for tracking (or reuse existing one)
+      if (!currentDeviceId) {
+        setCurrentDeviceId(`device_${Date.now()}`);
+      }
+      const deviceId = currentDeviceId || `device_${Date.now()}`;
+      
       // Call the backend API
       const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/generate_vpn_profile`, {
         method: 'POST',
@@ -1257,6 +1266,7 @@ function App() {
           device_type: deviceFormData.device_type,
           device_name: deviceFormData.device_name,
           customer_id: customerId,
+          device_id: deviceId,  // NEW: Pass device_id for tracking
           pincode: pincodeData.pincode  // Pass the shared pincode for macOS devices
         })
       });
@@ -3198,6 +3208,48 @@ function App() {
   };
 
   // Device management functions
+  // Regenerate audio guide with new PIN for existing device
+  const regenerateAudioGuide = async (device) => {
+    try {
+      console.log('🔄 Regenerating audio guide for device:', device);
+      
+      let customerId = customerData?.customerId || extractCustomerId();
+      if (!customerId) {
+        alert('❌ Customer ID not found. Please refresh and try again.');
+        return;
+      }
+      
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/regenerate_audio_guide`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customer_id: customerId,
+          device_id: device.id,
+          device_type: device.type,
+          device_name: device.name
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        console.log('✅ Audio regenerated successfully:', result);
+        alert(`🎉 New audio guide generated!\n\nNew PIN: ${result.pincode}\nGeneration: ${result.tracking?.generation || 'N/A'}\n\nYour device has been updated with the new PIN.`);
+        
+        // Reload devices to show new PIN
+        await loadDevicesFromBackend();
+      } else {
+        throw new Error(result.error || 'Failed to regenerate audio');
+      }
+      
+    } catch (error) {
+      console.error('❌ Error regenerating audio:', error);
+      alert(`❌ Failed to regenerate audio guide: ${error.message}`);
+    }
+  };
+  
   const addDeviceFromFlow = async () => {
     if (!deviceFormData.device_name.trim()) {
       alert('Please enter a device name');
@@ -3215,7 +3267,7 @@ function App() {
     };
     
     const newDevice = {
-      id: `device_${Date.now()}`,
+      id: currentDeviceId || `device_${Date.now()}`,  // Use shared device_id for tracking
       name: deviceFormData.device_name.trim(),
       icon: deviceIcons[deviceFormData.device_type] || '📱',
       status: 'locked',
@@ -3227,8 +3279,17 @@ function App() {
       // Store audio URL if generated
       audio_url: audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url || null,
       // Store profile URL for VPN profile (if generated)
-      profile_url: vpnProfileData?.s3_url || vpnProfileData?.downloadUrl || null
+      profile_url: vpnProfileData?.s3_url || vpnProfileData?.downloadUrl || null,
+      // NEW: Store tracking info from backend
+      tracking: {
+        audio: audioGuideData?.tracking,
+        vpn_removal: vpnProfileData?.tracking?.vpn_removal,
+        vpn_profile: vpnProfileData?.tracking?.vpn_profile
+      }
     };
+    
+    // Clear shared device_id after device creation
+    setCurrentDeviceId(null);
     
     // For macOS devices, also store mdm_pincode (same as pincode for profile removal)
     if (deviceFormData.device_type === 'macOS') {
