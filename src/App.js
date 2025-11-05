@@ -3704,13 +3704,17 @@ function App() {
                 {commitmentError && <p className="error-message">{commitmentError}</p>}
                 <div className="modal__footer">
                   <button
+                    type="button"
                     className="btn btn--primary btn--full" 
                     disabled={!whatToChange.trim() || !whatToGain.trim() || !doingThisFor.trim() || commitmentValidating} 
-                    onClick={validateCommitment}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      validateCommitment();
+                    }}
                   >
                     {commitmentValidating ? 'Validating...' : 'Next →'}
                   </button>
-                  <button className="link-back" onClick={() => setOnboardStep(2)}>Back</button>
+                  <button type="button" className="link-back" onClick={() => setOnboardStep(2)}>Back</button>
                 </div>
               </div>
             )}
