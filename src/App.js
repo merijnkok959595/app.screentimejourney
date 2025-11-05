@@ -2961,11 +2961,12 @@ function App() {
           }
         }
         
-        // Close onboarding
+        // Close onboarding and immediately show dashboard
         setShowOnboarding(false);
+        setAuthenticated(true);
         
-        // Show success message
-        alert('Profile saved successfully! Welcome to your Screen Time Journey!');
+        // Fetch profile data to populate dashboard
+        fetchProfileData();
         
       } else {
         console.error('❌ Failed to save profile:', result);
