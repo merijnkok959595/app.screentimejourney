@@ -3495,8 +3495,28 @@ function App() {
       await loadDevicesFromBackend();
       console.log('✅ Device added from flow and reloaded from backend:', newDevice);
       
-      // Success feedback with better UX
-      alert(`🎉 Device "${newDevice.name}" has been successfully added and configured!\n\nYou now have ${devices.length + 1} of 3 devices maximum.`);
+      // Success: Close the flow and return to dashboard (no alert)
+      console.log(`🎉 Device "${newDevice.name}" successfully added. Returning to dashboard.`);
+      
+      // Stop any playing audio when flow completes
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        setCurrentAudio(null);
+      }
+      
+      // Close device flow modal
+      setShowDeviceFlow(false);
+      setCurrentFlow(null);
+      setCurrentFlowStep(1);
+      setDeviceFormData({
+        device_name: '',
+        device_type: ''
+      });
+      setAudioGuideData(null);
+      setVpnProfileData(null);
+      setSharedPincode(null);
+      setCurrentDeviceId(null);
       
     } catch (error) {
       console.error('❌ Error saving device:', error);
