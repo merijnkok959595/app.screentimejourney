@@ -876,7 +876,7 @@ function App() {
               {
                 step: 3,
                 title: 'Setup Profile',
-                body: '❗ Extra and optional step for extra protection against porn.',
+                body: '‼️ Extra optional protection against porn',
                 step_type: 'video',
                 media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
                 action_button: 'Next Step'
