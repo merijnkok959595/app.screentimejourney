@@ -341,7 +341,7 @@ function AudioPlayer({ audioUrl }) {
         </button>
 
         {/* Progress Bar and Time */}
-        <div style={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingTop: '3px'}}>
+        <div style={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingTop: '8px'}}>
           <div
             onClick={handleSeek}
             style={{
@@ -3427,15 +3427,9 @@ function App() {
       // Store pincode for all devices (used for audio guide)
       pincode: sharedPincode?.pincode || null,
       // Store audio URL if generated
-      audio_url: audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url || null,
+      audio_url: audioGuideData?.audio_url || audioGuideData?.tts_result?.public_url || null,
       // Store profile URL for VPN profile (if generated)
-      profile_url: vpnProfileData?.s3_url || vpnProfileData?.downloadUrl || null,
-      // NEW: Store tracking info from backend
-      tracking: {
-        audio: audioGuideData?.tracking,
-        vpn_removal: vpnProfileData?.tracking?.vpn_removal,
-        vpn_profile: vpnProfileData?.tracking?.vpn_profile
-      }
+      profile_url: vpnProfileData?.profile_url || vpnProfileData?.s3_url || vpnProfileData?.downloadUrl || null
     };
     
     // Clear shared device_id after device creation
