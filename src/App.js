@@ -50,22 +50,45 @@ const DEFAULT_MILESTONES = [
 
 // Progress calculation function
 const calculateProgress = (latestDevice, gender = 'male', milestones = DEFAULT_MILESTONES) => {
-  // Mock latest_device data structure - in real implementation this would come from API
-  const mockLatestDevice = latestDevice || {
-    last_unlock: null,
-    added_at: new Date().toISOString(),
-    status: 'locked',
-    focus_start_date: new Date().toISOString()
-  };
+  console.log('📊 calculateProgress called with device:', latestDevice);
+  console.log('📊 Milestones:', milestones);
+  
+  // If no device, default to 0 days
+  if (!latestDevice) {
+    console.log('⚠️ No device provided, defaulting to 0 days');
+    const genderMilestones = milestones.filter(m => m.gene === gender);
+    const currentLevel = genderMilestones[0] || milestones[0];
+    
+    return {
+      daysInFocus: 0,
+      progressPercentage: 0,
+      currentLevel: currentLevel,
+      daysToNext: currentLevel?.days_to_next || 0,
+      finalGoalDays: 365
+    };
+  }
 
-  // Calculate days in focus
-  const focusStartDate = new Date(mockLatestDevice.focus_start_date || mockLatestDevice.added_at);
+  // Calculate days in focus from device's added_at date
+  const deviceAddedDate = new Date(latestDevice.added_at || latestDevice.focus_start_date || latestDevice.created_at);
   const today = new Date();
-  const timeDiff = today.getTime() - focusStartDate.getTime();
+  const timeDiff = today.getTime() - deviceAddedDate.getTime();
   const daysInFocus = Math.max(0, Math.floor(timeDiff / (1000 * 3600 * 24)));
+  
+  console.log('📅 Device added:', deviceAddedDate, '→ Days in focus:', daysInFocus);
 
   // Find current level based on days in focus
   const genderMilestones = milestones.filter(m => m.gene === gender);
+  if (!genderMilestones.length) {
+    console.error('❌ No milestones found for gender:', gender);
+    return {
+      daysInFocus,
+      progressPercentage: 0,
+      currentLevel: milestones[0] || DEFAULT_MILESTONES[0],
+      daysToNext: 0,
+      finalGoalDays: 365 - daysInFocus
+    };
+  }
+  
   let currentLevel = genderMilestones[0]; // Default to level 0
   
   for (let i = genderMilestones.length - 1; i >= 0; i--) {
@@ -74,11 +97,17 @@ const calculateProgress = (latestDevice, gender = 'male', milestones = DEFAULT_M
       break;
     }
   }
+  
+  console.log('🎯 Current level:', currentLevel.title, currentLevel.emoji);
+
+  // Calculate days to next level
+  const daysToNext = currentLevel.days_to_next 
+    ? Math.max(0, currentLevel.days_to_next - (daysInFocus - currentLevel.milestone_day)) 
+    : 0;
 
   // Calculate progress percentage to next level
   let progressPercentage = 0;
   if (currentLevel.next_level_title && currentLevel.days_to_next) {
-    const nextMilestoneDay = currentLevel.milestone_day + currentLevel.days_to_next;
     const daysFromCurrentLevel = daysInFocus - currentLevel.milestone_day;
     progressPercentage = Math.min(100, Math.round((daysFromCurrentLevel / currentLevel.days_to_next) * 100));
   } else {
@@ -90,8 +119,8 @@ const calculateProgress = (latestDevice, gender = 'male', milestones = DEFAULT_M
     daysInFocus,
     progressPercentage,
     currentLevel,
-    daysToNext: currentLevel.days_to_next ? Math.max(0, currentLevel.days_to_next - (daysInFocus - currentLevel.milestone_day)) : 0,
-    finalGoalDays: 365 - daysInFocus
+    daysToNext,
+    finalGoalDays: Math.max(0, 365 - daysInFocus)
   };
 };
 
@@ -119,16 +148,27 @@ const getMockDeviceData = (scenario = 'ground_zero') => {
 };
 
 // Progress Section Component (Theme-styled card)
-const ProgressSection = ({ latestDevice, customerName = "Merijn", devices, milestones = DEFAULT_MILESTONES, startDeviceFlow }) => {
+const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail = "", percentile = 6, devices, milestones = DEFAULT_MILESTONES, startDeviceFlow }) => {
   // Get the latest device from devices array (sorted by added_at, most recent first)
   const realLatestDevice = devices && devices.length > 0 
     ? devices.sort((a, b) => new Date(b.added_at) - new Date(a.added_at))[0]
     : null;
   
   // Use real device data if available, otherwise use passed latestDevice or mock
-  const deviceData = realLatestDevice || latestDevice || getMockDeviceData('ground_zero');
+  const deviceData = realLatestDevice || latestDevice || null;
   const progress = calculateProgress(deviceData, 'male', milestones);
   const { daysInFocus, progressPercentage, currentLevel, daysToNext, finalGoalDays } = progress;
+  
+  // Extract first name from email or use username
+  let firstName = customerName;
+  if (customerEmail && customerEmail.includes('@')) {
+    // Extract name before @ and capitalize first letter
+    const emailName = customerEmail.split('@')[0];
+    firstName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+  } else if (customerName) {
+    // Use username without @ if present
+    firstName = customerName.replace('@', '');
+  }
   
   // Check if using default or API milestones for debugging
   const isUsingDefault = milestones === DEFAULT_MILESTONES;
@@ -154,13 +194,13 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", devices, miles
         </div>
 
         <div style={{paddingBottom: '8px'}}>
-          <h2 className="journey-greeting journey-greeting--big">Hi {customerName},</h2>
-          <p className="journey-line">You are among the top <strong>6% in the world 🌍</strong></p>
+          <h2 className="journey-greeting journey-greeting--big">Hi {firstName},</h2>
+          <p className="journey-line">You are among the top <strong>{percentile}% in the world 🌍</strong></p>
           <p className="journey-line">Right now, you are <strong>{currentLevel.title} {currentLevel.emoji}</strong> with <strong>{daysInFocus} days in focus</strong>.</p>
           {currentLevel.next_level_title && (
             <p className="journey-line journey-line--next">Next up: <strong>{currentLevel.next_level_title} {currentLevel.next_level_emoji}</strong> in <strong>{daysToNext} days</strong>.</p>
           )}
-          <p className="journey-line journey-line--path">You're on your path to <strong>King 👑</strong> in <strong>{finalGoalDays} days</strong>.</p>
+          <p className="journey-line journey-line--path">You're on your path to <strong>{currentLevel.gender === 'male' ? 'King' : 'Queen'} 👑</strong> in <strong>{finalGoalDays} days</strong>.</p>
           
           {/* Add Device Button */}
           <div style={{marginTop: '20px'}}>
@@ -237,6 +277,7 @@ function App() {
   const [milestones, setMilestones] = useState(DEFAULT_MILESTONES);
   const [milestonesLoading, setMilestonesLoading] = useState(false);
   const [milestonesError, setMilestonesError] = useState(null);
+  const [percentile, setPercentile] = useState(6); // Default to 6% (top performer)
   
   // Device management state
   const [devices, setDevices] = useState([]); // Start empty, load from backend
@@ -401,8 +442,9 @@ function App() {
   }, [customerData?.customerId]);
 
   useEffect(() => {
-    // Load milestone data and device flows when app starts
+    // Load milestone data, percentile, and device flows when app starts
     fetchMilestoneData();
+    fetchPercentile();
     fetchDeviceFlows();
     
     // Debug: Log current URL and authentication state
@@ -721,6 +763,38 @@ function App() {
       setMilestones(DEFAULT_MILESTONES);
     } finally {
       setMilestonesLoading(false);
+    }
+  };
+
+  // Function to fetch user's percentile ranking
+  const fetchPercentile = async () => {
+    try {
+      const customerId = extractCustomerId();
+      if (!customerId) {
+        console.log('⚠️ No customer ID, skipping percentile calculation');
+        return;
+      }
+
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/calculate_percentile`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ customer_id: customerId })
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        setPercentile(result.percentile);
+        console.log(`✅ Percentile calculated: Top ${result.percentile}%`);
+      } else {
+        console.log('⚠️ Failed to calculate percentile, using default');
+      }
+      
+    } catch (error) {
+      console.error('❌ Error fetching percentile:', error);
+      // Keep default percentile of 6%
     }
   };
 
@@ -5222,7 +5296,9 @@ function App() {
           {/* Journey progress - full width */}
           <ProgressSection 
             latestDevice={null}
-            customerName={profileData?.username || customerData?.username || "Friend"} 
+            customerName={profileData?.username || customerData?.username || "Friend"}
+            customerEmail={profileData?.email || customerData?.email || ""}
+            percentile={percentile}
             devices={devices}
             milestones={milestones}
             startDeviceFlow={startDeviceFlow}
