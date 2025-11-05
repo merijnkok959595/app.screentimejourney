@@ -148,7 +148,7 @@ const getMockDeviceData = (scenario = 'ground_zero') => {
 };
 
 // Progress Section Component (Theme-styled card)
-const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail = "", percentile = 6, devices, milestones = DEFAULT_MILESTONES, startDeviceFlow }) => {
+const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail = "", customerGender = "male", percentile = 6, devices, milestones = DEFAULT_MILESTONES, startDeviceFlow }) => {
   // Get the latest device from devices array (sorted by added_at, most recent first)
   const realLatestDevice = devices && devices.length > 0 
     ? devices.sort((a, b) => new Date(b.added_at) - new Date(a.added_at))[0]
@@ -156,7 +156,10 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
   
   // Use real device data if available, otherwise use passed latestDevice or mock
   const deviceData = realLatestDevice || latestDevice || null;
-  const progress = calculateProgress(deviceData, 'male', milestones);
+  
+  // Use the actual user's gender for milestone calculation
+  const userGender = customerGender || 'male';
+  const progress = calculateProgress(deviceData, userGender, milestones);
   const { daysInFocus, progressPercentage, currentLevel, daysToNext, finalGoalDays } = progress;
   
   // Extract first name from email or use username
@@ -200,7 +203,7 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
           {currentLevel.next_level_title && (
             <p className="journey-line journey-line--next">Next up: <strong>{currentLevel.next_level_title} {currentLevel.next_level_emoji}</strong> in <strong>{daysToNext} days</strong>.</p>
           )}
-          <p className="journey-line journey-line--path">You're on your path to <strong>{currentLevel.gender === 'male' ? 'King' : 'Queen'} 👑</strong> in <strong>{finalGoalDays} days</strong>.</p>
+          <p className="journey-line journey-line--path">You're on your path to <strong>{userGender === 'male' ? 'King' : 'Queen'} 👑</strong> in <strong>{finalGoalDays} days</strong>.</p>
           
           {/* Add Device Button */}
           <div style={{marginTop: '20px'}}>
@@ -737,23 +740,40 @@ function App() {
   // Function to fetch milestone data
   const fetchMilestoneData = async () => {
     try {
+      const apiUrl = process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws';
+      
+      // Fetch milestones for both genders
+      const [maleResponse, femaleResponse] = await Promise.all([
+        fetch(`${apiUrl}/get_milestones`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ gender: 'male' })
+        }),
+        fetch(`${apiUrl}/get_milestones`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ gender: 'female' })
+        })
+      ]);
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/get_milestones`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ gender: 'male' })
-      });
+      const maleResult = await maleResponse.json();
+      const femaleResult = await femaleResponse.json();
 
-      const result = await response.json();
+      // Combine both gender milestones
+      const allMilestones = [];
+      if (maleResponse.ok && maleResult.success && maleResult.milestones) {
+        allMilestones.push(...maleResult.milestones);
+      }
+      if (femaleResponse.ok && femaleResult.success && femaleResult.milestones) {
+        allMilestones.push(...femaleResult.milestones);
+      }
 
-      if (response.ok && result.success && result.milestones) {
-        setMilestones(result.milestones);
+      if (allMilestones.length > 0) {
+        setMilestones(allMilestones);
         setMilestonesError(null);
-        console.log('✅ Milestone data loaded from API');
+        console.log(`✅ Milestone data loaded: ${maleResult.milestones?.length || 0} male + ${femaleResult.milestones?.length || 0} female milestones`);
       } else {
-        throw new Error(result.error || 'Failed to load milestones');
+        throw new Error('No milestones returned from API');
       }
       
     } catch (error) {
@@ -5299,6 +5319,7 @@ function App() {
             latestDevice={null}
             customerName={profileData?.username || customerData?.username || "Friend"}
             customerEmail={profileData?.email || customerData?.email || ""}
+            customerGender={profileData?.gender || customerData?.gender || "male"}
             percentile={percentile}
             devices={devices}
             milestones={milestones}
