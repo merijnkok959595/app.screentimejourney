@@ -2735,7 +2735,7 @@ function App() {
         setTimeout(() => {
           setWhatsappCodeSent(true);
           setResendCooldown(60); // Start 60-second cooldown
-          setOnboardStep(6); // Move to verification step
+          setOnboardStep(5); // Move to verification step
           setWhatsappLoading(false);
           console.log(`🔧 Local dev: Simulated sending code to ${newCountryCode}${newWhatsapp}`);
           alert(`Demo: Verification code "123456" sent to ${newCountryCode}${newWhatsapp}`);
@@ -2773,7 +2773,7 @@ function App() {
       if (response.ok && result.success) {
         setWhatsappCodeSent(true);
         setResendCooldown(60); // Start 60-second cooldown
-        setOnboardStep(6); // Move to verification step
+        setOnboardStep(5); // Move to verification step
         console.log('✅ WhatsApp code sent successfully');
       } else {
         alert(result.error || 'Failed to send verification code. Please try again.');
@@ -3708,7 +3708,7 @@ function App() {
               </div>
             )}
 
-            {onboardStep === 5 && (
+            {onboardStep === 4 && (
               <div>
                 <p className="helper">Get daily motivation and accountability messages.</p>
                 <div className="phone-input-group">
@@ -3752,16 +3752,16 @@ function App() {
                   >
                     {profileLoading ? 'Saving profile...' : whatsappLoading ? 'Please wait...' : 'Skip (not recommended)'}
                   </button>
-                  <button className="link-back" onClick={() => setOnboardStep(4)}>Back</button>
+                  <button className="link-back" onClick={() => setOnboardStep(3)}>Back</button>
                 </div>
               </div>
             )}
 
-            {onboardStep === 6 && (
+            {onboardStep === 5 && (
               <div>
                 <p className="helper">
                   We sent a 6-digit code to {newCountryCode}{newWhatsapp}
-                  <button className="link-inline" onClick={() => setOnboardStep(5)}>Wrong number?</button>
+                  <button className="link-inline" onClick={() => setOnboardStep(4)}>Wrong number?</button>
                 </p>
                 <input 
                   className="input code-input" 
