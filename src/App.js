@@ -200,6 +200,8 @@ function App() {
   const [whatToChange, setWhatToChange] = useState('');
   const [whatToGain, setWhatToGain] = useState('');
   const [doingThisFor, setDoingThisFor] = useState('');
+  const [commitmentValidating, setCommitmentValidating] = useState(false);
+  const [commitmentError, setCommitmentError] = useState('');
   const [usernameValid, setUsernameValid] = useState(null); // null, true, false
   const [usernameChecking, setUsernameChecking] = useState(false);
   const [usernameError, setUsernameError] = useState('');
@@ -2666,6 +2668,49 @@ function App() {
     }
   };
 
+  const validateCommitment = async () => {
+    setCommitmentError('');
+    setCommitmentValidating(true);
+    
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/evaluate_commitment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          what_to_change: whatToChange.trim(),
+          what_to_gain: whatToGain.trim(),
+          doing_this_for: doingThisFor.trim()
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok && result.success) {
+        if (result.is_valid) {
+          // Validation passed, move to next step
+          console.log('✅ Commitment validated:', result.feedback);
+          setOnboardStep(4);
+        } else {
+          // Validation failed, show feedback
+          setCommitmentError(result.feedback || 'Please provide more thoughtful and specific responses.');
+        }
+      } else {
+        // API error, but don't block user
+        console.error('❌ Validation API error:', result);
+        setOnboardStep(4); // Allow to proceed
+      }
+      
+    } catch (error) {
+      console.error('❌ Error validating commitment:', error);
+      // On error, allow user to proceed (don't block onboarding)
+      setOnboardStep(4);
+    } finally {
+      setCommitmentValidating(false);
+    }
+  };
+
   const sendWhatsAppCode = async () => {
     setWhatsappError(''); // Clear any previous errors
     
@@ -3526,14 +3571,13 @@ function App() {
         <div className={`modal-overlay ${showOnboarding ? 'active' : ''}`}>
           <div className="modal" role="dialog" aria-modal="true" aria-labelledby="onboard-title">
             <div className="modal__header">
-              <div className="step-indicator">Step {onboardStep} of 6</div>
+              <div className="step-indicator">Step {onboardStep} of 5</div>
               <h3 id="onboard-title" className="modal__title">
                 {onboardStep === 1 && "Choose username"}
                 {onboardStep === 2 && "Select gender"}
-                {onboardStep === 3 && "What to change"}
-                {onboardStep === 4 && "What to gain"}
-                {onboardStep === 5 && "Setup WhatsApp"}
-                {onboardStep === 6 && "Verify phone"}
+                {onboardStep === 3 && "Your commitment"}
+                {onboardStep === 4 && "Setup WhatsApp"}
+                {onboardStep === 5 && "Verify phone"}
               </h3>
             </div>
 
@@ -3622,30 +3666,21 @@ function App() {
                   className="input" 
                   placeholder="quit porn" 
                   value={whatToChange}
-                  onChange={(e) => setWhatToChange(e.target.value)}
+                  onChange={(e) => {
+                    setWhatToChange(e.target.value);
+                    setCommitmentError(''); // Clear error on input
+                  }}
                   maxLength="100"
                 />
-                <div className="modal__footer">
-                  <button
-                    className="btn btn--primary btn--full" 
-                    disabled={!whatToChange.trim()} 
-                    onClick={() => setOnboardStep(4)}
-                  >
-                    Next →
-                  </button>
-                  <button className="link-back" onClick={() => setOnboardStep(2)}>Back</button>
-                </div>
-              </div>
-            )}
-
-            {onboardStep === 4 && (
-              <div>
-                <p className="helper">What do you want to gain from this journey?</p>
+                <p className="helper" style={{ marginTop: '1rem' }}>What do you want to gain from this journey?</p>
                 <input 
                   className="input" 
                   placeholder="more presence and purpose" 
                   value={whatToGain}
-                  onChange={(e) => setWhatToGain(e.target.value)}
+                  onChange={(e) => {
+                    setWhatToGain(e.target.value);
+                    setCommitmentError(''); // Clear error on input
+                  }}
                   maxLength="100"
                 />
                 <p className="helper" style={{ marginTop: '1rem' }}>Who are you doing this for?</p>
@@ -3653,18 +3688,22 @@ function App() {
                   className="input" 
                   placeholder="friends and family" 
                   value={doingThisFor}
-                  onChange={(e) => setDoingThisFor(e.target.value)}
+                  onChange={(e) => {
+                    setDoingThisFor(e.target.value);
+                    setCommitmentError(''); // Clear error on input
+                  }}
                   maxLength="100"
                 />
+                {commitmentError && <p className="error-message">{commitmentError}</p>}
                 <div className="modal__footer">
                   <button
                     className="btn btn--primary btn--full" 
-                    disabled={!whatToGain.trim() || !doingThisFor.trim()} 
-                    onClick={() => setOnboardStep(5)}
+                    disabled={!whatToChange.trim() || !whatToGain.trim() || !doingThisFor.trim() || commitmentValidating} 
+                    onClick={validateCommitment}
                   >
-                    Next →
+                    {commitmentValidating ? 'Validating...' : 'Next →'}
                   </button>
-                  <button className="link-back" onClick={() => setOnboardStep(3)}>Back</button>
+                  <button className="link-back" onClick={() => setOnboardStep(2)}>Back</button>
                 </div>
               </div>
             )}
