@@ -289,14 +289,8 @@ function App() {
   // Notification settings state
   const [showNotificationsFlow, setShowNotificationsFlow] = useState(false);
   const [notificationSettings, setNotificationSettings] = useState({
-    email: {
-      weeklyProgress: true,
-      monthlyLeaderboard: true
-    },
-    whatsapp: {
-      weeklyProgress: false,
-      monthlyLeaderboard: false
-    }
+    email_enabled: true,  // Email enabled by default
+    whatsapp_enabled: false  // WhatsApp enabled when verified
   });
   const [notificationsSubmitting, setNotificationsSubmitting] = useState(false);
 
@@ -1930,28 +1924,19 @@ function App() {
     setShowNotificationsFlow(false);
   };
 
-  const updateNotificationSetting = (platform, type, value) => {
+  const updateNotificationSetting = (key, value) => {
     setNotificationSettings(prev => ({
       ...prev,
-      [platform]: {
-        ...prev[platform],
-        [type]: value
-      }
+      [key]: value
     }));
   };
 
-  // Set default notification settings when user validates WhatsApp or email
+  // Set default notification settings when user validates WhatsApp
   const setDefaultNotificationSettings = () => {
-    setNotificationSettings({
-      email: {
-        weeklyProgress: true,
-        monthlyLeaderboard: true
-      },
-      whatsapp: {
-        weeklyProgress: true,
-        monthlyLeaderboard: true
-      }
-    });
+    setNotificationSettings(prev => ({
+      ...prev,
+      whatsapp_enabled: true  // Enable WhatsApp notifications when verified
+    }));
   };
 
   const submitNotificationSettings = async () => {
@@ -1971,51 +1956,21 @@ function App() {
         return;
       }
 
-      // Create individual records for each notification type
-      const notificationRecords = [
-        {
-          notification_type: 'email_weekly',
-          enabled: notificationSettings.email.weeklyProgress,
-          customer_id: customerId,
-          updated_at: new Date().toISOString()
-        },
-        {
-          notification_type: 'email_monthly', 
-          enabled: notificationSettings.email.monthlyLeaderboard,
-          customer_id: customerId,
-          updated_at: new Date().toISOString()
-        },
-        {
-          notification_type: 'whatsapp_weekly',
-          enabled: notificationSettings.whatsapp.weeklyProgress,
-          customer_id: customerId,
-          updated_at: new Date().toISOString()
-        },
-        {
-          notification_type: 'whatsapp_monthly',
-          enabled: notificationSettings.whatsapp.monthlyLeaderboard,
-          customer_id: customerId,
-          updated_at: new Date().toISOString()
-        }
-      ];
-
-      console.log('📤 Sending notification settings:', {
+      // Send simplified notification preferences
+      const notificationPayload = {
         customer_id: customerId,
-        notification_records: notificationRecords
-      });
+        email_enabled: notificationSettings.email_enabled,
+        whatsapp_enabled: notificationSettings.whatsapp_enabled
+      };
+
+      console.log('📤 Sending notification settings:', notificationPayload);
 
       const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/update_notifications`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          customer_id: customerId,
-          notification_records: notificationRecords,
-          // Add legacy format for backward compatibility
-          notification_settings: notificationSettings,
-          action: 'update_notification_preferences'
-        })
+        body: JSON.stringify(notificationPayload)
       });
 
       console.log('📥 API Response status:', response.status);
@@ -2381,6 +2336,18 @@ function App() {
       if (response.ok && result.success) {
         setProfileData(result.profile);
         console.log('✅ Profile data loaded successfully');
+        
+        // Load notification settings from profile
+        if (result.profile.email_enabled !== undefined || result.profile.whatsapp_enabled !== undefined) {
+          setNotificationSettings({
+            email_enabled: result.profile.email_enabled !== undefined ? result.profile.email_enabled : true,
+            whatsapp_enabled: result.profile.whatsapp_enabled !== undefined ? result.profile.whatsapp_enabled : false
+          });
+          console.log('✅ Notification settings loaded:', {
+            email: result.profile.email_enabled,
+            whatsapp: result.profile.whatsapp_enabled
+          });
+        }
         
         // Show account wall only if username doesn't exist
         const hasUsername = result.profile?.username && result.profile.username.trim();
@@ -5938,194 +5905,97 @@ function App() {
 
             <div className="modal__content">
               <div style={{marginBottom: '32px'}}>
+                <p style={{color: '#6b7280', marginBottom: '24px'}}>
+                  Choose how you want to receive progress updates and leaderboard notifications. We've combined weekly and monthly updates into one toggle per channel.
+                </p>
                 
-                {/* Email Notifications Section */}
-                <div style={{marginBottom: '32px'}}>
-                  <h4 style={{margin: '0 0 16px 0', fontSize: '18px', fontWeight: '600', color: '#374151'}}>
-                    📧 Email Notifications
-                  </h4>
-                  
-                  <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
-                    {/* Weekly Progress Update */}
-                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', background: '#f9fafb', borderRadius: '8px', border: '1px solid #e5e7eb'}}>
-                      <div>
-                        <div style={{fontWeight: '500', color: '#374151', marginBottom: '4px'}}>
-                          Weekly progress update
-                        </div>
-                        <div style={{fontSize: '14px', color: '#6b7280'}}>
-                          Get your weekly screen time summary every Sunday
-                        </div>
+                {/* Email Notifications */}
+                <div style={{marginBottom: '24px'}}>
+                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px', background: '#f9fafb', borderRadius: '12px', border: '1px solid #e5e7eb'}}>
+                    <div>
+                      <div style={{fontWeight: '600', color: '#374151', marginBottom: '4px', fontSize: '16px'}}>
+                        📧 Email Notifications
                       </div>
-                      <label style={{position: 'relative', display: 'inline-block', width: '44px', height: '24px'}}>
-                        <input
-                          type="checkbox"
-                          checked={notificationSettings.email.weeklyProgress}
-                          onChange={(e) => updateNotificationSetting('email', 'weeklyProgress', e.target.checked)}
-                          style={{opacity: 0, width: 0, height: 0}}
-                        />
+                      <div style={{fontSize: '14px', color: '#6b7280'}}>
+                        Get weekly progress updates and monthly leaderboard rankings via email
+                      </div>
+                    </div>
+                    <label style={{position: 'relative', display: 'inline-block', width: '44px', height: '24px'}}>
+                      <input
+                        type="checkbox"
+                        checked={notificationSettings.email_enabled}
+                        onChange={(e) => updateNotificationSetting('email_enabled', e.target.checked)}
+                        style={{opacity: 0, width: 0, height: 0}}
+                      />
+                      <span style={{
+                        position: 'absolute',
+                        cursor: 'pointer',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundColor: notificationSettings.email_enabled ? '#2E0456' : '#ccc',
+                        transition: '0.3s',
+                        borderRadius: '24px'
+                      }}>
                         <span style={{
                           position: 'absolute',
-                          cursor: 'pointer',
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          backgroundColor: notificationSettings.email.weeklyProgress ? '#2E0456' : '#ccc',
+                          content: '',
+                          height: '18px',
+                          width: '18px',
+                          left: notificationSettings.email_enabled ? '23px' : '3px',
+                          bottom: '3px',
+                          backgroundColor: 'white',
                           transition: '0.3s',
-                          borderRadius: '24px'
-                        }}>
-                          <span style={{
-                            position: 'absolute',
-                            content: '',
-                            height: '18px',
-                            width: '18px',
-                            left: notificationSettings.email.weeklyProgress ? '23px' : '3px',
-                            bottom: '3px',
-                            backgroundColor: 'white',
-                            transition: '0.3s',
-                            borderRadius: '50%'
-                          }}></span>
-                        </span>
-                      </label>
-                    </div>
-
-                    {/* Monthly Leaderboard */}
-                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', background: '#f9fafb', borderRadius: '8px', border: '1px solid #e5e7eb'}}>
-                      <div>
-                        <div style={{fontWeight: '500', color: '#374151', marginBottom: '4px'}}>
-                          Monthly leaderboard update
-                        </div>
-                        <div style={{fontSize: '14px', color: '#6b7280'}}>
-                          See how you rank against the community each month
-                        </div>
-                      </div>
-                      <label style={{position: 'relative', display: 'inline-block', width: '44px', height: '24px'}}>
-                        <input
-                          type="checkbox"
-                          checked={notificationSettings.email.monthlyLeaderboard}
-                          onChange={(e) => updateNotificationSetting('email', 'monthlyLeaderboard', e.target.checked)}
-                          style={{opacity: 0, width: 0, height: 0}}
-                        />
-                        <span style={{
-                          position: 'absolute',
-                          cursor: 'pointer',
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          backgroundColor: notificationSettings.email.monthlyLeaderboard ? '#2E0456' : '#ccc',
-                          transition: '0.3s',
-                          borderRadius: '24px'
-                        }}>
-                          <span style={{
-                            position: 'absolute',
-                            content: '',
-                            height: '18px',
-                            width: '18px',
-                            left: notificationSettings.email.monthlyLeaderboard ? '23px' : '3px',
-                            bottom: '3px',
-                            backgroundColor: 'white',
-                            transition: '0.3s',
-                            borderRadius: '50%'
-                          }}></span>
-                        </span>
-                      </label>
-                    </div>
+                          borderRadius: '50%'
+                        }}></span>
+                      </span>
+                    </label>
                   </div>
                 </div>
 
-                {/* WhatsApp Notifications Section */}
+                {/* WhatsApp Notifications */}
                 <div>
-                  <h4 style={{margin: '0 0 16px 0', fontSize: '18px', fontWeight: '600', color: '#374151'}}>
-                    💬 WhatsApp Notifications
-                  </h4>
-                  
-                  <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
-                    {/* Weekly Progress Update */}
-                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #bbf7d0'}}>
-                      <div>
-                        <div style={{fontWeight: '500', color: '#374151', marginBottom: '4px'}}>
-                          Weekly progress update
-                        </div>
-                        <div style={{fontSize: '14px', color: '#6b7280'}}>
-                          Get your weekly screen time summary via WhatsApp
-                        </div>
+                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px', background: '#f0fdf4', borderRadius: '12px', border: '1px solid #bbf7d0'}}>
+                    <div>
+                      <div style={{fontWeight: '600', color: '#374151', marginBottom: '4px', fontSize: '16px'}}>
+                        💬 WhatsApp Notifications
                       </div>
-                      <label style={{position: 'relative', display: 'inline-block', width: '44px', height: '24px'}}>
-                        <input
-                          type="checkbox"
-                          checked={notificationSettings.whatsapp.weeklyProgress}
-                          onChange={(e) => updateNotificationSetting('whatsapp', 'weeklyProgress', e.target.checked)}
-                          style={{opacity: 0, width: 0, height: 0}}
-                        />
+                      <div style={{fontSize: '14px', color: '#6b7280'}}>
+                        Get weekly progress updates and monthly leaderboard rankings via WhatsApp
+                      </div>
+                    </div>
+                    <label style={{position: 'relative', display: 'inline-block', width: '44px', height: '24px'}}>
+                      <input
+                        type="checkbox"
+                        checked={notificationSettings.whatsapp_enabled}
+                        onChange={(e) => updateNotificationSetting('whatsapp_enabled', e.target.checked)}
+                        style={{opacity: 0, width: 0, height: 0}}
+                      />
+                      <span style={{
+                        position: 'absolute',
+                        cursor: 'pointer',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundColor: notificationSettings.whatsapp_enabled ? '#22c55e' : '#ccc',
+                        transition: '0.3s',
+                        borderRadius: '24px'
+                      }}>
                         <span style={{
                           position: 'absolute',
-                          cursor: 'pointer',
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          backgroundColor: notificationSettings.whatsapp.weeklyProgress ? '#22c55e' : '#ccc',
+                          content: '',
+                          height: '18px',
+                          width: '18px',
+                          left: notificationSettings.whatsapp_enabled ? '23px' : '3px',
+                          bottom: '3px',
+                          backgroundColor: 'white',
                           transition: '0.3s',
-                          borderRadius: '24px'
-                        }}>
-                          <span style={{
-                            position: 'absolute',
-                            content: '',
-                            height: '18px',
-                            width: '18px',
-                            left: notificationSettings.whatsapp.weeklyProgress ? '23px' : '3px',
-                            bottom: '3px',
-                            backgroundColor: 'white',
-                            transition: '0.3s',
-                            borderRadius: '50%'
-                          }}></span>
-                        </span>
-                      </label>
-                    </div>
-
-                    {/* Monthly Leaderboard */}
-                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #bbf7d0'}}>
-                      <div>
-                        <div style={{fontWeight: '500', color: '#374151', marginBottom: '4px'}}>
-                          Monthly leaderboard update
-                        </div>
-                        <div style={{fontSize: '14px', color: '#6b7280'}}>
-                          See your community ranking via WhatsApp each month
-                        </div>
-                      </div>
-                      <label style={{position: 'relative', display: 'inline-block', width: '44px', height: '24px'}}>
-                        <input
-                          type="checkbox"
-                          checked={notificationSettings.whatsapp.monthlyLeaderboard}
-                          onChange={(e) => updateNotificationSetting('whatsapp', 'monthlyLeaderboard', e.target.checked)}
-                          style={{opacity: 0, width: 0, height: 0}}
-                        />
-                        <span style={{
-                          position: 'absolute',
-                          cursor: 'pointer',
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          backgroundColor: notificationSettings.whatsapp.monthlyLeaderboard ? '#22c55e' : '#ccc',
-                          transition: '0.3s',
-                          borderRadius: '24px'
-                        }}>
-                          <span style={{
-                            position: 'absolute',
-                            content: '',
-                            height: '18px',
-                            width: '18px',
-                            left: notificationSettings.whatsapp.monthlyLeaderboard ? '23px' : '3px',
-                            bottom: '3px',
-                            backgroundColor: 'white',
-                            transition: '0.3s',
-                            borderRadius: '50%'
-                          }}></span>
-                        </span>
-                      </label>
-                    </div>
+                          borderRadius: '50%'
+                        }}></span>
+                      </span>
+                    </label>
                   </div>
                 </div>
 
