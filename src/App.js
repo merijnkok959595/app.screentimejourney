@@ -2635,11 +2635,10 @@ function App() {
     }
   };
 
-  const validateCommitment = async () => {
-    console.log('🔍 Starting commitment validation...');
-    alert('Validation function called! Check console for logs.');
-    setCommitmentError('');
-    setCommitmentValidating(true);
+    const validateCommitment = async () => {
+      console.log('🔍 Starting commitment validation...');
+      setCommitmentError('');
+      setCommitmentValidating(true);
     
     try {
       console.log('📤 Sending validation request to API...');
@@ -5478,57 +5477,31 @@ function App() {
               <div style={{margin: '0 0 16px 0'}}>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
                   <span style={{fontSize: '14px', color: '#374151'}}>Email notifications</span>
-                  <div style={{display: 'flex', gap: '4px'}}>
-                    <span style={{
-                      fontSize: '12px',
-                      fontWeight: '500',
-                      color: notificationSettings.email.weeklyProgress ? '#059669' : '#6b7280',
-                      backgroundColor: '#f9fafb',
-                      padding: '2px 8px',
-                      borderRadius: '12px',
-                      border: '1px solid #e5e7eb'
-                    }}>
-                      Weekly {notificationSettings.email.weeklyProgress ? '✓' : '✗'}
-                    </span>
-                    <span style={{
-                      fontSize: '12px',
-                      fontWeight: '500',
-                      color: notificationSettings.email.monthlyLeaderboard ? '#059669' : '#6b7280',
-                      backgroundColor: '#f9fafb',
-                      padding: '2px 8px',
-                      borderRadius: '12px',
-                      border: '1px solid #e5e7eb'
-                    }}>
-                      Monthly {notificationSettings.email.monthlyLeaderboard ? '✓' : '✗'}
-                    </span>
-                  </div>
+                  <span style={{
+                    fontSize: '12px',
+                    fontWeight: '500',
+                    color: notificationSettings.email_enabled ? '#059669' : '#6b7280',
+                    backgroundColor: '#f9fafb',
+                    padding: '2px 8px',
+                    borderRadius: '12px',
+                    border: '1px solid #e5e7eb'
+                  }}>
+                    {notificationSettings.email_enabled ? '✓ Enabled' : '✗ Disabled'}
+                  </span>
                 </div>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0'}}>
                   <span style={{fontSize: '14px', color: '#374151'}}>WhatsApp notifications</span>
-                  <div style={{display: 'flex', gap: '4px'}}>
-                    <span style={{
-                      fontSize: '12px',
-                      fontWeight: '500',
-                      color: notificationSettings.whatsapp.weeklyProgress ? '#059669' : '#6b7280',
-                      backgroundColor: '#f9fafb',
-                      padding: '2px 8px',
-                      borderRadius: '12px',
-                      border: '1px solid #e5e7eb'
-                    }}>
-                      Weekly {notificationSettings.whatsapp.weeklyProgress ? '✓' : '✗'}
-                    </span>
-                    <span style={{
-                      fontSize: '12px',
-                      fontWeight: '500',
-                      color: notificationSettings.whatsapp.monthlyLeaderboard ? '#059669' : '#6b7280',
-                      backgroundColor: '#f9fafb',
-                      padding: '2px 8px',
-                      borderRadius: '12px',
-                      border: '1px solid #e5e7eb'
-                    }}>
-                      Monthly {notificationSettings.whatsapp.monthlyLeaderboard ? '✓' : '✗'}
-                    </span>
-                  </div>
+                  <span style={{
+                    fontSize: '12px',
+                    fontWeight: '500',
+                    color: notificationSettings.whatsapp_enabled ? '#059669' : '#6b7280',
+                    backgroundColor: '#f9fafb',
+                    padding: '2px 8px',
+                    borderRadius: '12px',
+                    border: '1px solid #e5e7eb'
+                  }}>
+                    {notificationSettings.whatsapp_enabled ? '✓ Enabled' : '✗ Disabled'}
+                  </span>
                 </div>
               </div>
               <div style={{marginTop: 'auto', display: 'flex', gap: '8px'}}>
