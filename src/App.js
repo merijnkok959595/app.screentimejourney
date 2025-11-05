@@ -197,6 +197,9 @@ function App() {
   const [newGender, setNewGender] = useState('');
   const [newWhatsapp, setNewWhatsapp] = useState('');
   const [newCountryCode, setNewCountryCode] = useState('+31');
+  const [whatToChange, setWhatToChange] = useState('');
+  const [whatToGain, setWhatToGain] = useState('');
+  const [doingThisFor, setDoingThisFor] = useState('');
   const [usernameValid, setUsernameValid] = useState(null); // null, true, false
   const [usernameChecking, setUsernameChecking] = useState(false);
   const [usernameError, setUsernameError] = useState('');
@@ -2687,7 +2690,7 @@ function App() {
         setTimeout(() => {
           setWhatsappCodeSent(true);
           setResendCooldown(60); // Start 60-second cooldown
-          setOnboardStep(4); // Move to verification step
+          setOnboardStep(6); // Move to verification step
           setWhatsappLoading(false);
           console.log(`🔧 Local dev: Simulated sending code to ${newCountryCode}${newWhatsapp}`);
           alert(`Demo: Verification code "123456" sent to ${newCountryCode}${newWhatsapp}`);
@@ -2725,7 +2728,7 @@ function App() {
       if (response.ok && result.success) {
         setWhatsappCodeSent(true);
         setResendCooldown(60); // Start 60-second cooldown
-        setOnboardStep(4); // Move to verification step
+        setOnboardStep(6); // Move to verification step
         console.log('✅ WhatsApp code sent successfully');
       } else {
         alert(result.error || 'Failed to send verification code. Please try again.');
@@ -2912,7 +2915,10 @@ function App() {
       const profileData = {
         customer_id: customerId,
         username: newUsername.trim(),
-        gender: newGender
+        gender: newGender,
+        what_to_change: whatToChange.trim(),
+        what_to_gain: whatToGain.trim(),
+        doing_this_for: doingThisFor.trim()
       };
       
       // Only include WhatsApp data if user is skipping verification
@@ -3520,12 +3526,14 @@ function App() {
         <div className={`modal-overlay ${showOnboarding ? 'active' : ''}`}>
           <div className="modal" role="dialog" aria-modal="true" aria-labelledby="onboard-title">
             <div className="modal__header">
-              <div className="step-indicator">Step {onboardStep} of 4</div>
+              <div className="step-indicator">Step {onboardStep} of 6</div>
               <h3 id="onboard-title" className="modal__title">
                 {onboardStep === 1 && "Choose username"}
                 {onboardStep === 2 && "Select gender"}
-                {onboardStep === 3 && "Setup WhatsApp"}
-                {onboardStep === 4 && "Verify phone"}
+                {onboardStep === 3 && "What to change"}
+                {onboardStep === 4 && "What to gain"}
+                {onboardStep === 5 && "Setup WhatsApp"}
+                {onboardStep === 6 && "Verify phone"}
               </h3>
             </div>
 
@@ -3609,6 +3617,60 @@ function App() {
 
             {onboardStep === 3 && (
               <div>
+                <p className="helper">What habit or behavior do you want to change?</p>
+                <input 
+                  className="input" 
+                  placeholder="quit porn" 
+                  value={whatToChange}
+                  onChange={(e) => setWhatToChange(e.target.value)}
+                  maxLength="100"
+                />
+                <div className="modal__footer">
+                  <button
+                    className="btn btn--primary btn--full" 
+                    disabled={!whatToChange.trim()} 
+                    onClick={() => setOnboardStep(4)}
+                  >
+                    Next →
+                  </button>
+                  <button className="link-back" onClick={() => setOnboardStep(2)}>Back</button>
+                </div>
+              </div>
+            )}
+
+            {onboardStep === 4 && (
+              <div>
+                <p className="helper">What do you want to gain from this journey?</p>
+                <input 
+                  className="input" 
+                  placeholder="more presence and purpose" 
+                  value={whatToGain}
+                  onChange={(e) => setWhatToGain(e.target.value)}
+                  maxLength="100"
+                />
+                <p className="helper" style={{ marginTop: '1rem' }}>Who are you doing this for?</p>
+                <input 
+                  className="input" 
+                  placeholder="friends and family" 
+                  value={doingThisFor}
+                  onChange={(e) => setDoingThisFor(e.target.value)}
+                  maxLength="100"
+                />
+                <div className="modal__footer">
+                  <button
+                    className="btn btn--primary btn--full" 
+                    disabled={!whatToGain.trim() || !doingThisFor.trim()} 
+                    onClick={() => setOnboardStep(5)}
+                  >
+                    Next →
+                  </button>
+                  <button className="link-back" onClick={() => setOnboardStep(3)}>Back</button>
+                </div>
+              </div>
+            )}
+
+            {onboardStep === 5 && (
+              <div>
                 <p className="helper">Get daily motivation and accountability messages.</p>
                 <div className="phone-input-group">
                   <select 
@@ -3651,16 +3713,16 @@ function App() {
                   >
                     {profileLoading ? 'Saving profile...' : whatsappLoading ? 'Please wait...' : 'Skip (not recommended)'}
                   </button>
-                  <button className="link-back" onClick={() => setOnboardStep(2)}>Back</button>
+                  <button className="link-back" onClick={() => setOnboardStep(4)}>Back</button>
                 </div>
               </div>
             )}
 
-            {onboardStep === 4 && (
+            {onboardStep === 6 && (
               <div>
                 <p className="helper">
                   We sent a 6-digit code to {newCountryCode}{newWhatsapp}
-                  <button className="link-inline" onClick={() => setOnboardStep(3)}>Wrong number?</button>
+                  <button className="link-inline" onClick={() => setOnboardStep(5)}>Wrong number?</button>
                 </p>
                 <input 
                   className="input code-input" 
