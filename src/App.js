@@ -1148,7 +1148,7 @@ function App() {
             {
               step: 2,
               title: 'Setup Screentime',
-              body: 'Follow this guide to configure screen time settings on your device.',
+              body: '‼️ Setup dummy pincode first.',
               step_type: 'video',
               media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
               action_button: 'Next Step'
@@ -1156,7 +1156,7 @@ function App() {
             {
               step: 3,
               title: 'Setup Profile',
-              body: 'Configure your device profile settings.',
+              body: '‼️ Extra optional protection against porn',
               step_type: 'video',
               media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
               action_button: 'Next Step'
@@ -1164,7 +1164,7 @@ function App() {
             {
               step: 4,
               title: 'Setup Pincode',
-              body: 'Set up your device pincode for security.',
+              body: '',
               step_type: 'video',
               media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
               action_button: 'Complete Setup'
