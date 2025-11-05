@@ -197,6 +197,11 @@ function App() {
   const [newGender, setNewGender] = useState('');
   const [newWhatsapp, setNewWhatsapp] = useState('');
   const [newCountryCode, setNewCountryCode] = useState('+31');
+  const [whatToChange, setWhatToChange] = useState('');
+  const [whatToGain, setWhatToGain] = useState('');
+  const [doingThisFor, setDoingThisFor] = useState('');
+  const [commitmentValidating, setCommitmentValidating] = useState(false);
+  const [commitmentError, setCommitmentError] = useState('');
   const [usernameValid, setUsernameValid] = useState(null); // null, true, false
   const [usernameChecking, setUsernameChecking] = useState(false);
   const [usernameError, setUsernameError] = useState('');
@@ -2663,6 +2668,57 @@ function App() {
     }
   };
 
+  const validateCommitment = async () => {
+    console.log('🔍 Starting commitment validation...');
+    alert('Validation function called! Check console for logs.');
+    setCommitmentError('');
+    setCommitmentValidating(true);
+    
+    try {
+      console.log('📤 Sending validation request to API...');
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/evaluate_commitment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          what_to_change: whatToChange.trim(),
+          what_to_gain: whatToGain.trim(),
+          doing_this_for: doingThisFor.trim()
+        })
+      });
+      
+      console.log('📥 Received response, status:', response.status);
+      const result = await response.json();
+      console.log('📋 Validation result:', result);
+      
+      if (response.ok && result.success) {
+        if (result.is_valid) {
+          // Validation passed, move to next step
+          console.log('✅ Commitment validated successfully!');
+          setCommitmentValidating(false);
+          setOnboardStep(4);
+        } else {
+          // Validation failed, show feedback
+          console.log('❌ Commitment validation failed:', result.feedback);
+          setCommitmentError(result.feedback || 'Please provide more thoughtful and specific responses.');
+          setCommitmentValidating(false);
+        }
+      } else {
+        // API error, but don't block user
+        console.error('❌ Validation API error:', result);
+        setCommitmentValidating(false);
+        setOnboardStep(4); // Allow to proceed
+      }
+      
+    } catch (error) {
+      console.error('❌ Error validating commitment:', error);
+      setCommitmentValidating(false);
+      // On error, allow user to proceed (don't block onboarding)
+      setOnboardStep(4);
+    }
+  };
+
   const sendWhatsAppCode = async () => {
     setWhatsappError(''); // Clear any previous errors
     
@@ -2687,7 +2743,7 @@ function App() {
         setTimeout(() => {
           setWhatsappCodeSent(true);
           setResendCooldown(60); // Start 60-second cooldown
-          setOnboardStep(4); // Move to verification step
+          setOnboardStep(5); // Move to verification step
           setWhatsappLoading(false);
           console.log(`🔧 Local dev: Simulated sending code to ${newCountryCode}${newWhatsapp}`);
           alert(`Demo: Verification code "123456" sent to ${newCountryCode}${newWhatsapp}`);
@@ -2725,7 +2781,7 @@ function App() {
       if (response.ok && result.success) {
         setWhatsappCodeSent(true);
         setResendCooldown(60); // Start 60-second cooldown
-        setOnboardStep(4); // Move to verification step
+        setOnboardStep(5); // Move to verification step
         console.log('✅ WhatsApp code sent successfully');
       } else {
         alert(result.error || 'Failed to send verification code. Please try again.');
@@ -2912,7 +2968,10 @@ function App() {
       const profileData = {
         customer_id: customerId,
         username: newUsername.trim(),
-        gender: newGender
+        gender: newGender,
+        what_to_change: whatToChange.trim(),
+        what_to_gain: whatToGain.trim(),
+        doing_this_for: doingThisFor.trim()
       };
       
       // Only include WhatsApp data if user is skipping verification
@@ -2961,11 +3020,12 @@ function App() {
           }
         }
         
-        // Close onboarding
+        // Close onboarding and immediately show dashboard
         setShowOnboarding(false);
+        setAuthenticated(true);
         
-        // Show success message
-        alert('Profile saved successfully! Welcome to your Screen Time Journey!');
+        // Fetch profile data to populate dashboard
+        fetchProfileData();
         
       } else {
         console.error('❌ Failed to save profile:', result);
@@ -3519,12 +3579,13 @@ function App() {
         <div className={`modal-overlay ${showOnboarding ? 'active' : ''}`}>
           <div className="modal" role="dialog" aria-modal="true" aria-labelledby="onboard-title">
             <div className="modal__header">
-              <div className="step-indicator">Step {onboardStep} of 4</div>
+              <div className="step-indicator">Step {onboardStep} of 5</div>
               <h3 id="onboard-title" className="modal__title">
                 {onboardStep === 1 && "Choose username"}
                 {onboardStep === 2 && "Select gender"}
-                {onboardStep === 3 && "Setup WhatsApp"}
-                {onboardStep === 4 && "Verify phone"}
+                {onboardStep === 3 && "Your commitment"}
+                {onboardStep === 4 && "Setup WhatsApp"}
+                {onboardStep === 5 && "Verify phone"}
               </h3>
             </div>
 
@@ -3608,6 +3669,59 @@ function App() {
 
             {onboardStep === 3 && (
               <div>
+                <p className="helper">Why do you want to change your screentime habits?</p>
+                <input 
+                  className="input" 
+                  placeholder="I want to be more present with my family" 
+                  value={whatToChange}
+                  onChange={(e) => {
+                    setWhatToChange(e.target.value);
+                    setCommitmentError(''); // Clear error on input
+                  }}
+                  maxLength="200"
+                />
+                <p className="helper" style={{ marginTop: '1rem' }}>How will this change your life?</p>
+                <input 
+                  className="input" 
+                  placeholder="I'll have more energy and focus for what matters" 
+                  value={whatToGain}
+                  onChange={(e) => {
+                    setWhatToGain(e.target.value);
+                    setCommitmentError(''); // Clear error on input
+                  }}
+                  maxLength="200"
+                />
+                <p className="helper" style={{ marginTop: '1rem' }}>Who in your life will be affected by these changes?</p>
+                <input 
+                  className="input" 
+                  placeholder="My partner and children" 
+                  value={doingThisFor}
+                  onChange={(e) => {
+                    setDoingThisFor(e.target.value);
+                    setCommitmentError(''); // Clear error on input
+                  }}
+                  maxLength="200"
+                />
+                {commitmentError && <p className="error-message">{commitmentError}</p>}
+                <div className="modal__footer">
+                  <button
+                    type="button"
+                    className="btn btn--primary btn--full" 
+                    disabled={!whatToChange.trim() || !whatToGain.trim() || !doingThisFor.trim() || commitmentValidating} 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      validateCommitment();
+                    }}
+                  >
+                    {commitmentValidating ? 'Validating...' : 'Next →'}
+                  </button>
+                  <button type="button" className="link-back" onClick={() => setOnboardStep(2)}>Back</button>
+                </div>
+              </div>
+            )}
+
+            {onboardStep === 4 && (
+              <div>
                 <p className="helper">Get daily motivation and accountability messages.</p>
                 <div className="phone-input-group">
                   <select 
@@ -3650,16 +3764,16 @@ function App() {
                   >
                     {profileLoading ? 'Saving profile...' : whatsappLoading ? 'Please wait...' : 'Skip (not recommended)'}
                   </button>
-                  <button className="link-back" onClick={() => setOnboardStep(2)}>Back</button>
+                  <button className="link-back" onClick={() => setOnboardStep(3)}>Back</button>
                 </div>
               </div>
             )}
 
-            {onboardStep === 4 && (
+            {onboardStep === 5 && (
               <div>
                 <p className="helper">
                   We sent a 6-digit code to {newCountryCode}{newWhatsapp}
-                  <button className="link-inline" onClick={() => setOnboardStep(3)}>Wrong number?</button>
+                  <button className="link-inline" onClick={() => setOnboardStep(4)}>Wrong number?</button>
                 </p>
                 <input 
                   className="input code-input" 
@@ -5161,7 +5275,7 @@ function App() {
                     color: '#6b7280',
                     fontFamily: 'monospace'
                   }}>
-                    merijn@risottini.com
+                    {profileData?.email || 'Not set'}
                   </span>
                 </div>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
@@ -5171,7 +5285,7 @@ function App() {
                     fontWeight: '500',
                     color: '#374151'
                   }}>
-                    @theking
+                    @{profileData?.username || 'Not set'}
                   </span>
                 </div>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
@@ -5181,7 +5295,7 @@ function App() {
                     fontWeight: '500',
                     color: '#374151'
                   }}>
-                    🙋‍♂️ Man
+                    {profileData?.gender === 'male' ? '🙋‍♂️ Man' : profileData?.gender === 'female' ? '🙋‍♀️ Woman' : 'Not set'}
                   </span>
                 </div>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
@@ -5192,7 +5306,7 @@ function App() {
                     color: '#374151',
                     fontFamily: 'monospace'
                   }}>
-                    +31627207989
+                    {profileData?.whatsapp || 'Not set'}
                   </span>
                 </div>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
