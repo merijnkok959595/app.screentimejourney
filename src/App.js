@@ -341,7 +341,7 @@ function AudioPlayer({ audioUrl }) {
         </button>
 
         {/* Progress Bar and Time */}
-        <div style={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+        <div style={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingTop: '3px'}}>
           <div
             onClick={handleSeek}
             style={{
