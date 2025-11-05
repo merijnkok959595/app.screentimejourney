@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import './styles/brand-theme.css';
 
@@ -233,6 +233,137 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
     </div>
   );
 };
+
+// Audio Player Component
+function AudioPlayer({ audioUrl }) {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const updateTime = () => setCurrentTime(audio.currentTime);
+    const updateDuration = () => setDuration(audio.duration);
+    const handleEnded = () => setIsPlaying(false);
+
+    audio.addEventListener('timeupdate', updateTime);
+    audio.addEventListener('loadedmetadata', updateDuration);
+    audio.addEventListener('ended', handleEnded);
+
+    return () => {
+      audio.removeEventListener('timeupdate', updateTime);
+      audio.removeEventListener('loadedmetadata', updateDuration);
+      audio.removeEventListener('ended', handleEnded);
+    };
+  }, []);
+
+  const togglePlay = () => {
+    const audio = audioRef.current;
+    if (isPlaying) {
+      audio.pause();
+    } else {
+      audio.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  const handleSeek = (e) => {
+    const audio = audioRef.current;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const percentage = x / rect.width;
+    audio.currentTime = percentage * duration;
+  };
+
+  const formatTime = (time) => {
+    if (isNaN(time)) return '0:00';
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.8)',
+      border: '1px solid rgba(0, 0, 0, 0.1)',
+      borderRadius: '12px',
+      padding: '16px'
+    }}>
+      <audio ref={audioRef} src={audioUrl} preload="metadata" />
+      
+      <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
+        {/* Play/Pause Button */}
+        <button
+          onClick={togglePlay}
+          style={{
+            background: 'linear-gradient(135deg, #2E0456, #440B6C)',
+            border: 'none',
+            borderRadius: '50%',
+            width: '48px',
+            height: '48px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            transition: 'transform 0.2s ease',
+            flexShrink: 0
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+          onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+        >
+          {isPlaying ? (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+              <rect x="6" y="4" width="4" height="16"/>
+              <rect x="14" y="4" width="4" height="16"/>
+            </svg>
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+              <polygon points="8,5 8,19 19,12"/>
+            </svg>
+          )}
+        </button>
+
+        {/* Progress Bar and Time */}
+        <div style={{flex: 1}}>
+          <div
+            onClick={handleSeek}
+            style={{
+              height: '6px',
+              background: 'rgba(0, 0, 0, 0.1)',
+              borderRadius: '3px',
+              cursor: 'pointer',
+              position: 'relative',
+              marginBottom: '6px'
+            }}
+          >
+            <div
+              style={{
+                height: '100%',
+                width: `${duration ? (currentTime / duration) * 100 : 0}%`,
+                background: 'linear-gradient(135deg, #2E0456, #440B6C)',
+                borderRadius: '3px',
+                transition: 'width 0.1s linear'
+              }}
+            />
+          </div>
+          
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            fontSize: '12px',
+            color: '#6B7280'
+          }}>
+            <span>{formatTime(currentTime)}</span>
+            <span>{formatTime(duration)}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function App() {
   const [customerData, setCustomerData] = useState(null);
@@ -5103,22 +5234,9 @@ function App() {
                           
                           {/* Audio Guide for Setup Pincode step (step 4) */}
                           {currentFlowStep === 4 && (
-                            <div className="card" style={{marginBottom: '20px'}}>
-                              <div className="card-header">
-                                <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                                  <div className="audio-icon">🎵</div>
-                                  <h4 className="card-title" style={{margin: '0'}}>
-                                    Audio Pincode Guide
-                                  </h4>
-                                </div>
-                              </div>
-                              <div className="card-body">
-                              
+                            <div style={{marginBottom: '20px'}}>
                               {!audioGuideData ? (
                                 <div>
-                                  <p style={{margin: '0 0 12px 0', fontSize: '14px', color: '#6b7280'}}>
-                                    Generate an audio guide to help you enter your screen time pincode without memorizing it.
-                                  </p>
                                   <button
                                     className="btn btn--outline btn--sm"
                                     onClick={generateAudioGuide}
@@ -5137,44 +5255,8 @@ function App() {
                                   </button>
                                 </div>
                               ) : (
-                                <div>
-                                  <div style={{textAlign: 'center', marginBottom: '16px'}}>
-                                    <p style={{margin: '0', fontSize: '14px', color: 'var(--text-secondary)'}}>
-                                      🎧 Your audio guide is ready! Listen for step-by-step pincode instructions.
-                                    </p>
-                                    <p style={{margin: '8px 0 0 0', fontSize: '12px', color: 'var(--text-muted)'}}>
-                                      🔒 Pincode is securely generated - no need to memorize it
-                                    </p>
-                                  </div>
-                                  
-                                  <button
-                                    className="btn btn--primary btn--sm"
-                                    onClick={playAudioGuide}
-                                    style={{width: '100%', marginBottom: '8px'}}
-                                  >
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px'}}>
-                                      <polygon points="5 3,19 12,5 21,5 3"/>
-                                    </svg>
-                                    🔊 Play Audio Guide
-                                  </button>
-                                  
-                                  <button
-                                    className="btn btn--outline btn--sm"
-                                    onClick={() => {
-                                      setAudioGuideData(null);
-                                      console.log('🔄 Audio guide cleared, user can generate new one');
-                                    }}
-                                    style={{width: '100%', fontSize: '12px'}}
-                                  >
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '6px'}}>
-                                      <path d="M1 4v6h6"/>
-                                      <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
-                                    </svg>
-                                    🔄 Generate New Code
-                                  </button>
-                                </div>
+                                <AudioPlayer audioUrl={audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url} />
                               )}
-                              </div>
                             </div>
                           )}
                         </>
