@@ -3221,8 +3221,19 @@ function App() {
       status: 'locked',
       addedDate: new Date().toISOString(),
       type: deviceFormData.device_type,
-      setup_completed_at: new Date().toISOString()
+      setup_completed_at: new Date().toISOString(),
+      // Store pincode for all devices (used for audio guide)
+      pincode: sharedPincode?.pincode || null,
+      // Store audio URL if generated
+      audio_url: audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url || null,
+      // Store profile URL for VPN profile (if generated)
+      profile_url: vpnProfileData?.s3_url || vpnProfileData?.downloadUrl || null
     };
+    
+    // For macOS devices, also store mdm_pincode (same as pincode for profile removal)
+    if (deviceFormData.device_type === 'macOS') {
+      newDevice.mdm_pincode = sharedPincode?.pincode || null;
+    }
     
     try {
       // Get customer ID for device addition (using working account section pattern)
