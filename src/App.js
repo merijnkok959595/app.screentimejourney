@@ -120,8 +120,13 @@ const getMockDeviceData = (scenario = 'ground_zero') => {
 
 // Progress Section Component (Theme-styled card)
 const ProgressSection = ({ latestDevice, customerName = "Merijn", devices, milestones = DEFAULT_MILESTONES, startDeviceFlow }) => {
-  // Use mock data if no real device data provided
-  const deviceData = latestDevice || getMockDeviceData('ground_zero');
+  // Get the latest device from devices array (sorted by added_at, most recent first)
+  const realLatestDevice = devices && devices.length > 0 
+    ? devices.sort((a, b) => new Date(b.added_at) - new Date(a.added_at))[0]
+    : null;
+  
+  // Use real device data if available, otherwise use passed latestDevice or mock
+  const deviceData = realLatestDevice || latestDevice || getMockDeviceData('ground_zero');
   const progress = calculateProgress(deviceData, 'male', milestones);
   const { daysInFocus, progressPercentage, currentLevel, daysToNext, finalGoalDays } = progress;
   
@@ -150,7 +155,8 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", devices, miles
 
         <div style={{paddingBottom: '8px'}}>
           <h2 className="journey-greeting journey-greeting--big">Hi {customerName},</h2>
-          <p className="journey-line">Right now, you are <strong>{currentLevel.title} {currentLevel.emoji}</strong> with <strong>{daysInFocus} days</strong> in focus – progress <strong>{progressPercentage}%</strong>.</p>
+          <p className="journey-line">You are among the top <strong>6% in the world 🌍</strong></p>
+          <p className="journey-line">Right now, you are <strong>{currentLevel.title} {currentLevel.emoji}</strong> with <strong>{daysInFocus} days in focus</strong>.</p>
           {currentLevel.next_level_title && (
             <p className="journey-line journey-line--next">Next up: <strong>{currentLevel.next_level_title} {currentLevel.next_level_emoji}</strong> in <strong>{daysToNext} days</strong>.</p>
           )}
@@ -5215,10 +5221,9 @@ function App() {
           
           {/* Journey progress - full width */}
           <ProgressSection 
-            latestDevice={getMockDeviceData(testScenario)} 
-            customerName="Merijn" 
+            latestDevice={null}
+            customerName={profileData?.username || customerData?.username || "Friend"} 
             devices={devices}
-
             milestones={milestones}
             startDeviceFlow={startDeviceFlow}
           />
