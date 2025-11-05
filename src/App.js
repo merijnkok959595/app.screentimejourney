@@ -884,7 +884,7 @@ function App() {
               {
                 step: 4,
                 title: 'Setup Pincode',
-                body: '‼️ Setup dummy pincode first.',
+                body: '‼️ Setup secret pincode',
                 step_type: 'video',
                 media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
                 action_button: 'Complete Setup'
