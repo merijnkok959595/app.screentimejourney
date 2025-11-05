@@ -2669,10 +2669,12 @@ function App() {
   };
 
   const validateCommitment = async () => {
+    console.log('🔍 Starting commitment validation...');
     setCommitmentError('');
     setCommitmentValidating(true);
     
     try {
+      console.log('📤 Sending validation request to API...');
       const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/evaluate_commitment`, {
         method: 'POST',
         headers: {
@@ -2685,29 +2687,34 @@ function App() {
         })
       });
       
+      console.log('📥 Received response, status:', response.status);
       const result = await response.json();
+      console.log('📋 Validation result:', result);
       
       if (response.ok && result.success) {
         if (result.is_valid) {
           // Validation passed, move to next step
-          console.log('✅ Commitment validated:', result.feedback);
+          console.log('✅ Commitment validated successfully!');
+          setCommitmentValidating(false);
           setOnboardStep(4);
         } else {
           // Validation failed, show feedback
+          console.log('❌ Commitment validation failed:', result.feedback);
           setCommitmentError(result.feedback || 'Please provide more thoughtful and specific responses.');
+          setCommitmentValidating(false);
         }
       } else {
         // API error, but don't block user
         console.error('❌ Validation API error:', result);
+        setCommitmentValidating(false);
         setOnboardStep(4); // Allow to proceed
       }
       
     } catch (error) {
       console.error('❌ Error validating commitment:', error);
+      setCommitmentValidating(false);
       // On error, allow user to proceed (don't block onboarding)
       setOnboardStep(4);
-    } finally {
-      setCommitmentValidating(false);
     }
   };
 
@@ -3661,38 +3668,38 @@ function App() {
 
             {onboardStep === 3 && (
               <div>
-                <p className="helper">What habit or behavior do you want to change?</p>
+                <p className="helper">Why do you want to change your screentime habits?</p>
                 <input 
                   className="input" 
-                  placeholder="quit porn" 
+                  placeholder="I want to be more present with my family" 
                   value={whatToChange}
                   onChange={(e) => {
                     setWhatToChange(e.target.value);
                     setCommitmentError(''); // Clear error on input
                   }}
-                  maxLength="100"
+                  maxLength="200"
                 />
-                <p className="helper" style={{ marginTop: '1rem' }}>What do you want to gain from this journey?</p>
+                <p className="helper" style={{ marginTop: '1rem' }}>How will this change your life?</p>
                 <input 
                   className="input" 
-                  placeholder="more presence and purpose" 
+                  placeholder="I'll have more energy and focus for what matters" 
                   value={whatToGain}
                   onChange={(e) => {
                     setWhatToGain(e.target.value);
                     setCommitmentError(''); // Clear error on input
                   }}
-                  maxLength="100"
+                  maxLength="200"
                 />
-                <p className="helper" style={{ marginTop: '1rem' }}>Who are you doing this for?</p>
+                <p className="helper" style={{ marginTop: '1rem' }}>Who in your life will be affected by these changes?</p>
                 <input 
                   className="input" 
-                  placeholder="friends and family" 
+                  placeholder="My partner and children" 
                   value={doingThisFor}
                   onChange={(e) => {
                     setDoingThisFor(e.target.value);
                     setCommitmentError(''); // Clear error on input
                   }}
-                  maxLength="100"
+                  maxLength="200"
                 />
                 {commitmentError && <p className="error-message">{commitmentError}</p>}
                 <div className="modal__footer">
