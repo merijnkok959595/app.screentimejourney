@@ -3445,6 +3445,12 @@ function App() {
       newDevice.mdm_pincode = sharedPincode?.pincode || null;
     }
     
+    // Log device size for debugging
+    const deviceSize = JSON.stringify(newDevice).length;
+    console.log(`📊 New device data size: ${deviceSize} bytes`, newDevice);
+    console.log(`📊 audioGuideData size: ${audioGuideData ? JSON.stringify(audioGuideData).length : 0} bytes`);
+    console.log(`📊 vpnProfileData size: ${vpnProfileData ? JSON.stringify(vpnProfileData).length : 0} bytes`);
+    
     try {
       // Get customer ID for device addition (using working account section pattern)
       let customerId = customerData?.customerId;
