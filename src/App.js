@@ -3428,6 +3428,11 @@ function App() {
       macOS: '💻'
     };
     
+    console.log('🔍 sharedPincode:', sharedPincode);
+    console.log('🔍 audioGuideData:', audioGuideData);
+    console.log('🔍 vpnProfileData:', vpnProfileData);
+    console.log('🔍 currentDeviceId:', currentDeviceId);
+    
     const newDevice = {
       id: currentDeviceId || `device_${Date.now()}`,  // Use shared device_id for tracking
       name: deviceFormData.device_name.trim(),
@@ -3444,12 +3449,17 @@ function App() {
       profile_url: vpnProfileData?.profile_url || vpnProfileData?.s3_url || vpnProfileData?.downloadUrl || null
     };
     
+    console.log('📦 newDevice pincode:', newDevice.pincode);
+    console.log('📦 newDevice audio_url:', newDevice.audio_url);
+    console.log('📦 newDevice profile_url:', newDevice.profile_url);
+    
     // Clear shared device_id after device creation
     setCurrentDeviceId(null);
     
     // For macOS devices, also store mdm_pincode (same as pincode for profile removal)
     if (deviceFormData.device_type === 'macOS') {
       newDevice.mdm_pincode = sharedPincode?.pincode || null;
+      console.log('📦 newDevice mdm_pincode:', newDevice.mdm_pincode);
     }
     
     // Log device size for debugging
@@ -3583,6 +3593,12 @@ function App() {
             unlockedDeviceData: device
           }));
           
+          // Get customer ID
+          const customerId = customerData?.customerId || extractCustomerId();
+          console.log('🔑 Unlocking with customer_id:', customerId);
+          console.log('🔑 Device ID to unlock:', currentFlow.deviceId);
+          console.log('🔑 customerData:', customerData);
+          
           // Call backend API to unlock device
           const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/unlock_device`, {
             method: 'POST',
@@ -3590,10 +3606,13 @@ function App() {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              customer_id: customerData?.customerId || extractCustomerId(),
+              customer_id: customerId,
               device_id: currentFlow.deviceId
             })
           });
+          
+          console.log('📡 Unlock response status:', response.status);
+          console.log('📡 Unlock response ok:', response.ok);
 
           if (response.ok) {
             const result = await response.json();
@@ -3628,6 +3647,8 @@ function App() {
             
           } else {
             console.error('❌ Failed to auto-unlock device:', response.status);
+            const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+            console.error('❌ Error response:', errorData);
           }
         } catch (error) {
           console.error('❌ Error during auto-unlock:', error);
