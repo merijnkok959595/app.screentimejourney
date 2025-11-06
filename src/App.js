@@ -1042,26 +1042,19 @@ function App() {
           device_unlock_flow: {
             flow_id: 'device_unlock',
             flow_name: 'Unlock Device',
-            total_steps: 3,
+            total_steps: 2,
             steps: [
               {
                 step: 1,
-                title: 'Unlock Device',
-                body: '',
-                step_type: 'video',
-                media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
-                action_button: 'I Understand, Continue'
-              },
-              {
-                step: 2,
                 title: 'Read out loud:',
-                body: 'You are about to unlock your device. This action requires you to acknowledge what you are giving up.',
-                step_type: 'surrender',
+                body: '',
+                step_type: 'video_surrender',
+                media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
                 surrender_text: 'I hereby give up on changing my screen time habits. I give up the chance to be a present family man, live with more presence and purpose, and give attention to my wife and children. I choose distraction over discipline, and I surrender my intention to grow.',
                 action_button: 'Submit Surrender'
               },
               {
-                step: 3,
+                step: 2,
                 title: '🔓 Unlock Code',
                 body: 'Your surrender has been approved. Use the code below to unlock your device for 15 minutes.',
                 step_type: 'pincode_display',
@@ -1188,26 +1181,19 @@ function App() {
         device_unlock_flow: {
           flow_id: 'device_unlock',
           flow_name: 'Unlock Device',
-          total_steps: 3,
+          total_steps: 2,
           steps: [
             {
               step: 1,
-              title: 'Unlock Process',
-              body: 'Watch this video to understand the unlock process and what it means for your journey.',
-              step_type: 'video',
+              title: 'Read out loud:',
+              body: '',
+              step_type: 'video_surrender',
               media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
-              action_button: 'I Understand, Continue'
-            },
-            {
-              step: 2,
-              title: '🔐 Unlock Device',
-              body: 'You are about to unlock your device. This action requires you to acknowledge what you are giving up.',
-              step_type: 'surrender',
               surrender_text: 'I hereby give up on changing my screen time habits. I give up the chance to be a present family man, live with more presence and purpose, and give attention to my wife and children. I choose distraction over discipline, and I surrender my intention to grow.',
               action_button: 'Submit Surrender'
             },
             {
-              step: 3,
+              step: 2,
               title: '🔓 Unlock Code',
               body: 'Your surrender has been approved. Use the code below to unlock your device for 15 minutes.',
               step_type: 'pincode_display',
@@ -2322,26 +2308,19 @@ function App() {
         const fallbackFlow = {
           flow_id: 'device_unlock',
           flow_name: 'Unlock Device',
-          total_steps: 3,
+          total_steps: 2,
           steps: [
             {
               step: 1,
-              title: 'Unlock Process',
-              body: 'Watch this video to understand the unlock process and what it means for your journey.',
-              step_type: 'video',
+              title: 'Read out loud:',
+              body: '',
+              step_type: 'video_surrender',
               media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
-              action_button: 'I Understand, Continue'
-            },
-            {
-              step: 2,
-              title: '🔐 Unlock Device',
-              body: 'You are about to unlock your device. This action requires you to acknowledge what you are giving up.',
-              step_type: 'surrender',
               surrender_text: 'I hereby give up on changing my screen time habits. I give up the chance to be a present family man, live with more presence and purpose, and give attention to my wife and children. I choose distraction over discipline, and I surrender my intention to grow.',
               action_button: 'Submit Surrender'
             },
             {
-              step: 3,
+              step: 2,
               title: '🔓 Unlock Code',
               body: 'Your surrender has been approved. Use the code below to unlock your device for 15 minutes.',
               step_type: 'pincode_display',
@@ -2445,8 +2424,8 @@ function App() {
     // Clear previous errors
     setDeviceFormErrors({});
     
-    // Handle surrender step
-    if (currentStep && currentStep.step_type === 'surrender') {
+    // Handle surrender step (both standalone and video_surrender)
+    if (currentStep && (currentStep.step_type === 'surrender' || currentStep.step_type === 'video_surrender')) {
       submitSurrender();
       return;
     }
@@ -4758,7 +4737,286 @@ function App() {
                   {currentFlow.steps && currentFlow.steps[currentFlowStep - 1] && (
                     <div className="flow-step">
                       {/* Conditional rendering based on step type */}
-                      {currentFlow.steps[currentFlowStep - 1].step_type === 'surrender' ? (
+                      {currentFlow.steps[currentFlowStep - 1].step_type === 'video_surrender' ? (
+                        <>
+                          {/* Video + Surrender Step Content - Merged */}
+                          <div style={{marginBottom: '20px'}}>
+                            
+                            {/* Video */}
+                            <div style={{marginBottom: '20px', textAlign: 'center'}}>
+                              <video controls style={{width: '100%', maxWidth: '500px', borderRadius: '8px', marginBottom: '20px'}}>
+                                <source src={currentFlow.steps[currentFlowStep - 1].media_url} type="video/mp4" />
+                                Your browser does not support the video tag.
+                              </video>
+                            </div>
+                            
+                            {/* Surrender Text */}
+                            <div style={{background: 'rgba(255,255,255,0.8)', padding: '20px', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.1)', marginBottom: '20px'}}>
+                              <p style={{margin: 0, fontSize: '15px', lineHeight: '1.7', color: '#374151', fontStyle: 'italic', textAlign: 'left'}}>
+                                "{currentFlow.steps[currentFlowStep - 1].surrender_text || surrenderText}"
+                              </p>
+                            </div>
+                            
+                            {/* Recording Status (only when recording) */}
+                            {isRecording && (
+                              <div style={{
+                                background: 'rgba(249, 250, 251, 0.8)',
+                                border: '1px solid rgba(0, 0, 0, 0.1)',
+                                borderRadius: '8px',
+                                padding: '16px',
+                                marginBottom: '16px',
+                                textAlign: 'center'
+                              }}>
+                                <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px'}}>
+                                  <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    fontSize: '16px',
+                                    fontWeight: '600',
+                                    color: '#374151'
+                                  }}>
+                                    <div style={{
+                                      width: '12px',
+                                      height: '12px',
+                                      backgroundColor: '#DC2626',
+                                      borderRadius: '50%',
+                                      animation: 'pulse 1.5s ease-in-out infinite'
+                                    }}></div>
+                                    Recording...
+                                  </div>
+                                  <div style={{
+                                    fontSize: '24px',
+                                    fontWeight: '700',
+                                    color: '#374151',
+                                    fontFamily: 'monospace'
+                                  }}>
+                                    {recordingTime}s
+                                  </div>
+                                  
+                                  {/* Audio Visualizer */}
+                                  <div style={{
+                                    display: 'flex',
+                                    alignItems: 'end',
+                                    gap: '4px',
+                                    height: '50px',
+                                    justifyContent: 'center',
+                                    marginTop: '8px',
+                                    width: '100%',
+                                    maxWidth: '500px'
+                                  }}>
+                                    {Array.from({length: 50}, (_, i) => (
+                                      <div
+                                        key={i}
+                                        style={{
+                                          width: '6px',
+                                          backgroundColor: audioLevels[i % audioLevels.length] > 20 ? '#2E0456' : '#E5E7EB',
+                                          borderRadius: '2px',
+                                          height: `${Math.max(8, (audioLevels[i % audioLevels.length] || 10) * 0.8)}px`,
+                                          transition: 'all 0.1s ease'
+                                        }}
+                                      />
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                            
+                            {!audioBlob ? (
+                              <div>
+                                {/* Record Button */}
+                                <button
+                                  onClick={(e) => {
+                                    console.log('🎯 Button clicked! isRecording:', isRecording);
+                                    console.log('🎯 mediaRecorder:', mediaRecorder);
+                                    if (isRecording) {
+                                      console.log('📞 Calling stopRecording...');
+                                      stopRecording();
+                                    } else {
+                                      console.log('📞 Calling startRecording...');
+                                      startRecording();
+                                    }
+                                  }}
+                                  className="btn btn--primary"
+                                  style={{
+                                    background: isRecording 
+                                      ? 'linear-gradient(135deg, #DC2626, #EF4444)'
+                                      : 'linear-gradient(135deg, #2E0456, #440B6C)',
+                                    border: 'none',
+                                    borderRadius: '8px',
+                                    padding: '14px 28px',
+                                    fontSize: '16px',
+                                    fontWeight: '600',
+                                    color: 'white',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s ease',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    margin: '0 auto',
+                                    width: 'auto',
+                                    minWidth: '180px'
+                                  }}
+                                >
+                                  {isRecording ? (
+                                    <>
+                                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <rect x="6" y="6" width="12" height="12"/>
+                                      </svg>
+                                      Stop Recording
+                                      </>
+                                    ) : (
+                                      <>
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                          <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                        Start Recording
+                                      </>
+                                    )}
+                                  </button>
+                                  
+                                  {/* Microphone permission hint */}
+                                  {!isRecording && (
+                                    <div className="mic-permission">
+                                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path d="M12 6v6l4 2"/>
+                                      </svg>
+                                      Click to allow microphone access and start recording
+                                    </div>
+                                  )}
+                                </div>
+                              ) : (
+                                <div style={{
+                                  background: 'rgba(249, 250, 251, 0.8)',
+                                  border: '1px solid rgba(0, 0, 0, 0.1)',
+                                  borderRadius: '12px',
+                                  padding: '20px'
+                                }}>
+                                  {/* Success Message with Green Emoji */}
+                                  <div style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    gap: '12px',
+                                    marginBottom: '20px'
+                                  }}>
+                                    <div style={{fontSize: '48px', lineHeight: 1}}>✅</div>
+                                    <div style={{textAlign: 'center'}}>
+                                      <h3 style={{
+                                        margin: '0 0 8px 0',
+                                        fontSize: '18px',
+                                        fontWeight: '600',
+                                        color: '#374151'
+                                      }}>
+                                        Recording Complete!
+                                      </h3>
+                                      <p style={{
+                                        margin: 0,
+                                        fontSize: '14px',
+                                        color: '#6B7280'
+                                      }}>
+                                        Duration: {recordingTime} seconds
+                                      </p>
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Audio Player Preview */}
+                                  <div style={{
+                                    background: 'rgba(255, 255, 255, 0.8)',
+                                    borderRadius: '8px',
+                                    padding: '16px',
+                                    marginBottom: '16px',
+                                    border: '1px solid rgba(0, 0, 0, 0.1)'
+                                  }}>
+                                    <div style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '12px'
+                                    }}>
+                                      <button
+                                        onClick={async () => {
+                                          try {
+                                            console.log('🎵 Playing audio, blob size:', audioBlob.size, 'bytes');
+                                            const audioUrl = URL.createObjectURL(audioBlob);
+                                            const audio = new Audio(audioUrl);
+                                            
+                                            audio.onloadstart = () => console.log('🔄 Audio loading started');
+                                            audio.oncanplay = () => console.log('✅ Audio can play');
+                                            audio.onerror = (e) => console.error('❌ Audio error:', e);
+                                            audio.onended = () => URL.revokeObjectURL(audioUrl);
+                                            
+                                            await audio.play();
+                                            console.log('🎵 Audio playback started');
+                                          } catch (error) {
+                                            console.error('❌ Error playing audio:', error);
+                                            alert('Failed to play audio. Please try recording again.');
+                                          }
+                                        }}
+                                        style={{
+                                          background: 'linear-gradient(135deg, #2E0456, #440B6C)',
+                                          border: 'none',
+                                          borderRadius: '50%',
+                                          width: '40px',
+                                          height: '40px',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          cursor: 'pointer',
+                                          transition: 'transform 0.2s ease'
+                                        }}
+                                        onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}
+                                        onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                                      >
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                                          <polygon points="5,3 19,12 5,21"/>
+                                        </svg>
+                                      </button>
+                                      <div style={{flex: 1}}>
+                                        <div style={{
+                                          fontSize: '14px',
+                                          fontWeight: '500',
+                                          color: '#374151',
+                                          marginBottom: '4px'
+                                        }}>
+                                          Surrender Recording
+                                        </div>
+                                        <div style={{
+                                          fontSize: '12px',
+                                          color: '#6B7280'
+                                        }}>
+                                          Tap play to review your recording
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Record Again Button */}
+                                  <button
+                                    onClick={() => {
+                                      setAudioBlob(null);
+                                      setIsRecording(false);
+                                      setRecordingTime(0);
+                                    }}
+                                    style={{
+                                      width: '100%',
+                                      background: 'transparent',
+                                      border: 'none',
+                                      color: '#440B6C',
+                                      textDecoration: 'underline',
+                                      cursor: 'pointer',
+                                      fontSize: '14px',
+                                      padding: '8px 0',
+                                      textAlign: 'center'
+                                    }}
+                                  >
+                                    Record Again
+                                  </button>
+                                </div>
+                              )}
+                          </div>
+                        </>
+                      ) : currentFlow.steps[currentFlowStep - 1].step_type === 'surrender' ? (
                         <>
                           {/* Surrender Step Content - Simplified */}
                           <div style={{marginBottom: '20px'}}>
@@ -5284,7 +5542,7 @@ function App() {
                       <button
                         className="btn btn--primary btn--full"
                         onClick={nextFlowStep}
-                        disabled={surrenderSubmitting}
+                        disabled={surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob)}
                         style={{
                           opacity: surrenderSubmitting ? 0.7 : 1,
                           cursor: surrenderSubmitting ? 'not-allowed' : 'pointer',
