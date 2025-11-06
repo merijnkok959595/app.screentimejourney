@@ -6357,7 +6357,7 @@ function App() {
             </a>
             <div className="footer-contact">
               <a href="mailto:info@screentimejourney.com" className="footer-contact-link">info@screentimejourney.com</a>
-              <a href="tel:+31627207989" className="footer-contact-link">+31627207989</a>
+              <a href="tel:+31649232152" className="footer-contact-link">+31 6 49232152</a>
               <div className="footer-address">Linnaeusstraat 35F-14, Amsterdam, Netherlands</div>
             </div>
           </div>

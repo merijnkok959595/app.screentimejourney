@@ -22,7 +22,7 @@
   grid-template-columns: 1.2fr 1fr 1.4fr;
   gap: 4rem;
   align-items: flex-start;
-  margin-bottom: 3rem;
+  margin-bottom: 4rem;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
@@ -87,7 +87,7 @@
 
 .footer-title {
   font-family: var(--font-heading);
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 400;
   color: #FFFFFF;
   margin: 0 0 1.5rem 0;
@@ -142,7 +142,8 @@
 
 .footer-bottom {
   border-top: 1px solid rgba(255,255,255,0.2);
-  padding: 2rem 0 0 0;
+  padding: 2.5rem 0 0 0;
+  margin-top: 1.5rem;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
@@ -152,10 +153,10 @@
 
 .footer-policies {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 2rem;
+  gap: 1.5rem;
   font-family: var(--font-body);
   font-size: 0.875rem;
   font-weight: 500;
@@ -166,21 +167,22 @@
   color: rgba(255,255,255,0.95);
   font-weight: 500;
   letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
 .footer-policy-links {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
   flex-wrap: wrap;
   align-items: center;
 }
 
 .footer-policy-link {
-  color: rgba(255,255,255,0.8);
-  text-decoration: none;
+  color: #FFFFFF;
+  text-decoration: underline;
   font-family: var(--font-body);
   font-size: 0.875rem;
-  font-weight: 400;
+  font-weight: 700;
   transition: all 0.2s ease;
   position: relative;
   white-space: nowrap;
@@ -189,6 +191,7 @@
 .footer-policy-link:hover {
   color: #FFFFFF;
   text-decoration: underline;
+  opacity: 0.9;
 }
 
 /* Mobile Responsiveness */
@@ -213,8 +216,12 @@
   .footer-inner {
     grid-template-columns: 1fr;
     gap: 2.5rem;
-    margin-bottom: 2.5rem;
+    margin-bottom: 3rem;
     padding: 0 var(--spacing-md);
+  }
+  
+  .footer-bottom {
+    margin-top: 1.5rem;
   }
   
   .footer-logo-column {
@@ -235,7 +242,7 @@
   }
   
   .footer-title {
-    font-size: 1.125rem;
+    font-size: 1.375rem;
     margin-bottom: 1.25rem;
   }
   
@@ -249,17 +256,18 @@
   }
   
   .footer-policies {
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1rem;
     text-align: center;
     padding-top: 1.5rem;
+    flex-wrap: wrap;
   }
   
   .footer-policy-links {
     justify-content: center;
-    gap: 1.25rem;
+    gap: 1rem;
     flex-wrap: wrap;
   }
   
@@ -284,7 +292,7 @@
   }
   
   .footer-title {
-    font-size: 1rem;
+    font-size: 1.125rem;
     margin-bottom: 1rem;
   }
   
