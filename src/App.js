@@ -1704,6 +1704,65 @@ function App() {
             audio_url: result.audio_url 
           });
           console.log('✅ Audio guide generated:', audioData);
+          
+          // IMMEDIATELY save pincode to draft device in DynamoDB (best practice)
+          // This ensures pincode is persisted even if user closes browser before completing setup
+          if (currentDeviceId && customerId) {
+            console.log('💾 Saving pincode to draft device immediately...');
+            try {
+              // Check if device exists, if not create draft
+              const getDevicesResp = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/get_devices`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ customer_id: customerId })
+              });
+              
+              const devicesData = await getDevicesResp.json();
+              const deviceExists = devicesData.devices?.some(d => d.id === currentDeviceId);
+              
+              if (!deviceExists) {
+                // Create draft device
+                console.log('📝 Creating draft device...');
+                await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/add_device`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    customer_id: customerId,
+                    device: {
+                      id: currentDeviceId,
+                      name: deviceFormData.device_name || 'New Device',
+                      type: deviceFormData.device_type,
+                      icon: deviceFormData.device_type === 'macOS' ? '💻' : '📱',
+                      status: 'draft',
+                      addedDate: new Date().toISOString(),
+                      pincode: result.pincode,
+                      audio_url: result.audio_url
+                    }
+                  })
+                });
+                console.log('✅ Draft device created with pincode');
+              } else {
+                // Update existing device with pincode
+                console.log('🔄 Updating existing device with pincode...');
+                await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/update_device`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    customer_id: customerId,
+                    device_id: currentDeviceId,
+                    updates: {
+                      pincode: result.pincode,
+                      audio_url: result.audio_url
+                    }
+                  })
+                });
+                console.log('✅ Device updated with pincode');
+              }
+            } catch (saveError) {
+              console.error('⚠️ Failed to save pincode to draft device:', saveError);
+              // Don't fail the generation, just log the error
+            }
+          }
         } else {
           throw new Error(result.error || 'Failed to generate audio guide');
         }
@@ -2466,31 +2525,28 @@ function App() {
       const nextStep = currentFlowStep + 1;
       setCurrentFlowStep(nextStep);
       
-      // Skip auto-generation for now - focus on core device setup flow
-      // Users can manually generate profiles/guides later if needed
-      console.log('📋 Device setup flow continuing to step', nextStep, 'without auto-generation');
+      console.log('📋 Device setup flow continuing to step', nextStep);
       
-      // // Auto-generate VPN profile when reaching step 3 (Setup Profile) - DISABLED FOR NOW
-      // if (nextStep === 3 && currentFlow.flowType === 'device_setup_flow' && !vpnProfileData) {
-      //   console.log('🔧 Auto-generating VPN profile for step 3', { deviceFormData });
-      //   try {
-      //     generateVPNProfile();
-      //   } catch (error) {
-      //     console.error('❌ Error auto-generating VPN profile:', error);
-      //     // Continue flow even if VPN profile generation fails
-      //   }
-      // }
-      // 
-      // // Auto-generate audio guide when reaching step 4 (Setup Pincode) - DISABLED FOR NOW
-      // if (nextStep === 4 && currentFlow.flowType === 'device_setup_flow' && !audioGuideData) {
-      //   console.log('🔧 Auto-generating audio guide for step 4', { deviceFormData });
-      //   try {
-      //     generateAudioGuide();
-      //   } catch (error) {
-      //     console.error('❌ Error auto-generating audio guide:', error);
-      //     // Continue flow even if audio guide generation fails
-      //   }
-      // }
+      // VPN profile generation (Step 3) is OPTIONAL - users can skip or generate manually
+      // This is only relevant for macOS devices and provides extra protection
+      
+      // Ensure device ID is created for tracking (needed for draft device pattern)
+      if (currentFlow.flowType === 'device_setup_flow' && !currentDeviceId) {
+        const newDeviceId = `device_${Date.now()}`;
+        setCurrentDeviceId(newDeviceId);
+        console.log('📝 Created device ID for tracking:', newDeviceId);
+      }
+      
+      // Audio guide generation (Step 4) is MANDATORY - auto-generate when reaching this step
+      if (nextStep === 4 && currentFlow.flowType === 'device_setup_flow' && !audioGuideData) {
+        console.log('🔧 MANDATORY: Auto-generating audio guide for step 4');
+        try {
+          generateAudioGuide();
+        } catch (error) {
+          console.error('❌ Error auto-generating audio guide:', error);
+          alert('Failed to generate audio guide. Please try again.');
+        }
+      }
     } else {
       completeFlow();
     }
@@ -5620,10 +5676,14 @@ function App() {
                       <button
                         className="btn btn--primary btn--full"
                         onClick={nextFlowStep}
-                        disabled={surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob)}
+                        disabled={
+                          surrenderSubmitting || 
+                          ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) ||
+                          (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && !audioGuideData)
+                        }
                         style={{
-                          opacity: surrenderSubmitting ? 0.7 : 1,
-                          cursor: surrenderSubmitting ? 'not-allowed' : 'pointer',
+                          opacity: surrenderSubmitting || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && !audioGuideData) ? 0.7 : 1,
+                          cursor: surrenderSubmitting || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && !audioGuideData) ? 'not-allowed' : 'pointer',
                           position: 'relative',
                           display: 'flex',
                           alignItems: 'center',
