@@ -1958,8 +1958,8 @@ function App() {
         
         console.log('🔓 Surrender approved! Pincode generated:', pincode);
         
-        // Move to step 3 (pincode display)
-        setCurrentFlowStep(3);
+        // Move to step 2 (pincode display)
+        setCurrentFlowStep(2);
         return;
       }
 
@@ -1993,8 +1993,8 @@ function App() {
           // Send email with pincode
           await sendUnlockEmail(result.pincode);
           
-          // Move to step 3 (pincode display)
-          setCurrentFlowStep(3);
+          // Move to step 2 (pincode display)
+          setCurrentFlowStep(2);
         } else {
           alert(`❌ ${result.feedback || 'Surrender not approved. Please record the complete text clearly.'}`);
         }
@@ -3516,7 +3516,7 @@ function App() {
 
   // Auto-unlock device when reaching pincode display step
   useEffect(() => {
-    if (showDeviceFlow && currentFlow && currentFlowStep === 3 && 
+    if (showDeviceFlow && currentFlow && currentFlowStep === 2 && 
         currentFlow.steps[currentFlowStep - 1]?.step_type === 'pincode_display' &&
         currentFlow.deviceId && currentFlow.flowType === 'device_unlock_flow') {
       
