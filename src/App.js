@@ -1046,8 +1046,8 @@ function App() {
             steps: [
               {
                 step: 1,
-                title: 'Unlock Process',
-                body: 'Watch this video to understand the unlock process and what it means for your journey.',
+                title: 'Unlock Device',
+                body: '',
                 step_type: 'video',
                 media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
                 action_button: 'I Understand, Continue'
