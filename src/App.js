@@ -1046,7 +1046,7 @@ function App() {
             steps: [
               {
                 step: 1,
-                title: 'Read out loud:',
+                title: 'Unlock Device',
                 body: '',
                 step_type: 'video_surrender',
                 media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
@@ -1185,7 +1185,7 @@ function App() {
           steps: [
             {
               step: 1,
-              title: 'Read out loud:',
+              title: 'Unlock Device',
               body: '',
               step_type: 'video_surrender',
               media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
@@ -2312,7 +2312,7 @@ function App() {
           steps: [
             {
               step: 1,
-              title: 'Read out loud:',
+              title: 'Unlock Device',
               body: '',
               step_type: 'video_surrender',
               media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
@@ -4751,11 +4751,20 @@ function App() {
                             </div>
                             
                             {/* Surrender Text */}
-                            <div style={{background: 'rgba(255,255,255,0.8)', padding: '20px', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.1)', marginBottom: '20px'}}>
-                              <p style={{margin: 0, fontSize: '15px', lineHeight: '1.7', color: '#374151', fontStyle: 'italic', textAlign: 'left'}}>
-                                "{currentFlow.steps[currentFlowStep - 1].surrender_text || surrenderText}"
-                              </p>
-                            </div>
+                            <p style={{margin: '0 0 12px 0', fontSize: '15px', lineHeight: '1.7', color: '#374151', fontStyle: 'italic', textAlign: 'left'}}>
+                              "{currentFlow.steps[currentFlowStep - 1].surrender_text || surrenderText}"
+                            </p>
+                            
+                            {/* Microphone permission hint */}
+                            {!isRecording && !audioBlob && (
+                              <div className="mic-permission" style={{marginBottom: '16px', textAlign: 'center'}}>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                  <circle cx="12" cy="12" r="10"/>
+                                  <path d="M12 6v6l4 2"/>
+                                </svg>
+                                Click to allow microphone access and start recording
+                              </div>
+                            )}
                             
                             {/* Recording Status (only when recording) */}
                             {isRecording && (
@@ -4837,17 +4846,15 @@ function App() {
                                       startRecording();
                                     }
                                   }}
-                                  className="btn btn--primary"
+                                  className="btn btn--outline"
                                   style={{
-                                    background: isRecording 
-                                      ? 'linear-gradient(135deg, #DC2626, #EF4444)'
-                                      : 'linear-gradient(135deg, #2E0456, #440B6C)',
-                                    border: 'none',
+                                    background: 'transparent',
+                                    border: isRecording ? '2px solid #DC2626' : '2px solid #440B6C',
                                     borderRadius: '8px',
                                     padding: '14px 28px',
                                     fontSize: '16px',
                                     fontWeight: '600',
-                                    color: 'white',
+                                    color: isRecording ? '#DC2626' : '#440B6C',
                                     cursor: 'pointer',
                                     transition: 'all 0.2s ease',
                                     display: 'flex',
@@ -4874,17 +4881,6 @@ function App() {
                                       </>
                                     )}
                                   </button>
-                                  
-                                  {/* Microphone permission hint */}
-                                  {!isRecording && (
-                                    <div className="mic-permission">
-                                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                        <circle cx="12" cy="12" r="10"/>
-                                        <path d="M12 6v6l4 2"/>
-                                      </svg>
-                                      Click to allow microphone access and start recording
-                                    </div>
-                                  )}
                                 </div>
                               ) : (
                                 <div style={{
@@ -4901,7 +4897,7 @@ function App() {
                                     gap: '12px',
                                     marginBottom: '20px'
                                   }}>
-                                    <div style={{fontSize: '48px', lineHeight: 1}}>✅</div>
+                                    <div style={{fontSize: '32px', lineHeight: 1}}>✅</div>
                                     <div style={{textAlign: 'center'}}>
                                       <h3 style={{
                                         margin: '0 0 8px 0',
@@ -5172,7 +5168,7 @@ function App() {
                                     gap: '12px',
                                     marginBottom: '20px'
                                   }}>
-                                    <div style={{fontSize: '48px', lineHeight: 1}}>✅</div>
+                                    <div style={{fontSize: '32px', lineHeight: 1}}>✅</div>
                                     <div style={{textAlign: 'center'}}>
                                       <h3 style={{
                                         margin: '0 0 8px 0',
