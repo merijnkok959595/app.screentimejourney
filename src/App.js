@@ -5679,51 +5679,7 @@ function App() {
                                 </div>
                               ) : (
                                 <div>
-                                  {/* Show pincode even if audio isn't available */}
-                                  {audioGuideData?.pincode && (
-                                    <div style={{
-                                      background: 'rgba(255, 255, 255, 0.9)',
-                                      border: '2px solid #e0f2fe',
-                                      borderRadius: '12px',
-                                      padding: '20px',
-                                      marginBottom: '16px',
-                                      textAlign: 'center'
-                                    }}>
-                                      <div style={{
-                                        fontSize: '14px',
-                                        color: '#6b7280',
-                                        marginBottom: '8px',
-                                        fontWeight: '500'
-                                      }}>
-                                        Your Screen Time Pincode
-                                      </div>
-                                      <div style={{
-                                        fontFamily: 'SF Mono, Monaco, monospace',
-                                        fontSize: '32px',
-                                        fontWeight: '700',
-                                        color: '#0369a1',
-                                        letterSpacing: '8px',
-                                        marginBottom: '12px'
-                                      }}>
-                                        {audioGuideData.pincode}
-                                      </div>
-                                      {audioGuideData.instructions && (
-                                        <div style={{
-                                          fontSize: '13px',
-                                          color: '#6b7280',
-                                          lineHeight: '1.5',
-                                          marginTop: '12px',
-                                          padding: '12px',
-                                          background: '#f8f9fa',
-                                          borderRadius: '8px'
-                                        }}>
-                                          {audioGuideData.instructions}
-                                        </div>
-                                      )}
-                                    </div>
-                                  )}
-                                  
-                                  {/* Audio player - only show if audio URL is available */}
+                                  {/* Audio player - only show audio player, never show pincode on screen */}
                                   {(audioGuideData?.audioUrl || audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url) ? (
                                     <AudioPlayer audioUrl={(() => {
                                       const url = audioGuideData?.audioUrl || audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url;
@@ -5742,7 +5698,7 @@ function App() {
                                       fontSize: '13px',
                                       color: '#856404'
                                     }}>
-                                      ⚠️ Audio playback is not available, but you can use the pincode above to manually enter it.
+                                      ⚠️ Audio playback is not available. Please try generating the audio guide again.
                                     </div>
                                   )}
                                   
