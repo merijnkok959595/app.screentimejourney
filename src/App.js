@@ -6389,7 +6389,7 @@ function App() {
         <div className="modal" role="dialog" aria-modal="true" aria-labelledby="cancel-flow-title" style={{maxWidth: '600px'}}>
           <>
             <div className="modal__header">
-              <div className="step-indicator">{cancelStep === 4 ? 'Complete' : `Step ${cancelStep} of 3`}</div>
+              <div className="step-indicator">{cancelStep === 4 ? '' : `Step ${cancelStep} of 3`}</div>
               <h3 id="cancel-flow-title" className="modal__title">
                 {cancelStep === 1 && 'We\'re sorry to see you go'}
                 {cancelStep === 2 && 'Help us improve'}
