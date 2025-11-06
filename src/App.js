@@ -1771,64 +1771,9 @@ function App() {
             console.warn('⚠️ Audio URL is null/undefined - audio playback will not be available');
           }
           
-          // IMMEDIATELY save pincode to draft device in DynamoDB (best practice)
-          // This ensures pincode is persisted even if user closes browser before completing setup
-          if (currentDeviceId && customerId) {
-            console.log('💾 Saving pincode to draft device immediately...');
-            try {
-              // Check if device exists, if not create draft
-              const getDevicesResp = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/get_devices`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ customer_id: customerId })
-              });
-              
-              const devicesData = await getDevicesResp.json();
-              const deviceExists = devicesData.devices?.some(d => d.id === currentDeviceId);
-              
-              if (!deviceExists) {
-                // Create draft device
-                console.log('📝 Creating draft device...');
-                await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/add_device`, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    customer_id: customerId,
-                    device: {
-                      id: currentDeviceId,
-                      name: deviceFormData.device_name || 'New Device',
-                      type: deviceFormData.device_type,
-                      icon: deviceFormData.device_type === 'macOS' ? '💻' : '📱',
-                      status: 'draft',
-                      addedDate: new Date().toISOString(),
-                      pincode: result.pincode,
-                      audio_url: result.audio_url
-                    }
-                  })
-                });
-                console.log('✅ Draft device created with pincode');
-              } else {
-                // Update existing device with pincode
-                console.log('🔄 Updating existing device with pincode...');
-                await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/update_device`, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    customer_id: customerId,
-                    device_id: currentDeviceId,
-                    updates: {
-                      pincode: result.pincode,
-                      audio_url: result.audio_url
-                    }
-                  })
-                });
-                console.log('✅ Device updated with pincode');
-              }
-            } catch (saveError) {
-              console.error('⚠️ Failed to save pincode to draft device:', saveError);
-              // Don't fail the generation, just log the error
-            }
-          }
+          // NOTE: Device is NOT saved to database here - it will only be saved when user clicks "Complete Setup"
+          // This ensures devices are only added to the database when the user explicitly completes the setup flow
+          console.log('📝 Audio guide generated - device will be saved when user completes setup');
         } else {
           throw new Error(result.error || 'Failed to generate audio guide');
         }
@@ -3656,8 +3601,8 @@ function App() {
         return;
       }
       
-      // Check if draft device already exists (from audio guide generation)
-      console.log('🔍 Checking if draft device exists...');
+      // Check if device already exists (in case user completed setup multiple times)
+      console.log('🔍 Checking if device already exists...');
       console.log('🔍 Looking for device ID:', newDevice.id);
       const getDevicesResp = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/get_devices`, {
         method: 'POST',
@@ -3668,13 +3613,13 @@ function App() {
       const devicesData = await getDevicesResp.json();
       console.log('🔍 Existing devices:', devicesData.devices?.map(d => ({id: d.id, status: d.status, size: JSON.stringify(d).length})));
       console.log('📏 Size of newDevice object:', JSON.stringify(newDevice).length, 'bytes');
-      const draftDeviceExists = devicesData.devices?.some(d => d.id === newDevice.id);
-      console.log('🔍 Draft device exists:', draftDeviceExists);
+      const deviceExists = devicesData.devices?.some(d => d.id === newDevice.id);
+      console.log('🔍 Device exists:', deviceExists);
       
       let response;
-      if (draftDeviceExists) {
-        // UPDATE existing draft device to finalize it
-        console.log('📝 Updating draft device to complete status...');
+      if (deviceExists) {
+        // UPDATE existing device (in case user completed setup multiple times)
+        console.log('📝 Updating existing device...');
         response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/update_device`, {
           method: 'POST',
           headers: {
@@ -3685,16 +3630,18 @@ function App() {
             device_id: newDevice.id,
             updates: {
               name: newDevice.name,
-              status: 'locked', // Change from draft to locked
+              status: 'locked',
               setup_completed_at: newDevice.setup_completed_at,
               profile_url: newDevice.profile_url,
-              mdm_pincode: newDevice.mdm_pincode
+              mdm_pincode: newDevice.mdm_pincode,
+              pincode: newDevice.pincode,
+              audio_url: newDevice.audio_url
             }
           })
         });
       } else {
-        // ADD new device (fallback if draft doesn't exist)
-        console.log('📝 Adding new device...');
+        // ADD new device (first time completing setup)
+        console.log('📝 Adding new device to database...');
         response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/add_device`, {
           method: 'POST',
           headers: {
