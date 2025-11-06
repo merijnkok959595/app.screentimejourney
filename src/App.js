@@ -535,6 +535,9 @@ function App() {
   // Logs state
   const [showLogsFlow, setShowLogsFlow] = useState(false);
   const [logs, setLogs] = useState([]);
+  
+  // Payment wall state
+  const [showPaymentWall, setShowPaymentWall] = useState(false);
 
   // Countdown timer for resend cooldown
   useEffect(() => {
@@ -2659,6 +2662,13 @@ function App() {
         const hasUsername = result.profile?.username && result.profile.username.trim();
         setShowOnboarding(!hasUsername);
         console.log(`🔍 Username check: ${hasUsername ? 'exists' : 'missing'} - Account wall: ${!hasUsername ? 'show' : 'hide'}`);
+        
+        // Show payment wall if subscription is cancelled (check both profile and customerData)
+        const profileCancelled = result.profile?.subscription_status === 'cancelled' || result.profile?.subscription_status === 'cancel_scheduled';
+        const customerCancelled = customerData?.subscription_status === 'cancelled' || customerData?.subscription_status === 'cancel_scheduled';
+        const isCancelled = profileCancelled || customerCancelled;
+        setShowPaymentWall(isCancelled && hasUsername);
+        console.log(`💳 Payment wall: ${isCancelled && hasUsername ? 'show' : 'hide'} (profile: ${profileCancelled}, customer: ${customerCancelled})`);
       } else {
         // If profile doesn't exist, show onboarding
         setShowOnboarding(true);
@@ -6829,6 +6839,95 @@ function App() {
               >
                 Close
               </button>
+            </div>
+          </>
+        </div>
+      </div>
+
+      {/* Payment Wall Modal - Shows activity logs when subscription is cancelled */}
+      <div className={`modal-overlay ${showPaymentWall ? 'active' : ''}`}>
+        <div className="modal" role="dialog" aria-modal="true" aria-labelledby="payment-wall-title" style={{maxWidth: '800px'}}>
+          <>
+            <div className="modal__header">
+              <h3 id="payment-wall-title" className="modal__title">
+                Your Device Pincodes
+              </h3>
+            </div>
+
+            <div className="modal__content">
+              <div style={{marginBottom: '16px'}}>
+                <p style={{fontSize: '16px', color: '#6b7280', marginBottom: '24px'}}>
+                  Your subscription has been cancelled. Below are the pincodes for your devices in case you need them.
+                </p>
+                
+                <div style={{maxHeight: '500px', overflowY: 'auto', border: '1px solid #e5e7eb', borderRadius: '8px'}}>
+                  {logs.map((log, index) => (
+                    <div key={log.id} style={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      padding: '16px',
+                      borderBottom: index < logs.length - 1 ? '1px solid #e5e7eb' : 'none',
+                      backgroundColor: '#fff'
+                    }}>
+
+                      <div style={{flex: 1}}>
+                        <div style={{fontWeight: '600', color: '#374151', marginBottom: '4px', fontSize: '16px'}}>
+                          {log.title}
+                        </div>
+                        <div style={{fontSize: '14px', color: '#6b7280', marginBottom: '4px'}}>
+                          {log.description}
+                        </div>
+                        {log.pincode && (
+                          <div style={{
+                            display: 'inline-block',
+                            background: '#f9fafb',
+                            border: '1px solid #e5e7eb',
+                            borderRadius: '12px',
+                            padding: '2px 8px',
+                            fontSize: '12px',
+                            color: '#059669',
+                            fontFamily: 'monospace',
+                            fontWeight: '500',
+                            marginTop: '4px'
+                          }}>
+                            Code: {log.pincode} ✓
+                          </div>
+                        )}
+                        <div style={{fontSize: '13px', color: '#9ca3af', marginTop: '8px'}}>
+                          {log.timestamp}
+                        </div>
+                      </div>
+
+                    </div>
+                  ))}
+                </div>
+
+                {logs.length === 0 && (
+                  <div style={{
+                    textAlign: 'center',
+                    padding: '40px',
+                    color: '#9ca3af',
+                    border: '1px solid #e5e7eb',
+                    borderRadius: '8px'
+                  }}>
+                    <div style={{fontSize: '40px', marginBottom: '16px'}}>📝</div>
+                    <p style={{margin: 0, fontSize: '16px'}}>No device pincodes found</p>
+                    <p style={{margin: '8px 0 0 0', fontSize: '14px'}}>No devices were added to your account</p>
+                  </div>
+                )}
+
+
+              </div>
+            </div>
+
+            <div className="modal__footer">
+              <a
+                href="https://www.screentimejourney.com/products/screentimejourney"
+                className="btn btn--primary btn--full"
+                style={{width: '100%', textAlign: 'center', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+              >
+                Subscribe Now
+              </a>
             </div>
           </>
         </div>
