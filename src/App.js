@@ -250,7 +250,13 @@ function AudioPlayer({ audioUrl }) {
 
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio) return;
+    if (!audio || !audioUrl) return;
+
+    // Update audio source when audioUrl changes
+    audio.src = audioUrl;
+    audio.load(); // Reload the audio element with new source
+    setIsPlaying(false); // Reset playing state when source changes
+    setCurrentTime(0); // Reset time
 
     const updateTime = () => setCurrentTime(audio.currentTime);
     const updateDuration = () => setDuration(audio.duration);
@@ -265,9 +271,15 @@ function AudioPlayer({ audioUrl }) {
       audio.removeEventListener('loadedmetadata', updateDuration);
       audio.removeEventListener('ended', handleEnded);
     };
-  }, []);
+  }, [audioUrl]);
 
   const togglePlay = async () => {
+    if (!audioUrl) {
+      console.error('❌ No audio URL available');
+      alert('Audio is not available. Please generate an audio guide first.');
+      return;
+    }
+
     const audio = audioRef.current;
     if (!audio) {
       console.error('❌ Audio element not found');
@@ -305,6 +317,22 @@ function AudioPlayer({ audioUrl }) {
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
+
+  // Don't render if no audio URL
+  if (!audioUrl) {
+    return (
+      <div style={{
+        background: 'rgba(255, 255, 255, 0.8)',
+        border: '1px solid rgba(0, 0, 0, 0.1)',
+        borderRadius: '12px',
+        padding: '16px',
+        textAlign: 'center',
+        color: '#6b7280'
+      }}>
+        <p style={{margin: 0, fontSize: '14px'}}>Audio not available. Please generate an audio guide first.</p>
+      </div>
+    );
+  }
 
   return (
     <div style={{
@@ -1337,16 +1365,24 @@ function App() {
     setProfileGenerating(true);
     
     try {
-      // Use shared pincode (should be set from audio guide generation)
-      if (!sharedPincode || !sharedPincode.pincode) {
-        console.error('❌ No shared pincode available. Audio guide must be generated first.');
-        alert('Please generate an audio guide first before creating the VPN profile.');
-        setProfileGenerating(false);
-        return;
-      }
+      // Pincode is only required for macOS devices (for MDM profile removal)
+      // iOS devices can generate profiles without a pincode
+      let pincode = null;
       
-      console.log('✅ Using shared pincode for VPN profile');
-      const pincode = sharedPincode.pincode;
+      if (deviceFormData.device_type === 'macOS') {
+        // macOS requires a pincode for MDM profile removal
+        if (!sharedPincode || !sharedPincode.pincode) {
+          console.error('❌ No shared pincode available. Audio guide must be generated first for macOS devices.');
+          alert('Please generate an audio guide first before creating the VPN profile for macOS.');
+          setProfileGenerating(false);
+          return;
+        }
+        pincode = sharedPincode.pincode;
+        console.log('✅ Using shared pincode for macOS VPN profile');
+      } else {
+        // iOS devices don't require a pincode
+        console.log('✅ Generating iOS profile without pincode requirement');
+      }
       
       // Get customer ID for VPN profile generation (using working account section pattern)
       let customerId = customerData?.customerId;
@@ -5673,7 +5709,7 @@ function App() {
                                 </div>
                               ) : (
                                 <div>
-                                  <AudioPlayer audioUrl={audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url} />
+                                  <AudioPlayer audioUrl={audioGuideData?.audioUrl || audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url} />
                                   <button
                                     onClick={() => {
                                       setAudioGuideData(null);
