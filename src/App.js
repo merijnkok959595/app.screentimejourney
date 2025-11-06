@@ -3555,20 +3555,55 @@ function App() {
         return;
       }
       
-      // Always save to backend for persistence
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/add_device`, {
+      // Check if draft device already exists (from audio guide generation)
+      console.log('🔍 Checking if draft device exists...');
+      const getDevicesResp = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/get_devices`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          customer_id: customerId,
-          device: newDevice
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ customer_id: customerId })
       });
       
-      console.log('📡 Add device response status:', response.status);
-      console.log('📡 Add device response ok:', response.ok);
+      const devicesData = await getDevicesResp.json();
+      const draftDeviceExists = devicesData.devices?.some(d => d.id === newDevice.id);
+      
+      let response;
+      if (draftDeviceExists) {
+        // UPDATE existing draft device to finalize it
+        console.log('📝 Updating draft device to complete status...');
+        response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/update_device`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            customer_id: customerId,
+            device_id: newDevice.id,
+            updates: {
+              name: newDevice.name,
+              status: 'locked', // Change from draft to locked
+              setup_completed_at: newDevice.setup_completed_at,
+              profile_url: newDevice.profile_url,
+              mdm_pincode: newDevice.mdm_pincode
+            }
+          })
+        });
+      } else {
+        // ADD new device (fallback if draft doesn't exist)
+        console.log('📝 Adding new device...');
+        response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/add_device`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            customer_id: customerId,
+            device: newDevice
+          })
+        });
+      }
+      
+      console.log('📡 Device save response status:', response.status);
+      console.log('📡 Device save response ok:', response.ok);
       
       if (!response.ok) {
         const errorData = await response.json();
