@@ -3521,17 +3521,26 @@ function App() {
         currentFlow.deviceId && currentFlow.flowType === 'device_unlock_flow') {
       
       console.log('🔓 Auto-unlocking device on pincode display:', currentFlow.deviceId);
+      console.log('📱 Current devices array:', devices);
       
       // Auto-unlock the device without confirmation
       const autoUnlockDevice = async () => {
         try {
           const device = devices.find(d => d.id === currentFlow.deviceId);
+          console.log('🔍 Looking for device:', currentFlow.deviceId);
+          console.log('✅ Found device:', device);
+          
           if (!device) {
             console.log('⚠️ Device not found for auto-unlock:', currentFlow.deviceId);
+            console.log('📋 Available device IDs:', devices.map(d => d.id));
             return;
           }
           
           console.log('🔓 Auto-unlocking device:', device.name);
+          console.log('📱 Device pincodes:', {
+            audio: device.current_audio_pincode,
+            mdm: device.current_mdm_pincode
+          });
           
           // Store device data in currentFlow before removal so UI can display pincodes
           setCurrentFlow(prev => ({
@@ -5285,8 +5294,24 @@ function App() {
                               // Use stored device data from currentFlow (stored before removal)
                               const unlockedDevice = currentFlow?.unlockedDeviceData;
                               
+                              console.log('🔍 Pincode Display - unlockedDevice:', unlockedDevice);
+                              console.log('🔍 Pincode Display - currentFlow:', currentFlow);
+                              
                               if (!unlockedDevice) {
-                                return <p style={{textAlign: 'center', color: '#6b7280'}}>Device information not available</p>;
+                                return (
+                                  <div style={{textAlign: 'center', padding: '20px'}}>
+                                    <div style={{marginBottom: '12px'}}>Loading device information...</div>
+                                    <div style={{
+                                      width: '24px',
+                                      height: '24px',
+                                      border: '3px solid #f3f4f6',
+                                      borderTop: '3px solid #2E0456',
+                                      borderRadius: '50%',
+                                      animation: 'spin 1s linear infinite',
+                                      margin: '0 auto'
+                                    }}></div>
+                                  </div>
+                                );
                               }
                               
                               return (
