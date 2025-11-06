@@ -2,8 +2,8 @@
   background: var(--brand-primary);
   color: #FFFFFF;
   text-align: left;
-  padding: 5rem 0 2.5rem 0;
-  margin-top: 4rem;
+  padding: 3.5rem 0 2.5rem 0;
+  margin-top: 3rem;
   position: relative;
 }
 
@@ -141,7 +141,7 @@
 }
 
 .footer-bottom {
-  border-top: 1px solid rgba(255,255,255,0.2);
+  border-top: none;
   padding: 2.5rem 0 0 0;
   margin-top: 1.5rem;
   max-width: 1200px;
@@ -158,7 +158,7 @@
   flex-wrap: wrap;
   gap: 1.5rem;
   font-family: var(--font-body);
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   font-weight: 500;
   padding-top: 1.5rem;
 }
@@ -168,6 +168,7 @@
   font-weight: 500;
   letter-spacing: 0.02em;
   white-space: nowrap;
+  font-size: 0.8rem;
 }
 
 .footer-policy-links {
@@ -181,7 +182,7 @@
   color: #FFFFFF;
   text-decoration: underline;
   font-family: var(--font-body);
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   font-weight: 700;
   transition: all 0.2s ease;
   position: relative;
@@ -209,8 +210,8 @@
 
 @media (max-width: 768px) {
   .footer {
-    padding: 3.5rem 0 2rem 0;
-    margin-top: 3rem;
+    padding: 3rem 0 2rem 0;
+    margin-top: 2.5rem;
   }
   
   .footer-inner {
@@ -272,13 +273,22 @@
   }
   
   .footer-policy-link {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+  }
+  
+  .footer-policies {
+    font-size: 0.75rem;
+  }
+  
+  .footer-policies > span {
+    font-size: 0.75rem;
   }
 }
 
 @media (max-width: 480px) {
   .footer {
-    padding: 3rem 0 1.5rem 0;
+    padding: 2.5rem 0 1.5rem 0;
+    margin-top: 2rem;
   }
   
   .footer-inner {
@@ -307,7 +317,15 @@
   }
   
   .footer-policy-link {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
+  }
+  
+  .footer-policies {
+    font-size: 0.7rem;
+  }
+  
+  .footer-policies > span {
+    font-size: 0.7rem;
   }
 }
 .badge { display: inline-flex; align-items: center; border-radius: 12px; font-size: 0.75rem; font-weight: 600; padding: 4px 8px; }
