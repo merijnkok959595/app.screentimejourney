@@ -6182,7 +6182,8 @@ function App() {
                       }}>
                         {(() => {
                           // Calculate next billing date from subscription creation date
-                          const subscriptionDate = profileData?.created_at || customerData?.created_at;
+                          // Prefer subscription_created_at over account created_at
+                          const subscriptionDate = profileData?.subscription_created_at || customerData?.subscription_created_at || profileData?.created_at || customerData?.created_at;
                           if (subscriptionDate) {
                             try {
                               const createdDate = new Date(subscriptionDate);
