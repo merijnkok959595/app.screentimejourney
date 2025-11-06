@@ -1054,7 +1054,7 @@ function App() {
               },
               {
                 step: 2,
-                title: '🔐 Unlock Device',
+                title: 'Read out loud:',
                 body: 'You are about to unlock your device. This action requires you to acknowledge what you are giving up.',
                 step_type: 'surrender',
                 surrender_text: 'I hereby give up on changing my screen time habits. I give up the chance to be a present family man, live with more presence and purpose, and give attention to my wife and children. I choose distraction over discipline, and I surrender my intention to grow.',
