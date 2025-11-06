@@ -3521,8 +3521,27 @@ function App() {
     // Log device size for debugging
     const deviceSize = JSON.stringify(newDevice).length;
     console.log(`📊 New device data size: ${deviceSize} bytes`, newDevice);
+    console.log(`📊 audioGuideData full object:`, audioGuideData);
     console.log(`📊 audioGuideData size: ${audioGuideData ? JSON.stringify(audioGuideData).length : 0} bytes`);
+    console.log(`📊 vpnProfileData full object:`, vpnProfileData);
     console.log(`📊 vpnProfileData size: ${vpnProfileData ? JSON.stringify(vpnProfileData).length : 0} bytes`);
+    
+    // DETAILED field-by-field size analysis
+    console.log('🔬 Field sizes:');
+    console.log(`  - id: ${JSON.stringify(newDevice.id).length} bytes`);
+    console.log(`  - name: ${JSON.stringify(newDevice.name).length} bytes`);
+    console.log(`  - type: ${JSON.stringify(newDevice.type).length} bytes`);
+    console.log(`  - added_at: ${JSON.stringify(newDevice.added_at).length} bytes`);
+    console.log(`  - setup_completed_at: ${JSON.stringify(newDevice.setup_completed_at).length} bytes`);
+    console.log(`  - status: ${JSON.stringify(newDevice.status).length} bytes`);
+    console.log(`  - pincode: ${JSON.stringify(newDevice.pincode).length} bytes`);
+    console.log(`  - audio_url: ${JSON.stringify(newDevice.audio_url).length} bytes`);
+    console.log(`  - profile_url: ${JSON.stringify(newDevice.profile_url).length} bytes`);
+    if (newDevice.mdm_pincode) {
+      console.log(`  - mdm_pincode: ${JSON.stringify(newDevice.mdm_pincode).length} bytes`);
+    }
+    console.log(`  - audio_url type: ${typeof newDevice.audio_url}, starts with: ${newDevice.audio_url ? newDevice.audio_url.substring(0, 50) : 'null'}`);
+    console.log(`  - profile_url type: ${typeof newDevice.profile_url}, starts with: ${newDevice.profile_url ? newDevice.profile_url.substring(0, 50) : 'null'}`);
     
     try {
       // Get customer ID for device addition (using working account section pattern)
