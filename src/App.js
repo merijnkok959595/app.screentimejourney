@@ -3557,6 +3557,7 @@ function App() {
       
       // Check if draft device already exists (from audio guide generation)
       console.log('🔍 Checking if draft device exists...');
+      console.log('🔍 Looking for device ID:', newDevice.id);
       const getDevicesResp = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/get_devices`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -3564,7 +3565,10 @@ function App() {
       });
       
       const devicesData = await getDevicesResp.json();
+      console.log('🔍 Existing devices:', devicesData.devices?.map(d => ({id: d.id, status: d.status, size: JSON.stringify(d).length})));
+      console.log('📏 Size of newDevice object:', JSON.stringify(newDevice).length, 'bytes');
       const draftDeviceExists = devicesData.devices?.some(d => d.id === newDevice.id);
+      console.log('🔍 Draft device exists:', draftDeviceExists);
       
       let response;
       if (draftDeviceExists) {
