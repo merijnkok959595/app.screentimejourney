@@ -4760,193 +4760,98 @@ function App() {
                       {/* Conditional rendering based on step type */}
                       {currentFlow.steps[currentFlowStep - 1].step_type === 'surrender' ? (
                         <>
-                          {/* Surrender Step Content */}
-                          <div style={{marginBottom: '20px', textAlign: 'center'}}>
+                          {/* Surrender Step Content - Simplified */}
+                          <div style={{marginBottom: '20px'}}>
                             
-                            <div style={{background: 'rgba(255,255,255,0.6)', border: '2px solid rgba(0,0,0,0.1)', borderRadius: '8px', padding: '20px', marginBottom: '24px'}}>
-                              <h4 style={{margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600', color: '#374151', display: 'flex', alignItems: 'center', gap: '8px'}}>
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                  <path d="m12 1-3 3-3-3v6c0 3 6 5 6 5s6-2 6-5V1l-3 3-3-3Z"/>
-                                  <path d="M6 19h12"/>
-                                  <path d="M6 23h12"/>
-                                </svg>
-                                Record your surrender statement:
-                              </h4>
-                              <div style={{background: 'rgba(255,255,255,0.8)', padding: '16px', borderRadius: '6px', border: '1px solid rgba(0,0,0,0.1)', marginBottom: '16px'}}>
-                                <p style={{margin: 0, fontSize: '14px', lineHeight: '1.6', color: '#4b5563', fontStyle: 'italic'}}>
-                                  "{currentFlow.steps[currentFlowStep - 1].surrender_text || surrenderText}"
-                                </p>
-                              </div>
-                              <p style={{margin: '0', fontSize: '14px', color: '#6b7280', fontWeight: '500', display: 'flex', alignItems: 'flex-start', gap: '6px'}}>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginTop: '2px', flexShrink: 0}}>
-                                  <path d="M9 12l2 2 4-4"/>
-                                  <path d="M21 12c.552 0 1-.448 1-1V8c0-.552-.448-1-1-1s-1 .448-1 1v3c0 .552.448 1 1 1z"/>
-                                  <path d="M3 12c-.552 0-1-.448-1-1V8c0-.552.448-1 1-1s1 .448 1 1v3c0 .552-.448 1-1 1z"/>
-                                </svg>
-                                Please record a voice message reading the text above out loud to receive your unlock code.
+                            {/* Surrender Text */}
+                            <div style={{background: 'rgba(255,255,255,0.8)', padding: '20px', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.1)', marginBottom: '20px'}}>
+                              <p style={{margin: 0, fontSize: '15px', lineHeight: '1.7', color: '#374151', fontStyle: 'italic', textAlign: 'left'}}>
+                                "{currentFlow.steps[currentFlowStep - 1].surrender_text || surrenderText}"
                               </p>
                             </div>
                             
-                            {/* Professional Recording Interface */}
-                            <div style={{
-                              background: 'rgba(249, 250, 251, 0.8)',
-                              border: '1px solid rgba(0, 0, 0, 0.1)',
-                              borderRadius: '12px',
-                              padding: '24px',
-                              marginBottom: '24px',
-                              textAlign: 'center'
-                            }}>
-                              {!audioBlob ? (
-                                <div>
-                                  {/* Recording Status and Timer */}
-                                  <div style={{marginBottom: '20px'}}>
-                                    {isRecording ? (
-                                      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px'}}>
-                                        {/* Recording Status */}
-                                        <div style={{
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                          gap: '8px',
-                                          fontSize: '16px',
-                                          fontWeight: '600',
-                                          color: '#374151'
-                                        }}>
-                                          <div style={{
-                                            width: '12px',
-                                            height: '12px',
-                                            backgroundColor: '#6B7280',
-                                            borderRadius: '50%',
-                                            animation: 'pulse 1.5s ease-in-out infinite'
-                                          }}></div>
-                                          Recording in progress...
-                                        </div>
-                                        
-                                        {/* Timer */}
-                                        <div style={{
-                                          fontSize: '24px',
-                                          fontWeight: '700',
-                                          color: '#374151',
-                                          fontFamily: 'monospace'
-                                        }}>
-                                          {recordingTime}s
-                                        </div>
-                                        
-                                        {/* Audio Visualizer */}
-                                        <div style={{
-                                          display: 'flex',
-                                          alignItems: 'end',
-                                          gap: '3px',
-                                          height: '60px',
-                                          justifyContent: 'center',
-                                          marginTop: '8px'
-                                        }}>
-                                          {Array.from({length: 20}, (_, i) => (
-                                            <div
-                                              key={i}
-                                              style={{
-                                                width: '4px',
-                                                backgroundColor: audioLevels[i % audioLevels.length] > 20 ? '#6B7280' : '#E5E7EB',
-                                                borderRadius: '2px',
-                                                height: `${Math.max(8, (audioLevels[i % audioLevels.length] || 10) * 0.8)}px`,
-                                                transition: 'all 0.1s ease',
-                                                animation: audioLevels[i % audioLevels.length] > 20 ? 'bounce 0.3s ease' : 'none'
-                                              }}
-                                            />
-                                          ))}
-                                        </div>
-                                      </div>
-                                    ) : (
-                                      <div style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'center',
-                                        gap: '12px'
-                                      }}>
-                                        <div style={{
-                                          width: '80px',
-                                          height: '80px',
-                                          borderRadius: '50%',
-                                          background: 'linear-gradient(135deg, #6B7280, #9CA3AF)',
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                          justifyContent: 'center',
-                                          marginBottom: '8px'
-                                        }}>
-                                          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-                                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                                            <path d="M12 19v4"/>
-                                            <path d="M8 23h8"/>
-                                          </svg>
-                                        </div>
-                                        <h3 style={{
-                                          margin: 0,
-                                          fontSize: '18px',
-                                          fontWeight: '600',
-                                          color: '#374151'
-                                        }}>
-                                          Ready to Record
-                                        </h3>
-                                        <p style={{
-                                          margin: 0,
-                                          fontSize: '14px',
-                                          color: '#6B7280',
-                                          maxWidth: '280px'
-                                        }}>
-                                          Tap the button below to start recording your surrender statement
-                                        </p>
-                                      </div>
-                                    )}
+                            {/* Recording Status (only when recording) */}
+                            {isRecording && (
+                              <div style={{
+                                background: 'rgba(249, 250, 251, 0.8)',
+                                border: '1px solid rgba(0, 0, 0, 0.1)',
+                                borderRadius: '8px',
+                                padding: '16px',
+                                marginBottom: '16px',
+                                textAlign: 'center'
+                              }}>
+                                <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px'}}>
+                                  <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    fontSize: '16px',
+                                    fontWeight: '600',
+                                    color: '#374151'
+                                  }}>
+                                    <div style={{
+                                      width: '12px',
+                                      height: '12px',
+                                      backgroundColor: '#DC2626',
+                                      borderRadius: '50%',
+                                      animation: 'pulse 1.5s ease-in-out infinite'
+                                    }}></div>
+                                    Recording...
                                   </div>
-                                  
-                                  {/* Record Button */}
-                                  <button
-                                    onClick={(e) => {
-                                      console.log('🎯 Button clicked! isRecording:', isRecording);
-                                      console.log('🎯 mediaRecorder:', mediaRecorder);
-                                      if (isRecording) {
-                                        console.log('📞 Calling stopRecording...');
-                                        stopRecording();
-                                      } else {
-                                        console.log('📞 Calling startRecording...');
-                                        startRecording();
-                                      }
-                                    }}
-                                    style={{
-                                      background: isRecording 
-                                        ? 'linear-gradient(135deg, #6B7280, #9CA3AF)'
-                                        : 'linear-gradient(135deg, #374151, #6B7280)',
-                                      border: 'none',
-                                      borderRadius: '12px',
-                                      padding: '14px 28px',
-                                      fontSize: '16px',
-                                      fontWeight: '600',
-                                      color: 'white',
-                                      cursor: 'pointer',
-                                      transition: 'all 0.2s ease',
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      gap: '8px',
-                                      margin: '0 auto',
-                                      boxShadow: '0 4px 12px rgba(107, 114, 128, 0.2)',
-                                      width: 'auto',
-                                      minWidth: '160px'
-                                    }}
-                                    onMouseEnter={(e) => {
-                                      e.target.style.transform = 'translateY(-2px)';
-                                      e.target.style.boxShadow = '0 6px 16px rgba(107, 114, 128, 0.3)';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                      e.target.style.transform = 'translateY(0px)';
-                                      e.target.style.boxShadow = '0 4px 12px rgba(107, 114, 128, 0.2)';
-                                    }}
-                                  >
-                                    {isRecording ? (
-                                      <>
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                          <rect x="6" y="6" width="12" height="12"/>
-                                        </svg>
-                                        Stop Recording
+                                  <div style={{
+                                    fontSize: '24px',
+                                    fontWeight: '700',
+                                    color: '#374151',
+                                    fontFamily: 'monospace'
+                                  }}>
+                                    {recordingTime}s
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                            
+                            {!audioBlob ? (
+                              <div>
+                                {/* Record Button */}
+                                <button
+                                  onClick={(e) => {
+                                    console.log('🎯 Button clicked! isRecording:', isRecording);
+                                    console.log('🎯 mediaRecorder:', mediaRecorder);
+                                    if (isRecording) {
+                                      console.log('📞 Calling stopRecording...');
+                                      stopRecording();
+                                    } else {
+                                      console.log('📞 Calling startRecording...');
+                                      startRecording();
+                                    }
+                                  }}
+                                  className="btn btn--primary"
+                                  style={{
+                                    background: isRecording 
+                                      ? 'linear-gradient(135deg, #DC2626, #EF4444)'
+                                      : 'linear-gradient(135deg, #2E0456, #440B6C)',
+                                    border: 'none',
+                                    borderRadius: '8px',
+                                    padding: '14px 28px',
+                                    fontSize: '16px',
+                                    fontWeight: '600',
+                                    color: 'white',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s ease',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    margin: '0 auto',
+                                    width: 'auto',
+                                    minWidth: '180px'
+                                  }}
+                                >
+                                  {isRecording ? (
+                                    <>
+                                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <rect x="6" y="6" width="12" height="12"/>
+                                      </svg>
+                                      Stop Recording
                                       </>
                                     ) : (
                                       <>
@@ -5126,9 +5031,6 @@ function App() {
                                   </div>
                                 </div>
                               )}
-                            </div>
-                            
-
                           </div>
                         </>
                       ) : currentFlow.steps[currentFlowStep - 1].step_type === 'pincode_display' ? (
