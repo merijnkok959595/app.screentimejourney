@@ -3563,10 +3563,17 @@ function App() {
   useEffect(() => {
     if (showDeviceFlow && currentFlow && currentFlowStep === 2 && 
         currentFlow.steps[currentFlowStep - 1]?.step_type === 'pincode_display' &&
-        currentFlow.deviceId && currentFlow.flowType === 'device_unlock_flow') {
+        currentFlow.deviceId && currentFlow.flowType === 'device_unlock_flow' &&
+        !currentFlow.unlockProcessed) {  // Only run once
       
       console.log('🔓 Auto-unlocking device on pincode display:', currentFlow.deviceId);
       console.log('📱 Current devices array:', devices);
+      
+      // Mark as processed immediately to prevent multiple runs
+      setCurrentFlow(prev => ({
+        ...prev,
+        unlockProcessed: true
+      }));
       
       // Auto-unlock the device without confirmation
       const autoUnlockDevice = async () => {
