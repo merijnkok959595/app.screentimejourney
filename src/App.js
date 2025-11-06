@@ -150,8 +150,15 @@ const getMockDeviceData = (scenario = 'ground_zero') => {
 // Progress Section Component (Theme-styled card)
 const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail = "", customerGender = "male", percentile = 6, devices, milestones = DEFAULT_MILESTONES, startDeviceFlow }) => {
   // Get the latest device from devices array (sorted by added_at, most recent first)
+  // Filter out any undefined/null devices and handle missing added_at properties
   const realLatestDevice = devices && devices.length > 0 
-    ? devices.sort((a, b) => new Date(b.added_at) - new Date(a.added_at))[0]
+    ? devices
+        .filter(d => d && (d.added_at || d.addedDate || d.created_at)) // Filter out undefined/null devices
+        .sort((a, b) => {
+          const aDate = new Date(a.added_at || a.addedDate || a.created_at || 0);
+          const bDate = new Date(b.added_at || b.addedDate || b.created_at || 0);
+          return bDate - aDate;
+        })[0]
     : null;
   
   // Use real device data if available, otherwise use passed latestDevice or mock
@@ -3544,15 +3551,15 @@ function App() {
     
     // DETAILED field-by-field size analysis
     console.log('🔬 Field sizes:');
-    console.log(`  - id: ${JSON.stringify(newDevice.id).length} bytes`);
-    console.log(`  - name: ${JSON.stringify(newDevice.name).length} bytes`);
-    console.log(`  - type: ${JSON.stringify(newDevice.type).length} bytes`);
-    console.log(`  - added_at: ${JSON.stringify(newDevice.added_at).length} bytes`);
-    console.log(`  - setup_completed_at: ${JSON.stringify(newDevice.setup_completed_at).length} bytes`);
-    console.log(`  - status: ${JSON.stringify(newDevice.status).length} bytes`);
-    console.log(`  - pincode: ${JSON.stringify(newDevice.pincode).length} bytes`);
-    console.log(`  - audio_url: ${JSON.stringify(newDevice.audio_url).length} bytes`);
-    console.log(`  - profile_url: ${JSON.stringify(newDevice.profile_url).length} bytes`);
+    console.log(`  - id: ${JSON.stringify(newDevice.id || '').length} bytes`);
+    console.log(`  - name: ${JSON.stringify(newDevice.name || '').length} bytes`);
+    console.log(`  - type: ${JSON.stringify(newDevice.type || '').length} bytes`);
+    console.log(`  - added_at: ${JSON.stringify(newDevice.added_at || '').length} bytes`);
+    console.log(`  - setup_completed_at: ${JSON.stringify(newDevice.setup_completed_at || '').length} bytes`);
+    console.log(`  - status: ${JSON.stringify(newDevice.status || '').length} bytes`);
+    console.log(`  - pincode: ${JSON.stringify(newDevice.pincode || '').length} bytes`);
+    console.log(`  - audio_url: ${JSON.stringify(newDevice.audio_url || '').length} bytes`);
+    console.log(`  - profile_url: ${JSON.stringify(newDevice.profile_url || '').length} bytes`);
     if (newDevice.mdm_pincode) {
       console.log(`  - mdm_pincode: ${JSON.stringify(newDevice.mdm_pincode).length} bytes`);
     }
