@@ -3533,6 +3533,12 @@ function App() {
           
           console.log('🔓 Auto-unlocking device:', device.name);
           
+          // Store device data in currentFlow before removal so UI can display pincodes
+          setCurrentFlow(prev => ({
+            ...prev,
+            unlockedDeviceData: device
+          }));
+          
           // Call backend API to unlock device
           const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/unlock_device`, {
             method: 'POST',
@@ -5276,7 +5282,13 @@ function App() {
                           {/* Pincode Display Step */}
                           <div style={{marginBottom: '20px'}}>
                             {(() => {
-                              const unlockedDevice = devices.find(d => d.id === currentFlow.deviceId);
+                              // Use stored device data from currentFlow (stored before removal)
+                              const unlockedDevice = currentFlow?.unlockedDeviceData;
+                              
+                              if (!unlockedDevice) {
+                                return <p style={{textAlign: 'center', color: '#6b7280'}}>Device information not available</p>;
+                              }
+                              
                               return (
                                 <>
                                   {/* Screen Time Unlock Code */}
