@@ -2293,9 +2293,21 @@ function App() {
   };
 
   // Function to start a device flow
-  const startDeviceFlow = (flowType, deviceId = null) => {
+  const startDeviceFlow = async (flowType, deviceId = null) => {
     console.log('🎬 Attempting to start flow:', flowType, 'for device:', deviceId);
     console.log('📋 Available flows:', Object.keys(deviceFlows));
+    
+    // For unlock flows, reload devices from backend first to ensure we have latest data
+    if (flowType === 'device_unlock_flow') {
+      console.log('🔄 Reloading devices before unlock flow...');
+      const loadedDevices = await loadDevicesFromBackend();
+      console.log('✅ Devices reloaded:', loadedDevices.length, 'devices');
+      console.log('📱 Loaded devices:', loadedDevices);
+      
+      // Add a small delay to ensure React state has been updated
+      await new Promise(resolve => setTimeout(resolve, 100));
+      console.log('✅ State should now be updated, devices.length:', devices.length);
+    }
     
     const flow = deviceFlows[flowType];
     if (!flow || !flow.steps || !Array.isArray(flow.steps) || flow.steps.length === 0) {
@@ -3329,15 +3341,18 @@ function App() {
       if (result.success && result.devices) {
         console.log(`✅ Loaded ${result.devices.length} devices from backend:`, result.devices);
         setDevices(result.devices);
+        return result.devices; // Return the loaded devices
       } else {
         console.log('📱 No devices found in backend, starting with empty array');
         setDevices([]);
+        return []; // Return empty array
       }
       
     } catch (error) {
       console.error('❌ Error loading devices from backend:', error);
       // Don't show error to user, just start with empty array
       setDevices([]);
+      return []; // Return empty array on error
     }
   };
 
