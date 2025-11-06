@@ -3272,6 +3272,9 @@ function App() {
 
   // Load devices from backend on app startup
   const loadDevicesFromBackend = async () => {
+    console.log('🚀 loadDevicesFromBackend called');
+    console.log('🔍 customerData:', customerData);
+    
     let customerId = customerData?.customerId;
     
     if (!customerId) {
@@ -3316,7 +3319,7 @@ function App() {
       console.warn('⚠️ No customer ID available, cannot load devices');
       console.warn('🔐 User needs to authenticate through Shopify first');
       setDevices([]); // Clear devices if no auth
-      return;
+      return []; // Return empty array
     }
 
     try {
@@ -3332,18 +3335,28 @@ function App() {
         })
       });
 
+      console.log('📡 Response status:', response.status);
+      console.log('📡 Response ok:', response.ok);
+      
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ Failed to fetch devices. Status:', response.status, 'Error:', errorText);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const result = await response.json();
+      console.log('📦 Backend response:', result);
+      console.log('📦 result.success:', result.success);
+      console.log('📦 result.devices:', result.devices);
+      console.log('📦 result.devices length:', result.devices?.length);
       
       if (result.success && result.devices) {
         console.log(`✅ Loaded ${result.devices.length} devices from backend:`, result.devices);
         setDevices(result.devices);
         return result.devices; // Return the loaded devices
       } else {
-        console.log('📱 No devices found in backend, starting with empty array');
+        console.log('📱 No devices found in backend (success=false or devices empty), starting with empty array');
+        console.log('📱 Full result:', JSON.stringify(result));
         setDevices([]);
         return []; // Return empty array
       }
@@ -3488,17 +3501,24 @@ function App() {
         })
       });
       
+      console.log('📡 Add device response status:', response.status);
+      console.log('📡 Add device response ok:', response.ok);
+      
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('❌ Backend returned error:', errorData);
         throw new Error(errorData.error || 'Failed to save device to backend');
       }
       
       const result = await response.json();
       console.log('✅ Device saved to backend:', result);
+      console.log('✅ Full result:', JSON.stringify(result));
       
       // Reload devices from backend to ensure persistence
-      await loadDevicesFromBackend();
-      console.log('✅ Device added from flow and reloaded from backend:', newDevice);
+      console.log('🔄 Reloading devices after adding...');
+      const reloadedDevices = await loadDevicesFromBackend();
+      console.log('✅ Device added from flow and reloaded from backend. Reloaded devices:', reloadedDevices.length);
+      console.log('✅ Reloaded devices:', reloadedDevices);
       
       // Success: Close the flow and return to dashboard (no alert)
       console.log(`🎉 Device "${newDevice.name}" successfully added. Returning to dashboard.`);
@@ -5584,12 +5604,7 @@ function App() {
                         }}
                       >
                         {surrenderSubmitting ? (
-                          <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            width: '100%'
-                          }}>
+                          <>
                             <div style={{
                               width: '16px',
                               height: '16px',
@@ -5601,7 +5616,7 @@ function App() {
                               flexShrink: 0
                             }}></div>
                             <span>Processing Surrender...</span>
-                          </div>
+                          </>
                         ) : (
                           <>
                             {currentFlow.steps && currentFlow.steps[currentFlowStep - 1] 
