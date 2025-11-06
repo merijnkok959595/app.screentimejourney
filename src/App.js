@@ -2245,7 +2245,7 @@ function App() {
 
     } catch (error) {
       console.error('❌ Error cancelling subscription:', error);
-      alert(`❌ Failed to cancel subscription: ${error.message}\n\nPlease try again or contact support at support@screentimejourney.com`);
+      alert(`❌ Failed to cancel subscription: ${error.message}\n\nPlease try again or contact support at info@screentimejourney.com`);
     } finally {
       setCancelSubmitting(false);
     }
@@ -6216,8 +6216,6 @@ function App() {
                 {(customerData?.subscription_status === 'cancelled' || customerData?.subscription_status === 'cancel_scheduled' || profileData?.subscription_status === 'cancelled' || profileData?.subscription_status === 'cancel_scheduled') ? (
                   <a
                     href="https://www.screentimejourney.com/products/screentimejourney"
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="btn btn--outline btn--sm"
                     style={{flex: 1, textAlign: 'center', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center'}}
                   >
@@ -6489,10 +6487,6 @@ function App() {
                 <div style={{textAlign: 'center', marginBottom: '20px'}}>
                   <div style={{fontSize: '3rem', marginBottom: '16px'}}>✅</div>
                   
-                  <h4 style={{fontSize: '20px', fontWeight: '600', color: '#374151', marginBottom: '12px'}}>
-                    Subscription Successfully Cancelled
-                  </h4>
-                  
                   <p style={{fontSize: '14px', lineHeight: '1.5', color: '#6b7280', marginBottom: '20px'}}>
                     Your subscription has been cancelled and you will receive a confirmation email shortly.
                   </p>
@@ -6510,7 +6504,7 @@ function App() {
                   </div>
                   
                   <p style={{fontSize: '13px', color: '#6b7280', margin: 0}}>
-                    Questions? Contact us at <strong>support@screentimejourney.com</strong>
+                    Questions? Contact us at <strong>info@screentimejourney.com</strong>
                   </p>
                 </div>
               )}
