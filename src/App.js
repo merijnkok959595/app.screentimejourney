@@ -5801,19 +5801,15 @@ function App() {
                         }}
                       >
                         {surrenderSubmitting ? (
-                          <>
-                            <div style={{
-                              width: '16px',
-                              height: '16px',
-                              border: '2px solid transparent',
-                              borderTop: '2px solid white',
-                              borderRadius: '50%',
-                              animation: 'spin 1s linear infinite',
-                              marginRight: '8px',
-                              flexShrink: 0
-                            }}></div>
-                            <span>Processing Surrender...</span>
-                          </>
+                          <div style={{
+                            width: '20px',
+                            height: '20px',
+                            border: '2px solid transparent',
+                            borderTop: '2px solid white',
+                            borderRadius: '50%',
+                            animation: 'spin 1s linear infinite',
+                            margin: '0 auto'
+                          }}></div>
                         ) : (
                           <>
                             {currentFlow.steps && currentFlow.steps[currentFlowStep - 1] 
