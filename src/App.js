@@ -534,67 +534,7 @@ function App() {
 
   // Logs state
   const [showLogsFlow, setShowLogsFlow] = useState(false);
-  const [logs, setLogs] = useState([
-    {
-      id: 'log_1',
-      timestamp: '2025-01-15 22:31',
-      type: 'device_unlock',
-      title: 'Device unlocked: iPhone 15 Pro',
-      description: '15-minute unlock period',
-      pincode: '7429'
-    },
-    {
-      id: 'log_2',
-      timestamp: '2025-01-15 15:04',
-      type: 'device_added',
-      title: 'Device added: MacBook Air',
-      description: 'macOS profile installed'
-    },
-    {
-      id: 'log_3',
-      timestamp: '2025-01-14 18:35',
-      type: 'device_unlock',
-      title: 'Device unlocked: MacBook Air',
-      description: '15-minute unlock period',
-      pincode: '3851'
-    },
-    {
-      id: 'log_4',
-      timestamp: '2025-01-14 09:12',
-      type: 'profile_updated',
-      title: 'Account profile edited',
-      description: 'Username and preferences updated'
-    },
-    {
-      id: 'log_5',
-      timestamp: '2025-01-13 14:28',
-      type: 'notifications_updated',
-      title: 'Notifications updated',
-      description: 'Weekly report enabled'
-    },
-    {
-      id: 'log_6',
-      timestamp: '2025-01-12 16:45',
-      type: 'device_setup',
-      title: 'Device setup completed: iPhone 15 Pro',
-      description: 'iOS profile and audio guide configured'
-    },
-    {
-      id: 'log_7',
-      timestamp: '2025-01-11 11:20',
-      type: 'subscription_activated',
-      title: 'Subscription activated',
-      description: 'Screen Time Journey - Starter plan'
-    },
-    {
-      id: 'log_8',
-      timestamp: '2025-01-10 20:15',
-      type: 'device_unlock',
-      title: 'Device unlocked: iPhone 15 Pro',
-      description: '15-minute unlock period',
-      pincode: '9264'
-    }
-  ]);
+  const [logs, setLogs] = useState([]);
 
   // Countdown timer for resend cooldown
   useEffect(() => {
@@ -2685,6 +2625,36 @@ function App() {
           });
         }
         
+        // Load activity logs from profile
+        if (result.profile.activity_logs && Array.isArray(result.profile.activity_logs)) {
+          const formattedLogs = result.profile.activity_logs.map(log => ({
+            id: log.id || `log_${Date.now()}_${Math.random()}`,
+            timestamp: log.timestamp ? (() => {
+              try {
+                const date = new Date(log.timestamp);
+                return date.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                }).replace(',', '');
+              } catch (e) {
+                return log.timestamp;
+              }
+            })() : '',
+            type: log.type || 'unknown',
+            title: log.title || '',
+            description: log.description || '',
+            pincode: log.unlock_code || log.pincode || null
+          }));
+          setLogs(formattedLogs);
+          console.log('✅ Activity logs loaded:', formattedLogs.length, 'logs');
+        } else {
+          setLogs([]);
+          console.log('📝 No activity logs found in profile');
+        }
+        
         // Show account wall only if username doesn't exist
         const hasUsername = result.profile?.username && result.profile.username.trim();
         setShowOnboarding(!hasUsername);
@@ -3686,6 +3656,9 @@ function App() {
       console.log('✅ Device added from flow and reloaded from backend. Reloaded devices:', reloadedDevices.length);
       console.log('✅ Reloaded devices:', reloadedDevices);
       
+      // Reload profile data to refresh activity logs
+      await fetchProfileData();
+      
       // Success: Close the flow and return to dashboard (no alert)
       console.log(`🎉 Device "${newDevice.name}" successfully added. Returning to dashboard.`);
       
@@ -3780,6 +3753,9 @@ function App() {
           if (response.ok) {
             const result = await response.json();
             console.log('✅ Device auto-unlocked successfully:', result);
+            
+            // Reload profile data to refresh activity logs
+            await fetchProfileData();
             
             // Now remove device permanently from DynamoDB
             console.log('🗑️ Removing device from DynamoDB...');
@@ -3885,6 +3861,9 @@ function App() {
           
           // Reload devices from backend to ensure persistence
           await loadDevicesFromBackend();
+          
+          // Reload profile data to refresh activity logs
+          await fetchProfileData();
           
           console.log('🔓 Device unlocked:', device.name);
           alert(`${device.name} has been unlocked for ${result.unlock_duration_minutes} minutes`);
