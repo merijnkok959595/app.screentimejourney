@@ -3955,7 +3955,7 @@ function App() {
                   marginBottom: 'var(--spacing-md)',
                   fontSize: '1.5rem'
                 }}>
-                  {milestonesLoading ? 'Loading milestone data...' : 'Loading your dashboard...'}
+                  Loading your dashboard...
                 </h3>
                 
                 <p style={{ 
