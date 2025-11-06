@@ -6860,7 +6860,7 @@ function App() {
           <>
             <div className="modal__header">
               <h3 id="payment-wall-title" className="modal__title">
-                Your Device Pincodes
+                Subscription cancelled
               </h3>
             </div>
 
