@@ -247,6 +247,11 @@ function AudioPlayer({ audioUrl }) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef(null);
+  
+  // Debug: Log what audioUrl we received
+  useEffect(() => {
+    console.log('🎵 AudioPlayer received audioUrl:', audioUrl);
+  }, [audioUrl]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -1730,11 +1735,25 @@ function App() {
         const result = await response.json();
         
         if (response.ok && result.success) {
+          // Debug: Log the full response to understand structure
+          console.log('🔍 Full audio guide response:', result);
+          console.log('🔍 result.audio_url:', result.audio_url);
+          console.log('🔍 result.tts_result?.public_url:', result.tts_result?.public_url);
+          
           // Transform backend response to match frontend expectation
+          // Try multiple possible property names for audio URL
+          const audioUrl = result.audio_url || 
+                          result.tts_result?.public_url || 
+                          result.audioUrl || 
+                          result.audioData?.audioUrl || 
+                          null;
+          
+          console.log('🔍 Resolved audioUrl:', audioUrl);
+          
           const audioData = {
             pincode: result.pincode,
             digits: result.digits,
-            audioUrl: result.audio_url || result.tts_result?.public_url || null, // Real audio URL from backend
+            audioUrl: audioUrl, // Real audio URL from backend
             audio_url: result.audio_url, // Store for device tracking
             instructions: `Generated pincode: ${result.pincode}. Click Settings, then Screen Time, then Lock Screen Time settings. Follow the audio instructions to enter: ${result.digits.first}, ${result.digits.second}, ${result.digits.third}, ${result.digits.fourth}.`,
             executionId: result.execution_id
@@ -1747,6 +1766,10 @@ function App() {
             audio_url: result.audio_url 
           });
           console.log('✅ Audio guide generated:', audioData);
+          
+          if (!audioUrl) {
+            console.warn('⚠️ Audio URL is null/undefined - audio playback will not be available');
+          }
           
           // IMMEDIATELY save pincode to draft device in DynamoDB (best practice)
           // This ensures pincode is persisted even if user closes browser before completing setup
@@ -5709,7 +5732,12 @@ function App() {
                                 </div>
                               ) : (
                                 <div>
-                                  <AudioPlayer audioUrl={audioGuideData?.audioUrl || audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url} />
+                                  <AudioPlayer audioUrl={(() => {
+                                    const url = audioGuideData?.audioUrl || audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url;
+                                    console.log('🎵 AudioPlayer props - audioGuideData:', audioGuideData);
+                                    console.log('🎵 AudioPlayer props - resolved URL:', url);
+                                    return url;
+                                  })()} />
                                   <button
                                     onClick={() => {
                                       setAudioGuideData(null);
