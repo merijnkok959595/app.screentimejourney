@@ -5830,9 +5830,15 @@ function App() {
                           {device.icon} {device.name}
                         </div>
                         <div className="device-item__meta">
-                          Status: {device.status.charAt(0).toUpperCase() + device.status.slice(1)} • Added {device.addedDate}
+                          Status: {device.status.charAt(0).toUpperCase() + device.status.slice(1)} • Added {(() => {
+                            const date = new Date(device.addedDate);
+                            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                          })()}
                           {device.lastUnlock && (
-                            <> • Last unlock: {device.lastUnlock}</>
+                            <> • Last unlock: {(() => {
+                              const date = new Date(device.lastUnlock);
+                              return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                            })()}</>
                           )}
                         </div>
                       </div>
