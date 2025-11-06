@@ -6394,7 +6394,7 @@ function App() {
                 {cancelStep === 1 && 'We\'re sorry to see you go'}
                 {cancelStep === 2 && 'Help us improve'}
                 {cancelStep === 3 && 'Confirm cancellation'}
-                {cancelStep === 4 && 'Subscription cancelled'}
+                {cancelStep === 4 && ''}
               </h3>
             </div>
 
@@ -6583,7 +6583,7 @@ function App() {
                     className="link-back"
                     onClick={() => setCancelStep(2)}
                     disabled={cancelSubmitting}
-                    style={{width: '100%', textAlign: 'center', background: 'none', border: 'none', color: '#6b7280', fontSize: '14px', cursor: 'pointer'}}
+                    style={{display: 'block', margin: '0 auto', background: 'none', border: 'none', color: '#6b7280', fontSize: '14px', cursor: 'pointer', textAlign: 'center'}}
                   >
                     Back
                   </button>
@@ -6593,9 +6593,8 @@ function App() {
               {cancelStep === 4 && (
                 <div style={{textAlign: 'center'}}>
                   <button
-                    className="btn btn--outline btn--full"
                     onClick={closeCancelFlow}
-                    style={{width: '100%'}}
+                    style={{background: 'none', border: 'none', color: '#2E0456', fontSize: '14px', cursor: 'pointer', textDecoration: 'underline', padding: '8px'}}
                   >
                     Close
                   </button>
