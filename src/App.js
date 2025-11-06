@@ -6187,8 +6187,17 @@ function App() {
                           if (subscriptionDate) {
                             try {
                               const createdDate = new Date(subscriptionDate);
-                              const nextBilling = new Date(createdDate);
+                              const today = new Date();
+                              today.setHours(0, 0, 0, 0); // Reset to start of day
+                              
+                              // Start with the first billing date (one month after creation)
+                              let nextBilling = new Date(createdDate);
                               nextBilling.setMonth(nextBilling.getMonth() + 1);
+                              
+                              // If that date is in the past, keep adding months until we find the next future billing date
+                              while (nextBilling < today) {
+                                nextBilling.setMonth(nextBilling.getMonth() + 1);
+                              }
                               
                               // Format as "DD MMM YYYY"
                               const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
