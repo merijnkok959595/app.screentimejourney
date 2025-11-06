@@ -6191,7 +6191,28 @@ function App() {
                         color: '#374151',
                         fontFamily: 'monospace'
                       }}>
-                        15 Sep 2025
+                        {(() => {
+                          // Calculate next billing date from subscription creation date
+                          const subscriptionDate = profileData?.created_at || customerData?.created_at;
+                          if (subscriptionDate) {
+                            try {
+                              const createdDate = new Date(subscriptionDate);
+                              const nextBilling = new Date(createdDate);
+                              nextBilling.setMonth(nextBilling.getMonth() + 1);
+                              
+                              // Format as "DD MMM YYYY"
+                              const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                              const day = nextBilling.getDate();
+                              const month = months[nextBilling.getMonth()];
+                              const year = nextBilling.getFullYear();
+                              return `${day} ${month} ${year}`;
+                            } catch (e) {
+                              console.error('Error calculating next billing date:', e);
+                              return 'N/A';
+                            }
+                          }
+                          return 'N/A';
+                        })()}
                       </span>
                     </div>
                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0'}}>
