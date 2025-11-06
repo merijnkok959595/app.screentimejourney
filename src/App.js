@@ -4811,16 +4811,18 @@ function App() {
                                   <div style={{
                                     display: 'flex',
                                     alignItems: 'end',
-                                    gap: '3px',
+                                    gap: '4px',
                                     height: '50px',
                                     justifyContent: 'center',
-                                    marginTop: '8px'
+                                    marginTop: '8px',
+                                    width: '100%',
+                                    maxWidth: '500px'
                                   }}>
-                                    {Array.from({length: 20}, (_, i) => (
+                                    {Array.from({length: 50}, (_, i) => (
                                       <div
                                         key={i}
                                         style={{
-                                          width: '4px',
+                                          width: '6px',
                                           backgroundColor: audioLevels[i % audioLevels.length] > 20 ? '#2E0456' : '#E5E7EB',
                                           borderRadius: '2px',
                                           height: `${Math.max(8, (audioLevels[i % audioLevels.length] || 10) * 0.8)}px`,
