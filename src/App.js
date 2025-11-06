@@ -5287,48 +5287,42 @@ function App() {
                         <>
                           {/* Pincode Display Step */}
                           <div style={{marginBottom: '20px'}}>
-                            <p style={{fontSize: '18px', lineHeight: '1.5', color: '#374151', marginBottom: '24px', textAlign: 'left'}}>
-                              Device unlocked successfully. Use the appropriate code below:
-                            </p>
-                            
-                            {/* MDM Profile Pincode (if profile was used) */}
-                            {vpnProfileData?.pincode && (
-                              <div style={{padding: '20px', background: 'rgba(255,255,255,0.8)', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '8px', marginBottom: '16px'}}>
-                                <h4 style={{margin: '0 0 12px 0', fontSize: '16px', fontWeight: '600', color: '#374151'}}>
-                                  🔧 MDM Profile Removal Code
-                                </h4>
-                                <div style={{background: '#ffffff', border: '1px solid #d1d5db', borderRadius: '6px', padding: '16px', marginBottom: '12px'}}>
-                                  <div style={{fontFamily: 'monospace', fontSize: '28px', fontWeight: '700', color: '#374151', letterSpacing: '4px'}}>
-                                    {vpnProfileData.pincode}
+                            {(() => {
+                              const unlockedDevice = devices.find(d => d.id === currentFlow.deviceId);
+                              return (
+                                <>
+                                  {/* Screen Time Unlock Code */}
+                                  {unlockedDevice?.current_audio_pincode && (
+                                    <div style={{padding: '16px', background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '8px', marginBottom: '12px'}}>
+                                      <h4 style={{margin: '0 0 8px 0', fontSize: '14px', fontWeight: '600', color: '#374151'}}>
+                                        📱 Screen Time Code
+                                      </h4>
+                                      <div style={{fontFamily: 'monospace', fontSize: '32px', fontWeight: '700', color: '#2E0456', letterSpacing: '8px', textAlign: 'center', padding: '8px 0'}}>
+                                        {unlockedDevice.current_audio_pincode}
+                                      </div>
+                                    </div>
+                                  )}
+                                  
+                                  {/* MDM Profile Pincode (if device has it) */}
+                                  {unlockedDevice?.current_mdm_pincode && (
+                                    <div style={{padding: '16px', background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '8px', marginBottom: '12px'}}>
+                                      <h4 style={{margin: '0 0 8px 0', fontSize: '14px', fontWeight: '600', color: '#374151'}}>
+                                        🔧 MDM Profile Removal Code
+                                      </h4>
+                                      <div style={{fontFamily: 'monospace', fontSize: '32px', fontWeight: '700', color: '#2E0456', letterSpacing: '8px', textAlign: 'center', padding: '8px 0'}}>
+                                        {unlockedDevice.current_mdm_pincode}
+                                      </div>
+                                    </div>
+                                  )}
+                                  
+                                  <div style={{background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.2)', borderRadius: '6px', padding: '12px', marginTop: '16px', textAlign: 'center'}}>
+                                    <p style={{margin: 0, fontSize: '13px', color: '#16a34a', fontWeight: '500'}}>
+                                      ✅ Device unlocked and removed from monitoring
+                                    </p>
                                   </div>
-                                </div>
-                                <p style={{margin: '0', fontSize: '13px', color: '#6b7280'}}>
-                                  Use this code to remove the MDM profile when needed
-                                </p>
-                              </div>
-                            )}
-                            
-                            {/* Screen Time Unlock Code */}
-                            <div style={{padding: '20px', background: 'rgba(255,255,255,0.8)', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '8px', marginBottom: '16px'}}>
-                              <h4 style={{margin: '0 0 12px 0', fontSize: '16px', fontWeight: '600', color: '#374151'}}>
-                                📱 Screen Time Unlock Code
-                              </h4>
-                              <div style={{background: '#ffffff', border: '1px solid #d1d5db', borderRadius: '6px', padding: '16px', marginBottom: '12px'}}>
-                                <div style={{fontFamily: 'monospace', fontSize: '28px', fontWeight: '700', color: '#374151', letterSpacing: '4px'}}>
-                                  {unlockPincode || '----'}
-                                </div>
-                              </div>
-                              <p style={{margin: '0', fontSize: '13px', color: '#6b7280'}}>
-                                Enter this code on your device to unlock screen time for 15 minutes
-                              </p>
-                            </div>
-                            
-                            <div style={{background: 'rgba(249, 250, 251, 0.8)', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '14px', marginBottom: '24px'}}>
-                              <p style={{margin: 0, fontSize: '13px', color: '#6b7280', fontWeight: '500'}}>
-                                ✅ Your device has been automatically unlocked and removed from monitoring
-                              </p>
-                            </div>
-                            
+                                </>
+                              );
+                            })()}
                           </div>
                         </>
                       ) : currentFlow.steps[currentFlowStep - 1].step_type === 'form' ? (
@@ -5485,8 +5479,8 @@ function App() {
                   )}
 
                   <div className="modal__footer">
-                    {/* Download Profile Button for Setup Profile step (step 3) - not for pincode display */}
-                    {currentFlowStep === 3 && currentFlow.steps[currentFlowStep - 1]?.step_type !== 'pincode_display' && (
+                    {/* Download Profile Button for Setup Profile step (step 3) - only for device_setup_flow */}
+                    {currentFlowStep === 3 && currentFlow.flowType === 'device_setup_flow' && currentFlow.steps[currentFlowStep - 1]?.step_type !== 'pincode_display' && (
                       <div style={{marginBottom: '4px', width: '100%'}}>
                         {!vpnProfileData ? (
                           <button
