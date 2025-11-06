@@ -1055,7 +1055,7 @@ function App() {
               },
               {
                 step: 2,
-                title: '🔓 Unlock Code',
+                title: 'Unlocked Device',
                 body: 'Your surrender has been approved. Use the code below to unlock your device for 15 minutes.',
                 step_type: 'pincode_display',
                 action_button: 'Complete Unlock'
@@ -4803,29 +4803,23 @@ function App() {
                                     {recordingTime}s
                                   </div>
                                   
-                                  {/* Audio Visualizer */}
+                                  {/* Audio Visualizer - Single Bar */}
                                   <div style={{
-                                    display: 'flex',
-                                    alignItems: 'end',
-                                    gap: '4px',
-                                    height: '50px',
-                                    justifyContent: 'center',
-                                    marginTop: '8px',
                                     width: '100%',
-                                    maxWidth: '500px'
+                                    maxWidth: '500px',
+                                    height: '8px',
+                                    background: '#E5E7EB',
+                                    borderRadius: '4px',
+                                    overflow: 'hidden',
+                                    marginTop: '8px'
                                   }}>
-                                    {Array.from({length: 50}, (_, i) => (
-                                      <div
-                                        key={i}
-                                        style={{
-                                          width: '6px',
-                                          backgroundColor: audioLevels[i % audioLevels.length] > 20 ? '#2E0456' : '#E5E7EB',
-                                          borderRadius: '2px',
-                                          height: `${Math.max(8, (audioLevels[i % audioLevels.length] || 10) * 0.8)}px`,
-                                          transition: 'all 0.1s ease'
-                                        }}
-                                      />
-                                    ))}
+                                    <div style={{
+                                      height: '100%',
+                                      background: 'linear-gradient(90deg, #2E0456, #440B6C)',
+                                      width: `${Math.min(100, Math.max(10, (audioLevels[0] || 30) * 1.5))}%`,
+                                      transition: 'width 0.1s ease',
+                                      animation: 'pulse 1.5s ease-in-out infinite'
+                                    }}></div>
                                   </div>
                                 </div>
                               </div>
@@ -5061,29 +5055,23 @@ function App() {
                                     {recordingTime}s
                                   </div>
                                   
-                                  {/* Audio Visualizer */}
+                                  {/* Audio Visualizer - Single Bar */}
                                   <div style={{
-                                    display: 'flex',
-                                    alignItems: 'end',
-                                    gap: '4px',
-                                    height: '50px',
-                                    justifyContent: 'center',
-                                    marginTop: '8px',
                                     width: '100%',
-                                    maxWidth: '500px'
+                                    maxWidth: '500px',
+                                    height: '8px',
+                                    background: '#E5E7EB',
+                                    borderRadius: '4px',
+                                    overflow: 'hidden',
+                                    marginTop: '8px'
                                   }}>
-                                    {Array.from({length: 50}, (_, i) => (
-                                      <div
-                                        key={i}
-                                        style={{
-                                          width: '6px',
-                                          backgroundColor: audioLevels[i % audioLevels.length] > 20 ? '#2E0456' : '#E5E7EB',
-                                          borderRadius: '2px',
-                                          height: `${Math.max(8, (audioLevels[i % audioLevels.length] || 10) * 0.8)}px`,
-                                          transition: 'all 0.1s ease'
-                                        }}
-                                      />
-                                    ))}
+                                    <div style={{
+                                      height: '100%',
+                                      background: 'linear-gradient(90deg, #2E0456, #440B6C)',
+                                      width: `${Math.min(100, Math.max(10, (audioLevels[0] || 30) * 1.5))}%`,
+                                      transition: 'width 0.1s ease',
+                                      animation: 'pulse 1.5s ease-in-out infinite'
+                                    }}></div>
                                   </div>
                                 </div>
                               </div>
