@@ -2194,83 +2194,32 @@ function App() {
       console.log('🔍 Profile data:', profileData);
       console.log('🔍 Customer data:', customerData);
       
-      if (!sealSubscriptionId) {
-        throw new Error('Subscription ID not found. Please contact support.');
-      }
+      // Call our Lambda function which will proxy the request to Seal API (avoids CORS issues)
+      console.log('📤 Calling Lambda to cancel subscription via Seal API...');
+      
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/cancel_subscription`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customer_id: customerId,
+          customer_email: customerData?.email || profileData?.email,
+          cancel_reason: cancelReason,
+          feedback: cancelFeedback,
+          cancel_date: new Date().toISOString(),
+          seal_subscription_id: sealSubscriptionId
+        })
+      });
 
-      // Make API call to cancel subscription via Seal API
-      const cancelPayload = {
-        id: parseInt(sealSubscriptionId), // Ensure it's a number
-        action: 'cancel'
-      };
+      console.log('📥 Lambda response status:', response.status, response.statusText);
       
-      console.log('📤 Calling Seal API to cancel subscription:', cancelPayload);
-      
-      let response;
-      try {
-        response = await fetch('https://app.sealsubscriptions.com/shopify/merchant/api/subscription', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Seal-Token': 'seal_token_r90trlel5ffdmck64dhajug50skudevfk2w9lmfn'
-          },
-          body: JSON.stringify(cancelPayload)
-        });
-        console.log('📥 Seal API response status:', response.status, response.statusText);
-      } catch (fetchError) {
-        console.error('❌ Network error calling Seal API:', fetchError);
-        throw new Error(`Failed to connect to Seal API: ${fetchError.message}`);
-      }
-      
-      let result;
-      try {
-        const responseText = await response.text();
-        console.log('📥 Seal API raw response:', responseText);
-        result = JSON.parse(responseText);
-        console.log('📥 Seal API parsed response:', result);
-      } catch (parseError) {
-        console.error('❌ Failed to parse Seal API response:', parseError);
-        throw new Error('Invalid response from Seal API');
-      }
+      const result = await response.json();
+      console.log('📥 Lambda response body:', result);
 
       // Check if cancellation was successful
-      // Seal API might return success: true or payload object, or just 200 status
-      console.log('🔍 Checking response:', {
-        ok: response.ok,
-        status: response.status,
-        success: result.success,
-        hasPayload: !!result.payload,
-        hasError: !!result.error,
-        fullResult: result
-      });
-      
-      // Accept any 2xx status code as success
-      // Seal API returns: {"success":true,"payload":"Subscription was cancelled."}
-      const isSuccess = (response.ok || (response.status >= 200 && response.status < 300)) && 
-                        (result.success === true || result.success === "true" || result.payload);
-      
-      if (isSuccess) {
-        console.log('✅ Subscription cancelled successfully via Seal API (Status:', response.status, '):', result);
-        
-        // Also update backend for tracking purposes
-        try {
-          await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/cancel_subscription`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              customer_id: customerId,
-              customer_email: customerData?.email || profileData?.email,
-              cancel_reason: cancelReason,
-              feedback: cancelFeedback,
-              cancel_date: new Date().toISOString(),
-              seal_subscription_id: sealSubscriptionId
-            })
-          });
-        } catch (backendError) {
-          console.warn('⚠️ Failed to update backend, but cancellation succeeded:', backendError);
-        }
+      if (response.ok && result.success) {
+        console.log('✅ Subscription cancelled successfully via Seal API:', result);
         
         // Update local state to reflect cancellation
         setCustomerData(prev => ({
@@ -6614,14 +6563,18 @@ function App() {
                     style={{background: '#dc2626', borderColor: '#dc2626', color: '#fff', width: '100%', marginBottom: '16px'}}
                   >
                     {cancelSubmitting ? (
-                      <>
-                        <div className="spinner" style={{width: '16px', height: '16px', marginRight: '8px', borderWidth: '2px'}}></div>
-                        Cancelling...
-                      </>
+                      <div className="spinner" style={{
+                        width: '20px', 
+                        height: '20px', 
+                        border: '3px solid rgba(255, 255, 255, 0.3)',
+                        borderTop: '3px solid #fff',
+                        borderRadius: '50%',
+                        animation: 'spin 1s linear infinite',
+                        margin: '0 auto',
+                        display: 'inline-block'
+                      }}></div>
                     ) : (
-                      <>
-                        Confirm cancellation
-                      </>
+                      'Confirm cancellation'
                     )}
                   </button>
                   <button
