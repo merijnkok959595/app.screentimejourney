@@ -2156,6 +2156,7 @@ function App() {
   };
 
   const submitCancellation = async () => {
+    console.log('🚀 submitCancellation called - NEW CODE VERSION');
     setCancelSubmitting(true);
     
     try {
@@ -2185,31 +2186,91 @@ function App() {
         return;
       }
 
-      // Make API call to cancel subscription via Shopify
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/cancel_subscription`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          customer_id: customerId,
-          user_id: customerData?.customerId || customerId,
-          customer_email: customerData?.email || 'test@example.com',
-          shop: customerData?.shop || 'xpvznx-9w.myshopify.com',
-          subscription_id: customerData?.subscription_id,
-          shopify_customer_id: customerData?.shopifyCustomerId,
-          cancel_reason: cancelReason,
-          feedback: cancelFeedback,
-          cancel_date: new Date().toISOString(),
-          // Add Shopify-specific action for backend processing
-          action: 'cancel_shopify_subscription'
-        })
+      // Get Seal subscription ID from profile data
+      console.log('🔍 Checking for subscription ID...');
+      const sealSubscriptionId = profileData?.seal_subscription_id || customerData?.seal_subscription_id;
+      
+      console.log('🔍 Seal subscription ID:', sealSubscriptionId);
+      console.log('🔍 Profile data:', profileData);
+      console.log('🔍 Customer data:', customerData);
+      
+      if (!sealSubscriptionId) {
+        throw new Error('Subscription ID not found. Please contact support.');
+      }
+
+      // Make API call to cancel subscription via Seal API
+      const cancelPayload = {
+        id: parseInt(sealSubscriptionId), // Ensure it's a number
+        action: 'cancel'
+      };
+      
+      console.log('📤 Calling Seal API to cancel subscription:', cancelPayload);
+      
+      let response;
+      try {
+        response = await fetch('https://app.sealsubscriptions.com/shopify/merchant/api/subscription', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Seal-Token': 'seal_token_r90trlel5ffdmck64dhajug50skudevfk2w9lmfn'
+          },
+          body: JSON.stringify(cancelPayload)
+        });
+        console.log('📥 Seal API response status:', response.status, response.statusText);
+      } catch (fetchError) {
+        console.error('❌ Network error calling Seal API:', fetchError);
+        throw new Error(`Failed to connect to Seal API: ${fetchError.message}`);
+      }
+      
+      let result;
+      try {
+        const responseText = await response.text();
+        console.log('📥 Seal API raw response:', responseText);
+        result = JSON.parse(responseText);
+        console.log('📥 Seal API parsed response:', result);
+      } catch (parseError) {
+        console.error('❌ Failed to parse Seal API response:', parseError);
+        throw new Error('Invalid response from Seal API');
+      }
+
+      // Check if cancellation was successful
+      // Seal API might return success: true or payload object, or just 200 status
+      console.log('🔍 Checking response:', {
+        ok: response.ok,
+        status: response.status,
+        success: result.success,
+        hasPayload: !!result.payload,
+        hasError: !!result.error,
+        fullResult: result
       });
-
-      const result = await response.json();
-
-      if (response.ok && result.success) {
-        console.log('✅ Subscription cancelled successfully:', result);
+      
+      // Accept any 2xx status code as success
+      // Seal API returns: {"success":true,"payload":"Subscription was cancelled."}
+      const isSuccess = (response.ok || (response.status >= 200 && response.status < 300)) && 
+                        (result.success === true || result.success === "true" || result.payload);
+      
+      if (isSuccess) {
+        console.log('✅ Subscription cancelled successfully via Seal API (Status:', response.status, '):', result);
+        
+        // Also update backend for tracking purposes
+        try {
+          await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/cancel_subscription`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              customer_id: customerId,
+              customer_email: customerData?.email || profileData?.email,
+              cancel_reason: cancelReason,
+              feedback: cancelFeedback,
+              cancel_date: new Date().toISOString(),
+              seal_subscription_id: sealSubscriptionId
+            })
+          });
+        } catch (backendError) {
+          console.warn('⚠️ Failed to update backend, but cancellation succeeded:', backendError);
+        }
         
         // Update local state to reflect cancellation
         setCustomerData(prev => ({
@@ -2227,7 +2288,12 @@ function App() {
         }, 4000);
         
       } else {
-        throw new Error(result.error || 'Failed to cancel subscription. Please contact support.');
+        console.error('❌ Seal API cancellation failed:', {
+          status: response.status,
+          statusText: response.statusText,
+          result: result
+        });
+        throw new Error(result.error || result.message || `Failed to cancel subscription (Status: ${response.status}). Please contact support.`);
       }
 
     } catch (error) {
@@ -6374,10 +6440,6 @@ function App() {
             <div className="modal__content">
               {cancelStep === 1 && (
                 <div style={{textAlign: 'center', marginBottom: '20px'}}>
-                  <p style={{fontSize: '18px', lineHeight: '1.5', color: '#374151', marginBottom: '24px'}}>
-                    Before you cancel, we'd love to understand what led to this decision.
-                  </p>
-                  
                   <div style={{textAlign: 'left', marginBottom: '24px'}}>
                     <label style={{display: 'block', fontWeight: '500', marginBottom: '12px', color: '#374151'}}>
                       What's the main reason for cancelling?
@@ -6435,21 +6497,11 @@ function App() {
                       }}
                     />
                   </div>
-
-                  <div style={{background: '#e0f2fe', border: '1px solid #0284c7', borderRadius: '8px', padding: '16px', marginBottom: '20px'}}>
-                    <p style={{margin: 0, fontSize: '14px', color: '#0369a1', fontWeight: '500'}}>
-                      🙏 <strong>Thank you!</strong> Your feedback is invaluable in helping us improve Screen Time Journey for future users.
-                    </p>
-                  </div>
                 </div>
               )}
 
               {cancelStep === 3 && (
                 <div style={{textAlign: 'left', marginBottom: '20px'}}>
-                  <p style={{fontSize: '18px', lineHeight: '1.5', color: '#374151', marginBottom: '24px'}}>
-                    Please review your cancellation details before confirming.
-                  </p>
-                  
                   <div style={{background: '#f9fafb', border: '1px solid #d1d5db', borderRadius: '8px', padding: '20px', marginBottom: '24px', textAlign: 'left'}}>
                     <h4 style={{margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600', color: '#374151'}}>
                       Cancellation Summary
@@ -6623,7 +6675,7 @@ function App() {
                   <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px', background: '#f9fafb', borderRadius: '12px', border: '1px solid #e5e7eb'}}>
                     <div>
                       <div style={{fontWeight: '600', color: '#374151', marginBottom: '4px', fontSize: '16px'}}>
-                        📧 Email Notifications
+                        Email Notifications
                       </div>
                       <div style={{fontSize: '14px', color: '#6b7280'}}>
                         Get weekly progress updates and monthly leaderboard rankings via email
@@ -6668,7 +6720,7 @@ function App() {
                   <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px', background: '#f9fafb', borderRadius: '12px', border: '1px solid #e5e7eb'}}>
                     <div>
                       <div style={{fontWeight: '600', color: '#374151', marginBottom: '4px', fontSize: '16px'}}>
-                        💬 WhatsApp Notifications
+                        WhatsApp Notifications
                       </div>
                       <div style={{fontSize: '14px', color: '#6b7280'}}>
                         Get weekly progress updates and monthly leaderboard rankings via WhatsApp
@@ -6688,7 +6740,7 @@ function App() {
                         left: 0,
                         right: 0,
                         bottom: 0,
-                        backgroundColor: notificationSettings.whatsapp_enabled ? '#22c55e' : '#ccc',
+                        backgroundColor: notificationSettings.whatsapp_enabled ? '#2E0456' : '#ccc',
                         transition: '0.3s',
                         borderRadius: '24px'
                       }}>
