@@ -5732,12 +5732,73 @@ function App() {
                                 </div>
                               ) : (
                                 <div>
-                                  <AudioPlayer audioUrl={(() => {
-                                    const url = audioGuideData?.audioUrl || audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url;
-                                    console.log('🎵 AudioPlayer props - audioGuideData:', audioGuideData);
-                                    console.log('🎵 AudioPlayer props - resolved URL:', url);
-                                    return url;
-                                  })()} />
+                                  {/* Show pincode even if audio isn't available */}
+                                  {audioGuideData?.pincode && (
+                                    <div style={{
+                                      background: 'rgba(255, 255, 255, 0.9)',
+                                      border: '2px solid #e0f2fe',
+                                      borderRadius: '12px',
+                                      padding: '20px',
+                                      marginBottom: '16px',
+                                      textAlign: 'center'
+                                    }}>
+                                      <div style={{
+                                        fontSize: '14px',
+                                        color: '#6b7280',
+                                        marginBottom: '8px',
+                                        fontWeight: '500'
+                                      }}>
+                                        Your Screen Time Pincode
+                                      </div>
+                                      <div style={{
+                                        fontFamily: 'SF Mono, Monaco, monospace',
+                                        fontSize: '32px',
+                                        fontWeight: '700',
+                                        color: '#0369a1',
+                                        letterSpacing: '8px',
+                                        marginBottom: '12px'
+                                      }}>
+                                        {audioGuideData.pincode}
+                                      </div>
+                                      {audioGuideData.instructions && (
+                                        <div style={{
+                                          fontSize: '13px',
+                                          color: '#6b7280',
+                                          lineHeight: '1.5',
+                                          marginTop: '12px',
+                                          padding: '12px',
+                                          background: '#f8f9fa',
+                                          borderRadius: '8px'
+                                        }}>
+                                          {audioGuideData.instructions}
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
+                                  
+                                  {/* Audio player - only show if audio URL is available */}
+                                  {(audioGuideData?.audioUrl || audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url) ? (
+                                    <AudioPlayer audioUrl={(() => {
+                                      const url = audioGuideData?.audioUrl || audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url;
+                                      console.log('🎵 AudioPlayer props - audioGuideData:', audioGuideData);
+                                      console.log('🎵 AudioPlayer props - resolved URL:', url);
+                                      return url;
+                                    })()} />
+                                  ) : (
+                                    <div style={{
+                                      background: 'rgba(255, 193, 7, 0.1)',
+                                      border: '1px solid rgba(255, 193, 7, 0.3)',
+                                      borderRadius: '8px',
+                                      padding: '12px',
+                                      marginBottom: '12px',
+                                      textAlign: 'center',
+                                      fontSize: '13px',
+                                      color: '#856404'
+                                    }}>
+                                      ⚠️ Audio playback is not available, but you can use the pincode above to manually enter it.
+                                    </div>
+                                  )}
+                                  
                                   <button
                                     onClick={() => {
                                       setAudioGuideData(null);
