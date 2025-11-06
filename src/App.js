@@ -4757,8 +4757,8 @@ function App() {
                             
                             {/* Microphone permission hint */}
                             {!isRecording && !audioBlob && (
-                              <div className="mic-permission" style={{marginBottom: '16px', textAlign: 'center'}}>
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <div style={{marginBottom: '16px', textAlign: 'center', fontSize: '14px', color: '#6B7280', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'}}>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                   <circle cx="12" cy="12" r="10"/>
                                   <path d="M12 6v6l4 2"/>
                                 </svg>
