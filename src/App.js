@@ -3499,10 +3499,26 @@ function App() {
       setup_completed_at: new Date().toISOString(),
       // Store pincode for all devices (used for audio guide)
       pincode: sharedPincode?.pincode || null,
-      // Store audio URL if generated
-      audio_url: audioGuideData?.audio_url || audioGuideData?.tts_result?.public_url || null,
-      // Store profile URL for VPN profile (if generated)
-      profile_url: vpnProfileData?.profile_url || vpnProfileData?.s3_url || vpnProfileData?.downloadUrl || null
+      // Store audio URL if generated (ONLY S3/HTTPS URLs, NEVER base64 data URLs!)
+      audio_url: (() => {
+        const url = audioGuideData?.audio_url || audioGuideData?.tts_result?.public_url || null;
+        // Safety check: NEVER store base64 data URLs (they're 2-5MB and break DynamoDB!)
+        if (url && url.startsWith('data:')) {
+          console.warn('⚠️ Blocked base64 audio URL from being stored in device');
+          return null;
+        }
+        return url;
+      })(),
+      // Store profile URL for VPN profile (ONLY S3/HTTPS URLs, NEVER base64 data URLs!)
+      profile_url: (() => {
+        const url = vpnProfileData?.profile_url || vpnProfileData?.s3_url || null;
+        // Safety check: NEVER store base64 data URLs (they're huge and break DynamoDB!)
+        if (url && url.startsWith('data:')) {
+          console.warn('⚠️ Blocked base64 profile URL from being stored in device');
+          return null;
+        }
+        return url;
+      })()
     };
     
     console.log('📦 newDevice pincode:', newDevice.pincode);
