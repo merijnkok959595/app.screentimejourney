@@ -2228,6 +2228,9 @@ function App() {
           subscription_cancelled_at: new Date().toISOString()
         }));
         
+        // Refresh profile data to get updated status from backend
+        await fetchProfileData();
+        
         // Show success step
         setCancelStep(4);
         
@@ -6174,50 +6177,66 @@ function App() {
                   <span style={{
                     fontSize: '12px',
                     fontWeight: '500',
-                    color: '#059669',
+                    color: (customerData?.subscription_status === 'cancelled' || customerData?.subscription_status === 'cancel_scheduled' || profileData?.subscription_status === 'cancelled' || profileData?.subscription_status === 'cancel_scheduled') ? '#dc2626' : '#059669',
                     backgroundColor: '#f9fafb',
                     padding: '2px 8px',
                     borderRadius: '12px',
                     border: '1px solid #e5e7eb'
                   }}>
-                    Active ✓
+                    {(customerData?.subscription_status === 'cancelled' || customerData?.subscription_status === 'cancel_scheduled' || profileData?.subscription_status === 'cancelled' || profileData?.subscription_status === 'cancel_scheduled') ? 'Cancelled ✗' : 'Active ✓'}
                   </span>
                 </div>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
-                  <span style={{fontSize: '14px', color: '#374151'}}>Next billing</span>
-                  <span style={{
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    color: '#374151',
-                    fontFamily: 'monospace'
-                  }}>
-                    15 Sep 2025
-                  </span>
-                </div>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0'}}>
-                  <span style={{fontSize: '14px', color: '#374151'}}>Billing cycle</span>
-                  <span style={{
-                    fontSize: '12px',
-                    fontWeight: '500',
-                    color: '#6b7280',
-                    backgroundColor: '#f3f4f6',
-                    padding: '2px 8px',
-                    borderRadius: '8px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px'
-                  }}>
-                    Monthly
-                  </span>
-                </div>
+                {(customerData?.subscription_status !== 'cancelled' && customerData?.subscription_status !== 'cancel_scheduled' && profileData?.subscription_status !== 'cancelled' && profileData?.subscription_status !== 'cancel_scheduled') && (
+                  <>
+                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
+                      <span style={{fontSize: '14px', color: '#374151'}}>Next billing</span>
+                      <span style={{
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        color: '#374151',
+                        fontFamily: 'monospace'
+                      }}>
+                        15 Sep 2025
+                      </span>
+                    </div>
+                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0'}}>
+                      <span style={{fontSize: '14px', color: '#374151'}}>Billing cycle</span>
+                      <span style={{
+                        fontSize: '12px',
+                        fontWeight: '500',
+                        color: '#6b7280',
+                        backgroundColor: '#f3f4f6',
+                        padding: '2px 8px',
+                        borderRadius: '8px',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px'
+                      }}>
+                        Monthly
+                      </span>
+                    </div>
+                  </>
+                )}
               </div>
               <div style={{marginTop: 'auto', display: 'flex', gap: '8px'}}>
-                <button
-                  className="btn btn--outline btn--sm"
-                  style={{flex: 1}}
-                  onClick={startCancelFlow}
-                >
-                  Cancel subscription
-                </button>
+                {(customerData?.subscription_status === 'cancelled' || customerData?.subscription_status === 'cancel_scheduled' || profileData?.subscription_status === 'cancelled' || profileData?.subscription_status === 'cancel_scheduled') ? (
+                  <a
+                    href="https://www.screentimejourney.com/products/screentimejourney"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn--primary btn--sm"
+                    style={{flex: 1, textAlign: 'center', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+                  >
+                    Start new subscription
+                  </a>
+                ) : (
+                  <button
+                    className="btn btn--outline btn--sm"
+                    style={{flex: 1}}
+                    onClick={startCancelFlow}
+                  >
+                    Cancel subscription
+                  </button>
+                )}
               </div>
             </div>
 
