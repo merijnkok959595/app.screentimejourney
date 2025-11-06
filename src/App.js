@@ -2234,11 +2234,6 @@ function App() {
         // Show success step
         setCancelStep(4);
         
-        // Auto-close after showing success message
-        setTimeout(() => {
-          closeCancelFlow();
-        }, 4000);
-        
       } else {
         console.error('❌ Seal API cancellation failed:', {
           status: response.status,
@@ -6223,7 +6218,7 @@ function App() {
                     href="https://www.screentimejourney.com/products/screentimejourney"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn btn--primary btn--sm"
+                    className="btn btn--outline btn--sm"
                     style={{flex: 1, textAlign: 'center', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center'}}
                   >
                     Start new subscription
@@ -6492,21 +6487,21 @@ function App() {
 
               {cancelStep === 4 && (
                 <div style={{textAlign: 'center', marginBottom: '20px'}}>
-                  <div style={{fontSize: '4rem', marginBottom: '24px'}}>✅</div>
+                  <div style={{fontSize: '3rem', marginBottom: '16px'}}>✅</div>
                   
-                  <h4 style={{fontSize: '24px', fontWeight: '600', color: '#059669', marginBottom: '16px'}}>
+                  <h4 style={{fontSize: '20px', fontWeight: '600', color: '#374151', marginBottom: '12px'}}>
                     Subscription Successfully Cancelled
                   </h4>
                   
-                  <p style={{fontSize: '16px', lineHeight: '1.5', color: '#374151', marginBottom: '24px'}}>
+                  <p style={{fontSize: '14px', lineHeight: '1.5', color: '#6b7280', marginBottom: '20px'}}>
                     Your subscription has been cancelled and you will receive a confirmation email shortly.
                   </p>
                   
-                  <div style={{background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', padding: '20px', marginBottom: '24px', textAlign: 'left'}}>
-                    <h5 style={{margin: '0 0 12px 0', fontSize: '16px', fontWeight: '600', color: '#059669'}}>
+                  <div style={{textAlign: 'left', marginBottom: '20px', padding: '16px', background: '#f9fafb', borderRadius: '8px'}}>
+                    <h5 style={{margin: '0 0 8px 0', fontSize: '14px', fontWeight: '600', color: '#374151'}}>
                       What happens next:
                     </h5>
-                    <ul style={{margin: 0, paddingLeft: '20px', color: '#374151', lineHeight: '1.6'}}>
+                    <ul style={{margin: 0, paddingLeft: '20px', color: '#6b7280', lineHeight: '1.6', fontSize: '14px'}}>
                       <li>You'll continue to have access until your current billing period ends</li>
                       <li>A confirmation email will be sent to your registered email address</li>
                       <li>Your progress and data will be preserved for 30 days in case you change your mind</li>
@@ -6514,13 +6509,7 @@ function App() {
                     </ul>
                   </div>
                   
-                  <div style={{background: '#e0f2fe', border: '1px solid #0284c7', borderRadius: '8px', padding: '16px', marginBottom: '20px'}}>
-                    <p style={{margin: 0, fontSize: '14px', color: '#0369a1', fontWeight: '500'}}>
-                      💙 Thank you for being part of the Screen Time Journey community. We hope to see you again soon!
-                    </p>
-                  </div>
-                  
-                  <p style={{fontSize: '14px', color: '#6b7280', margin: 0}}>
+                  <p style={{fontSize: '13px', color: '#6b7280', margin: 0}}>
                     Questions? Contact us at <strong>support@screentimejourney.com</strong>
                   </p>
                 </div>
@@ -6609,11 +6598,8 @@ function App() {
 
               {cancelStep === 4 && (
                 <div style={{textAlign: 'center'}}>
-                  <p style={{fontSize: '14px', color: '#6b7280', margin: '0 0 16px 0'}}>
-                    This window will close automatically in a few seconds...
-                  </p>
                   <button
-                    className="btn btn--secondary btn--full"
+                    className="btn btn--outline btn--full"
                     onClick={closeCancelFlow}
                     style={{width: '100%'}}
                   >
