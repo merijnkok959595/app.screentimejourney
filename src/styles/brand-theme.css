@@ -631,7 +631,7 @@ p, span, div {
 }
 
 .header {
-  background: #FFFFFF;
+  background: #f9f9f9; /* Light gray background */
   position: sticky;
   top: 42px; /* Position below announcement bar */
   z-index: 100;
@@ -716,7 +716,7 @@ p, span, div {
   gap: 12px;
 }
 
-/* Home Button - Solid Purple with Shadow Effect */
+/* Home Button - Solid Purple with Left-to-Right Fill Effect */
 .btn-outline-primary {
   background: var(--brand-primary);
   color: #FFFFFF;
@@ -726,20 +726,34 @@ p, span, div {
   border-radius: 7px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 15px; /* Slightly bigger */
   letter-spacing: 1px;
   cursor: pointer;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 0 rgba(74, 19, 117, 0);
-  transition: box-shadow 0.3s ease, background-color 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: color 0.3s ease;
 }
 
-.btn-outline-primary:hover {
-  background: #4a1375; /* Lighter purple on hover */
-  box-shadow: 8px 0 16px rgba(74, 19, 117, 0.3); /* Left-to-right shadow */
+.btn-outline-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: #4a1375; /* Lighter purple fill */
+  border-radius: 7px;
+  transition: width 0.3s ease;
+  z-index: -1;
+}
+
+.btn-outline-primary:hover::before {
+  width: 100%; /* Fill from left to right */
 }
 
 @media (max-width: 768px) {
@@ -748,7 +762,7 @@ p, span, div {
   }
 }
 
-/* Log out Button - Outline Style with Shadow Effect */
+/* Log out Button - Outline Style with Left-to-Right Fill Effect */
 .btn-outline-secondary {
   background: #FFFFFF;
   color: var(--brand-primary);
@@ -758,21 +772,38 @@ p, span, div {
   border-radius: 7px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 15px; /* Slightly bigger */
   letter-spacing: 1px;
   cursor: pointer;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 0 rgba(74, 19, 117, 0);
-  transition: box-shadow 0.3s ease, all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: color 0.3s ease;
+}
+
+.btn-outline-secondary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: #4a1375; /* Same lighter purple fill */
+  border-radius: 7px;
+  transition: width 0.3s ease;
+  z-index: -1;
 }
 
 .btn-outline-secondary:hover {
-  background: var(--brand-primary);
-  color: #FFFFFF;
-  box-shadow: 8px 0 16px rgba(74, 19, 117, 0.3); /* Left-to-right shadow */
+  color: #FFFFFF; /* Text turns white on hover */
+}
+
+.btn-outline-secondary:hover::before {
+  width: 100%; /* Fill from left to right */
 }
 
 @media (max-width: 768px) {
