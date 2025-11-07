@@ -4410,7 +4410,7 @@ function App() {
                   className="input"
                   value={profileData?.email || ''}
                   readOnly
-                  style={{ backgroundColor: '#f3f4f6', cursor: 'not-allowed' }}
+                  style={{ backgroundColor: '#EEEEEE', cursor: 'not-allowed' }}
                 />
                 <p className="helper" style={{ margin: '0.5rem 0 0 0' }}>Email cannot be changed as it's linked to your Shopify account.</p>
               </div>
@@ -5585,7 +5585,7 @@ function App() {
                                     <div style={{
                                       width: '24px',
                                       height: '24px',
-                                      border: '3px solid #f3f4f6',
+                                      border: '3px solid #EEEEEE',
                                       borderTop: '3px solid #2E0456',
                                       borderRadius: '50%',
                                       animation: 'spin 1s linear infinite',
@@ -5712,7 +5712,7 @@ function App() {
                       ) : (
                         <>
                           {/* Video Player for video steps */}
-                          <div style={{marginBottom: '20px', borderRadius: '8px', overflow: 'hidden', backgroundColor: '#f3f4f6'}}>
+                          <div style={{marginBottom: '20px', borderRadius: '8px', overflow: 'hidden', backgroundColor: '#EEEEEE'}}>
                             <video 
                               controls 
                               style={{width: '100%', height: 'auto', maxHeight: '300px'}}
@@ -6193,7 +6193,7 @@ function App() {
                 <h3 className="card-title">Account</h3>
               </div>
               <div style={{margin: '0 0 16px 0'}}>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #EEEEEE'}}>
                   <span style={{fontSize: '14px', color: '#374151'}}>Email</span>
                   <span style={{
                     fontSize: '14px',
@@ -6204,7 +6204,7 @@ function App() {
                     {profileData?.email || 'Not set'}
                   </span>
                 </div>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #EEEEEE'}}>
                   <span style={{fontSize: '14px', color: '#374151'}}>Username</span>
                   <span style={{
                     fontSize: '14px',
@@ -6214,7 +6214,7 @@ function App() {
                     @{profileData?.username || 'Not set'}
                   </span>
                 </div>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #EEEEEE'}}>
                   <span style={{fontSize: '14px', color: '#374151'}}>Gender</span>
                   <span style={{
                     fontSize: '14px',
@@ -6224,7 +6224,7 @@ function App() {
                     {profileData?.gender === 'male' ? '🙋‍♂️ Man' : profileData?.gender === 'female' ? '🙋‍♀️ Woman' : 'Not set'}
                   </span>
                 </div>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #EEEEEE'}}>
                   <span style={{fontSize: '14px', color: '#374151'}}>WhatsApp</span>
                   <span style={{
                     fontSize: '14px',
@@ -6235,7 +6235,7 @@ function App() {
                     {profileData?.whatsapp || 'Not set'}
                   </span>
                 </div>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #EEEEEE'}}>
                   <span style={{fontSize: '14px', color: '#374151'}}>Commitment</span>
                   <span style={{
                     fontSize: '12px',
@@ -6250,7 +6250,7 @@ function App() {
                   </span>
                 </div>
                 {profileData?.commitment_data && (
-                  <div style={{padding: '12px 0', borderBottom: '1px solid #f3f4f6'}}>
+                  <div style={{padding: '12px 0', borderBottom: '1px solid #EEEEEE'}}>
                     <div style={{marginBottom: '8px'}}>
                       <span style={{fontSize: '12px', color: '#6b7280', fontWeight: '500'}}>What to change:</span>
                       <p style={{margin: '2px 0 0 0', fontSize: '14px', color: '#374151'}}>"{profileData.commitment_data.q1}"</p>
@@ -6385,7 +6385,7 @@ function App() {
                   <h3 className="card-title">Subscription</h3>
                 </div>
               <div style={{margin: '0 0 16px 0'}}>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #EEEEEE'}}>
                   <span style={{fontSize: '14px', color: '#374151'}}>Status</span>
                   <span style={{
                     fontSize: '12px',
@@ -6401,7 +6401,7 @@ function App() {
                 </div>
                 {(customerData?.subscription_status !== 'cancelled' && customerData?.subscription_status !== 'cancel_scheduled' && profileData?.subscription_status !== 'cancelled' && profileData?.subscription_status !== 'cancel_scheduled') && (
                   <>
-                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
+                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #EEEEEE'}}>
                       <span style={{fontSize: '14px', color: '#374151'}}>Next billing</span>
                       <span style={{
                         fontSize: '14px',
@@ -6449,7 +6449,7 @@ function App() {
                         fontSize: '12px',
                         fontWeight: '500',
                         color: '#6b7280',
-                        backgroundColor: '#f3f4f6',
+                        backgroundColor: '#EEEEEE',
                         padding: '2px 8px',
                         borderRadius: '8px',
                         textTransform: 'uppercase',
@@ -6487,7 +6487,7 @@ function App() {
                 <h3 className="card-title">Notifications</h3>
               </div>
               <div style={{margin: '0 0 16px 0'}}>
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #EEEEEE'}}>
                   <span style={{fontSize: '14px', color: '#374151'}}>Email notifications</span>
                   <span style={{
                     fontSize: '12px',
@@ -6541,7 +6541,7 @@ function App() {
                   display: 'flex',
                   alignItems: 'flex-start',
                   padding: '12px 0',
-                  borderBottom: index < 4 ? '1px solid #f3f4f6' : 'none'
+                  borderBottom: index < 4 ? '1px solid #EEEEEE' : 'none'
                 }}>
 
                   <div style={{flex: 1}}>
