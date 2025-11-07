@@ -396,8 +396,8 @@
   /* Brand Colors */
   --brand-primary: #2E0456;      /* Primary button/elements color */
   --brand-primary-dark: #1a0230; /* Darker shade for hover */
-  --brand-text: #0F172A;         /* Primary text color */
-  --brand-background: #FFFFFF;    /* Background */
+  --brand-text: #0F172A;         /* Primary text color - dark slate */
+  --brand-background: transparent; /* Transparent card background */
   --brand-separator: #E5E5E5;    /* Separator lines */
   --page-bg: #f9f9f9;            /* Page background - light gray */
   --border: #E5E5E5;             /* Neutral border */
@@ -536,10 +536,20 @@ p, span, div {
 }
 
 /* === CARDS === */
-.card { padding: 24px; margin: var(--spacing-md) 0; border: 1px solid var(--brand-separator); border-radius: var(--radius-lg); }
-.card-header { margin-bottom: var(--spacing-md); border-bottom: 1px solid var(--brand-separator); padding-bottom: var(--spacing-sm); }
+.card { 
+  padding: 24px; 
+  margin: var(--spacing-md) 0; 
+  background: transparent; 
+  border: none; 
+  border-radius: var(--radius-lg); 
+}
+.card-header { 
+  margin-bottom: var(--spacing-md); 
+  border-bottom: none; 
+  padding-bottom: var(--spacing-sm); 
+}
 
-.card:hover { box-shadow: var(--shadow-md); }
+.card:hover { box-shadow: none; }
 
 .card-header {
   margin-bottom: var(--spacing-md);
