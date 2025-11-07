@@ -720,7 +720,7 @@ p, span, div {
 
 /* === BUTTON STYLES === */
 
-/* Primary Button - Solid Purple with Wave Effect + Pulse + Shimmer (Home, Start Now, etc.) */
+/* Primary Button - Solid Purple with Wave Effect (Home, Submit, Save, etc.) */
 .btn-primary,
 .btn-outline-primary {
   background: var(--brand-primary);
@@ -742,10 +742,14 @@ p, span, div {
   overflow: hidden;
   z-index: 1;
   transition: color 0.3s ease;
+}
+
+/* Special animated primary button (Start Now only) */
+.btn-primary--animated {
   animation: pulse 2s ease-in-out infinite;
 }
 
-/* Pulse animation */
+/* Pulse animation - ONLY for Start Now */
 @keyframes pulse {
   0%, 100% {
     box-shadow: 0 0 0 0 rgba(74, 19, 117, 0.7);
@@ -755,9 +759,8 @@ p, span, div {
   }
 }
 
-/* Shimmer effect */
-.btn-primary::after,
-.btn-outline-primary::after {
+/* Shimmer effect - ONLY for Start Now */
+.btn-primary--animated::after {
   content: '';
   position: absolute;
   top: 0;

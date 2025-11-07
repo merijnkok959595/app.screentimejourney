@@ -216,7 +216,7 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
           <div style={{marginTop: '20px'}}>
             {devices.length < 3 ? (
               <button 
-                className="btn btn--primary"
+                className={`btn btn--primary ${devices.length === 0 ? 'btn-primary--animated' : ''}`}
                 onClick={() => startDeviceFlow('device_setup_flow')}
                 style={{width: '100%'}}
               >
