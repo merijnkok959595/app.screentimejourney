@@ -679,7 +679,7 @@ p, span, div {
   gap: 20px; /* Reduced spacing between links */
   align-items: center;
   justify-content: flex-start; /* Left-align the nav items */
-  padding-left: 32px; /* Reasonable padding from logo */
+  padding-left: 48px; /* More space from logo */
 }
 
 .header-nav a {
