@@ -531,7 +531,7 @@ function App() {
   // Device form data state
   const [deviceFormData, setDeviceFormData] = useState({
     device_name: '',
-    device_type: 'iOS'
+    device_type: ''
   });
   const [deviceFormErrors, setDeviceFormErrors] = useState({});
   
@@ -2621,7 +2621,7 @@ function App() {
     // Reset form data and VPN profile data
     setDeviceFormData({
       device_name: '',
-      device_type: 'iOS'
+      device_type: ''
     });
     setVpnProfileData(null);
     setAudioGuideData(null);
@@ -5695,7 +5695,7 @@ function App() {
                                 
                                 {field.field_type === 'radio' && (
                                   <>
-                                    <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '13px', color: '#6b7280'}}>{field.label}</label>
+                                    <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>{field.label}</label>
                                     <div className="radio-group">
                                       {field.options.map((option, optIndex) => (
                                         <label key={optIndex} className="radio-option">
@@ -5930,7 +5930,7 @@ function App() {
                             setCurrentFlowStep(1);
                             setDeviceFormData({
                               device_name: '',
-                              device_type: 'iOS'
+                              device_type: ''
                             });
                             setDeviceFormErrors({});
                             setVpnProfileData(null);

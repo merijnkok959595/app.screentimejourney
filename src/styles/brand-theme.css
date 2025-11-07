@@ -1305,11 +1305,12 @@ p, span, div {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background: transparent;
   color: #0F172A;
-  transition: border-width 0.2s ease;
+  transition: border-width 0.2s ease, border-color 0.2s ease;
 }
 .input:focus {
   outline: none;
   border-width: 2px;
+  border-color: #0F172A;
   padding: 21px 15px 7px 15px; /* Adjust padding to compensate for thicker border */
 }
 .input::placeholder {
@@ -1331,12 +1332,14 @@ p, span, div {
   pointer-events: none;
   transition: all 0.2s ease;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
 }
 .input:focus ~ .form-label,
 .input:not(:placeholder-shown) ~ .form-label {
   top: 10px;
   font-size: 11px;
-  color: #6b7280;
+  color: #0F172A;
+  font-weight: 400;
   transform: translateY(0);
 }
 
@@ -1344,16 +1347,16 @@ p, span, div {
 .radio-row { display: flex; gap: 12px; }
 .radio-group { 
   display: flex; 
-  flex-direction: row;
+  flex-direction: column;
   gap: 12px; 
 }
 .radio-option {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;
+  width: 100%;
   cursor: pointer;
-  padding: 12px 16px;
+  padding: 14px 16px;
   border: 1px solid #0F172A;
   border-radius: 7px;
   background: transparent;
@@ -1380,11 +1383,12 @@ p, span, div {
 }
 .radio-option:has(input[type="radio"]:checked) .radio-label {
   color: #ffffff;
-  font-weight: 500;
+  font-weight: 400;
 }
 .radio-label {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 400;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   color: #0F172A;
   text-align: center;
   width: 100%;
