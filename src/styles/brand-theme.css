@@ -743,25 +743,30 @@ p, span, div {
   transition: color 0.3s ease;
 }
 
-/* Text should be above all effects */
-.btn-primary > *,
-.btn-outline-primary > * {
-  position: relative;
-  z-index: 3;
+/* Ensure button has stacking context */
+.btn-primary,
+.btn-outline-primary {
+  isolation: isolate;
 }
 
 /* Special animated primary button (Start Now only) */
 .btn-primary--animated {
-  animation: pulse-heartbeat 1.5s ease-in-out infinite;
+  animation: pulse-heartbeat 6.5s ease-in-out infinite;
 }
 
-/* Pulse animation - Heartbeat scale effect */
+/* Pulse animation - Heartbeat scale effect with 5s break */
 @keyframes pulse-heartbeat {
-  0%, 100% {
+  0% {
     transform: scale(1);
   }
-  50% {
+  7.5% {
     transform: scale(1.05);
+  }
+  15% {
+    transform: scale(1);
+  }
+  15.1%, 100% {
+    transform: scale(1); /* 5.5s break */
   }
 }
 
@@ -780,7 +785,7 @@ p, span, div {
     transparent
   );
   animation: shimmer 3s infinite;
-  z-index: 2; /* Above ::before wave effect but below text */
+  z-index: -1; /* Behind text */
   pointer-events: none;
   border-radius: 7px; /* Match button border radius */
 }
@@ -798,7 +803,7 @@ p, span, div {
   transform: scaleX(0);
   transform-origin: left; /* Grows from LEFT on hover */
   transition: transform 0.3s ease, transform-origin 0s;
-  z-index: 1; /* Above background but below text */
+  z-index: -1; /* Behind everything */
 }
 
 .btn-primary:hover::before,
