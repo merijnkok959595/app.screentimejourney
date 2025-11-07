@@ -1403,13 +1403,19 @@ p, span, div {
 .error-message {
   font-size: 13px;
   color: #dc2626;
-  margin: 6px 0 0 0;
-  padding: 0 4px;
+  margin: 8px 0 0 4px;
+  padding: 0;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 400;
 }
 
 .btn--full { width: 100%; }
+.btn--no-hover::before {
+  display: none !important; /* Disable wave effect */
+}
+.btn--no-hover:hover {
+  transform: none !important; /* Disable any transform effects */
+}
 .link { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0; font-size: 0.95rem; }
 .link:hover { color: var(--brand-text); }
 .row { display: flex; gap: 12px; }

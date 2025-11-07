@@ -5838,7 +5838,7 @@ function App() {
                       <div style={{marginBottom: '4px', width: '100%'}}>
                         {!vpnProfileData ? (
                           <button
-                            className="btn-secondary"
+                            className="btn-secondary btn--no-hover"
                             onClick={generateVPNProfile}
                             disabled={profileGenerating || !deviceFormData.device_type}
                             style={{width: '100%', marginBottom: '0px', minWidth: '100%', maxWidth: '100%'}}
@@ -6088,7 +6088,7 @@ function App() {
           )}
           
           {/* Journey progress - full width */}
-          {(profileLoading || milestonesLoading) ? (
+          {(!initialLoad && (profileLoading || milestonesLoading)) ? (
             <div className="card" style={{padding: '40px', textAlign: 'center'}}>
               <div className="spinner" style={{width: '40px', height: '40px', margin: '0 auto 16px'}}></div>
               <p style={{color: '#6b7280', margin: 0}}>Loading your journey...</p>
