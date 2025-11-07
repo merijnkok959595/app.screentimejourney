@@ -1296,9 +1296,82 @@ p, span, div {
 .modal__title { font-family: var(--font-heading); font-size: 1.75rem; margin: 0 0 8px 0; }
 .modal__desc { color: var(--text-muted); margin: 0 0 16px 0; }
 .modal__footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
-.input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 16px; }
+.input { 
+  width: 100%; 
+  padding: 14px 16px; 
+  border: 1px solid #EEEEEE; 
+  border-radius: 7px; 
+  font-size: 15px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #ffffff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.input:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(68, 11, 108, 0.1);
+}
+.input::placeholder {
+  color: #9ca3af;
+}
+
+/* Radio Button Styling */
 .radio-row { display: flex; gap: 12px; }
-.radio-group { display: flex; gap: 16px; align-items: center; }
+.radio-group { 
+  display: flex; 
+  flex-direction: column;
+  gap: 12px; 
+}
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 14px 16px;
+  border: 1px solid #EEEEEE;
+  border-radius: 7px;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+.radio-option:hover {
+  border-color: #d1d5db;
+  background: #fafafa;
+}
+.radio-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.radio-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #EEEEEE;
+  border-radius: 50%;
+  position: relative;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+.radio-option input[type="radio"]:checked ~ .radio-custom {
+  border-color: var(--brand-primary);
+  background: var(--brand-primary);
+}
+.radio-option input[type="radio"]:checked ~ .radio-custom::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ffffff;
+}
+.radio-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: #0F172A;
+  flex: 1;
+}
 .radio { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
 .radio input { width: 16px; height: 16px; }
 .helper { font-size: 0.9rem; color: var(--text-muted); margin-top: 8px; }
@@ -1310,4 +1383,19 @@ p, span, div {
 .row > * { flex: 1; }
 
 .phone-row { display: grid; grid-template-columns: 140px 1fr; gap: 12px; }
-.select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 16px; background: #fff; }
+.select { 
+  width: 100%; 
+  padding: 14px 16px; 
+  border: 1px solid #EEEEEE; 
+  border-radius: 7px; 
+  font-size: 15px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #ffffff;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.select:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(68, 11, 108, 0.1);
+}
