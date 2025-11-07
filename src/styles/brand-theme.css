@@ -636,12 +636,12 @@ p, span, div {
   top: 42px; /* Position below announcement bar */
   z-index: 100;
   border-bottom: 1px solid #e5e5e5;
-  padding: 20px 0; /* Vertical padding instead of fixed height */
-  transition: padding 0.6s ease-in; /* Starts slow, gets faster (acceleration) */
+  padding: 7.5px 0; /* Exact padding: 7.5px top + 80px logo + 7.5px bottom = 95px total */
+  transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Faster with incremental speed */
 }
 
 .header.scrolled {
-  padding: 10px 0; /* Scrolled padding */
+  padding: 7.5px 0; /* Same padding on scroll: 7.5px + 60px logo + 7.5px = 75px total */
 }
 
 /* Boxed container - aligned with main content */
@@ -662,14 +662,14 @@ p, span, div {
 }
 
 .header-logo img {
-  height: 70px; /* Default logo height */
+  height: 80px; /* Default logo height - bigger! */
   width: auto;
-  transition: height 0.6s ease-in; /* Starts slow, accelerates (faster faster faster) */
+  transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Faster with incremental speed */
   display: block;
 }
 
 .header.scrolled .header-logo img {
-  height: 50px; /* Scrolled logo height */
+  height: 60px; /* Scrolled logo height */
 }
 
 /* Center Section: Navigation Menu - grows to fill middle space */
@@ -680,6 +680,8 @@ p, span, div {
   align-items: center;
   justify-content: flex-start; /* Left-align the nav items */
   padding-left: 48px; /* More space from logo */
+  position: relative;
+  top: 0; /* Keep menu items at consistent vertical position */
 }
 
 .header-nav a {
