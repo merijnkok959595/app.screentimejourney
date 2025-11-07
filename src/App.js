@@ -564,6 +564,29 @@ function App() {
     };
   }, [mobileMenuOpen]);
 
+  // Shrink header on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const header = document.querySelector('.header');
+      const announcementBar = document.querySelector('.announcement-bar');
+      
+      if (header && announcementBar) {
+        if (window.scrollY > 50) {
+          header.classList.add('scrolled');
+          announcementBar.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+          announcementBar.classList.remove('scrolled');
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   // Load devices when customer data is available
   useEffect(() => {
     console.log('🔍 Device loading useEffect triggered:', {
@@ -5981,8 +6004,7 @@ function App() {
             <a className="header-logo" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">
               <img 
                 src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/stj_trimmed_png.png?v=1757864303" 
-                alt="Screen Time Journey Logo" 
-                style={{height: '50px'}}
+                alt="Screen Time Journey Logo"
               />
             </a>
             

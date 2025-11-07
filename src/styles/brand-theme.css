@@ -630,9 +630,14 @@ p, span, div {
   top: 42px; /* Position below announcement bar */
   z-index: 100;
   border-bottom: 1px solid #e5e5e5;
-  height: 70px;
+  height: 95px;
   display: flex;
   align-items: center;
+  transition: height 0.3s ease;
+}
+
+.header.scrolled {
+  height: 70px;
 }
 
 .header-inner {
@@ -645,6 +650,16 @@ p, span, div {
 
 .header-logo {
   flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.header-logo img {
+  height: 60px;
+  transition: height 0.3s ease;
+}
+
+.header.scrolled .header-logo img {
+  height: 45px;
 }
 
 /* Navigation Links */
