@@ -5662,29 +5662,31 @@ function App() {
                           {/* Form Fields */}
                           <div style={{marginBottom: '20px'}}>
                             {currentFlow.steps[currentFlowStep - 1].form_fields.map((field, index) => (
-                              <div key={index} style={{marginBottom: '1rem'}}>
+                              <div key={index} style={{marginBottom: '1.5rem'}}>
                                 {field.field_type === 'text' && (
                                   <>
-                                    <label className="form-label">{field.label}</label>
-                                    <input 
-                                      className={`input ${deviceFormErrors[field.field_name] ? 'input--invalid' : ''}`}
-                                      placeholder={field.placeholder} 
-                                      value={deviceFormData[field.field_name] || ''} 
-                                      onChange={(e) => {
-                                        setDeviceFormData(prev => ({
-                                          ...prev, 
-                                          [field.field_name]: e.target.value
-                                        }));
-                                        // Clear error when user starts typing
-                                        if (deviceFormErrors[field.field_name]) {
-                                          setDeviceFormErrors(prev => ({
-                                            ...prev,
-                                            [field.field_name]: ''
+                                    <div className="input-wrapper">
+                                      <input 
+                                        className={`input ${deviceFormErrors[field.field_name] ? 'input--invalid' : ''}`}
+                                        placeholder={field.placeholder} 
+                                        value={deviceFormData[field.field_name] || ''} 
+                                        onChange={(e) => {
+                                          setDeviceFormData(prev => ({
+                                            ...prev, 
+                                            [field.field_name]: e.target.value
                                           }));
-                                        }
-                                      }}
-                                      maxLength={field.max_length}
-                                    />
+                                          // Clear error when user starts typing
+                                          if (deviceFormErrors[field.field_name]) {
+                                            setDeviceFormErrors(prev => ({
+                                              ...prev,
+                                              [field.field_name]: ''
+                                            }));
+                                          }
+                                        }}
+                                        maxLength={field.max_length}
+                                      />
+                                      <label className="form-label">{field.label}</label>
+                                    </div>
                                     {deviceFormErrors[field.field_name] && (
                                       <p className="error-message">{deviceFormErrors[field.field_name]}</p>
                                     )}
@@ -5693,7 +5695,7 @@ function App() {
                                 
                                 {field.field_type === 'radio' && (
                                   <>
-                                    <label className="form-label">{field.label}</label>
+                                    <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '13px', color: '#6b7280'}}>{field.label}</label>
                                     <div className="radio-group">
                                       {field.options.map((option, optIndex) => (
                                         <label key={optIndex} className="radio-option">
@@ -5716,7 +5718,6 @@ function App() {
                                               }
                                             }} 
                                           />
-                                          <span className="radio-custom"></span>
                                           <span className="radio-label">{option.label}</span>
                                         </label>
                                       ))}

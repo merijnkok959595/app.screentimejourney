@@ -1298,79 +1298,97 @@ p, span, div {
 .modal__footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
 .input { 
   width: 100%; 
-  padding: 14px 16px; 
-  border: 1px solid #EEEEEE; 
+  padding: 22px 16px 8px 16px; 
+  border: 1px solid #0F172A; 
   border-radius: 7px; 
   font-size: 15px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #ffffff;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background: transparent;
+  color: #0F172A;
+  transition: border-width 0.2s ease;
 }
 .input:focus {
   outline: none;
-  border-color: var(--brand-primary);
-  box-shadow: 0 0 0 3px rgba(68, 11, 108, 0.1);
+  border-width: 2px;
+  padding: 21px 15px 7px 15px; /* Adjust padding to compensate for thicker border */
 }
 .input::placeholder {
-  color: #9ca3af;
+  color: transparent;
 }
 
-/* Radio Button Styling */
+/* Floating Label Wrapper */
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+.form-label {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 15px;
+  color: #9ca3af;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+.input:focus ~ .form-label,
+.input:not(:placeholder-shown) ~ .form-label {
+  top: 10px;
+  font-size: 11px;
+  color: #6b7280;
+  transform: translateY(0);
+}
+
+/* Radio Button Styling - Button-like Toggle */
 .radio-row { display: flex; gap: 12px; }
 .radio-group { 
   display: flex; 
-  flex-direction: column;
+  flex-direction: row;
   gap: 12px; 
 }
 .radio-option {
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+  flex: 1;
   cursor: pointer;
-  padding: 14px 16px;
-  border: 1px solid #EEEEEE;
+  padding: 12px 16px;
+  border: 1px solid #0F172A;
   border-radius: 7px;
-  background: #ffffff;
+  background: transparent;
   transition: all 0.2s ease;
+  min-height: 48px;
 }
 .radio-option:hover {
-  border-color: #d1d5db;
-  background: #fafafa;
+  background: rgba(15, 23, 42, 0.05);
 }
 .radio-option input[type="radio"] {
   position: absolute;
   opacity: 0;
   pointer-events: none;
 }
+/* Hide the custom radio circle */
 .radio-custom {
-  width: 20px;
-  height: 20px;
-  border: 2px solid #EEEEEE;
-  border-radius: 50%;
-  position: relative;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
+  display: none;
 }
-.radio-option input[type="radio"]:checked ~ .radio-custom {
-  border-color: var(--brand-primary);
-  background: var(--brand-primary);
+/* Selected state - filled with body text color */
+.radio-option input[type="radio"]:checked ~ .radio-label,
+.radio-option:has(input[type="radio"]:checked) {
+  background: #0F172A;
+  border-color: #0F172A;
 }
-.radio-option input[type="radio"]:checked ~ .radio-custom::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #ffffff;
+.radio-option:has(input[type="radio"]:checked) .radio-label {
+  color: #ffffff;
+  font-weight: 500;
 }
 .radio-label {
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 400;
   color: #0F172A;
-  flex: 1;
+  text-align: center;
+  width: 100%;
+  transition: color 0.2s ease;
 }
 .radio { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
 .radio input { width: 16px; height: 16px; }
