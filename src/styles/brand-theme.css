@@ -1398,7 +1398,17 @@ p, span, div {
 .radio { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
 .radio input { width: 16px; height: 16px; }
 .helper { font-size: 0.9rem; color: var(--text-muted); margin-top: 8px; }
-.
+
+/* Error Message Styling */
+.error-message {
+  font-size: 13px;
+  color: #dc2626;
+  margin: 6px 0 0 0;
+  padding: 0 4px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+}
+
 .btn--full { width: 100%; }
 .link { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0; font-size: 0.95rem; }
 .link:hover { color: var(--brand-text); }
