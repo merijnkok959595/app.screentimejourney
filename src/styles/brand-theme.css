@@ -536,7 +536,7 @@ p, span, div {
 }
 
 /* === CARDS === */
-.card { padding: var(--spacing-lg); margin: var(--spacing-md) 0; border: 1px solid var(--brand-separator); border-radius: var(--radius-lg); }
+.card { padding: 24px; margin: var(--spacing-md) 0; border: 1px solid var(--brand-separator); border-radius: var(--radius-lg); }
 .card-header { margin-bottom: var(--spacing-md); border-bottom: 1px solid var(--brand-separator); padding-bottom: var(--spacing-sm); }
 
 .card:hover { box-shadow: var(--shadow-md); }
@@ -602,9 +602,9 @@ p, span, div {
 
 /* === LAYOUT === */
 .container {
-  max-width: 1100px;
+  max-width: 1200px; /* Industry standard */
   margin: 0 auto;
-  padding: 0 var(--spacing-md);
+  padding: 0 24px;
 }
 
 /* Announcement Bar */
@@ -648,9 +648,9 @@ p, span, div {
 
 /* Boxed container - aligned with main content */
 .header-inner {
-  max-width: 1100px; /* Match .container width for consistent alignment */
+  max-width: 1200px; /* Industry standard - match .container */
   margin: 0 auto;
-  padding: 0 var(--spacing-md); /* Match .container padding (16px) */
+  padding: 0 24px; /* Match .container padding */
   display: flex;
   align-items: center;
   justify-content: space-between; /* Three-section layout */
