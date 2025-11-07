@@ -250,7 +250,7 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
           {/* Quote removed per request */}
         </div>
 
-        <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingBottom: '8px'}}>
+        <div style={{paddingBottom: '8px'}}>
           <h2 className="journey-greeting journey-greeting--big">Hi {firstName},</h2>
           <p className="journey-line" style={{marginBottom: '12px'}}>You are among the top <strong>{percentile}%</strong> in the world 🌍</p>
           <p className="journey-line" style={{marginBottom: '12px'}}>Right now, you are <strong>{currentLevel.title} {currentLevel.emoji}</strong> with <strong>{daysInFocus}</strong> days in focus.</p>
