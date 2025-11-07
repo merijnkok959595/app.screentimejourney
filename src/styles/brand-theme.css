@@ -685,6 +685,7 @@ p, span, div {
   font-weight: 400;
   color: #0F172A;
   text-decoration: none;
+  letter-spacing: 0.3px;
   transition: opacity 0.2s ease;
 }
 
@@ -699,38 +700,16 @@ p, span, div {
   flex-shrink: 0;
 }
 
-.btn-inverted {
+/* Home Button - Solid Purple */
+.btn-outline-primary {
   background: var(--brand-primary);
   color: #FFFFFF;
-  border: 2px solid var(--brand-primary);
-  padding: 6px 12px;
-  border-radius: var(--radius-md);
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
   font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-inverted:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-/* Outlined Primary Button */
-.btn-outline-primary {
-  background: transparent;
-  color: var(--brand-primary);
-  border: 2px solid var(--brand-primary);
-  padding: 6px 12px;
-  border-radius: var(--radius-md);
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 0.9rem;
+  font-weight: 700;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
   text-decoration: none;
@@ -740,19 +719,19 @@ p, span, div {
 }
 
 .btn-outline-primary:hover {
-  background: rgba(46, 4, 86, 0.05);
+  background: #3d0a6d;
 }
 
-/* Outlined Secondary Button */
+/* Logout Button - Outline Style */
 .btn-outline-secondary {
-  background: transparent;
-  color: #6b7280;
-  border: 2px solid #d1d5db;
-  padding: 6px 12px;
-  border-radius: var(--radius-md);
+  background: #FFFFFF;
+  color: #2c0066;
+  border: 1.5px solid #2c0066;
+  padding: 12px 28px;
+  border-radius: 10px;
   font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 0.9rem;
+  font-weight: 700;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
   text-decoration: none;
@@ -762,8 +741,15 @@ p, span, div {
 }
 
 .btn-outline-secondary:hover {
-  background: #f9fafb;
-  border-color: #9ca3af;
+  background: #2c0066;
+  color: #FFFFFF;
+}
+
+/* Header Buttons Container */
+.header-buttons-desktop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 /* === MOBILE RESPONSIVENESS === */

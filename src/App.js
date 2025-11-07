@@ -6019,7 +6019,7 @@ function App() {
             {/* Action Buttons */}
             <div className="header-actions">
               {/* Desktop buttons */}
-              <div className="header-buttons-desktop" style={{ display: 'flex', gap: '8px' }}>
+              <div className="header-buttons-desktop">
                 <a className="btn-outline-primary" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">Home</a>
                 <button className="btn-outline-secondary" onClick={() => {
                   document.cookie = 'stj_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
