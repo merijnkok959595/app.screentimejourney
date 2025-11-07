@@ -650,11 +650,10 @@ p, span, div {
 .header-inner {
   max-width: 1200px; /* Industry standard - match .container */
   margin: 0 auto;
-  padding: 0 24px; /* Match .container padding */
+  padding: 0 24px; /* EXACTLY match .container padding */
   display: flex;
   align-items: center;
   justify-content: space-between; /* Three-section layout */
-  gap: 24px; /* Space between sections */
 }
 
 /* Left Section: Logo - aligned to left edge */
