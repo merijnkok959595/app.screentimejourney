@@ -5991,154 +5991,112 @@ function App() {
           </div>
         </div>
 
-        {/* Announcement Bar - Enhanced with Tailwind */}
-        <div className="bg-purple-900 text-white text-lg md:text-xl tracking-wider font-bold flex items-center justify-center py-2 sticky top-0 z-50">
-          👑 Account Dashboard
+        {/* Announcement Bar */}
+        <div className="announcement-bar">
+          <div className="container" style={{
+            fontFamily: 'var(--font-heading)',
+            color: '#ffffff',
+            fontWeight: 600
+          }}>
+            👑 Account Dashboard
+          </div>
         </div>
 
-        {/* Header - Three Section Layout with Tailwind */}
-        <header className="bg-white shadow-sm sticky top-[42px] z-40">
-          <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between relative">
-            
-            {/* Section 1: Logo (Left) */}
-            <a 
-              href="https://www.screentimejourney.com" 
-              target="_self" 
-              rel="noopener noreferrer"
-              className="flex-shrink-0"
-            >
+        <header className="header">
+          <div className="header-inner">
+            {/* Logo */}
+            <a className="header-logo" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">
               <img 
                 src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/stj_trimmed_png.png?v=1757864303" 
                 alt="Screen Time Journey Logo"
-                className="h-16 w-auto transition-all duration-500 ease-in-out hover:scale-110"
               />
             </a>
             
-            {/* Section 2: Navigation Links (Center - Absolute positioned for perfect centering) */}
-            <nav className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 space-x-8">
-              <a 
-                href="https://www.screentimejourney.com/pages/about-me" 
-                target="_self" 
-                rel="noopener noreferrer"
-                className="relative font-inter font-medium text-[14px] text-gray-800 tracking-wide hover:text-purple-700 transition-colors duration-200 after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-0 after:bg-purple-700 after:transition-all after:duration-300 hover:after:w-full"
-              >
-                About Me
-              </a>
-              <a 
-                href="https://www.screentimejourney.com/products/screentimejourney" 
-                target="_self" 
-                rel="noopener noreferrer"
-                className="relative font-inter font-medium text-[14px] text-gray-800 tracking-wide hover:text-purple-700 transition-colors duration-200 after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-0 after:bg-purple-700 after:transition-all after:duration-300 hover:after:w-full"
-              >
-                Start Now
-              </a>
-              <a 
-                href="https://www.screentimejourney.com/pages/milestones" 
-                target="_self" 
-                rel="noopener noreferrer"
-                className="relative font-inter font-medium text-[14px] text-gray-800 tracking-wide hover:text-purple-700 transition-colors duration-200 after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-0 after:bg-purple-700 after:transition-all after:duration-300 hover:after:w-full"
-              >
-                Milestones
-              </a>
-              <a 
-                href="https://www.screentimejourney.com/pages/leaderboard" 
-                target="_self" 
-                rel="noopener noreferrer"
-                className="relative font-inter font-medium text-[14px] text-gray-800 tracking-wide hover:text-purple-700 transition-colors duration-200 after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-0 after:bg-purple-700 after:transition-all after:duration-300 hover:after:w-full"
-              >
-                Leaderboard
-              </a>
+            {/* Navigation Links */}
+            <nav className="header-nav">
+              <a href="https://www.screentimejourney.com/pages/about-me" target="_self" rel="noopener noreferrer">About Me</a>
+              <a href="https://www.screentimejourney.com/products/screentimejourney" target="_self" rel="noopener noreferrer">Start Now</a>
+              <a href="https://www.screentimejourney.com/pages/milestones" target="_self" rel="noopener noreferrer">Milestones</a>
+              <a href="https://www.screentimejourney.com/pages/leaderboard" target="_self" rel="noopener noreferrer">Leaderboard</a>
             </nav>
             
-            {/* Section 3: Action Buttons (Right) */}
-            <div className="flex items-center gap-3">
+            {/* Action Buttons */}
+            <div className="header-actions">
               {/* Desktop buttons */}
-              <div className="hidden md:flex items-center gap-3">
-                <a 
-                  href="https://www.screentimejourney.com" 
-                  target="_self" 
-                  rel="noopener noreferrer"
-                  className="bg-purple-900 text-white px-6 py-2.5 rounded-lg font-inter font-medium text-sm hover:bg-purple-800 transition-colors duration-200"
-                >
-                  Home
-                </a>
-                <button 
-                  onClick={() => {
-                    document.cookie = 'stj_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-                    window.location.href = 'https://xpvznx-9w.myshopify.com/account/logout?return_url=/';
-                  }}
-                  className="border border-purple-900 text-purple-900 px-6 py-2.5 rounded-lg font-inter font-medium text-sm hover:bg-purple-50 transition-colors duration-200"
-                >
-                  Logout
-                </button>
+              <div className="header-buttons-desktop">
+                <a className="btn-outline-primary" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">Home</a>
+                <button className="btn-outline-secondary" onClick={() => {
+                  document.cookie = 'stj_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+                  window.location.href = 'https://xpvznx-9w.myshopify.com/account/logout?return_url=/';
+                }}>Logout</button>
               </div>
               
               {/* Mobile hamburger menu */}
-              <div className="flex md:hidden relative">
+              <div className="header-mobile-menu">
                 <button 
+                  className="mobile-menu-toggle"
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                   aria-label="Toggle menu"
-                  className="p-2 text-purple-900 hover:bg-purple-50 rounded-lg transition-colors duration-200"
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
+                  <span className="hamburger-line"></span>
+                  <span className="hamburger-line"></span>
+                  <span className="hamburger-line"></span>
                 </button>
                 
                 {mobileMenuOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                  <div className="mobile-menu-dropdown">
                     <a 
+                      className="mobile-menu-item" 
                       href="https://www.screentimejourney.com/pages/about-me" 
                       target="_self" 
                       rel="noopener noreferrer"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block px-4 py-3 text-gray-800 hover:bg-purple-50 hover:text-purple-700 transition-colors font-inter text-sm"
                     >
                       About Me
                     </a>
                     <a 
+                      className="mobile-menu-item" 
                       href="https://www.screentimejourney.com/products/screentimejourney" 
                       target="_self" 
                       rel="noopener noreferrer"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block px-4 py-3 text-gray-800 hover:bg-purple-50 hover:text-purple-700 transition-colors font-inter text-sm"
                     >
                       Start Now
                     </a>
                     <a 
+                      className="mobile-menu-item" 
                       href="https://www.screentimejourney.com/pages/milestones" 
                       target="_self" 
                       rel="noopener noreferrer"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block px-4 py-3 text-gray-800 hover:bg-purple-50 hover:text-purple-700 transition-colors font-inter text-sm"
                     >
                       Milestones
                     </a>
                     <a 
+                      className="mobile-menu-item" 
                       href="https://www.screentimejourney.com/pages/leaderboard" 
                       target="_self" 
                       rel="noopener noreferrer"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block px-4 py-3 text-gray-800 hover:bg-purple-50 hover:text-purple-700 transition-colors font-inter text-sm"
                     >
                       Leaderboard
                     </a>
-                    <hr className="my-2 border-gray-200" />
+                    <hr style={{margin: '12px 0', border: 'none', borderTop: '1px solid #e5e7eb'}} />
                     <a 
+                      className="mobile-menu-item" 
                       href="https://www.screentimejourney.com" 
                       target="_self" 
                       rel="noopener noreferrer"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block px-4 py-3 text-gray-800 hover:bg-purple-50 hover:text-purple-700 transition-colors font-inter text-sm font-medium"
                     >
                       Home
                     </a>
                     <button 
+                      className="mobile-menu-item" 
                       onClick={() => {
                         document.cookie = 'stj_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
                         window.location.href = 'https://xpvznx-9w.myshopify.com/account/logout?return_url=/';
                       }}
-                      className="block w-full text-left px-4 py-3 text-purple-900 hover:bg-purple-50 transition-colors font-inter text-sm font-medium"
                     >
                       Logout
                     </button>
