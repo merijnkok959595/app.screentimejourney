@@ -659,6 +659,8 @@ p, span, div {
   flex: 0 0 auto; /* Don't grow or shrink */
   display: flex;
   align-items: center;
+  width: 80px; /* Fixed width = default logo size, so nav doesn't shift */
+  justify-content: flex-start;
 }
 
 .header-logo img {
@@ -748,12 +750,18 @@ p, span, div {
   height: 100%;
   background: #4a1375; /* Lighter purple fill */
   border-radius: 7px;
-  transition: width 0.3s ease;
+  transition: width 0.3s ease, left 0.3s ease;
   z-index: -1;
 }
 
 .btn-outline-primary:hover::before {
   width: 100%; /* Fill from left to right */
+  left: 0;
+}
+
+.btn-outline-primary:not(:hover)::before {
+  left: 100%; /* On cursor leave, fade out from right side */
+  width: 0;
 }
 
 @media (max-width: 768px) {
@@ -794,7 +802,7 @@ p, span, div {
   height: 100%;
   background: #4a1375; /* Same lighter purple fill */
   border-radius: 7px;
-  transition: width 0.3s ease;
+  transition: width 0.3s ease, left 0.3s ease;
   z-index: -1;
 }
 
@@ -804,6 +812,12 @@ p, span, div {
 
 .btn-outline-secondary:hover::before {
   width: 100%; /* Fill from left to right */
+  left: 0;
+}
+
+.btn-outline-secondary:not(:hover)::before {
+  left: 100%; /* On cursor leave, fade out from right side */
+  width: 0;
 }
 
 @media (max-width: 768px) {
