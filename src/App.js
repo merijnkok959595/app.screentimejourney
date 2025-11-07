@@ -2,6 +2,58 @@ import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import './styles/brand-theme.css';
 
+// Lazy Loading Component with Intersection Observer
+const LazySection = ({ children, minHeight = '300px' }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const currentRef = ref.current; // Store ref for cleanup
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect(); // Stop observing once loaded
+        }
+      },
+      {
+        rootMargin: '100px', // Start loading 100px before entering viewport
+        threshold: 0.01
+      }
+    );
+
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+      observer.disconnect();
+    };
+  }, []);
+
+  return (
+    <div ref={ref} style={{ minHeight: isVisible ? 'auto' : minHeight }}>
+      {isVisible ? children : (
+        <div className="card" style={{
+          minHeight,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#f9fafb'
+        }}>
+          <div style={{textAlign: 'center'}}>
+            <div className="spinner" style={{width: '24px', height: '24px', margin: '0 auto 8px'}}></div>
+            <p style={{color: '#9ca3af', fontSize: '14px', margin: 0}}>Loading...</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 // Default milestone data as fallback (will be replaced by API data)
 const DEFAULT_MILESTONES = [
   {
@@ -6138,9 +6190,10 @@ function App() {
           )}
 
           {/* Account (50%) + Devices (50%) */}
-          <div className="grid grid-2" style={{marginBottom: '32px', alignItems: 'stretch'}}>
-            {/* Account */}
-            <div className="card card--equal" style={{display: 'flex', flexDirection: 'column'}}>
+          <LazySection minHeight="280px">
+            <div className="grid grid-2" style={{marginBottom: '32px', alignItems: 'stretch'}}>
+              {/* Account */}
+              <div className="card card--equal" style={{display: 'flex', flexDirection: 'column'}}>
               <div className="card-header">
                 <h3 className="card-title">Account</h3>
               </div>
@@ -6326,15 +6379,16 @@ function App() {
                 )}
               </div>
             </div>
-          </div>
-
+            </div>
+          </LazySection>
 
           {/* Subscription (50%) + Notifications (50%) */}
-          <div className="grid grid-2" style={{marginBottom: '32px', alignItems: 'stretch'}}>
-            <div className="card card--equal" style={{display: 'flex', flexDirection: 'column'}}>
-              <div className="card-header">
-                <h3 className="card-title">Subscription</h3>
-              </div>
+          <LazySection minHeight="280px">
+            <div className="grid grid-2" style={{marginBottom: '32px', alignItems: 'stretch'}}>
+              <div className="card card--equal" style={{display: 'flex', flexDirection: 'column'}}>
+                <div className="card-header">
+                  <h3 className="card-title">Subscription</h3>
+                </div>
               <div style={{margin: '0 0 16px 0'}}>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>
                   <span style={{fontSize: '14px', color: '#374151'}}>Status</span>
@@ -6477,13 +6531,15 @@ function App() {
                 </button>
               </div>
             </div>
-          </div>
+            </div>
+          </LazySection>
 
           {/* Logs - full width */}
-          <div className="card" style={{marginBottom: '32px'}}>
-            <div className="card-header">
-              <h3 className="card-title">Recent Activity</h3>
-            </div>
+          <LazySection minHeight="200px">
+            <div className="card" style={{marginBottom: '32px'}}>
+              <div className="card-header">
+                <h3 className="card-title">Recent Activity</h3>
+              </div>
             <div style={{marginBottom: '16px'}}>
               {logs.slice(0, 5).map((log, index) => (
                 <div key={log.id} style={{
@@ -6521,7 +6577,8 @@ function App() {
                 See all logs
               </button>
             </div>
-          </div>
+            </div>
+          </LazySection>
         </main>
       </div>
       <footer className="footer">
