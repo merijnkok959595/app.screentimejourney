@@ -1075,7 +1075,7 @@ p, span, div {
 .dashboard {
   background: var(--brand-background);
   border-radius: 0;
-  padding: var(--spacing-lg) 0;
+  padding: 0;
   margin: var(--spacing-md) 0;
 }
 
