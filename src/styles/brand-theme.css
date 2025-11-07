@@ -336,9 +336,9 @@
 .progress__fill { height: 100%; background: var(--brand-primary); width: 0%; transition: width 0.3s ease; }
 
 .media-square { 
-  width: 605px; 
-  height: 605px; 
-  max-width: 100%; /* Responsive on smaller screens */
+  width: 100%; 
+  aspect-ratio: 1 / 1; 
+  max-width: 605px; /* Maximum 605px but scales down */
   border-radius: 6px; 
   border: 1px solid var(--border); 
   background: #fff; 
@@ -1091,6 +1091,20 @@ p, span, div {
 
 .grid-2 {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* Specific styling for hero/journey grid - better balance */
+.grid-align-center {
+  grid-template-columns: 1fr 1fr; /* Equal columns on desktop */
+  gap: 48px; /* More breathing room */
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .grid-align-center {
+    grid-template-columns: 1fr; /* Stack on mobile */
+    gap: 24px;
+  }
 }
 
 /* Ensure cards in grids stretch to the same height */
