@@ -4072,7 +4072,7 @@ function App() {
                   </button>
                   
                   <button 
-                    className="btn btn--secondary"
+                    className="btn-secondary"
                     onClick={() => window.location.reload()}
                     style={{ minWidth: '140px' }}
                   >
@@ -4295,7 +4295,8 @@ function App() {
                     {whatsappLoading ? 'Sending code...' : 'Validate'}
                   </button>
                   <button 
-                    className="btn btn--secondary btn--full" 
+                    className="btn-secondary"
+                    style={{width: '100%'}} 
                     disabled={whatsappLoading || profileLoading}
                     onClick={async () => {
                       await saveProfile(); // Save without WhatsApp
@@ -4489,7 +4490,7 @@ function App() {
                       </div>
                       <button 
                         type="button"
-                        className="btn btn--secondary"
+                        className="btn-secondary"
                         style={{ padding: '4px 8px', fontSize: '12px' }}
                         onClick={() => setProfileEditData(prev => ({...prev, showWhatsAppEdit: true}))}
                       >
@@ -4568,7 +4569,7 @@ function App() {
                         {profileData?.whatsapp && (
                           <button 
                             type="button"
-                            className="btn btn--secondary"
+                            className="btn-secondary"
                             style={{ padding: '6px 12px', fontSize: '14px' }}
                             onClick={() => setProfileEditData(prev => ({...prev, showWhatsAppEdit: false, whatsapp: '', whatsappCodeSent: false}))}
                           >
@@ -4675,7 +4676,7 @@ function App() {
                       <span style={{ fontSize: '12px', color: '#64748b' }}>Click edit to update your commitment</span>
                       <button 
                         type="button"
-                        className="btn btn--secondary"
+                        className="btn-secondary"
                         style={{ padding: '6px 12px', fontSize: '14px' }}
                         onClick={() => setProfileEditData(prev => ({
                           ...prev, 
@@ -4884,7 +4885,7 @@ function App() {
                       
                       <button 
                         type="button"
-                        className="btn btn--secondary"
+                        className="btn-secondary"
                         onClick={() => setProfileEditData(prev => ({
                           ...prev, 
                           showCommitmentEdit: false,
@@ -4949,7 +4950,8 @@ function App() {
                   {profileLoading ? 'Saving...' : 'Save Changes'}
                 </button>
                 <button 
-                  className="btn btn--secondary btn--full"
+                  className="btn-secondary"
+                  style={{width: '100%'}}
                   onClick={() => {
                     setShowProfileEdit(false);
                     setProfileError('');
@@ -6289,7 +6291,7 @@ function App() {
                       </div>
                       <div style={{display: 'flex', gap: '6px', alignItems: 'center'}}>
                         <button 
-                          className="btn btn--secondary btn--sm"
+                          className="btn-secondary"
                           onClick={() => startDeviceFlow('device_unlock_flow', device.id)}
                           style={{fontSize: '12px', padding: '4px 8px'}}
                         >

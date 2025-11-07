@@ -802,7 +802,7 @@ p, span, div {
   border-radius: 7px;
   transform: scaleX(0);
   transform-origin: left; /* Grows from LEFT on hover */
-  transition: transform 0.3s ease, transform-origin 0s;
+  transition: transform 0.5s ease, transform-origin 0s; /* Slower for wider buttons */
   z-index: -1; /* Behind everything */
 }
 
@@ -862,7 +862,7 @@ p, span, div {
   border-radius: 7px;
   transform: scaleX(0);
   transform-origin: left; /* Grows from LEFT on hover */
-  transition: transform 0.3s ease, transform-origin 0s;
+  transition: transform 0.5s ease, transform-origin 0s; /* Slower for wider buttons */
   z-index: -1;
 }
 
