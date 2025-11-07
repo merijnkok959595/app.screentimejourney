@@ -1305,13 +1305,14 @@ p, span, div {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background: transparent;
   color: #0F172A;
-  transition: border-width 0.2s ease, border-color 0.2s ease;
+  transition: border-width 0.15s ease, border-color 0.15s ease;
 }
 .input:focus {
   outline: none;
   border-width: 2px;
   border-color: #0F172A;
   padding: 21px 15px 7px 15px; /* Adjust padding to compensate for thicker border */
+  box-shadow: none; /* Remove shadow effect */
 }
 .input::placeholder {
   color: transparent;
@@ -1360,11 +1361,11 @@ p, span, div {
   border: 1px solid #0F172A;
   border-radius: 7px;
   background: transparent;
-  transition: all 0.2s ease;
+  transition: background 0.1s ease, border-color 0.1s ease;
   min-height: 48px;
 }
 .radio-option:hover {
-  background: rgba(15, 23, 42, 0.05);
+  background: rgba(15, 23, 42, 0.03);
 }
 .radio-option input[type="radio"] {
   position: absolute;
@@ -1392,7 +1393,7 @@ p, span, div {
   color: #0F172A;
   text-align: center;
   width: 100%;
-  transition: color 0.2s ease;
+  transition: color 0.1s ease;
 }
 .radio { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
 .radio input { width: 16px; height: 16px; }
