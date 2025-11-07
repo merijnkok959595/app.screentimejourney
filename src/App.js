@@ -6028,7 +6028,7 @@ function App() {
                 <button className="btn-outline-secondary" onClick={() => {
                   document.cookie = 'stj_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
                   window.location.href = 'https://xpvznx-9w.myshopify.com/account/logout?return_url=/';
-                }}>Logout</button>
+                }}>Log out</button>
               </div>
               
               {/* Mobile hamburger menu */}

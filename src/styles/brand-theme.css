@@ -664,7 +664,7 @@ p, span, div {
 .header-logo img {
   height: 80px; /* Default logo height - bigger! */
   width: auto;
-  transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Faster with incremental speed */
+  transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Slower incremental speed */
   display: block;
 }
 
@@ -716,27 +716,30 @@ p, span, div {
   gap: 12px;
 }
 
-/* Home Button - Solid Purple with Lighter Hover */
+/* Home Button - Solid Purple with Shadow Effect */
 .btn-outline-primary {
   background: var(--brand-primary);
   color: #FFFFFF;
   border: none;
-  padding: 12px 28px;
-  border-radius: 10px;
+  padding: 0 30px; /* 30px left/right padding */
+  height: 47px; /* Exact height */
+  border-radius: 7px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 500;
-  font-size: 14px; /* Same as nav links */
-  letter-spacing: 1px; /* Button label letter spacing */
+  font-size: 14px;
+  letter-spacing: 1px;
   cursor: pointer;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease;
+  box-shadow: 0 0 0 rgba(74, 19, 117, 0);
+  transition: box-shadow 0.3s ease, background-color 0.2s ease;
 }
 
 .btn-outline-primary:hover {
   background: #4a1375; /* Lighter purple on hover */
+  box-shadow: 8px 0 16px rgba(74, 19, 117, 0.3); /* Left-to-right shadow */
 }
 
 @media (max-width: 768px) {
@@ -745,28 +748,31 @@ p, span, div {
   }
 }
 
-/* Logout Button - Outline Style with Thinner Border */
+/* Log out Button - Outline Style with Shadow Effect */
 .btn-outline-secondary {
   background: #FFFFFF;
   color: var(--brand-primary);
-  border: 1px solid var(--brand-primary); /* Thinner border (was 2px before) */
-  padding: 12px 28px;
-  border-radius: 10px;
+  border: 1px solid var(--brand-primary);
+  padding: 0 30px; /* 30px left/right padding */
+  height: 47px; /* Exact height */
+  border-radius: 7px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 500;
-  font-size: 14px; /* Same as nav links */
-  letter-spacing: 1px; /* Button label letter spacing */
+  font-size: 14px;
+  letter-spacing: 1px;
   cursor: pointer;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  box-shadow: 0 0 0 rgba(74, 19, 117, 0);
+  transition: box-shadow 0.3s ease, all 0.2s ease;
 }
 
 .btn-outline-secondary:hover {
-  background: var(--brand-primary); /* Same color as Home button on hover */
+  background: var(--brand-primary);
   color: #FFFFFF;
+  box-shadow: 8px 0 16px rgba(74, 19, 117, 0.3); /* Left-to-right shadow */
 }
 
 @media (max-width: 768px) {
