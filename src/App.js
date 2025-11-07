@@ -237,7 +237,7 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
   const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
   return (
-    <div className="card">
+    <div className="card card--hero">
       <div className="grid grid-2 grid-align-center">
         <div>
           <div className="media-square">

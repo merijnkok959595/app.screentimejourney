@@ -562,6 +562,12 @@ p, span, div {
 
 .card:hover { box-shadow: none; }
 
+/* Hero/Milestone card - transparent background */
+.card--hero {
+  background: transparent;
+  border: none;
+}
+
 .card-header {
   margin-bottom: var(--spacing-md);
 }
