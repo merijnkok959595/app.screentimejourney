@@ -5993,8 +5993,12 @@ function App() {
 
         {/* Announcement Bar */}
         <div className="announcement-bar">
-          <div className="container" style={{fontFamily: 'var(--font-heading)'}}>
-            📊 Account Dashboard
+          <div className="container" style={{
+            fontFamily: 'var(--font-heading)',
+            color: '#ffffff',
+            fontWeight: 600
+          }}>
+            👑 Account Dashboard
           </div>
         </div>
 

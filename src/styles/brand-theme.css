@@ -614,9 +614,9 @@ p, span, div {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.5px;
   position: sticky;
   top: 0;
@@ -634,7 +634,7 @@ p, span, div {
   height: 120px;
   display: flex;
   align-items: center;
-  transition: height 0.3s ease;
+  transition: all 0.4s ease-in-out;
 }
 
 .header.scrolled {
@@ -654,7 +654,7 @@ p, span, div {
 
 .header-logo {
   flex-shrink: 0;
-  transition: all 0.3s ease;
+  transition: all 0.55s ease-in-out;
   display: flex;
   align-items: center;
   margin-right: 24px;
@@ -662,7 +662,7 @@ p, span, div {
 
 .header-logo img {
   height: 96px;
-  transition: height 0.3s ease;
+  transition: height 0.55s ease-in-out;
   display: block;
 }
 
