@@ -1424,6 +1424,7 @@ p, span, div {
 }
 .btn--no-hover:hover {
   transform: none !important; /* Disable any transform effects */
+  color: var(--brand-primary) !important; /* Keep text color, don't turn white */
 }
 .link { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0; font-size: 0.95rem; }
 .link:hover { color: var(--brand-text); }
