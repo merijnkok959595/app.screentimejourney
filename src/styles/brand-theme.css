@@ -746,31 +746,25 @@ p, span, div {
   position: absolute;
   top: 0;
   left: 0;
-  width: 0;
+  width: 100%;
   height: 100%;
   background: #4a1375; /* Lighter purple fill */
   border-radius: 7px;
-  transition: width 0.3s ease;
+  transform: scaleX(0);
+  transform-origin: left; /* Grows from LEFT on hover */
+  transition: transform 0.3s ease, transform-origin 0s;
   z-index: -1;
 }
 
 .btn-outline-primary:hover::before {
-  width: 100%; /* Grow from left to right */
+  transform: scaleX(1); /* Fill from left to right */
+  transform-origin: left;
 }
 
-.btn-outline-primary::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 0;
-  height: 100%;
-  background: #4a1375;
-  border-radius: 7px;
-  transition: width 0.3s ease;
-  z-index: -1;
-  opacity: 0;
-  pointer-events: none;
+/* On unhover: shrink from right to left */
+.btn-outline-primary:not(:hover)::before {
+  transform: scaleX(0);
+  transform-origin: right; /* Empties from RIGHT on unhover */
 }
 
 @media (max-width: 768px) {
@@ -807,11 +801,13 @@ p, span, div {
   position: absolute;
   top: 0;
   left: 0;
-  width: 0;
+  width: 100%;
   height: 100%;
   background: #4a1375; /* Same lighter purple fill */
   border-radius: 7px;
-  transition: width 0.3s ease;
+  transform: scaleX(0);
+  transform-origin: left; /* Grows from LEFT on hover */
+  transition: transform 0.3s ease, transform-origin 0s;
   z-index: -1;
 }
 
@@ -820,22 +816,14 @@ p, span, div {
 }
 
 .btn-outline-secondary:hover::before {
-  width: 100%; /* Grow from left to right */
+  transform: scaleX(1); /* Fill from left to right */
+  transform-origin: left;
 }
 
-.btn-outline-secondary::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 0;
-  height: 100%;
-  background: #4a1375;
-  border-radius: 7px;
-  transition: width 0.3s ease;
-  z-index: -1;
-  opacity: 0;
-  pointer-events: none;
+/* On unhover: shrink from right to left */
+.btn-outline-secondary:not(:hover)::before {
+  transform: scaleX(0);
+  transform-origin: right; /* Empties from RIGHT on unhover */
 }
 
 @media (max-width: 768px) {
