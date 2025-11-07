@@ -3971,57 +3971,78 @@ function App() {
 
   if (loading || milestonesLoading) {
     return (
-      <div className="App" style={{ background: 'var(--page-bg)', minHeight: '100vh' }}>
+      <div className="App" style={{ background: 'var(--page-bg)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        {/* Announcement Bar */}
+        <div className="announcement-bar">
+          <div className="container" style={{
+            fontFamily: 'var(--font-heading)',
+            color: '#ffffff',
+            fontWeight: 600
+          }}>
+            👑 Account Dashboard
+          </div>
+        </div>
+
         <header className="header">
-          <div className="container header-inner">
+          <div className="header-inner">
+            {/* Logo */}
             <a className="header-logo" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">
               <img 
-                src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/stj_favi_inverted_yellow_extra.png?v=1757864432" 
-                alt="Screen Time Journey Logo" 
-                style={{maxHeight: '64px', marginBottom: '8px'}}
+                src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/stj_trimmed_png.png?v=1757864303" 
+                alt="Screen Time Journey Logo"
               />
             </a>
-            <h1 className="header-title">Loading...</h1>
+            
+            {/* Navigation Links */}
+            <nav className="header-nav">
+              <a href="https://www.screentimejourney.com/pages/about-me" target="_self" rel="noopener noreferrer">About Me</a>
+              <a href="https://www.screentimejourney.com/products/screentimejourney" target="_self" rel="noopener noreferrer">Start Now</a>
+              <a href="https://www.screentimejourney.com/pages/milestones" target="_self" rel="noopener noreferrer">Milestones</a>
+              <a href="https://www.screentimejourney.com/pages/leaderboard" target="_self" rel="noopener noreferrer">Leaderboard</a>
+            </nav>
+            
+            {/* Action Buttons */}
             <div className="header-actions">
-              <div className="header-buttons-desktop" style={{ display: 'flex', gap: '8px' }}>
-                <a className="btn-inverted" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">Return to website</a>
+              <div className="header-buttons-desktop">
+                <a className="btn-outline-primary" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">Home</a>
               </div>
             </div>
           </div>
         </header>
 
-        <div className="container">
-          <main className="dashboard">
-            <div className="card" style={{ maxWidth: '400px', margin: '0 auto', textAlign: 'center' }}>
-              <div style={{ padding: 'var(--spacing-xl)' }}>
-                <div style={{ marginBottom: 'var(--spacing-lg)' }}>
-                  <div className="spinner" style={{ 
-                    width: '60px', 
-                    height: '60px',
-                    border: '4px solid var(--brand-separator)',
-                    borderTop: '4px solid var(--brand-primary)',
-                    margin: '0 auto var(--spacing-lg) auto'
-                  }}></div>
-                </div>
-                
-                <h3 style={{ 
-                  fontFamily: 'var(--font-heading)', 
-                  color: 'var(--brand-text)', 
-                  marginBottom: 'var(--spacing-md)',
-                  fontSize: '1.5rem'
-                }}>
-                  Loading your dashboard...
-                </h3>
-                
-                <p style={{ 
-                  color: 'var(--text-muted)', 
-                  fontSize: '0.95rem' 
-                }}>
-                  Please wait while we prepare your screen time journey dashboard.
-                </p>
-              </div>
-            </div>
-          </main>
+        {/* Centered Loading Spinner */}
+        <div style={{
+          flex: 1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '60vh'
+        }}>
+          <div style={{ textAlign: 'center' }}>
+            <div className="spinner" style={{ 
+              width: '60px', 
+              height: '60px',
+              border: '4px solid #EEEEEE',
+              borderTop: '4px solid var(--brand-primary)',
+              margin: '0 auto 24px auto'
+            }}></div>
+            
+            <h3 style={{ 
+              fontFamily: 'var(--font-heading)', 
+              color: '#0F172A', 
+              marginBottom: '12px',
+              fontSize: '1.5rem'
+            }}>
+              Loading your dashboard...
+            </h3>
+            
+            <p style={{ 
+              color: '#6b7280', 
+              fontSize: '0.95rem' 
+            }}>
+              Please wait while we fetch your journey data
+            </p>
+          </div>
         </div>
       </div>
     );
