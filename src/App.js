@@ -5970,26 +5970,36 @@ function App() {
 
         {/* Announcement Bar */}
         <div className="announcement-bar">
-          <div className="container">
-            🎉 Welcome to your Screen Time Journey Dashboard
+          <div className="container" style={{fontWeight: 'bold', fontFamily: 'var(--font-heading)'}}>
+            Account Dashboard
           </div>
         </div>
 
         <header className="header">
           <div className="container header-inner">
+            {/* Logo */}
             <a className="header-logo" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">
               <img 
-                src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/stj_favi_inverted_yellow_extra.png?v=1757864432" 
+                src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/stj_trimmed_png.png?v=1757864303" 
                 alt="Screen Time Journey Logo" 
-                style={{maxHeight: '64px', marginBottom: '8px'}}
+                style={{height: '50px'}}
               />
             </a>
-            <h1 className="header-title">Account Dashboard</h1>
+            
+            {/* Navigation Links */}
+            <nav className="header-nav">
+              <a href="https://www.screentimejourney.com/pages/about-me" target="_self" rel="noopener noreferrer">About Me</a>
+              <a href="https://www.screentimejourney.com/products/screentimejourney" target="_self" rel="noopener noreferrer">Start Now</a>
+              <a href="https://www.screentimejourney.com/pages/milestones" target="_self" rel="noopener noreferrer">Milestones</a>
+              <a href="https://www.screentimejourney.com/pages/leaderboard" target="_self" rel="noopener noreferrer">Leaderboard</a>
+            </nav>
+            
+            {/* Action Buttons */}
             <div className="header-actions">
               {/* Desktop buttons */}
               <div className="header-buttons-desktop" style={{ display: 'flex', gap: '8px' }}>
-                <a className="btn-inverted" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">Return to website</a>
-                <button className="btn-inverted" onClick={() => {
+                <a className="btn-inverted" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">Home</a>
+                <button className="btn-outline-secondary" onClick={() => {
                   document.cookie = 'stj_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
                   window.location.href = 'https://xpvznx-9w.myshopify.com/account/logout?return_url=/';
                 }}>Logout</button>
@@ -6011,12 +6021,49 @@ function App() {
                   <div className="mobile-menu-dropdown">
                     <a 
                       className="mobile-menu-item" 
+                      href="https://www.screentimejourney.com/pages/about-me" 
+                      target="_self" 
+                      rel="noopener noreferrer"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      About Me
+                    </a>
+                    <a 
+                      className="mobile-menu-item" 
+                      href="https://www.screentimejourney.com/products/screentimejourney" 
+                      target="_self" 
+                      rel="noopener noreferrer"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Start Now
+                    </a>
+                    <a 
+                      className="mobile-menu-item" 
+                      href="https://www.screentimejourney.com/pages/milestones" 
+                      target="_self" 
+                      rel="noopener noreferrer"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Milestones
+                    </a>
+                    <a 
+                      className="mobile-menu-item" 
+                      href="https://www.screentimejourney.com/pages/leaderboard" 
+                      target="_self" 
+                      rel="noopener noreferrer"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Leaderboard
+                    </a>
+                    <hr style={{margin: '12px 0', border: 'none', borderTop: '1px solid #e5e7eb'}} />
+                    <a 
+                      className="mobile-menu-item" 
                       href="https://www.screentimejourney.com" 
                       target="_self" 
                       rel="noopener noreferrer"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      Return to website
+                      Home
                     </a>
                     <button 
                       className="mobile-menu-item" 
