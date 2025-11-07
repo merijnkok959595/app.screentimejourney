@@ -630,60 +630,53 @@ p, span, div {
 }
 
 .header {
-  text-align: center;
-  padding: 0;
   background: #FFFFFF;
   position: sticky;
   top: 42px; /* Position below announcement bar */
   z-index: 100;
   border-bottom: 1px solid #e5e5e5;
-  height: 120px;
-  display: flex;
-  align-items: center;
-  transition: all 0.4s ease-in-out;
+  padding: 20px 0;
+  transition: all 0.5s ease-in-out; /* Smooth resize transition */
 }
 
 .header.scrolled {
-  height: 85px;
+  padding: 12px 0;
 }
 
+/* Boxed container - aligned with main content */
 .header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 16px;
-  height: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 var(--spacing-md);
+  justify-content: space-between; /* Three-section layout */
 }
 
+/* Left Section: Logo */
 .header-logo {
   flex-shrink: 0;
-  transition: all 0.55s ease-in-out;
   display: flex;
   align-items: center;
-  margin-right: 24px;
 }
 
 .header-logo img {
   height: 96px;
-  transition: height 0.55s ease-in-out;
+  width: auto;
+  transition: height 0.5s ease-in-out; /* Smooth incremental resize */
   display: block;
 }
 
 .header.scrolled .header-logo img {
-  height: 72px;
+  height: 64px; /* Incremental resize on scroll */
 }
 
-/* Navigation Links */
+/* Center Section: Navigation Menu */
 .header-nav {
   display: flex;
-  gap: 20px;
+  gap: 32px;
   align-items: center;
-  flex: 1;
-  justify-content: flex-end;
-  margin-right: 32px;
+  /* No flex: 1 or justify-content - let it be natural width */
 }
 
 .header-nav a {
@@ -694,7 +687,7 @@ p, span, div {
   text-decoration: none;
   letter-spacing: 0.3px;
   transition: all 0.2s ease;
-  position: relative;
+  white-space: nowrap;
 }
 
 /* Underline effect on hover */
@@ -710,7 +703,7 @@ p, span, div {
   }
 }
 
-/* Header actions (right side buttons) */
+/* Right Section: Action Buttons */
 .header-actions {
   display: flex;
   align-items: center;
