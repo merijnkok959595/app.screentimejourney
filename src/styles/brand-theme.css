@@ -636,12 +636,14 @@ p, span, div {
   top: 42px; /* Position below announcement bar */
   z-index: 100;
   border-bottom: 1px solid #e5e5e5;
-  padding: 20px 0;
-  transition: all 0.5s ease-in-out; /* Smooth resize transition */
+  height: 95px; /* Default height */
+  display: flex;
+  align-items: center;
+  transition: height 0.6s ease-in; /* Starts slow, gets faster (acceleration) */
 }
 
 .header.scrolled {
-  padding: 12px 0;
+  height: 75px; /* Scrolled height */
 }
 
 /* Boxed container - aligned with main content */
@@ -662,14 +664,14 @@ p, span, div {
 }
 
 .header-logo img {
-  height: 96px;
+  height: 70px; /* Default logo height */
   width: auto;
-  transition: height 0.5s ease-in-out; /* Smooth incremental resize */
+  transition: height 0.6s ease-in; /* Starts slow, accelerates (faster faster faster) */
   display: block;
 }
 
 .header.scrolled .header-logo img {
-  height: 64px; /* Incremental resize on scroll */
+  height: 50px; /* Scrolled logo height */
 }
 
 /* Center Section: Navigation Menu */
