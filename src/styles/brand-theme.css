@@ -648,7 +648,7 @@ p, span, div {
 .header-inner {
   max-width: 1200px; /* Industry standard - match .container */
   margin: 0 auto;
-  padding: 0 24px; /* EXACTLY match .container padding */
+  padding: 0 59px; /* Container padding (24px) + Card padding (24px) + Card border (1px) + extra adjustment (10px) = 59px to match card body width */
   display: flex;
   align-items: center;
   justify-content: space-between; /* Three-section layout */
