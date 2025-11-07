@@ -654,11 +654,12 @@ p, span, div {
   display: flex;
   align-items: center;
   justify-content: space-between; /* Three-section layout */
+  gap: 24px; /* Space between sections */
 }
 
-/* Left Section: Logo */
+/* Left Section: Logo - aligned to left edge */
 .header-logo {
-  flex-shrink: 0;
+  flex: 0 0 auto; /* Don't grow or shrink */
   display: flex;
   align-items: center;
 }
@@ -674,12 +675,13 @@ p, span, div {
   height: 50px; /* Scrolled logo height */
 }
 
-/* Center Section: Navigation Menu */
+/* Center Section: Navigation Menu - grows to fill middle space */
 .header-nav {
+  flex: 1 1 auto; /* Grow to fill available space */
   display: flex;
   gap: 32px;
   align-items: center;
-  /* No flex: 1 or justify-content - let it be natural width */
+  justify-content: center; /* Center the nav items within this section */
 }
 
 .header-nav a {
@@ -706,11 +708,12 @@ p, span, div {
   }
 }
 
-/* Right Section: Action Buttons */
+/* Right Section: Action Buttons - aligned to right edge */
 .header-actions {
+  flex: 0 0 auto; /* Don't grow or shrink */
   display: flex;
   align-items: center;
-  flex-shrink: 0;
+  gap: 12px;
 }
 
 /* Home Button - Solid Purple with Lighter Hover */
