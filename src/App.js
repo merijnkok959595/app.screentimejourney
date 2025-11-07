@@ -5968,6 +5968,13 @@ function App() {
           </div>
         </div>
 
+        {/* Announcement Bar */}
+        <div className="announcement-bar">
+          <div className="container">
+            🎉 Welcome to your Screen Time Journey Dashboard
+          </div>
+        </div>
+
         <header className="header">
           <div className="container header-inner">
             <a className="header-logo" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">

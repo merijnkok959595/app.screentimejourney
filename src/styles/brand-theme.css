@@ -607,12 +607,32 @@ p, span, div {
   padding: 0 var(--spacing-md);
 }
 
+/* Announcement Bar */
+.announcement-bar {
+  background: var(--brand-primary);
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-size: 0.9rem;
+  font-weight: 500;
+  position: sticky;
+  top: 0;
+  z-index: 101;
+}
+
 .header {
   text-align: center;
-  padding: var(--spacing-sm) 0;
-  background: var(--brand-primary);
-  position: relative;
-  border-bottom: 1px solid var(--brand-separator);
+  padding: 0;
+  background: #FFFFFF;
+  position: sticky;
+  top: 42px; /* Position below announcement bar */
+  z-index: 100;
+  border-bottom: 1px solid #e5e5e5;
+  height: 70px;
+  display: flex;
+  align-items: center;
 }
 
 .header-inner {
@@ -628,8 +648,8 @@ p, span, div {
 .header-title {
   font-family: var(--font-heading);
   font-size: 2.25rem;
-  color: #FFFFFF; /* header stays white for contrast */
-  margin-bottom: var(--spacing-sm);
+  color: var(--brand-primary); /* Dark purple text on white background */
+  margin: 0;
 }
 
 /* Header actions (top-right button) */
@@ -642,9 +662,9 @@ p, span, div {
 }
 
 .btn-inverted {
-  background: #FFFFFF;
-  color: var(--brand-primary);
-  border: 2px solid #FFFFFF;
+  background: var(--brand-primary);
+  color: #FFFFFF;
+  border: 2px solid var(--brand-primary);
   padding: 6px 12px;
   border-radius: var(--radius-md);
   font-family: var(--font-body);
