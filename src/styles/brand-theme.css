@@ -718,7 +718,10 @@ p, span, div {
   gap: 12px;
 }
 
-/* Home Button - Solid Purple with Left-to-Right Fill Effect */
+/* === BUTTON STYLES === */
+
+/* Primary Button - Solid Purple with Wave Effect (Home, Start Now, etc.) */
+.btn-primary,
 .btn-outline-primary {
   background: var(--brand-primary);
   color: #FFFFFF;
@@ -768,12 +771,14 @@ p, span, div {
 }
 
 @media (max-width: 768px) {
+  .btn-primary,
   .btn-outline-primary {
     font-size: 12px;
   }
 }
 
-/* Log out Button - Outline Style with Left-to-Right Fill Effect */
+/* Secondary Button - Outline Style with Wave Effect (Log out, Edit Profile, etc.) */
+.btn-secondary,
 .btn-outline-secondary {
   background: #FFFFFF;
   color: var(--brand-primary);
@@ -827,7 +832,38 @@ p, span, div {
 }
 
 @media (max-width: 768px) {
+  .btn-secondary,
   .btn-outline-secondary {
+    font-size: 12px;
+  }
+}
+
+/* Tertiary Button - Simple Underlined Text (Back, Cancel) */
+.btn-tertiary {
+  background: transparent;
+  color: var(--brand-primary);
+  border: none;
+  padding: 12px 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+}
+
+.btn-tertiary:hover {
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .btn-tertiary {
     font-size: 12px;
   }
 }
