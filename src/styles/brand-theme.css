@@ -615,12 +615,18 @@ p, span, div {
   align-items: center;
   justify-content: center;
   color: #ffffff;
-  font-size: 0.9rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  font-size: 1.25rem; /* Bigger font size */
+  font-weight: 700; /* Bolder */
+  letter-spacing: 2px; /* More letter spacing */
   position: sticky;
   top: 0;
   z-index: 101;
+}
+
+@media (max-width: 768px) {
+  .announcement-bar {
+    font-size: 1rem;
+  }
 }
 
 .header {
@@ -682,16 +688,26 @@ p, span, div {
 
 .header-nav a {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 14px;
-  font-weight: 400;
+  font-size: 14px; /* Desktop size */
+  font-weight: 500;
   color: #0F172A;
   text-decoration: none;
   letter-spacing: 0.3px;
-  transition: opacity 0.2s ease;
+  transition: all 0.2s ease;
+  position: relative;
 }
 
+/* Underline effect on hover */
 .header-nav a:hover {
-  opacity: 0.7;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+
+@media (max-width: 768px) {
+  .header-nav a {
+    font-size: 12px; /* Mobile size */
+  }
 }
 
 /* Header actions (right side buttons) */
@@ -701,82 +717,61 @@ p, span, div {
   flex-shrink: 0;
 }
 
-/* Home Button - Solid Purple with Slide Effect */
+/* Home Button - Solid Purple with Lighter Hover */
 .btn-outline-primary {
   background: var(--brand-primary);
   color: #FFFFFF;
   border: none;
   padding: 12px 28px;
   border-radius: 10px;
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: 1rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+  font-size: 14px; /* Same as nav links */
   cursor: pointer;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-  transition: color 0.3s ease;
+  transition: background-color 0.2s ease;
 }
 
-.btn-outline-primary::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: #3d0a6d;
-  transition: left 0.3s ease;
-  z-index: -1;
+.btn-outline-primary:hover {
+  background: #4a1375; /* Lighter purple on hover */
 }
 
-.btn-outline-primary:hover::before {
-  left: 0;
+@media (max-width: 768px) {
+  .btn-outline-primary {
+    font-size: 12px;
+  }
 }
 
-/* Logout Button - Outline Style with Slide Effect */
+/* Logout Button - Outline Style with Thinner Border */
 .btn-outline-secondary {
   background: #FFFFFF;
-  color: #2c0066;
-  border: 1px solid #2c0066;
+  color: var(--brand-primary);
+  border: 1px solid var(--brand-primary); /* Thinner border (was 2px before) */
   padding: 12px 28px;
   border-radius: 10px;
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: 1rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+  font-size: 14px; /* Same as nav links */
   cursor: pointer;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-  transition: color 0.3s ease;
-}
-
-.btn-outline-secondary::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: #2c0066;
-  transition: left 0.3s ease;
-  z-index: -1;
+  transition: all 0.2s ease;
 }
 
 .btn-outline-secondary:hover {
+  background: var(--brand-primary); /* Same color as Home button on hover */
   color: #FFFFFF;
 }
 
-.btn-outline-secondary:hover::before {
-  left: 0;
+@media (max-width: 768px) {
+  .btn-outline-secondary {
+    font-size: 12px;
+  }
 }
 
 /* Header Buttons Container */
