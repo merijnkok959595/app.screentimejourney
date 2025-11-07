@@ -5993,13 +5993,13 @@ function App() {
 
         {/* Announcement Bar */}
         <div className="announcement-bar">
-          <div className="container" style={{fontWeight: 'bold', fontFamily: 'var(--font-heading)'}}>
-            Account Dashboard
+          <div className="container" style={{fontFamily: 'var(--font-heading)'}}>
+            📊 Account Dashboard
           </div>
         </div>
 
         <header className="header">
-          <div className="container header-inner">
+          <div className="header-inner">
             {/* Logo */}
             <a className="header-logo" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">
               <img 
@@ -6020,7 +6020,7 @@ function App() {
             <div className="header-actions">
               {/* Desktop buttons */}
               <div className="header-buttons-desktop" style={{ display: 'flex', gap: '8px' }}>
-                <a className="btn-inverted" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">Home</a>
+                <a className="btn-outline-primary" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">Home</a>
                 <button className="btn-outline-secondary" onClick={() => {
                   document.cookie = 'stj_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
                   window.location.href = 'https://xpvznx-9w.myshopify.com/account/logout?return_url=/';
