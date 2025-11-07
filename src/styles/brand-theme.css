@@ -636,14 +636,12 @@ p, span, div {
   top: 42px; /* Position below announcement bar */
   z-index: 100;
   border-bottom: 1px solid #e5e5e5;
-  height: 95px; /* Default height */
-  display: flex;
-  align-items: center;
-  transition: height 0.6s ease-in; /* Starts slow, gets faster (acceleration) */
+  padding: 20px 0; /* Vertical padding instead of fixed height */
+  transition: padding 0.6s ease-in; /* Starts slow, gets faster (acceleration) */
 }
 
 .header.scrolled {
-  height: 75px; /* Scrolled height */
+  padding: 10px 0; /* Scrolled padding */
 }
 
 /* Boxed container - aligned with main content */
