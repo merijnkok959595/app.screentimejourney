@@ -5728,49 +5728,46 @@ function App() {
                                 </div>
                               ) : (
                                 <div>
-                                  {/* Audio player - only show audio player, never show pincode on screen */}
-                                  {(audioGuideData?.audioUrl || audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url) ? (
-                                    <AudioPlayer audioUrl={(() => {
-                                      const url = audioGuideData?.audioUrl || audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url;
-                                      console.log('🎵 AudioPlayer props - audioGuideData:', audioGuideData);
-                                      console.log('🎵 AudioPlayer props - resolved URL:', url);
-                                      return url;
-                                    })()} />
-                                  ) : (
-                                    <div style={{
-                                      background: 'rgba(255, 193, 7, 0.1)',
-                                      border: '1px solid rgba(255, 193, 7, 0.3)',
-                                      borderRadius: '8px',
-                                      padding: '12px',
-                                      marginBottom: '12px',
-                                      textAlign: 'center',
-                                      fontSize: '13px',
-                                      color: '#856404'
-                                    }}>
-                                      ⚠️ Audio playback is not available. Please try generating the audio guide again.
+                                  {/* Audio player with Generate new code button side by side */}
+                                  <div style={{display: 'flex', gap: '12px', alignItems: 'flex-start'}}>
+                                    <div style={{flex: '1 1 auto'}}>
+                                      {(audioGuideData?.audioUrl || audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url) ? (
+                                        <AudioPlayer audioUrl={(() => {
+                                          const url = audioGuideData?.audioUrl || audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url;
+                                          console.log('🎵 AudioPlayer props - audioGuideData:', audioGuideData);
+                                          console.log('🎵 AudioPlayer props - resolved URL:', url);
+                                          return url;
+                                        })()} />
+                                      ) : (
+                                        <div style={{
+                                          background: 'rgba(255, 193, 7, 0.1)',
+                                          border: '1px solid rgba(255, 193, 7, 0.3)',
+                                          borderRadius: '8px',
+                                          padding: '12px',
+                                          textAlign: 'center',
+                                          fontSize: '13px',
+                                          color: '#856404'
+                                        }}>
+                                          ⚠️ Audio playback is not available. Please try generating the audio guide again.
+                                        </div>
+                                      )}
                                     </div>
-                                  )}
-                                  
-                                  <button
-                                    onClick={() => {
-                                      setAudioGuideData(null);
-                                      console.log('🔄 Regenerating audio guide');
-                                    }}
-                                    style={{
-                                      background: 'transparent',
-                                      border: 'none',
-                                      color: '#440B6C',
-                                      textDecoration: 'underline',
-                                      cursor: 'pointer',
-                                      fontSize: '14px',
-                                      padding: '8px 0',
-                                      marginTop: '8px',
-                                      width: '100%',
-                                      textAlign: 'center'
-                                    }}
-                                  >
-                                    Generate new code
-                                  </button>
+                                    
+                                    <button
+                                      className="btn-secondary"
+                                      onClick={() => {
+                                        setAudioGuideData(null);
+                                        console.log('🔄 Regenerating audio guide');
+                                      }}
+                                      style={{
+                                        flex: '0 0 auto',
+                                        whiteSpace: 'nowrap',
+                                        minWidth: 'auto'
+                                      }}
+                                    >
+                                      Generate new code
+                                    </button>
+                                  </div>
                                 </div>
                               )}
                             </div>
