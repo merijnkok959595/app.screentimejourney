@@ -1366,11 +1366,20 @@ p, span, div {
 }
 .radio-option:hover {
   background: rgba(15, 23, 42, 0.03);
+  border-color: #0F172A; /* Keep border same color on hover */
+}
+.radio-option:focus,
+.radio-option:focus-within {
+  outline: none;
+  border-color: #0F172A; /* Keep border same color on focus */
 }
 .radio-option input[type="radio"] {
   position: absolute;
   opacity: 0;
   pointer-events: none;
+}
+.radio-option input[type="radio"]:focus {
+  outline: none; /* Remove default blue outline */
 }
 /* Hide the custom radio circle */
 .radio-custom {
