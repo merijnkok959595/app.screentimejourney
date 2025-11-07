@@ -3550,8 +3550,9 @@ function App() {
     console.log('🔬 Field sizes:');
     console.log(`  - id: ${JSON.stringify(newDevice.id || '').length} bytes`);
     console.log(`  - name: ${JSON.stringify(newDevice.name || '').length} bytes`);
+    console.log(`  - icon: ${JSON.stringify(newDevice.icon || '').length} bytes`);
     console.log(`  - type: ${JSON.stringify(newDevice.type || '').length} bytes`);
-    console.log(`  - added_at: ${JSON.stringify(newDevice.added_at || '').length} bytes`);
+    console.log(`  - addedDate: ${JSON.stringify(newDevice.addedDate || '').length} bytes`);
     console.log(`  - setup_completed_at: ${JSON.stringify(newDevice.setup_completed_at || '').length} bytes`);
     console.log(`  - status: ${JSON.stringify(newDevice.status || '').length} bytes`);
     console.log(`  - pincode: ${JSON.stringify(newDevice.pincode || '').length} bytes`);
@@ -5822,12 +5823,12 @@ function App() {
                       </button>
                     )}
                     
-                    {/* Dynamic Cancel/Back/Close Button */}
-                    <button 
-                      className="link-back"
-                      onClick={() => {
-                        if (currentFlowStep === 1 || currentFlow.steps[currentFlowStep - 1]?.step_type === 'pincode_display') {
-                          // Cancel on first step or Close on pincode display - stop any playing audio
+                    {/* Two-button layout with Home (left) and Next/action (right) */}
+                    <div style={{display: 'flex', gap: '12px', marginTop: '8px', width: '100%'}}>
+                      {/* Left button: Home (primary purple) */}
+                      <button 
+                        onClick={() => {
+                          // Close flow and return to dashboard
                           if (currentAudio) {
                             currentAudio.pause();
                             currentAudio.currentTime = 0;
@@ -5845,24 +5846,121 @@ function App() {
                           setAudioGuideData(null);
                           setSharedPincode(null);
                           setAudioBlob(null);
-    setIsRecording(false);
-    setSurrenderSubmitting(false);
-    setSurrenderApproved(false);
-    setUnlockPincode(null);
-                        } else {
-                          // Back on other steps
-                          setCurrentFlowStep(currentFlowStep - 1);
-                          setDeviceFormErrors({});
-                        }
-                      }}
-                      style={{marginTop: '8px'}}
-                    >
-                      {currentFlowStep === 1 
-                        ? 'Cancel' 
-                        : currentFlow.steps[currentFlowStep - 1]?.step_type === 'pincode_display' 
-                          ? 'Close' 
-                          : 'Back'}
-                    </button>
+                          setIsRecording(false);
+                          setSurrenderSubmitting(false);
+                          setSurrenderApproved(false);
+                          setUnlockPincode(null);
+                        }}
+                        style={{
+                          flex: 1,
+                          padding: '14px 24px',
+                          background: '#2E0456',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          fontSize: '16px',
+                          fontWeight: '500',
+                          cursor: 'pointer',
+                          position: 'relative',
+                          overflow: 'hidden',
+                          transition: 'all 0.3s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          const underline = document.createElement('div');
+                          underline.className = 'btn-underline';
+                          underline.style.cssText = `
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            height: 2px;
+                            width: 0;
+                            background: rgba(255, 255, 255, 0.3);
+                            transition: width 0.4s ease;
+                          `;
+                          e.currentTarget.appendChild(underline);
+                          setTimeout(() => underline.style.width = '100%', 10);
+                        }}
+                        onMouseLeave={(e) => {
+                          const underline = e.currentTarget.querySelector('.btn-underline');
+                          if (underline) underline.remove();
+                        }}
+                      >
+                        Home
+                      </button>
+
+                      {/* Right button: Outlined action button */}
+                      <button 
+                        onClick={() => {
+                          if (currentFlowStep === 1 || currentFlow.steps[currentFlowStep - 1]?.step_type === 'pincode_display') {
+                            // Close on first step or pincode display
+                            if (currentAudio) {
+                              currentAudio.pause();
+                              currentAudio.currentTime = 0;
+                              setCurrentAudio(null);
+                            }
+                            setShowDeviceFlow(false);
+                            setCurrentFlow(null);
+                            setCurrentFlowStep(1);
+                            setDeviceFormData({
+                              device_name: '',
+                              device_type: 'iOS'
+                            });
+                            setDeviceFormErrors({});
+                            setVpnProfileData(null);
+                            setAudioGuideData(null);
+                            setSharedPincode(null);
+                            setAudioBlob(null);
+                            setIsRecording(false);
+                            setSurrenderSubmitting(false);
+                            setSurrenderApproved(false);
+                            setUnlockPincode(null);
+                          } else {
+                            // Back on other steps
+                            setCurrentFlowStep(currentFlowStep - 1);
+                            setDeviceFormErrors({});
+                          }
+                        }}
+                        style={{
+                          flex: 1,
+                          padding: '14px 24px',
+                          background: 'transparent',
+                          color: '#2E0456',
+                          border: '2px solid #2E0456',
+                          borderRadius: '4px',
+                          fontSize: '16px',
+                          fontWeight: '500',
+                          cursor: 'pointer',
+                          position: 'relative',
+                          overflow: 'hidden',
+                          transition: 'all 0.3s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          const underline = document.createElement('div');
+                          underline.className = 'btn-underline';
+                          underline.style.cssText = `
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            height: 2px;
+                            width: 0;
+                            background: rgba(46, 4, 86, 0.3);
+                            transition: width 0.4s ease;
+                          `;
+                          e.currentTarget.appendChild(underline);
+                          setTimeout(() => underline.style.width = '100%', 10);
+                        }}
+                        onMouseLeave={(e) => {
+                          const underline = e.currentTarget.querySelector('.btn-underline');
+                          if (underline) underline.remove();
+                        }}
+                      >
+                        {currentFlowStep === 1 
+                          ? 'Cancel' 
+                          : currentFlow.steps[currentFlowStep - 1]?.step_type === 'pincode_display' 
+                            ? 'Close' 
+                            : 'Back'}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </>
