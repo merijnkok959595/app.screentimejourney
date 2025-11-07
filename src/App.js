@@ -5912,36 +5912,42 @@ function App() {
                       </button>
                     )}
                     
-                    {/* Cancel Button - Centered Below */}
+                    {/* Cancel/Back Button - Centered Below */}
                     <div style={{display: 'flex', justifyContent: 'center', marginTop: '16px', width: '100%'}}>
                       <button 
                         className="btn-tertiary"
                         onClick={() => {
-                          // Close flow and return to dashboard
-                          if (currentAudio) {
-                            currentAudio.pause();
-                            currentAudio.currentTime = 0;
-                            setCurrentAudio(null);
+                          if (currentFlowStep === 1) {
+                            // Step 1: Cancel - Close flow and return to dashboard
+                            if (currentAudio) {
+                              currentAudio.pause();
+                              currentAudio.currentTime = 0;
+                              setCurrentAudio(null);
+                            }
+                            setShowDeviceFlow(false);
+                            setCurrentFlow(null);
+                            setCurrentFlowStep(1);
+                            setDeviceFormData({
+                              device_name: '',
+                              device_type: 'iOS'
+                            });
+                            setDeviceFormErrors({});
+                            setVpnProfileData(null);
+                            setAudioGuideData(null);
+                            setSharedPincode(null);
+                            setAudioBlob(null);
+                            setIsRecording(false);
+                            setSurrenderSubmitting(false);
+                            setSurrenderApproved(false);
+                            setUnlockPincode(null);
+                          } else {
+                            // Steps 2+: Back - Go to previous step
+                            setCurrentFlowStep(currentFlowStep - 1);
+                            setDeviceFormErrors({});
                           }
-                          setShowDeviceFlow(false);
-                          setCurrentFlow(null);
-                          setCurrentFlowStep(1);
-                          setDeviceFormData({
-                            device_name: '',
-                            device_type: 'iOS'
-                          });
-                          setDeviceFormErrors({});
-                          setVpnProfileData(null);
-                          setAudioGuideData(null);
-                          setSharedPincode(null);
-                          setAudioBlob(null);
-                          setIsRecording(false);
-                          setSurrenderSubmitting(false);
-                          setSurrenderApproved(false);
-                          setUnlockPincode(null);
                         }}
                       >
-                        Cancel
+                        {currentFlowStep === 1 ? 'Cancel' : 'Back'}
                       </button>
                     </div>
                   </div>
