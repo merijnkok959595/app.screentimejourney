@@ -386,11 +386,11 @@
 .ach--active { background: var(--brand-primary); }
 .ach:hover { transform: scale(1.05); }
 
-.journey-greeting { font-family: var(--font-heading); font-size: 1.5rem; margin: 0 0 8px 0; }
-.journey-greeting--big { font-size: 2.4rem; }
-.journey-line { font-size: 1.05rem; margin: 0 0 6px 0; }
-.journey-line--next { color: var(--text-muted); }
-.journey-line--path { color: var(--text-muted); }
+.journey-greeting { font-family: var(--font-heading); font-size: 1.5rem; margin: 0 0 8px 0; color: #0F172A; }
+.journey-greeting--big { font-size: 2.4rem; color: #0F172A; }
+.journey-line { font-size: 1.05rem; margin: 0 0 6px 0; color: #0F172A; }
+.journey-line--next { color: #0F172A; }
+.journey-line--path { color: #0F172A; }
 .journey-lines { margin: 8px 0 12px 0; }
 .journey-next { font-size: 1rem; color: var(--text-muted); margin: 0 0 12px 0; }
 .quote-lg { font-size: 1.25rem; font-style: italic; line-height: 1.6; margin: 12px 0 0 0; }
@@ -492,9 +492,9 @@ p, span, div {
 .btn--primary { background-color: var(--brand-primary); color: #fff; border: 2px solid var(--brand-primary); }
 .btn--primary:hover { background-color: var(--brand-primary-dark); border-color: var(--brand-primary-dark); transform: translateY(-1px); box-shadow: var(--shadow-brand); }
 .btn--secondary { background: transparent; color: var(--brand-primary); border-color: var(--brand-primary); }
-.btn--secondary:hover { background: var(--brand-primary); color: #fff; }
+/* Removed instant fill - wave effect handles hover */
 .btn--outline { background: transparent; color: var(--brand-primary); border: 2px solid var(--brand-primary); }
-.btn--outline:hover { background: var(--brand-primary); color: #fff; transform: translateY(-1px); }
+/* Removed instant fill - wave effect handles hover */
 .btn--destructive { background: transparent; color: var(--destructive); border-color: var(--destructive); }
 .btn--destructive:hover { background: var(--destructive); color: #fff; }
 .btn-primary {
@@ -539,12 +539,7 @@ p, span, div {
   min-height: 48px;
 }
 
-.btn-secondary:hover {
-  background-color: var(--brand-primary);
-  color: var(--brand-background);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-brand);
-}
+/* Removed instant background fill - wave effect handles the fill */
 
 /* === CARDS === */
 .card { 
