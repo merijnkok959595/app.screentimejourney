@@ -6220,7 +6220,7 @@ function App() {
               </div>
               <div style={{marginTop: 'auto', display: 'flex', gap: '8px'}}>
                 <button
-                  className="btn btn--outline btn--sm"
+                  className="btn-secondary"
                   style={{flex: 1}}
                   onClick={() => {
                     setProfileEditData({
@@ -6305,7 +6305,7 @@ function App() {
               <div style={{marginTop: 'auto'}}>
                 {devices.length < 3 ? (
                   <button 
-                    className="btn btn--outline btn--sm" 
+                    className="btn-secondary" 
                     style={{width: '100%'}} 
                     onClick={() => startDeviceFlow('device_setup_flow')}
                   >
@@ -6416,14 +6416,14 @@ function App() {
                 {(customerData?.subscription_status === 'cancelled' || customerData?.subscription_status === 'cancel_scheduled' || profileData?.subscription_status === 'cancelled' || profileData?.subscription_status === 'cancel_scheduled') ? (
                   <a
                     href="https://www.screentimejourney.com/products/screentimejourney"
-                    className="btn btn--outline btn--sm"
+                    className="btn-secondary"
                     style={{flex: 1, textAlign: 'center', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center'}}
                   >
                     Start new subscription
                   </a>
                 ) : (
                   <button
-                    className="btn btn--outline btn--sm"
+                    className="btn-secondary"
                     style={{flex: 1}}
                     onClick={startCancelFlow}
                   >
@@ -6469,7 +6469,7 @@ function App() {
               </div>
               <div style={{marginTop: 'auto', display: 'flex', gap: '8px'}}>
                 <button 
-                  className="btn btn--outline btn--sm" 
+                  className="btn-secondary" 
                   style={{flex: 1}}
                   onClick={startNotificationsFlow}
                 >
