@@ -2,58 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import './styles/brand-theme.css';
 
-// Lazy Loading Component with Intersection Observer
-const LazySection = ({ children, minHeight = '300px' }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const currentRef = ref.current; // Store ref for cleanup
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect(); // Stop observing once loaded
-        }
-      },
-      {
-        rootMargin: '100px', // Start loading 100px before entering viewport
-        threshold: 0.01
-      }
-    );
-
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
-
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-      observer.disconnect();
-    };
-  }, []);
-
-  return (
-    <div ref={ref} style={{ minHeight: isVisible ? 'auto' : minHeight }}>
-      {isVisible ? children : (
-        <div className="card" style={{
-          minHeight,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: '#f9fafb'
-        }}>
-          <div style={{textAlign: 'center'}}>
-            <div className="spinner" style={{width: '24px', height: '24px', margin: '0 auto 8px'}}></div>
-            <p style={{color: '#9ca3af', fontSize: '14px', margin: 0}}>Loading...</p>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
 // Default milestone data as fallback (will be replaced by API data)
 const DEFAULT_MILESTONES = [
   {
@@ -3972,8 +3920,8 @@ function App() {
     }
   };
 
-  // Only show full loading screen on initial load
-  if (initialLoad && (loading || milestonesLoading)) {
+  // Show full loading screen until ALL data is ready
+  if (loading || profileLoading || milestonesLoading) {
     return (
       <div className="App" style={{ background: 'var(--page-bg)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         {/* Announcement Bar */}
@@ -6088,13 +6036,7 @@ function App() {
           )}
           
           {/* Journey progress - full width */}
-          {(!initialLoad && (profileLoading || milestonesLoading)) ? (
-            <div className="card" style={{padding: '40px', textAlign: 'center'}}>
-              <div className="spinner" style={{width: '40px', height: '40px', margin: '0 auto 16px'}}></div>
-              <p style={{color: '#6b7280', margin: 0}}>Loading your journey...</p>
-            </div>
-          ) : (
-            <ProgressSection 
+          <ProgressSection 
               latestDevice={null}
               customerName={profileData?.username || customerData?.username || "Friend"}
               customerEmail={profileData?.email || customerData?.email || ""}
@@ -6104,15 +6046,13 @@ function App() {
               milestones={milestones}
               startDeviceFlow={startDeviceFlow}
             />
-          )}
 
           {/* Separator */}
           <hr style={{border: 'none', borderTop: '1px solid #EEEEEE', margin: '48px 0'}} />
 
           {/* Account (50%) + Devices (50%) */}
-          <LazySection minHeight="280px">
-            <div className="grid grid-2" style={{marginBottom: '32px', alignItems: 'stretch'}}>
-              {/* Account */}
+          <div className="grid grid-2" style={{marginBottom: '32px', alignItems: 'stretch'}}>
+            {/* Account */}
               <div className="card card--equal" style={{display: 'flex', flexDirection: 'column'}}>
               <div className="card-header">
                 <h3 className="card-title">Account</h3>
@@ -6299,14 +6239,12 @@ function App() {
                 )}
               </div>
             </div>
-            </div>
-          </LazySection>
+          </div>
 
           {/* Subscription (50%) + Notifications (50%) */}
-          <LazySection minHeight="280px">
-            <div className="grid grid-2" style={{marginBottom: '32px', alignItems: 'stretch'}}>
-              <div className="card card--equal" style={{display: 'flex', flexDirection: 'column'}}>
-                <div className="card-header">
+          <div className="grid grid-2" style={{marginBottom: '32px', alignItems: 'stretch'}}>
+            <div className="card card--equal" style={{display: 'flex', flexDirection: 'column'}}>
+              <div className="card-header">
                   <h3 className="card-title">Subscription</h3>
                 </div>
               <div style={{margin: '0 0 16px 0'}}>
@@ -6451,15 +6389,13 @@ function App() {
                 </button>
               </div>
             </div>
-            </div>
-          </LazySection>
+          </div>
 
           {/* Logs - full width */}
-          <LazySection minHeight="200px">
-            <div className="card" style={{marginBottom: '32px'}}>
-              <div className="card-header">
-                <h3 className="card-title">Recent Activity</h3>
-              </div>
+          <div className="card" style={{marginBottom: '32px'}}>
+            <div className="card-header">
+              <h3 className="card-title">Recent Activity</h3>
+            </div>
             <div style={{marginBottom: '16px'}}>
               {logs.slice(0, 5).map((log, index) => (
                 <div key={log.id} style={{
@@ -6497,8 +6433,7 @@ function App() {
                 See all logs
               </button>
             </div>
-            </div>
-          </LazySection>
+          </div>
         </main>
       </div>
       <footer className="footer">
