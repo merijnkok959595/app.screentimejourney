@@ -469,6 +469,7 @@ function AudioPlayer({ audioUrl }) {
 function App() {
   const [customerData, setCustomerData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [initialLoad, setInitialLoad] = useState(true); // Track if this is the first load
   const [error, setError] = useState(null);
   const [authenticated, setAuthenticated] = useState(false);
   const [testScenario, setTestScenario] = useState('ground_zero');
@@ -718,6 +719,7 @@ function App() {
         
         // Fetch profile data to check if username exists
         setLoading(false);
+        setInitialLoad(false); // Mark initial load as complete
         fetchProfileData();
       } catch (err) {
         console.error('❌ Failed to parse session cookie:', err);
@@ -791,6 +793,7 @@ function App() {
       // Set authenticated state
       setAuthenticated(true);
       setLoading(false);
+      setInitialLoad(false); // Mark initial load as complete
       
       // Fetch profile data
       fetchProfileData();
@@ -3969,7 +3972,8 @@ function App() {
     }
   };
 
-  if (loading || milestonesLoading) {
+  // Only show full loading screen on initial load
+  if (initialLoad && (loading || milestonesLoading)) {
     return (
       <div className="App" style={{ background: 'var(--page-bg)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         {/* Announcement Bar */}
