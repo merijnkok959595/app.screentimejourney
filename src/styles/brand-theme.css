@@ -676,9 +676,10 @@ p, span, div {
 .header-nav {
   flex: 1 1 auto; /* Grow to fill available space */
   display: flex;
-  gap: 32px;
+  gap: 20px; /* Reduced spacing between links */
   align-items: center;
-  justify-content: center; /* Center the nav items within this section */
+  justify-content: flex-start; /* Left-align the nav items */
+  padding-left: 32px; /* Reasonable padding from logo */
 }
 
 .header-nav a {
