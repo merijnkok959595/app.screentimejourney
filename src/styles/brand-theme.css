@@ -7,6 +7,39 @@
   position: relative;
 }
 
+/* Scroll Reveal Animation */
+.footer-column,
+.footer-logo-column,
+.footer-bottom {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.footer-column.revealed,
+.footer-logo-column.revealed,
+.footer-bottom.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered animation delays for each column */
+.footer-logo-column.revealed {
+  transition-delay: 0.1s;
+}
+
+.footer-column:nth-child(2).revealed {
+  transition-delay: 0.2s;
+}
+
+.footer-column:nth-child(3).revealed {
+  transition-delay: 0.3s;
+}
+
+.footer-bottom.revealed {
+  transition-delay: 0.4s;
+}
+
 .footer::before {
   content: '';
   position: absolute;
