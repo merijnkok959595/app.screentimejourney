@@ -676,14 +676,15 @@ p, span, div {
 }
 
 .header-logo img {
-  height: 80px; /* Default logo height - bigger! */
+  height: 100%; /* Fill the container height (accounts for padding) */
+  max-height: 80px; /* Maximum logo height */
   width: auto;
-  transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Slower incremental speed */
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Slower incremental speed */
   display: block;
 }
 
 .header.scrolled .header-logo img {
-  height: 60px; /* Scrolled logo height */
+  max-height: 60px; /* Scrolled logo height */
 }
 
 /* Center Section: Navigation Menu - grows to fill middle space */
@@ -955,8 +956,8 @@ p, span, div {
   gap: 12px;
 }
 
-/* === MOBILE RESPONSIVENESS === */
-@media (max-width: 768px) {
+/* === MOBILE & TABLET RESPONSIVENESS === */
+@media (max-width: 1024px) {
   .header-nav {
     display: none;
   }
@@ -970,7 +971,7 @@ p, span, div {
   }
 }
 
-@media (min-width: 769px) {
+@media (min-width: 1025px) {
   .header-mobile-menu {
     display: none;
   }
@@ -1204,6 +1205,62 @@ p, span, div {
 }
 
 /* === RESPONSIVE === */
+/* Tablet styles (769px - 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .header .header-inner {
+    display: grid !important;
+    grid-template-columns: auto 1fr !important;
+    gap: var(--spacing-sm) !important;
+    align-items: center !important;
+    position: relative !important; /* For absolute positioning of mobile menu */
+  }
+  
+  /* Hide title on tablet */
+  .header .header-title {
+    display: none !important;
+  }
+  
+  /* Center the logo on tablet */
+  .header .header-logo {
+    justify-self: center !important;
+    order: 2 !important;
+    width: 70px !important;
+    height: 70px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 7.5px 0 !important;
+  }
+  
+  .header .header-actions {
+    justify-self: start !important;
+    order: 1 !important;
+    position: static !important;
+    transform: none !important;
+    right: auto !important;
+  }
+  
+  .header .header-mobile-menu {
+    display: block !important;
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 4px !important;
+    margin-left: 0 !important;
+    position: absolute !important;
+    left: 12px !important;
+  }
+  
+  .header-logo img {
+    height: 100% !important;
+    max-height: 70px !important;
+    margin-bottom: 0 !important;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .header.scrolled .header-logo img {
+    max-height: 52.5px !important;
+  }
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 0 6px; /* Reduced from 8px for less side margin */
@@ -1272,13 +1329,14 @@ p, span, div {
   }
   
   .header-logo img {
-    height: 70px !important; /* Default mobile logo height */
+    height: 100% !important; /* Fill container accounting for padding */
+    max-height: 70px !important; /* Maximum mobile logo height */
     margin-bottom: 0 !important;
-    transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth scaling */
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth scaling */
   }
   
   .header.scrolled .header-logo img {
-    height: 52.5px !important; /* Scrolled mobile logo height */
+    max-height: 52.5px !important; /* Scrolled mobile logo height */
   }
   
   .dashboard {
@@ -1337,13 +1395,14 @@ p, span, div {
   }
   
   .header-logo img {
-    height: 70px !important; /* Default mobile logo height */
+    height: 100% !important; /* Fill container accounting for padding */
+    max-height: 70px !important; /* Maximum mobile logo height */
     margin-bottom: 0 !important;
-    transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth scaling */
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth scaling */
   }
   
   .header.scrolled .header-logo img {
-    height: 52.5px !important; /* Scrolled mobile logo height */
+    max-height: 52.5px !important; /* Scrolled mobile logo height */
   }
   
   /* Ensure mobile menu is visible on very small screens */
