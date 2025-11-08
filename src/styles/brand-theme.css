@@ -1189,8 +1189,13 @@ p, span, div {
   }
   
   .header {
-    padding: var(--spacing-xs) 0 !important;
-    background-color: #1a0230 !important; /* Darker purple to show mobile CSS is working */
+    padding: 12.5px 0 !important; /* 12.5px + 70px logo + 12.5px = 95px total */
+    background-color: #f9f9f9 !important; /* Match desktop background */
+    transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .header.scrolled {
+    padding: 12.5px 0 !important; /* Same padding, logo scales to 52.5px = 77.5px total */
   }
   
   .header .header-inner {
@@ -1208,6 +1213,7 @@ p, span, div {
   .header .header-logo {
     justify-self: center !important;
     order: 2 !important;
+    width: 70px !important; /* Fixed width = default mobile logo size */
   }
   
   .header .header-actions {
@@ -1230,8 +1236,13 @@ p, span, div {
   }
   
   .header-logo img {
-    max-height: 40px !important;
-    margin-bottom: 4px !important;
+    height: 70px !important; /* Default mobile logo height */
+    margin-bottom: 0 !important;
+    transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth scaling */
+  }
+  
+  .header.scrolled .header-logo img {
+    height: 52.5px !important; /* Scrolled mobile logo height */
   }
   
   .dashboard {
@@ -1248,7 +1259,11 @@ p, span, div {
 
 @media (max-width: 480px) {
   .header {
-    padding: 4px 0;
+    padding: 12.5px 0 !important; /* Same as tablet: 12.5px + 70px logo + 12.5px = 95px total */
+  }
+  
+  .header.scrolled {
+    padding: 12.5px 0 !important; /* Same padding, logo scales to 52.5px = 77.5px total */
   }
   
   .header-inner {
@@ -1266,6 +1281,7 @@ p, span, div {
   .header-logo {
     justify-self: center;
     order: 2;
+    width: 70px !important; /* Fixed width = default mobile logo size */
   }
   
   .header-actions {
@@ -1274,8 +1290,13 @@ p, span, div {
   }
   
   .header-logo img {
-    max-height: 32px !important;
-    margin-bottom: 2px !important;
+    height: 70px !important; /* Default mobile logo height */
+    margin-bottom: 0 !important;
+    transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth scaling */
+  }
+  
+  .header.scrolled .header-logo img {
+    height: 52.5px !important; /* Scrolled mobile logo height */
   }
   
   /* Ensure mobile menu is visible on very small screens */
