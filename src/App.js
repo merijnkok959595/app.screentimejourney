@@ -4669,7 +4669,7 @@ function App() {
                   </>
                 )}
                 
-                <p className="helper" style={{ margin: '0.5rem 0 0 0' }}>
+                <p className="helper" style={{ margin: '8px 0 0 4px' }}>
                   {profileData?.whatsapp ? 'WhatsApp changes require verification for security.' : 'For daily motivation and accountability messages.'}
                 </p>
               </div>

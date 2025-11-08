@@ -1408,7 +1408,13 @@ p, span, div {
 }
 .radio { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
 .radio input { width: 16px; height: 16px; }
-.helper { font-size: 0.9rem; color: var(--text-muted); margin-top: 8px; }
+.helper { 
+  font-size: 13px; 
+  color: #6b7280; 
+  margin-top: 8px; 
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+}
 
 /* Error Message Styling */
 .error-message {
