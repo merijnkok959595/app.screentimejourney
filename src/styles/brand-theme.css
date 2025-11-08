@@ -196,7 +196,7 @@
 
 @media (max-width: 768px) {
   .footer {
-    padding: 2rem 0 2rem 0;
+    padding: 2.5rem 0 2rem 0; /* Increased top padding for more space */
     margin-top: 2.5rem;
   }
   
@@ -204,7 +204,7 @@
     grid-template-columns: 1fr;
     gap: 2.5rem;
     margin-bottom: 3rem;
-    padding: 0 10px; /* Reduced from 16px for wider content */
+    padding: 8px 10px 0 10px; /* Added top padding for extra spacing */
     margin-left: 6px; /* Extra margin left as requested */
   }
   
@@ -637,7 +637,7 @@ p, span, div {
 
 @media (max-width: 768px) {
   .announcement-bar {
-    font-size: 14px;
+    font-size: 12px;
   }
 }
 
