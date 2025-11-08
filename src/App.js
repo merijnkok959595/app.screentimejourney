@@ -4680,26 +4680,24 @@ function App() {
                 
                 {/* Current Commitment Display */}
                 {profileData?.commitment_data && !profileEditData.showCommitmentEdit && (
-                  <div style={{ marginBottom: '1rem', padding: '16px', backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '7px' }}>
-                    {/* Header with Edit button in top right */}
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '12px' }}>
-                      <button 
-                        type="button"
-                        className="btn-secondary"
-                        style={{ padding: '6px 16px', fontSize: '13px', height: '32px', minHeight: '32px' }}
-                        onClick={() => setProfileEditData(prev => ({
-                          ...prev, 
-                          showCommitmentEdit: true,
-                          commitmentQ1: profileData.commitment_data.q1 || '',
-                          commitmentQ2: profileData.commitment_data.q2 || '',
-                          commitmentQ3: profileData.commitment_data.q3 || ''
-                        }))}
-                      >
-                        Edit
-                      </button>
-                    </div>
+                  <div style={{ marginBottom: '1rem', padding: '16px', backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '7px', position: 'relative' }}>
+                    {/* Edit button in absolute position (top right) */}
+                    <button 
+                      type="button"
+                      className="btn-secondary"
+                      style={{ padding: '6px 16px', fontSize: '13px', height: '32px', minHeight: '32px', position: 'absolute', top: '16px', right: '16px' }}
+                      onClick={() => setProfileEditData(prev => ({
+                        ...prev, 
+                        showCommitmentEdit: true,
+                        commitmentQ1: profileData.commitment_data.q1 || '',
+                        commitmentQ2: profileData.commitment_data.q2 || '',
+                        commitmentQ3: profileData.commitment_data.q3 || ''
+                      }))}
+                    >
+                      Edit
+                    </button>
                     
-                    <div style={{ marginBottom: '12px' }}>
+                    <div style={{ marginBottom: '12px', paddingRight: '80px' }}>
                       <strong style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>What you want to change:</strong>
                       <p style={{ margin: '4px 0 0 0', color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>"{profileData.commitment_data.q1}"</p>
                     </div>
@@ -4720,35 +4718,38 @@ function App() {
                     <h4 style={{ margin: '0 0 16px 0', color: '#0F172A', fontSize: '16px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '500' }}>Update Your Commitment</h4>
                     
                     <div style={{ marginBottom: '16px' }}>
-                      <label className="form-label">What do you want to quit or change?</label>
+                      <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>What do you want to quit or change?</label>
                       <input 
                         type="text"
                         className="input"
                         placeholder="e.g., quit porn, reduce social media, stop gaming..."
                         value={profileEditData.commitmentQ1 || ''}
                         onChange={(e) => setProfileEditData(prev => ({...prev, commitmentQ1: e.target.value}))}
+                        style={{ padding: '16px' }}
                       />
                     </div>
 
                     <div style={{ marginBottom: '16px' }}>
-                      <label className="form-label">What do you want to gain or achieve?</label>
+                      <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>What do you want to gain or achieve?</label>
                       <input 
                         type="text"
                         className="input"
                         placeholder="e.g., more energy, better relationships, inner peace..."
                         value={profileEditData.commitmentQ2 || ''}
                         onChange={(e) => setProfileEditData(prev => ({...prev, commitmentQ2: e.target.value}))}
+                        style={{ padding: '16px' }}
                       />
                     </div>
 
                     <div style={{ marginBottom: '16px' }}>
-                      <label className="form-label">Who are you doing this for?</label>
+                      <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Who are you doing this for?</label>
                       <input 
                         type="text"
                         className="input"
                         placeholder="e.g., my family, my future self, my children..."
                         value={profileEditData.commitmentQ3 || ''}
                         onChange={(e) => setProfileEditData(prev => ({...prev, commitmentQ3: e.target.value}))}
+                        style={{ padding: '16px' }}
                       />
                     </div>
 
@@ -4795,132 +4796,157 @@ function App() {
                       </div>
                     )}
 
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <button 
-                        type="button"
-                        className="btn btn--primary"
-                        style={{ flex: 1 }}
-                        onClick={async () => {
-                          const q1 = profileEditData.commitmentQ1?.trim();
-                          const q2 = profileEditData.commitmentQ2?.trim();
-                          const q3 = profileEditData.commitmentQ3?.trim();
+                    <div>
+                      {!profileEditData.commitmentValidation?.is_passionate ? (
+                        <>
+                          <button 
+                            type="button"
+                            className="btn-primary"
+                            style={{ width: '100%' }}
+                            onClick={async () => {
+                              const q1 = profileEditData.commitmentQ1?.trim();
+                              const q2 = profileEditData.commitmentQ2?.trim();
+                              const q3 = profileEditData.commitmentQ3?.trim();
 
-                          if (!q1 || !q2 || !q3) {
-                            setProfileError('Please fill in all commitment fields');
-                            return;
-                          }
-
-                          setProfileEditData(prev => ({...prev, commitmentValidating: true}));
-                          
-                          try {
-                            // Validate with ChatGPT
-                            const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/evaluate_only`, {
-                              method: 'POST',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({ q1, q2, q3 })
-                            });
-                            const result = await response.json();
-                            
-                            if (response.ok && result.ok) {
-                              setProfileEditData(prev => ({
-                                ...prev, 
-                                commitmentValidation: result,
-                                commitmentValidating: false
-                              }));
-                              setProfileError('');
-                              
-                              // If validation is successful, update the display values immediately
-                              if (result.is_passionate) {
-                                console.log('✅ Commitment validated successfully, updating preview');
+                              if (!q1 || !q2 || !q3) {
+                                setProfileError('Please fill in all commitment fields');
+                                return;
                               }
-                            } else {
-                              setProfileError(result.error || 'Failed to validate commitment');
-                              setProfileEditData(prev => ({...prev, commitmentValidating: false}));
-                            }
-                          } catch (error) {
-                            console.error('Commitment validation error:', error);
-                            setProfileError('Failed to validate commitment');
-                            setProfileEditData(prev => ({...prev, commitmentValidating: false}));
-                          }
-                        }}
-                        disabled={profileEditData.commitmentValidating || !profileEditData.commitmentQ1?.trim() || !profileEditData.commitmentQ2?.trim() || !profileEditData.commitmentQ3?.trim()}
-                      >
-                        {profileEditData.commitmentValidating ? 'Validating...' : 'Validate'}
-                      </button>
-                      
-                      {profileEditData.commitmentValidation?.is_passionate && (
-                        <button 
-                          type="button"
-                          className="btn btn--primary"
-                          style={{ backgroundColor: '#10b981' }}
-                          onClick={async () => {
-                            setProfileEditData(prev => ({...prev, commitmentSaving: true}));
-                            
-                            try {
-                              const customerId = extractCustomerId();
-                              const commitmentData = {
-                                q1: profileEditData.commitmentQ1.trim(),
-                                q2: profileEditData.commitmentQ2.trim(),
-                                q3: profileEditData.commitmentQ3.trim(),
-                                surrender_text: profileEditData.commitmentValidation.surrender_text
-                              };
 
-                              const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/update_profile`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                  customer_id: customerId,
-                                  commitment_data: commitmentData
-                                })
-                              });
-                              const result = await response.json();
+                              setProfileEditData(prev => ({...prev, commitmentValidating: true}));
                               
-                              if (response.ok && result.success) {
-                                // Reset edit state and refresh data
-                                setProfileEditData(prev => ({
-                                  ...prev, 
-                                  showCommitmentEdit: false,
-                                  commitmentValidation: null,
-                                  commitmentSaving: false,
-                                  commitmentQ1: '',
-                                  commitmentQ2: '',
-                                  commitmentQ3: ''
-                                }));
-                                setProfileError('');
-                                // Refresh profile data to show updated values
-                                fetchProfileData();
-                              } else {
-                                setProfileError(result.error || 'Failed to save commitment');
+                              try {
+                                // Validate with ChatGPT
+                                const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/evaluate_only`, {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  body: JSON.stringify({ q1, q2, q3 })
+                                });
+                                const result = await response.json();
+                                
+                                if (response.ok && result.ok) {
+                                  setProfileEditData(prev => ({
+                                    ...prev, 
+                                    commitmentValidation: result,
+                                    commitmentValidating: false
+                                  }));
+                                  setProfileError('');
+                                  
+                                  // If validation is successful, update the display values immediately
+                                  if (result.is_passionate) {
+                                    console.log('✅ Commitment validated successfully, updating preview');
+                                  }
+                                } else {
+                                  setProfileError(result.error || 'Failed to validate commitment');
+                                  setProfileEditData(prev => ({...prev, commitmentValidating: false}));
+                                }
+                              } catch (error) {
+                                console.error('Commitment validation error:', error);
+                                setProfileError('Failed to validate commitment');
+                                setProfileEditData(prev => ({...prev, commitmentValidating: false}));
+                              }
+                            }}
+                            disabled={profileEditData.commitmentValidating || !profileEditData.commitmentQ1?.trim() || !profileEditData.commitmentQ2?.trim() || !profileEditData.commitmentQ3?.trim()}
+                          >
+                            {profileEditData.commitmentValidating ? 'Validating...' : 'Validate'}
+                          </button>
+                          
+                          <div style={{display: 'flex', justifyContent: 'center', marginTop: '6px', width: '100%'}}>
+                            <button 
+                              type="button"
+                              className="btn-tertiary"
+                              onClick={() => setProfileEditData(prev => ({
+                                ...prev, 
+                                showCommitmentEdit: false,
+                                commitmentValidation: null,
+                                // Reset to original values on cancel
+                                commitmentQ1: profileData?.commitment_data?.q1 || '',
+                                commitmentQ2: profileData?.commitment_data?.q2 || '',
+                                commitmentQ3: profileData?.commitment_data?.q3 || ''
+                              }))}
+                              disabled={profileEditData.commitmentValidating}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <button 
+                            type="button"
+                            className="btn-primary"
+                            style={{ backgroundColor: '#10b981', width: '100%' }}
+                            onClick={async () => {
+                              setProfileEditData(prev => ({...prev, commitmentSaving: true}));
+                              
+                              try {
+                                const customerId = extractCustomerId();
+                                const commitmentData = {
+                                  q1: profileEditData.commitmentQ1.trim(),
+                                  q2: profileEditData.commitmentQ2.trim(),
+                                  q3: profileEditData.commitmentQ3.trim(),
+                                  surrender_text: profileEditData.commitmentValidation.surrender_text
+                                };
+
+                                const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/update_profile`, {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  body: JSON.stringify({
+                                    customer_id: customerId,
+                                    commitment_data: commitmentData
+                                  })
+                                });
+                                const result = await response.json();
+                                
+                                if (response.ok && result.success) {
+                                  // Reset edit state and refresh data
+                                  setProfileEditData(prev => ({
+                                    ...prev, 
+                                    showCommitmentEdit: false,
+                                    commitmentValidation: null,
+                                    commitmentSaving: false,
+                                    commitmentQ1: '',
+                                    commitmentQ2: '',
+                                    commitmentQ3: ''
+                                  }));
+                                  setProfileError('');
+                                  // Refresh profile data to show updated values
+                                  fetchProfileData();
+                                } else {
+                                  setProfileError(result.error || 'Failed to save commitment');
+                                  setProfileEditData(prev => ({...prev, commitmentSaving: false}));
+                                }
+                              } catch (error) {
+                                console.error('Commitment save error:', error);
+                                setProfileError('Failed to save commitment');
                                 setProfileEditData(prev => ({...prev, commitmentSaving: false}));
                               }
-                            } catch (error) {
-                              console.error('Commitment save error:', error);
-                              setProfileError('Failed to save commitment');
-                              setProfileEditData(prev => ({...prev, commitmentSaving: false}));
-                            }
-                          }}
-                          disabled={profileEditData.commitmentSaving}
-                        >
-                          {profileEditData.commitmentSaving ? 'Saving...' : 'Save Commitment'}
-                        </button>
+                            }}
+                            disabled={profileEditData.commitmentSaving}
+                          >
+                            {profileEditData.commitmentSaving ? 'Saving...' : 'Save Commitment'}
+                          </button>
+                          
+                          <div style={{display: 'flex', justifyContent: 'center', marginTop: '6px', width: '100%'}}>
+                            <button 
+                              type="button"
+                              className="btn-tertiary"
+                              onClick={() => setProfileEditData(prev => ({
+                                ...prev, 
+                                showCommitmentEdit: false,
+                                commitmentValidation: null,
+                                // Reset to original values on cancel
+                                commitmentQ1: profileData?.commitment_data?.q1 || '',
+                                commitmentQ2: profileData?.commitment_data?.q2 || '',
+                                commitmentQ3: profileData?.commitment_data?.q3 || ''
+                              }))}
+                              disabled={profileEditData.commitmentSaving}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </>
                       )}
-                      
-                      <button 
-                        type="button"
-                        className="btn-secondary"
-                        onClick={() => setProfileEditData(prev => ({
-                          ...prev, 
-                          showCommitmentEdit: false,
-                          commitmentValidation: null,
-                          // Reset to original values on cancel
-                          commitmentQ1: profileData?.commitment_data?.q1 || '',
-                          commitmentQ2: profileData?.commitment_data?.q2 || '',
-                          commitmentQ3: profileData?.commitment_data?.q3 || ''
-                        }))}
-                        disabled={profileEditData.commitmentValidating || profileEditData.commitmentSaving}
-                      >
-                        Cancel
-                      </button>
                     </div>
                   </div>
                 )}
