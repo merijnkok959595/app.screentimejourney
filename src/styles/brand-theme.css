@@ -561,6 +561,7 @@ p, span, div {
 .card--hero {
   background: transparent;
   border: none;
+  margin-bottom: 0;
 }
 
 .card-header {
