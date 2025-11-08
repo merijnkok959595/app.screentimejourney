@@ -6365,9 +6365,9 @@ function App() {
                     fontSize: '12px',
                     fontWeight: '500',
                     color: notificationSettings.email_enabled ? '#059669' : '#0F172A',
-                    backgroundColor: '#f9fafb',
+                    backgroundColor: '#f9f9f9',
                     padding: '2px 8px',
-                    borderRadius: '12px',
+                    borderRadius: '7px',
                     border: '1px solid #e5e7eb',
                     fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                   }}>
@@ -6380,9 +6380,9 @@ function App() {
                     fontSize: '12px',
                     fontWeight: '500',
                     color: notificationSettings.whatsapp_enabled ? '#059669' : '#0F172A',
-                    backgroundColor: '#f9fafb',
+                    backgroundColor: '#f9f9f9',
                     padding: '2px 8px',
-                    borderRadius: '12px',
+                    borderRadius: '7px',
                     border: '1px solid #e5e7eb',
                     fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                   }}>
