@@ -4669,9 +4669,11 @@ function App() {
                   </>
                 )}
                 
-                <p className="helper" style={{ margin: '8px 0 0 4px' }}>
-                  {profileData?.whatsapp ? 'WhatsApp changes require verification for security.' : 'For daily motivation and accountability messages.'}
-                </p>
+                {!profileData?.whatsapp && (
+                  <p className="helper" style={{ margin: '8px 0 0 4px' }}>
+                    For daily motivation and accountability messages.
+                  </p>
+                )}
               </div>
 
               {/* Commitment Data Section */}
@@ -6454,19 +6456,19 @@ function App() {
                 }}>
 
                   <div style={{flex: 1}}>
-                    <div style={{fontWeight: '500', color: '#0F172A', marginBottom: '2px', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
+                    <div className="account-text" style={{fontWeight: '500', marginBottom: '2px'}}>
                       {log.title}
                     </div>
-                    <div style={{fontSize: '14px', color: '#0F172A', marginBottom: '2px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
+                    <div className="account-text" style={{marginBottom: '2px'}}>
                       {log.description}
                     </div>
                     {log.pincode && (
-                      <div style={{fontSize: '12px', color: '#059669', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '600'}}>
-                        Unlock code: {log.pincode}
+                      <div className="account-text" style={{fontSize: '12px', color: '#059669', fontWeight: '600'}}>
+                        Code: {log.pincode} ✓
                       </div>
                     )}
                   </div>
-                  <div style={{fontSize: '12px', color: '#0F172A', textAlign: 'right', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
+                  <div className="account-text" style={{fontSize: '12px', textAlign: 'right'}}>
                     {log.timestamp}
                   </div>
                 </div>
