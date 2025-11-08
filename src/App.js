@@ -6586,10 +6586,10 @@ function App() {
               {cancelStep === 3 && (
                 <div style={{textAlign: 'left', marginBottom: '20px'}}>
                   <div style={{background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '7px', padding: '20px', marginBottom: '24px', textAlign: 'left'}}>
-                    <h4 style={{margin: '0 0 16px 0', fontSize: '16px', fontWeight: '500', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
+                    <h4 className="account-text" style={{margin: '0 0 16px 0', fontSize: '16px', fontWeight: '500'}}>
                       Cancellation Summary
                     </h4>
-                    <div style={{fontSize: '14px', color: '#0F172A', lineHeight: '1.6', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
+                    <div className="account-text" style={{lineHeight: '1.6'}}>
                       <p style={{margin: '0 0 8px 0'}}><strong>Plan:</strong> Screen Time Journey - Starter</p>
                       <p style={{margin: '0 0 8px 0'}}><strong>Effective:</strong> Immediately</p>
                       <p style={{margin: '0'}}><strong>Access:</strong> Until end of current billing period</p>
@@ -6597,7 +6597,7 @@ function App() {
                   </div>
 
                   <div style={{background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '7px', padding: '16px', marginBottom: '20px'}}>
-                    <p style={{margin: 0, fontSize: '14px', color: '#dc2626', fontWeight: '500', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
+                    <p className="account-text" style={{margin: 0, color: '#dc2626', fontWeight: '500'}}>
                       ⚠️ <strong>Important:</strong> Cancelling will permanently delete your progress, device configurations, and journey data. This cannot be undone.
                     </p>
                   </div>
