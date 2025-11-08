@@ -205,7 +205,7 @@
     gap: 2.5rem;
     margin-bottom: 3rem;
     padding: 8px 10px 0 10px; /* Added top padding for extra spacing */
-    margin-left: 6px; /* Extra margin left as requested */
+    margin-left: 12px; /* Increased from 6px for more left spacing */
   }
   
   .footer-bottom {
@@ -241,7 +241,7 @@
   .footer-bottom {
     padding-left: 10px; /* Reduced from 16px for wider content */
     padding-right: 10px;
-    margin-left: 6px; /* Extra margin left as requested */
+    margin-left: 12px; /* Increased from 6px for more left spacing */
   }
   
   .footer-policies {
@@ -1021,7 +1021,7 @@ p, span, div {
   left: 0;
   bottom: 0;
   width: 100%;
-  background: #FFFFFF;
+  background: #f9f9f9;
   z-index: 50; /* Well below header */
   overflow-y: auto;
   transform: translateX(-100%);
@@ -1229,6 +1229,7 @@ p, span, div {
     align-items: center !important;
     justify-content: center !important;
     padding: 7.5px !important; /* 7.5px padding all around */
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
   }
   
   .header .header-actions {
@@ -1258,6 +1259,12 @@ p, span, div {
   .header.scrolled .header-logo img {
     max-height: 52.5px !important;
   }
+  
+  .header.scrolled .header .header-logo {
+    width: 70px !important; /* Smaller container on scroll */
+    height: 70px !important;
+    padding: 5px !important; /* Less padding on scroll */
+  }
 }
 
 @media (max-width: 768px) {
@@ -1275,9 +1282,10 @@ p, span, div {
     padding: 0 !important; /* No padding on scroll */
   }
   
-  /* Bigger image on mobile - closer to Shopify's 490px default */
+  /* Milestone image sized smaller than content on mobile */
   .media-square {
-    max-width: 100%; /* Use full width available on mobile */
+    max-width: 92%; /* Slightly smaller than full width */
+    margin: 0 auto; /* Center the image */
   }
   
   /* Ensure card--hero (milestone section) uses same padding as dashboard */
@@ -1308,6 +1316,7 @@ p, span, div {
     align-items: center !important;
     justify-content: center !important;
     padding: 7.5px !important; /* 7.5px padding all around */
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
   }
   
   .header .header-actions {
@@ -1341,6 +1350,12 @@ p, span, div {
   
   .header.scrolled .header-logo img {
     max-height: 52.5px !important; /* Scrolled mobile logo height */
+  }
+  
+  .header.scrolled .header .header-logo {
+    width: 70px !important; /* Smaller container on scroll */
+    height: 70px !important;
+    padding: 5px !important; /* Less padding on scroll */
   }
   
   .dashboard {
@@ -1391,6 +1406,7 @@ p, span, div {
     align-items: center !important;
     justify-content: center !important;
     padding: 7.5px !important; /* 7.5px padding all around */
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
   }
   
   .header-actions {
@@ -1407,6 +1423,12 @@ p, span, div {
   
   .header.scrolled .header-logo img {
     max-height: 52.5px !important; /* Scrolled mobile logo height */
+  }
+  
+  .header.scrolled .header-logo {
+    width: 70px !important; /* Smaller container on scroll */
+    height: 70px !important;
+    padding: 5px !important; /* Less padding on scroll */
   }
   
   /* Ensure mobile menu is visible on very small screens */
