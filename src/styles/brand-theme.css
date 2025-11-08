@@ -1002,6 +1002,8 @@ p, span, div {
 }
 
 .mobile-menu-toggle svg {
+  width: 20px;
+  height: 20px;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
