@@ -1005,6 +1005,11 @@ p, span, div {
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
+.mobile-menu-toggle svg path {
+  stroke-width: 1.5;
+  stroke: currentColor;
+}
+
 .hamburger-line {
   width: 20px;
   height: 1.5px;
@@ -1015,12 +1020,12 @@ p, span, div {
 
 .mobile-menu-dropdown {
   position: fixed;
-  top: 85px; /* Start below header (header height with logo padding) */
+  top: 127px; /* Start below header: 42px announcement bar + 85px header = 127px */
   left: 0;
   bottom: 0;
   width: 100%;
   background: #FFFFFF;
-  z-index: 9998; /* Below header */
+  z-index: 50; /* Well below header */
   overflow-y: auto;
   transform: translateX(-100%);
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); /* Quick slide in */
@@ -1053,9 +1058,9 @@ p, span, div {
 
 .mobile-menu-actions .btn-primary,
 .mobile-menu-actions .btn-secondary {
-  height: 38px;
-  padding: 0 20px;
-  font-size: 14px;
+  height: 34px;
+  padding: 0 18px;
+  font-size: 13px;
   flex: 1;
 }
 
@@ -1087,19 +1092,15 @@ p, span, div {
   color: var(--brand-text);
   text-decoration: none;
   font-family: var(--font-body);
-  font-size: 1rem;
+  font-size: 17px; /* 1px bigger */
   font-weight: 500;
+  letter-spacing: 1px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  border-bottom: 1px solid var(--brand-separator);
-}
-
-.mobile-menu-item:last-child {
-  border-bottom: none;
+  transition: box-shadow 0.2s ease;
 }
 
 .mobile-menu-item:hover {
-  background-color: #f8f9fa;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .header-subtitle {
