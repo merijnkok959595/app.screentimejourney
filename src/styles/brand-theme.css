@@ -999,7 +999,7 @@ p, span, div {
 
 .hamburger-line {
   width: 20px;
-  height: 2px;
+  height: 1.5px;
   background-color: var(--brand-primary);
   transition: all 0.3s ease;
   border-radius: 1px;
@@ -1177,13 +1177,13 @@ p, span, div {
   }
   
   .header {
-    padding: 12.5px 0 !important; /* 12.5px + 70px logo + 12.5px = 95px total */
+    padding: 7.5px 0 !important; /* 7.5px + 70px logo + 7.5px = 85px total */
     background-color: #f9f9f9 !important; /* Match desktop background */
     transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .header.scrolled {
-    padding: 12.5px 0 !important; /* Same padding, logo scales to 52.5px = 77.5px total */
+    padding: 7.5px 0 !important; /* Same padding on scroll */
   }
   
   .header .header-inner {
@@ -1203,6 +1203,10 @@ p, span, div {
     justify-self: center !important;
     order: 2 !important;
     width: 70px !important; /* Fixed width = default mobile logo size */
+    height: 70px !important; /* Fixed height = 70x70px container */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
   
   .header .header-actions {
@@ -1222,6 +1226,7 @@ p, span, div {
     display: block !important;
     background-color: rgba(255, 255, 255, 0.2) !important; /* Temporary: make hamburger menu visible */
     border-radius: 4px !important;
+    margin-left: 12px !important; /* Position more to the left */
   }
   
   .header-logo img {
@@ -1248,11 +1253,11 @@ p, span, div {
 
 @media (max-width: 480px) {
   .header {
-    padding: 12.5px 0 !important; /* Same as tablet: 12.5px + 70px logo + 12.5px = 95px total */
+    padding: 7.5px 0 !important; /* 7.5px + 70px logo + 7.5px = 85px total */
   }
   
   .header.scrolled {
-    padding: 12.5px 0 !important; /* Same padding, logo scales to 52.5px = 77.5px total */
+    padding: 7.5px 0 !important; /* Same padding on scroll */
   }
   
   .header-inner {
@@ -1271,6 +1276,10 @@ p, span, div {
     justify-self: center;
     order: 2;
     width: 70px !important; /* Fixed width = default mobile logo size */
+    height: 70px !important; /* Fixed height = 70x70px container */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
   
   .header-actions {
@@ -1305,7 +1314,7 @@ p, span, div {
   
   .hamburger-line {
     width: 16px;
-    height: 1.5px;
+    height: 1.25px;
   }
 }
 
