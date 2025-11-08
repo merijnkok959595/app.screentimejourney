@@ -583,38 +583,6 @@ function App() {
     };
   }, []);
 
-  // Footer scroll reveal animation - triggers once on scroll into view
-  useEffect(() => {
-    const footerElements = document.querySelectorAll('.footer-column, .footer-logo-column, .footer-bottom');
-    
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('revealed');
-            // Once revealed, stop observing this element
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        threshold: 0.1, // Trigger when 10% of element is visible
-        rootMargin: '0px 0px -50px 0px' // Start animation slightly before element enters viewport
-      }
-    );
-
-    footerElements.forEach((element) => {
-      observer.observe(element);
-    });
-
-    // Cleanup
-    return () => {
-      footerElements.forEach((element) => {
-        observer.unobserve(element);
-      });
-    };
-  }, []);
-
   // Load devices when customer data is available
   useEffect(() => {
     console.log('🔍 Device loading useEffect triggered:', {
