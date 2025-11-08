@@ -63,7 +63,7 @@
   text-decoration: none;
   font-family: var(--font-body);
   font-size: 0.95rem;
-  font-weight: 500;
+  font-weight: 600;
   transition: all 0.2s ease;
   display: inline-block;
   line-height: 1.6;
@@ -79,7 +79,7 @@
   color: rgba(255,255,255,0.85);
   font-family: var(--font-body);
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.6;
   margin-top: 0.5rem;
   max-width: 280px;
@@ -204,7 +204,8 @@
     grid-template-columns: 1fr;
     gap: 2.5rem;
     margin-bottom: 3rem;
-    padding: 0 var(--spacing-md);
+    padding: 0 10px; /* Reduced from 16px for wider content */
+    margin-left: 6px; /* Extra margin left as requested */
   }
   
   .footer-bottom {
@@ -238,8 +239,9 @@
   }
   
   .footer-bottom {
-    padding-left: var(--spacing-md);
-    padding-right: var(--spacing-md);
+    padding-left: 10px; /* Reduced from 16px for wider content */
+    padding-right: 10px;
+    margin-left: 6px; /* Extra margin left as requested */
   }
   
   .footer-policies {
@@ -645,12 +647,12 @@ p, span, div {
   top: 42px; /* Position below announcement bar */
   z-index: 100;
   border-bottom: 1px solid #e5e5e5;
-  padding: 7.5px 0; /* Exact padding: 7.5px top + 80px logo + 7.5px bottom = 95px total */
-  transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Faster with incremental speed */
+  padding: 0; /* No padding on header */
+  transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .header.scrolled {
-  padding: 7.5px 0; /* Same padding on scroll: 7.5px + 60px logo + 7.5px = 75px total */
+  padding: 0; /* No padding on scroll */
 }
 
 /* Boxed container - aligned with main content */
@@ -670,6 +672,7 @@ p, span, div {
   align-items: center;
   width: 80px; /* Fixed width = default logo size, so nav doesn't shift */
   justify-content: flex-start;
+  padding: 7.5px 0; /* 7.5px top and bottom padding */
 }
 
 .header-logo img {
@@ -842,7 +845,7 @@ p, span, div {
 @media (max-width: 768px) {
   .btn-primary,
   .btn-outline-primary {
-    font-size: 12px;
+    font-size: 13px; /* Increased from 12px for better readability */
     font-weight: 600;
   }
 }
@@ -908,7 +911,7 @@ p, span, div {
 @media (max-width: 768px) {
   .btn-secondary,
   .btn-outline-secondary {
-    font-size: 12px;
+    font-size: 13px; /* Increased from 12px for better readability */
     font-weight: 600;
   }
 }
@@ -1009,20 +1012,40 @@ p, span, div {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
   bottom: 0;
+  width: 100%;
+  max-width: 400px;
   background: #FFFFFF;
   z-index: 9999;
   overflow-y: auto;
-  transform: translateX(100%);
-  transition: transform 0.3s ease;
+  transform: translateX(-100%);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); /* Quick slide in */
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  justify-content: space-between;
 }
 
 .mobile-menu-dropdown.mobile-menu-open {
   transform: translateX(0);
+}
+
+.mobile-menu-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #FFFFFF;
+  padding: 3rem 2rem;
+  min-height: 574px; /* As specified */
+}
+
+.mobile-menu-actions {
+  height: 123px;
+  background: #f9f9f9;
+  padding: 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
 }
 
 .mobile-menu-header {
@@ -1173,17 +1196,22 @@ p, span, div {
 /* === RESPONSIVE === */
 @media (max-width: 768px) {
   .container {
-    padding: 0 var(--spacing-sm);
+    padding: 0 6px; /* Reduced from 8px for less side margin */
   }
   
   .header {
-    padding: 7.5px 0 !important; /* 7.5px + 70px logo + 7.5px = 85px total */
+    padding: 0 !important; /* No padding on header */
     background-color: #f9f9f9 !important; /* Match desktop background */
     transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .header.scrolled {
-    padding: 7.5px 0 !important; /* Same padding on scroll */
+    padding: 0 !important; /* No padding on scroll */
+  }
+  
+  /* Bigger image on mobile - closer to Shopify's 490px default */
+  .media-square {
+    max-width: 100%; /* Use full width available on mobile */
   }
   
   .header .header-inner {
@@ -1240,8 +1268,13 @@ p, span, div {
   }
   
   .dashboard {
-    padding: var(--spacing-lg);
-    margin: var(--spacing-sm) 0;
+    padding: 6px; /* Reduced from 24px for less spacing around cards */
+    margin: 6px 0; /* Reduced from 8px for less top/bottom margin */
+  }
+  
+  /* Reduce card margins on mobile */
+  .card {
+    margin: 8px 0; /* Reduced from 16px */
   }
   
   .grid-2,
@@ -1253,11 +1286,11 @@ p, span, div {
 
 @media (max-width: 480px) {
   .header {
-    padding: 7.5px 0 !important; /* 7.5px + 70px logo + 7.5px = 85px total */
+    padding: 0 !important; /* No padding on header */
   }
   
   .header.scrolled {
-    padding: 7.5px 0 !important; /* Same padding on scroll */
+    padding: 0 !important; /* No padding on scroll */
   }
   
   .header-inner {

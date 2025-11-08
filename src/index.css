@@ -10,7 +10,7 @@ body {
 
 @media (max-width: 768px) {
   body {
-    font-size: 12px; /* Default mobile font size */
+    font-size: 13px; /* Default mobile font size - increased for better readability */
   }
 }
 

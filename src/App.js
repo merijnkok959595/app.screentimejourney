@@ -4026,13 +4026,19 @@ function App() {
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                   aria-label="Toggle menu"
                 >
-                  <span className="hamburger-line"></span>
-                  <span className="hamburger-line"></span>
-                  <span className="hamburger-line"></span>
+                  {!mobileMenuOpen ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="icon icon-hamburger" viewBox="0 0 18 16" width="20" height="20">
+                      <path fill="currentColor" d="M1 .5a.5.5 0 1 0 0 1h15.71a.5.5 0 0 0 0-1zM.5 8a.5.5 0 0 1 .5-.5h15.71a.5.5 0 0 1 0 1H1A.5.5 0 0 1 .5 8m0 7a.5.5 0 0 1 .5-.5h15.71a.5.5 0 0 1 0 1H1a.5.5 0 0 1-.5-.5"></path>
+                    </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="icon icon-close" viewBox="0 0 18 17" width="20" height="20">
+                      <path fill="currentColor" d="M.865 15.978a.5.5 0 0 0 .707.707l7.433-7.431 7.579 7.282a.501.501 0 0 0 .846-.37.5.5 0 0 0-.153-.351L9.712 8.546l7.417-7.416a.5.5 0 1 0-.707-.708L8.991 7.853 1.413.573a.5.5 0 1 0-.693.72l7.563 7.268z"></path>
+                    </svg>
+                  )}
                 </button>
                 
-                {mobileMenuOpen && (
-                  <div className="mobile-menu-dropdown">
+                <div className={`mobile-menu-dropdown ${mobileMenuOpen ? 'mobile-menu-open' : ''}`}>
+                  <div className="mobile-menu-nav">
                     <a 
                       className="mobile-menu-item" 
                       href="https://www.screentimejourney.com" 
@@ -4043,7 +4049,10 @@ function App() {
                       Return to website
                     </a>
                   </div>
-                )}
+                  <div className="mobile-menu-actions">
+                    {/* Empty actions section for consistency */}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -5999,13 +6008,19 @@ function App() {
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                   aria-label="Toggle menu"
                 >
-                  <span className="hamburger-line"></span>
-                  <span className="hamburger-line"></span>
-                  <span className="hamburger-line"></span>
+                  {!mobileMenuOpen ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="icon icon-hamburger" viewBox="0 0 18 16" width="20" height="20">
+                      <path fill="currentColor" d="M1 .5a.5.5 0 1 0 0 1h15.71a.5.5 0 0 0 0-1zM.5 8a.5.5 0 0 1 .5-.5h15.71a.5.5 0 0 1 0 1H1A.5.5 0 0 1 .5 8m0 7a.5.5 0 0 1 .5-.5h15.71a.5.5 0 0 1 0 1H1a.5.5 0 0 1-.5-.5"></path>
+                    </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="icon icon-close" viewBox="0 0 18 17" width="20" height="20">
+                      <path fill="currentColor" d="M.865 15.978a.5.5 0 0 0 .707.707l7.433-7.431 7.579 7.282a.501.501 0 0 0 .846-.37.5.5 0 0 0-.153-.351L9.712 8.546l7.417-7.416a.5.5 0 1 0-.707-.708L8.991 7.853 1.413.573a.5.5 0 1 0-.693.72l7.563 7.268z"></path>
+                    </svg>
+                  )}
                 </button>
                 
-                {mobileMenuOpen && (
-                  <div className="mobile-menu-dropdown">
+                <div className={`mobile-menu-dropdown ${mobileMenuOpen ? 'mobile-menu-open' : ''}`}>
+                  <div className="mobile-menu-nav">
                     <a 
                       className="mobile-menu-item" 
                       href="https://www.screentimejourney.com/pages/about-me" 
@@ -6042,27 +6057,30 @@ function App() {
                     >
                       Leaderboard
                     </a>
-                    <hr style={{margin: '12px 0', border: 'none', borderTop: '1px solid #e5e7eb'}} />
+                  </div>
+                  <div className="mobile-menu-actions">
                     <a 
-                      className="mobile-menu-item" 
+                      className="btn-primary" 
                       href="https://www.screentimejourney.com" 
                       target="_self" 
                       rel="noopener noreferrer"
                       onClick={() => setMobileMenuOpen(false)}
+                      style={{width: '100%', textAlign: 'center'}}
                     >
                       Home
                     </a>
                     <button 
-                      className="mobile-menu-item" 
+                      className="btn-secondary"
                       onClick={() => {
                         document.cookie = 'stj_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
                         window.location.href = 'https://xpvznx-9w.myshopify.com/account/logout?return_url=/';
                       }}
+                      style={{width: '100%'}}
                     >
                       Logout
                     </button>
                   </div>
-                )}
+                </div>
               </div>
             </div>
           </div>
