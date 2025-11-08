@@ -6177,25 +6177,25 @@ function App() {
               <div className="card-header">
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                   <h3 className="card-title" style={{margin: 0}}>My Devices</h3>
-                  <span style={{fontSize: '14px', color: '#6b7280', fontWeight: '500'}}>
+                  <span style={{fontSize: '14px', color: '#0F172A', fontWeight: '500', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                     {devices.length} device{devices.length === 1 ? '' : 's'}
                   </span>
                 </div>
               </div>
               <div className="device-list" style={{padding: '16px 0'}}>
                 {devices.length === 0 ? (
-                  <div style={{textAlign: 'center', padding: '20px', color: '#6b7280'}}>
+                  <div style={{textAlign: 'center', padding: '20px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                     <div style={{fontSize: '2rem', marginBottom: '8px'}}>📱</div>
-                    <p>No devices added yet</p>
+                    <p style={{fontSize: '14px'}}>No devices added yet</p>
                   </div>
                 ) : (
                   devices.map((device, index) => (
                     <div key={device.id} className="device-item" style={{borderBottom: index === devices.length - 1 ? 'none' : '1px solid var(--border)'}}>
                       <div style={{flex: 1}}>
-                        <div style={{fontWeight: '500', marginBottom: '4px'}}>
+                        <div style={{fontWeight: '500', marginBottom: '4px', fontSize: '14px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                           {device.icon} {device.name}
                         </div>
-                        <div className="device-item__meta">
+                        <div className="device-item__meta" style={{fontSize: '14px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                           Status: {device.status.charAt(0).toUpperCase() + device.status.slice(1)} • Added {(() => {
                             const date = new Date(device.addedDate);
                             return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -6212,7 +6212,7 @@ function App() {
                         <button 
                           className="btn-secondary"
                           onClick={() => startDeviceFlow('device_unlock_flow', device.id)}
-                          style={{fontSize: '12px', padding: '4px 8px'}}
+                          style={{fontSize: '12px', padding: '4px 12px', height: '32px', minHeight: '32px'}}
                         >
                           Unlock
                         </button>
@@ -6237,8 +6237,9 @@ function App() {
                     backgroundColor: '#f8f9fa', 
                     borderRadius: '6px', 
                     border: '1px dashed #dee2e6',
-                    fontSize: '12px',
-                    color: '#6c757d'
+                    fontSize: '14px',
+                    color: '#0F172A',
+                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                   }}>
                     Maximum reached
                   </div>
@@ -6255,7 +6256,7 @@ function App() {
                 </div>
               <div style={{margin: '0 0 16px 0'}}>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #EEEEEE'}}>
-                  <span style={{fontSize: '14px', color: '#374151'}}>Status</span>
+                  <span style={{fontSize: '14px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>Status</span>
                   <span style={{
                     fontSize: '12px',
                     fontWeight: '500',
@@ -6263,7 +6264,8 @@ function App() {
                     backgroundColor: '#f9fafb',
                     padding: '2px 8px',
                     borderRadius: '12px',
-                    border: '1px solid #e5e7eb'
+                    border: '1px solid #e5e7eb',
+                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                   }}>
                     {(customerData?.subscription_status === 'cancelled' || customerData?.subscription_status === 'cancel_scheduled' || profileData?.subscription_status === 'cancelled' || profileData?.subscription_status === 'cancel_scheduled') ? 'Cancelled ✗' : 'Active ✓'}
                   </span>
@@ -6271,12 +6273,12 @@ function App() {
                 {(customerData?.subscription_status !== 'cancelled' && customerData?.subscription_status !== 'cancel_scheduled' && profileData?.subscription_status !== 'cancelled' && profileData?.subscription_status !== 'cancel_scheduled') && (
                   <>
                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #EEEEEE'}}>
-                      <span style={{fontSize: '14px', color: '#374151'}}>Next billing</span>
+                      <span style={{fontSize: '14px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>Next billing</span>
                       <span style={{
                         fontSize: '14px',
                         fontWeight: '500',
-                        color: '#374151',
-                        fontFamily: 'monospace'
+                        color: '#0F172A',
+                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                       }}>
                         {(() => {
                           // Calculate next billing date from subscription creation date
@@ -6313,16 +6315,17 @@ function App() {
                       </span>
                     </div>
                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0'}}>
-                      <span style={{fontSize: '14px', color: '#374151'}}>Billing cycle</span>
+                      <span style={{fontSize: '14px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>Billing cycle</span>
                       <span style={{
                         fontSize: '12px',
                         fontWeight: '500',
-                        color: '#6b7280',
+                        color: '#0F172A',
                         backgroundColor: '#EEEEEE',
                         padding: '2px 8px',
                         borderRadius: '8px',
                         textTransform: 'uppercase',
-                        letterSpacing: '0.5px'
+                        letterSpacing: '0.5px',
+                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                       }}>
                         Monthly
                       </span>
@@ -6357,29 +6360,31 @@ function App() {
               </div>
               <div style={{margin: '0 0 16px 0'}}>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #EEEEEE'}}>
-                  <span style={{fontSize: '14px', color: '#374151'}}>Email notifications</span>
+                  <span style={{fontSize: '14px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>Email notifications</span>
                   <span style={{
                     fontSize: '12px',
                     fontWeight: '500',
-                    color: notificationSettings.email_enabled ? '#059669' : '#6b7280',
+                    color: notificationSettings.email_enabled ? '#059669' : '#0F172A',
                     backgroundColor: '#f9fafb',
                     padding: '2px 8px',
                     borderRadius: '12px',
-                    border: '1px solid #e5e7eb'
+                    border: '1px solid #e5e7eb',
+                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                   }}>
                     {notificationSettings.email_enabled ? '✓ Enabled' : '✗ Disabled'}
                   </span>
                 </div>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0'}}>
-                  <span style={{fontSize: '14px', color: '#374151'}}>WhatsApp notifications</span>
+                  <span style={{fontSize: '14px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>WhatsApp notifications</span>
                   <span style={{
                     fontSize: '12px',
                     fontWeight: '500',
-                    color: notificationSettings.whatsapp_enabled ? '#059669' : '#6b7280',
+                    color: notificationSettings.whatsapp_enabled ? '#059669' : '#0F172A',
                     backgroundColor: '#f9fafb',
                     padding: '2px 8px',
                     borderRadius: '12px',
-                    border: '1px solid #e5e7eb'
+                    border: '1px solid #e5e7eb',
+                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                   }}>
                     {notificationSettings.whatsapp_enabled ? '✓ Enabled' : '✗ Disabled'}
                   </span>
@@ -6412,19 +6417,19 @@ function App() {
                 }}>
 
                   <div style={{flex: 1}}>
-                    <div style={{fontWeight: '500', color: '#374151', marginBottom: '2px'}}>
+                    <div style={{fontWeight: '500', color: '#0F172A', marginBottom: '2px', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                       {log.title}
                     </div>
-                    <div style={{fontSize: '14px', color: '#6b7280', marginBottom: '2px'}}>
+                    <div style={{fontSize: '14px', color: '#0F172A', marginBottom: '2px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                       {log.description}
                     </div>
                     {log.pincode && (
-                      <div style={{fontSize: '12px', color: '#059669', fontFamily: 'monospace', fontWeight: '600'}}>
+                      <div style={{fontSize: '12px', color: '#059669', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '600'}}>
                         Unlock code: {log.pincode}
                       </div>
                     )}
                   </div>
-                  <div style={{fontSize: '12px', color: '#9ca3af', textAlign: 'right'}}>
+                  <div style={{fontSize: '12px', color: '#0F172A', textAlign: 'right', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                     {log.timestamp}
                   </div>
                 </div>
