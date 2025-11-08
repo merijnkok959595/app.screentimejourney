@@ -1282,6 +1282,11 @@ p, span, div {
     max-width: 100%; /* Use full width available on mobile */
   }
   
+  /* Ensure card--hero (milestone section) uses same padding as dashboard */
+  .card--hero {
+    padding: 0 6px; /* Match dashboard padding for consistent widths */
+  }
+  
   .header .header-inner {
     display: grid !important;
     grid-template-columns: auto 1fr !important;
