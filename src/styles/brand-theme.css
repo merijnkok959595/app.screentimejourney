@@ -219,7 +219,7 @@
   
   .footer-logo {
     margin: 0 0 1.5rem 0;
-    max-height: 70px;
+    max-height: 100px;
   }
   
   .footer-contact {
@@ -843,6 +843,7 @@ p, span, div {
   .btn-primary,
   .btn-outline-primary {
     font-size: 12px;
+    font-weight: 600;
   }
 }
 
@@ -908,6 +909,7 @@ p, span, div {
   .btn-secondary,
   .btn-outline-secondary {
     font-size: 12px;
+    font-weight: 600;
   }
 }
 
@@ -939,6 +941,7 @@ p, span, div {
 @media (max-width: 768px) {
   .btn-tertiary {
     font-size: 12px;
+    font-weight: 600;
   }
 }
 
@@ -1184,6 +1187,7 @@ p, span, div {
   }
   
   .header .header-inner {
+    display: grid !important;
     grid-template-columns: auto 1fr !important;
     gap: var(--spacing-sm) !important;
     align-items: center !important;

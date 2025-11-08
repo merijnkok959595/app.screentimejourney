@@ -5,6 +5,13 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 14px; /* Default desktop font size */
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 12px; /* Default mobile font size */
+  }
 }
 
 code {
