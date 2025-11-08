@@ -6062,57 +6062,60 @@ function App() {
               </div>
               <div style={{margin: '0 0 16px 0'}}>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #EEEEEE'}}>
-                  <span style={{fontSize: '14px', color: '#374151'}}>Email</span>
+                  <span style={{fontSize: '14px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>Email</span>
                   <span style={{
                     fontSize: '14px',
                     fontWeight: '500',
-                    color: '#6b7280',
-                    fontFamily: 'monospace'
+                    color: '#0F172A',
+                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                   }}>
                     {profileData?.email || 'Not set'}
                   </span>
                 </div>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #EEEEEE'}}>
-                  <span style={{fontSize: '14px', color: '#374151'}}>Username</span>
+                  <span style={{fontSize: '14px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>Username</span>
                   <span style={{
                     fontSize: '14px',
                     fontWeight: '500',
-                    color: '#374151'
+                    color: '#0F172A',
+                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                   }}>
                     @{profileData?.username || 'Not set'}
                   </span>
                 </div>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #EEEEEE'}}>
-                  <span style={{fontSize: '14px', color: '#374151'}}>Gender</span>
+                  <span style={{fontSize: '14px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>Gender</span>
                   <span style={{
                     fontSize: '14px',
                     fontWeight: '500',
-                    color: '#374151'
+                    color: '#0F172A',
+                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                   }}>
                     {profileData?.gender === 'male' ? '🙋‍♂️ Man' : profileData?.gender === 'female' ? '🙋‍♀️ Woman' : 'Not set'}
                   </span>
                 </div>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #EEEEEE'}}>
-                  <span style={{fontSize: '14px', color: '#374151'}}>WhatsApp</span>
+                  <span style={{fontSize: '14px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>WhatsApp</span>
                   <span style={{
                     fontSize: '14px',
                     fontWeight: '500',
-                    color: '#374151',
-                    fontFamily: 'monospace'
+                    color: '#0F172A',
+                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                   }}>
                     {profileData?.whatsapp || 'Not set'}
                   </span>
                 </div>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #EEEEEE'}}>
-                  <span style={{fontSize: '14px', color: '#374151'}}>Commitment</span>
+                  <span style={{fontSize: '14px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>Commitment</span>
                   <span style={{
                     fontSize: '12px',
                     fontWeight: '500',
-                    color: profileData?.commitment_data ? '#059669' : '#6b7280',
+                    color: profileData?.commitment_data ? '#059669' : '#0F172A',
                     backgroundColor: '#f9fafb',
                     padding: '2px 8px',
                     borderRadius: '12px',
-                    border: '1px solid #e5e7eb'
+                    border: '1px solid #e5e7eb',
+                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                   }}>
                     {profileData?.commitment_data ? 'Set ✓' : 'Not Set ✗'}
                   </span>
@@ -6120,16 +6123,16 @@ function App() {
                 {profileData?.commitment_data && (
                   <div style={{padding: '12px 0', borderBottom: '1px solid #EEEEEE'}}>
                     <div style={{marginBottom: '8px'}}>
-                      <span style={{fontSize: '12px', color: '#6b7280', fontWeight: '500'}}>What to change:</span>
-                      <p style={{margin: '2px 0 0 0', fontSize: '14px', color: '#374151'}}>"{profileData.commitment_data.q1}"</p>
+                      <span style={{fontSize: '14px', color: '#0F172A', fontWeight: '500', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>What to change:</span>
+                      <p style={{margin: '2px 0 0 0', fontSize: '14px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>"{profileData.commitment_data.q1}"</p>
                     </div>
                     <div style={{marginBottom: '8px'}}>
-                      <span style={{fontSize: '12px', color: '#6b7280', fontWeight: '500'}}>What to gain:</span>
-                      <p style={{margin: '2px 0 0 0', fontSize: '14px', color: '#374151'}}>"{profileData.commitment_data.q2}"</p>
+                      <span style={{fontSize: '14px', color: '#0F172A', fontWeight: '500', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>What to gain:</span>
+                      <p style={{margin: '2px 0 0 0', fontSize: '14px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>"{profileData.commitment_data.q2}"</p>
                     </div>
                     <div>
-                      <span style={{fontSize: '12px', color: '#6b7280', fontWeight: '500'}}>Doing this for:</span>
-                      <p style={{margin: '2px 0 0 0', fontSize: '14px', color: '#374151'}}>"{profileData.commitment_data.q3}"</p>
+                      <span style={{fontSize: '14px', color: '#0F172A', fontWeight: '500', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>Doing this for:</span>
+                      <p style={{margin: '2px 0 0 0', fontSize: '14px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>"{profileData.commitment_data.q3}"</p>
                     </div>
                   </div>
                 )}

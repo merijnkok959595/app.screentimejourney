@@ -1420,6 +1420,19 @@ p, span, div {
   font-weight: 400;
 }
 
+/* Account Section Text Styling */
+.account-text {
+  font-size: 14px;
+  color: #0F172A;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+@media (max-width: 768px) {
+  .account-text {
+    font-size: 12px;
+  }
+}
+
 .btn--full { width: 100%; }
 .btn--no-hover::before {
   display: none !important; /* Disable wave effect */
