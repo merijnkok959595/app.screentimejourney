@@ -4681,21 +4681,8 @@ function App() {
                 {/* Current Commitment Display */}
                 {profileData?.commitment_data && !profileEditData.showCommitmentEdit && (
                   <div style={{ marginBottom: '1rem', padding: '16px', backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '7px' }}>
-                    <div style={{ marginBottom: '12px' }}>
-                      <strong style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>What you want to change:</strong>
-                      <p style={{ margin: '4px 0 0 0', color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>"{profileData.commitment_data.q1}"</p>
-                    </div>
-                    <div style={{ marginBottom: '12px' }}>
-                      <strong style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>What you want to gain:</strong>
-                      <p style={{ margin: '4px 0 0 0', color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>"{profileData.commitment_data.q2}"</p>
-                    </div>
-                    <div style={{ marginBottom: '12px' }}>
-                      <strong style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>Who you're doing this for:</strong>
-                      <p style={{ margin: '4px 0 0 0', color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>"{profileData.commitment_data.q3}"</p>
-                    </div>
-                    
-                    <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontSize: '13px', color: '#6b7280', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>Click edit to update your commitment</span>
+                    {/* Header with Edit button in top right */}
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '12px' }}>
                       <button 
                         type="button"
                         className="btn-secondary"
@@ -4710,6 +4697,19 @@ function App() {
                       >
                         Edit
                       </button>
+                    </div>
+                    
+                    <div style={{ marginBottom: '12px' }}>
+                      <strong style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>What you want to change:</strong>
+                      <p style={{ margin: '4px 0 0 0', color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>"{profileData.commitment_data.q1}"</p>
+                    </div>
+                    <div style={{ marginBottom: '12px' }}>
+                      <strong style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>What you want to gain:</strong>
+                      <p style={{ margin: '4px 0 0 0', color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>"{profileData.commitment_data.q2}"</p>
+                    </div>
+                    <div style={{ marginBottom: '0' }}>
+                      <strong style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>Who you're doing this for:</strong>
+                      <p style={{ margin: '4px 0 0 0', color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>"{profileData.commitment_data.q3}"</p>
                     </div>
                   </div>
                 )}
