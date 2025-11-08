@@ -5728,46 +5728,50 @@ function App() {
                                 </div>
                               ) : (
                                 <div>
-                                  {/* Audio player with Generate new code button side by side */}
-                                  <div style={{display: 'flex', gap: '12px', alignItems: 'flex-start'}}>
-                                    <div style={{flex: '1 1 auto'}}>
-                                      {(audioGuideData?.audioUrl || audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url) ? (
-                                        <AudioPlayer audioUrl={(() => {
-                                          const url = audioGuideData?.audioUrl || audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url;
-                                          console.log('🎵 AudioPlayer props - audioGuideData:', audioGuideData);
-                                          console.log('🎵 AudioPlayer props - resolved URL:', url);
-                                          return url;
-                                        })()} />
-                                      ) : (
-                                        <div style={{
-                                          background: 'rgba(255, 193, 7, 0.1)',
-                                          border: '1px solid rgba(255, 193, 7, 0.3)',
-                                          borderRadius: '8px',
-                                          padding: '12px',
-                                          textAlign: 'center',
-                                          fontSize: '13px',
-                                          color: '#856404'
-                                        }}>
-                                          ⚠️ Audio playback is not available. Please try generating the audio guide again.
-                                        </div>
-                                      )}
-                                    </div>
-                                    
+                                  {/* New code button above audio player */}
+                                  <div style={{textAlign: 'right', marginBottom: '8px'}}>
                                     <button
-                                      className="btn-secondary"
                                       onClick={() => {
                                         setAudioGuideData(null);
                                         console.log('🔄 Regenerating audio guide');
                                       }}
                                       style={{
-                                        flex: '0 0 auto',
-                                        whiteSpace: 'nowrap',
-                                        minWidth: 'auto'
+                                        background: 'transparent',
+                                        border: 'none',
+                                        color: 'var(--brand-primary)',
+                                        textDecoration: 'underline',
+                                        cursor: 'pointer',
+                                        fontSize: '14px',
+                                        padding: '4px 0',
+                                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                                        fontWeight: 500
                                       }}
                                     >
-                                      Generate new code
+                                      New code
                                     </button>
                                   </div>
+                                  
+                                  {/* Audio player */}
+                                  {(audioGuideData?.audioUrl || audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url) ? (
+                                    <AudioPlayer audioUrl={(() => {
+                                      const url = audioGuideData?.audioUrl || audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url;
+                                      console.log('🎵 AudioPlayer props - audioGuideData:', audioGuideData);
+                                      console.log('🎵 AudioPlayer props - resolved URL:', url);
+                                      return url;
+                                    })()} />
+                                  ) : (
+                                    <div style={{
+                                      background: 'rgba(255, 193, 7, 0.1)',
+                                      border: '1px solid rgba(255, 193, 7, 0.3)',
+                                      borderRadius: '8px',
+                                      padding: '12px',
+                                      textAlign: 'center',
+                                      fontSize: '13px',
+                                      color: '#856404'
+                                    }}>
+                                      ⚠️ Audio playback is not available. Please try generating the audio guide again.
+                                    </div>
+                                  )}
                                 </div>
                               )}
                             </div>
@@ -5863,7 +5867,7 @@ function App() {
                     )}
                     
                     {/* Cancel/Back Button - Centered Below */}
-                    <div style={{display: 'flex', justifyContent: 'center', marginTop: '12px', width: '100%'}}>
+                    <div style={{display: 'flex', justifyContent: 'center', marginTop: '6px', width: '100%'}}>
                       <button 
                         className="btn-tertiary"
                         onClick={() => {
@@ -5897,7 +5901,16 @@ function App() {
                           }
                         }}
                       >
-                        {currentFlowStep === 1 ? 'Cancel' : 'Back'}
+                        {currentFlowStep === 1 ? (
+                          'Cancel'
+                        ) : (
+                          <>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            </svg>
+                            Back
+                          </>
+                        )}
                       </button>
                     </div>
                   </div>
