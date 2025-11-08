@@ -2100,15 +2100,15 @@ function App() {
   // Subscription cancellation functions
   const startCancelFlow = () => {
     setShowCancelFlow(true);
-    setCancelStep(1);
-    setCancelReason('');
+    setCancelStep(2); // Start at step 2 (feedback form)
+    setCancelReason('user_feedback'); // Set default reason
     setCancelFeedback('');
   };
 
   const closeCancelFlow = () => {
     setShowCancelFlow(false);
-    setCancelStep(1);
-    setCancelReason('');
+    setCancelStep(2);
+    setCancelReason('user_feedback');
     setCancelFeedback('');
     setCancelSubmitting(false);
   };
@@ -6519,9 +6519,8 @@ function App() {
         <div className="modal" role="dialog" aria-modal="true" aria-labelledby="cancel-flow-title" style={{maxWidth: '600px'}}>
           <>
             <div className="modal__header">
-              <div className="step-indicator">{cancelStep === 4 ? '' : `Step ${cancelStep} of 3`}</div>
+              <div className="step-indicator">{cancelStep === 4 ? '' : `Step ${cancelStep - 1} of 2`}</div>
               <h3 id="cancel-flow-title" className="modal__title">
-                {cancelStep === 1 && 'We\'re sorry to see you go'}
                 {cancelStep === 2 && 'Help us improve'}
                 {cancelStep === 3 && 'Confirm cancellation'}
                 {cancelStep === 4 && ''}
@@ -6529,62 +6528,29 @@ function App() {
             </div>
 
             <div className="modal__content">
-              {cancelStep === 1 && (
-                <div style={{textAlign: 'center', marginBottom: '20px'}}>
-                  <div style={{textAlign: 'left', marginBottom: '24px'}}>
-                    <label style={{display: 'block', fontWeight: '500', marginBottom: '12px', color: '#374151'}}>
-                      What's the main reason for cancelling?
-                    </label>
-                    <select
-                      value={cancelReason}
-                      onChange={(e) => setCancelReason(e.target.value)}
-                      style={{
-                        width: '100%',
-                        padding: '12px',
-                        border: '2px solid #d1d5db',
-                        borderRadius: '8px',
-                        fontSize: '16px',
-                        backgroundColor: '#fff'
-                      }}
-                    >
-                      <option value="">Please select a reason...</option>
-                      <option value="too_expensive">Too expensive</option>
-                      <option value="not_using">Not using the service enough</option>
-                      <option value="technical_issues">Technical issues or bugs</option>
-                      <option value="missing_features">Missing features I need</option>
-                      <option value="found_alternative">Found a better alternative</option>
-                      <option value="temporary_pause">Just need a temporary break</option>
-                      <option value="privacy_concerns">Privacy or data concerns</option>
-                      <option value="other">Other reason</option>
-                    </select>
-                  </div>
-
-
-                </div>
-              )}
-
               {cancelStep === 2 && (
-                <div style={{textAlign: 'center', marginBottom: '20px'}}>
-                  
-                  
-                  <div style={{textAlign: 'left', marginBottom: '24px'}}>
-                    <label style={{display: 'block', fontWeight: '500', marginBottom: '12px', color: '#374151'}}>
-                      Tell us more about your experience (optional):
+                <div style={{marginBottom: '20px'}}>
+                  <div style={{marginBottom: '1.5rem'}}>
+                    <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>
+                      Tell us more about your experience (optional)
                     </label>
                     <textarea
                       value={cancelFeedback}
                       onChange={(e) => setCancelFeedback(e.target.value)}
                       placeholder="What could we have done better? Any suggestions for improvement?"
-                      rows={4}
+                      rows={5}
+                      className="input"
                       style={{
                         width: '100%',
-                        padding: '12px',
-                        border: '2px solid #d1d5db',
-                        borderRadius: '8px',
-                        fontSize: '16px',
+                        padding: '16px',
+                        border: '1px solid #0F172A',
+                        borderRadius: '7px',
+                        fontSize: '15px',
                         backgroundColor: '#fff',
                         resize: 'vertical',
-                        fontFamily: 'inherit'
+                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                        color: '#0F172A',
+                        minHeight: '120px'
                       }}
                     />
                   </div>
@@ -6593,20 +6559,19 @@ function App() {
 
               {cancelStep === 3 && (
                 <div style={{textAlign: 'left', marginBottom: '20px'}}>
-                  <div style={{background: '#f9fafb', border: '1px solid #d1d5db', borderRadius: '8px', padding: '20px', marginBottom: '24px', textAlign: 'left'}}>
-                    <h4 style={{margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600', color: '#374151'}}>
+                  <div style={{background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '7px', padding: '20px', marginBottom: '24px', textAlign: 'left'}}>
+                    <h4 style={{margin: '0 0 16px 0', fontSize: '16px', fontWeight: '500', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                       Cancellation Summary
                     </h4>
-                    <div style={{fontSize: '14px', color: '#6b7280', lineHeight: '1.6'}}>
+                    <div style={{fontSize: '14px', color: '#0F172A', lineHeight: '1.6', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                       <p style={{margin: '0 0 8px 0'}}><strong>Plan:</strong> Screen Time Journey - Starter</p>
-                      <p style={{margin: '0 0 8px 0'}}><strong>Reason:</strong> {cancelReason || 'Not specified'}</p>
                       <p style={{margin: '0 0 8px 0'}}><strong>Effective:</strong> Immediately</p>
                       <p style={{margin: '0'}}><strong>Access:</strong> Until end of current billing period</p>
                     </div>
                   </div>
 
-                  <div style={{background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '8px', padding: '16px', marginBottom: '20px'}}>
-                    <p style={{margin: 0, fontSize: '14px', color: '#dc2626', fontWeight: '500'}}>
+                  <div style={{background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '7px', padding: '16px', marginBottom: '20px'}}>
+                    <p style={{margin: 0, fontSize: '14px', color: '#dc2626', fontWeight: '500', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                       ⚠️ <strong>Important:</strong> Cancelling will permanently delete your progress, device configurations, and journey data. This cannot be undone.
                     </p>
                   </div>
@@ -6641,58 +6606,34 @@ function App() {
             </div>
 
             <div className="modal__footer">
-              {cancelStep === 1 && (
-                <>
-                  <button
-                    className="btn btn--primary btn--full"
-                    onClick={nextCancelStep}
-                    disabled={!cancelReason}
-                    style={{width: '100%', marginBottom: '16px'}}
-                  >
-                    Continue cancellation
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{marginLeft: '8px'}}>
-                      <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
-                  <button
-                    className="link-back"
-                    onClick={closeCancelFlow}
-                    style={{width: '100%', textAlign: 'center', background: 'none', border: 'none', color: '#6b7280', fontSize: '14px', cursor: 'pointer'}}
-                  >
-                    Keep subscription
-                  </button>
-                </>
-              )}
-
               {cancelStep === 2 && (
                 <>
                   <button
-                    className="btn btn--primary btn--full"
+                    className="btn-primary"
                     onClick={nextCancelStep}
-                    style={{width: '100%', marginBottom: '16px'}}
+                    style={{width: '100%'}}
                   >
-                    Continue
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{marginLeft: '8px'}}>
-                      <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                    Continue →
                   </button>
-                  <button
-                    className="link-back"
-                    onClick={() => setCancelStep(1)}
-                    style={{width: '100%', textAlign: 'center', background: 'none', border: 'none', color: '#6b7280', fontSize: '14px', cursor: 'pointer'}}
-                  >
-                    Back
-                  </button>
+                  
+                  <div style={{display: 'flex', justifyContent: 'center', marginTop: '6px', width: '100%'}}>
+                    <button
+                      className="btn-tertiary"
+                      onClick={closeCancelFlow}
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 </>
               )}
 
               {cancelStep === 3 && (
                 <>
                   <button
-                    className="btn btn--destructive btn--full"
+                    className="btn-primary"
                     onClick={submitCancellation}
                     disabled={cancelSubmitting}
-                    style={{background: '#dc2626', borderColor: '#dc2626', color: '#fff', width: '100%', marginBottom: '16px'}}
+                    style={{background: '#dc2626', borderColor: '#dc2626', color: '#fff', width: '100%'}}
                   >
                     {cancelSubmitting ? (
                       <div className="spinner" style={{
@@ -6709,14 +6650,16 @@ function App() {
                       'Confirm cancellation'
                     )}
                   </button>
-                  <button
-                    className="link-back"
-                    onClick={() => setCancelStep(2)}
-                    disabled={cancelSubmitting}
-                    style={{display: 'block', margin: '0 auto', background: 'none', border: 'none', color: '#6b7280', fontSize: '14px', cursor: 'pointer', textAlign: 'center'}}
-                  >
-                    Back
-                  </button>
+                  
+                  <div style={{display: 'flex', justifyContent: 'center', marginTop: '6px', width: '100%'}}>
+                    <button
+                      className="btn-tertiary"
+                      onClick={() => setCancelStep(2)}
+                      disabled={cancelSubmitting}
+                    >
+                      Back
+                    </button>
+                  </div>
                 </>
               )}
 
