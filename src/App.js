@@ -5313,8 +5313,8 @@ function App() {
                           <div style={{marginBottom: '20px'}}>
                             
                             {/* Surrender Text */}
-                            <div style={{background: 'rgba(255,255,255,0.8)', padding: '20px', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.1)', marginBottom: '20px'}}>
-                              <p style={{margin: 0, fontSize: '15px', lineHeight: '1.7', color: '#374151', fontStyle: 'italic', textAlign: 'left'}}>
+                            <div style={{background: '#ffffff', padding: '20px', borderRadius: '7px', border: '1px solid #e2e8f0', marginBottom: '20px'}}>
+                              <p className="account-text" style={{margin: 0, fontSize: '15px', lineHeight: '1.7', fontStyle: 'italic', textAlign: 'left'}}>
                                 "{currentFlow.steps[currentFlowStep - 1].surrender_text || surrenderText}"
                               </p>
                             </div>
@@ -5322,9 +5322,9 @@ function App() {
                             {/* Recording Status (only when recording) */}
                             {isRecording && (
                               <div style={{
-                                background: 'rgba(249, 250, 251, 0.8)',
-                                border: '1px solid rgba(0, 0, 0, 0.1)',
-                                borderRadius: '8px',
+                                background: '#ffffff',
+                                border: '1px solid #e2e8f0',
+                                borderRadius: '7px',
                                 padding: '16px',
                                 marginBottom: '16px',
                                 textAlign: 'center'
@@ -5335,8 +5335,9 @@ function App() {
                                     alignItems: 'center',
                                     gap: '8px',
                                     fontSize: '16px',
-                                    fontWeight: '600',
-                                    color: '#374151'
+                                    fontWeight: '500',
+                                    color: '#0F172A',
+                                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                                   }}>
                                     <div style={{
                                       width: '12px',
@@ -5350,29 +5351,37 @@ function App() {
                                   <div style={{
                                     fontSize: '24px',
                                     fontWeight: '700',
-                                    color: '#374151',
-                                    fontFamily: 'monospace'
+                                    color: '#0F172A',
+                                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                                   }}>
                                     {recordingTime}s
                                   </div>
                                   
-                                  {/* Audio Visualizer - Single Bar */}
+                                  {/* Audio Visualizer - Vertical Bars */}
                                   <div style={{
+                                    display: 'flex',
+                                    alignItems: 'flex-end',
+                                    justifyContent: 'center',
+                                    gap: '4px',
                                     width: '100%',
-                                    maxWidth: '500px',
-                                    height: '8px',
-                                    background: '#E5E7EB',
-                                    borderRadius: '4px',
-                                    overflow: 'hidden',
+                                    maxWidth: '300px',
+                                    height: '60px',
                                     marginTop: '8px'
                                   }}>
-                                    <div style={{
-                                      height: '100%',
-                                      background: 'linear-gradient(90deg, #2E0456, #440B6C)',
-                                      width: `${Math.min(100, Math.max(10, (audioLevels[0] || 30) * 1.5))}%`,
-                                      transition: 'width 0.1s ease',
-                                      animation: 'pulse 1.5s ease-in-out infinite'
-                                    }}></div>
+                                    {[...Array(12)].map((_, i) => (
+                                      <div
+                                        key={i}
+                                        style={{
+                                          flex: 1,
+                                          height: `${Math.min(100, Math.max(20, (audioLevels[i % audioLevels.length] || Math.random() * 50 + 20)))}%`,
+                                          background: 'linear-gradient(180deg, #2E0456, #440B6C)',
+                                          borderRadius: '2px',
+                                          transition: 'height 0.1s ease',
+                                          animation: 'pulse 1.5s ease-in-out infinite',
+                                          animationDelay: `${i * 0.1}s`
+                                        }}
+                                      ></div>
+                                    ))}
                                   </div>
                                 </div>
                               </div>
@@ -5393,37 +5402,34 @@ function App() {
                                       startRecording();
                                     }
                                   }}
-                                  className="btn btn--primary"
+                                  className="btn-secondary"
                                   style={{
                                     background: isRecording 
-                                      ? 'linear-gradient(135deg, #DC2626, #EF4444)'
-                                      : 'linear-gradient(135deg, #2E0456, #440B6C)',
-                                    border: 'none',
-                                    borderRadius: '8px',
-                                    padding: '14px 28px',
-                                    fontSize: '16px',
-                                    fontWeight: '600',
-                                    color: 'white',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s ease',
+                                      ? '#DC2626'
+                                      : 'transparent',
+                                    borderColor: isRecording ? '#DC2626' : '#0F172A',
+                                    color: isRecording ? 'white' : '#0F172A',
+                                    height: '32px',
+                                    minHeight: '32px',
+                                    padding: '6px 16px',
+                                    fontSize: '14px',
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: '8px',
                                     margin: '0 auto',
-                                    width: 'auto',
-                                    minWidth: '180px'
+                                    width: 'auto'
                                   }}
                                 >
                                   {isRecording ? (
                                     <>
-                                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                         <rect x="6" y="6" width="12" height="12"/>
                                       </svg>
                                       Stop Recording
                                       </>
                                     ) : (
                                       <>
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                           <circle cx="12" cy="12" r="3"/>
                                         </svg>
                                         Start Recording
@@ -5433,8 +5439,8 @@ function App() {
                                   
                                   {/* Microphone permission hint */}
                                   {!isRecording && (
-                                    <div className="mic-permission">
-                                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <div className="account-text" style={{textAlign: 'center', marginTop: '12px', fontSize: '13px'}}>
+                                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{verticalAlign: 'middle', marginRight: '4px'}}>
                                         <circle cx="12" cy="12" r="10"/>
                                         <path d="M12 6v6l4 2"/>
                                       </svg>
@@ -5444,9 +5450,9 @@ function App() {
                                 </div>
                               ) : (
                                 <div style={{
-                                  background: 'rgba(249, 250, 251, 0.8)',
-                                  border: '1px solid rgba(0, 0, 0, 0.1)',
-                                  borderRadius: '12px',
+                                  background: '#ffffff',
+                                  border: '1px solid #e2e8f0',
+                                  borderRadius: '7px',
                                   padding: '20px'
                                 }}>
                                   {/* Success Message with Green Emoji */}
@@ -5462,15 +5468,15 @@ function App() {
                                       <h3 style={{
                                         margin: '0 0 8px 0',
                                         fontSize: '18px',
-                                        fontWeight: '600',
-                                        color: '#374151'
+                                        fontWeight: '500',
+                                        color: '#0F172A',
+                                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                                       }}>
                                         Recording Complete!
                                       </h3>
-                                      <p style={{
+                                      <p className="account-text" style={{
                                         margin: 0,
-                                        fontSize: '14px',
-                                        color: '#6B7280'
+                                        fontSize: '14px'
                                       }}>
                                         Duration: {recordingTime} seconds
                                       </p>
@@ -5479,11 +5485,11 @@ function App() {
                                   
                                   {/* Audio Player Preview */}
                                   <div style={{
-                                    background: 'rgba(255, 255, 255, 0.8)',
-                                    borderRadius: '8px',
+                                    background: '#f9f9f9',
+                                    borderRadius: '7px',
                                     padding: '16px',
                                     marginBottom: '16px',
-                                    border: '1px solid rgba(0, 0, 0, 0.1)'
+                                    border: '1px solid #e2e8f0'
                                   }}>
                                     <div style={{
                                       display: 'flex',
@@ -5510,7 +5516,7 @@ function App() {
                                           }
                                         }}
                                         style={{
-                                          background: 'linear-gradient(135deg, #2E0456, #440B6C)',
+                                          background: '#2E0456',
                                           border: 'none',
                                           borderRadius: '50%',
                                           width: '40px',
@@ -5532,14 +5538,14 @@ function App() {
                                         <div style={{
                                           fontSize: '14px',
                                           fontWeight: '500',
-                                          color: '#374151',
-                                          marginBottom: '4px'
+                                          color: '#0F172A',
+                                          marginBottom: '4px',
+                                          fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                                         }}>
                                           Surrender Recording
                                         </div>
-                                        <div style={{
-                                          fontSize: '12px',
-                                          color: '#6B7280'
+                                        <div className="account-text" style={{
+                                          fontSize: '12px'
                                         }}>
                                           Tap play to review your recording
                                         </div>
@@ -5554,15 +5560,9 @@ function App() {
                                       setIsRecording(false);
                                       setRecordingTime(0);
                                     }}
+                                    className="btn-tertiary"
                                     style={{
                                       width: '100%',
-                                      background: 'transparent',
-                                      border: 'none',
-                                      color: '#440B6C',
-                                      textDecoration: 'underline',
-                                      cursor: 'pointer',
-                                      fontSize: '14px',
-                                      padding: '8px 0',
                                       textAlign: 'center'
                                     }}
                                   >
@@ -6926,7 +6926,7 @@ function App() {
                   className="btn-tertiary"
                   onClick={closeLogsFlow}
                 >
-                  Close
+                  Cancel
                 </button>
               </div>
             </div>
