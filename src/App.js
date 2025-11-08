@@ -5586,7 +5586,7 @@ function App() {
                               if (!unlockedDevice) {
                                 return (
                                   <div style={{textAlign: 'center', padding: '20px'}}>
-                                    <div style={{marginBottom: '12px'}}>Loading device information...</div>
+                                    <div className="account-text" style={{marginBottom: '12px'}}>Loading device information...</div>
                                     <div style={{
                                       width: '24px',
                                       height: '24px',
@@ -5604,11 +5604,11 @@ function App() {
                                 <>
                                   {/* Screen Time Unlock Code */}
                                   {unlockedDevice?.current_audio_pincode && (
-                                    <div style={{padding: '16px', background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '8px', marginBottom: '12px'}}>
-                                      <h4 style={{margin: '0 0 8px 0', fontSize: '14px', fontWeight: '600', color: '#374151'}}>
+                                    <div style={{padding: '16px', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '7px', marginBottom: '12px'}}>
+                                      <h4 style={{margin: '0 0 8px 0', fontSize: '14px', fontWeight: '500', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                                         📱 Screen Time Code
                                       </h4>
-                                      <div style={{fontFamily: 'monospace', fontSize: '32px', fontWeight: '700', color: '#2E0456', letterSpacing: '8px', textAlign: 'center', padding: '8px 0'}}>
+                                      <div style={{fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontSize: '32px', fontWeight: '700', color: '#2E0456', letterSpacing: '8px', textAlign: 'center', padding: '8px 0'}}>
                                         {unlockedDevice.current_audio_pincode}
                                       </div>
                                     </div>
@@ -5616,18 +5616,18 @@ function App() {
                                   
                                   {/* MDM Profile Pincode (if device has it) */}
                                   {unlockedDevice?.current_mdm_pincode && (
-                                    <div style={{padding: '16px', background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '8px', marginBottom: '12px'}}>
-                                      <h4 style={{margin: '0 0 8px 0', fontSize: '14px', fontWeight: '600', color: '#374151'}}>
+                                    <div style={{padding: '16px', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '7px', marginBottom: '12px'}}>
+                                      <h4 style={{margin: '0 0 8px 0', fontSize: '14px', fontWeight: '500', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                                         🔧 MDM Profile Removal Code
                                       </h4>
-                                      <div style={{fontFamily: 'monospace', fontSize: '32px', fontWeight: '700', color: '#2E0456', letterSpacing: '8px', textAlign: 'center', padding: '8px 0'}}>
+                                      <div style={{fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontSize: '32px', fontWeight: '700', color: '#2E0456', letterSpacing: '8px', textAlign: 'center', padding: '8px 0'}}>
                                         {unlockedDevice.current_mdm_pincode}
                                       </div>
                                     </div>
                                   )}
                                   
-                                  <div style={{background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.2)', borderRadius: '6px', padding: '12px', marginTop: '16px', textAlign: 'center'}}>
-                                    <p style={{margin: 0, fontSize: '13px', color: '#16a34a', fontWeight: '500'}}>
+                                  <div style={{background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '7px', padding: '12px', marginTop: '16px', textAlign: 'center'}}>
+                                    <p style={{margin: 0, fontSize: '13px', color: '#16a34a', fontWeight: '500', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                                       ✅ Device unlocked and removed from monitoring
                                     </p>
                                   </div>
