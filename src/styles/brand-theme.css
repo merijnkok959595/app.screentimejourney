@@ -1219,6 +1219,7 @@ p, span, div {
     grid-template-columns: auto 1fr !important;
     gap: var(--spacing-sm) !important;
     align-items: center !important;
+    position: relative !important; /* For absolute positioning of mobile menu */
   }
   
   /* Hide title on mobile */
@@ -1235,6 +1236,7 @@ p, span, div {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    padding: 7.5px 0 !important; /* 7.5px top and bottom padding */
   }
   
   .header .header-actions {
@@ -1254,7 +1256,9 @@ p, span, div {
     display: block !important;
     background-color: rgba(255, 255, 255, 0.2) !important; /* Temporary: make hamburger menu visible */
     border-radius: 4px !important;
-    margin-left: 12px !important; /* Position more to the left */
+    margin-left: 0 !important; /* Remove margin */
+    position: absolute !important;
+    left: 12px !important; /* Position to the left edge of header */
   }
   
   .header-logo img {
@@ -1297,6 +1301,7 @@ p, span, div {
     grid-template-columns: auto 1fr;
     gap: 4px;
     align-items: center;
+    position: relative; /* For absolute positioning of mobile menu */
   }
   
   /* Keep title hidden on small mobile */
@@ -1313,6 +1318,7 @@ p, span, div {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    padding: 7.5px 0 !important; /* 7.5px top and bottom padding */
   }
   
   .header-actions {
@@ -1337,6 +1343,9 @@ p, span, div {
   
   .header-mobile-menu {
     display: block !important;
+    margin-left: 0 !important; /* Remove margin */
+    position: absolute !important;
+    left: 12px !important; /* Position to the left edge of header */
   }
   
   .mobile-menu-toggle {
