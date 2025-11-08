@@ -793,6 +793,16 @@ p, span, div {
   }
 }
 
+/* Shimmer keyframes - Subtle light sweep */
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
 /* Shimmer effect - ONLY for Start Now */
 .btn-primary--animated::after {
   content: '';
@@ -804,11 +814,12 @@ p, span, div {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.2),
     transparent
   );
-  animation: shimmer 3s infinite;
-  z-index: -1; /* Behind text */
+  animation: shimmer 4s ease-in-out infinite;
+  animation-delay: 1s; /* Start after 1s */
+  z-index: 2; /* Above wave effect but below text */
   pointer-events: none;
   border-radius: 7px; /* Match button border radius */
 }
