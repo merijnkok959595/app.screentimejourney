@@ -1293,11 +1293,11 @@ p, span, div {
 /* === ACCOUNT WALL (ONBOARDING) === */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; z-index: 9999; }
 .modal-overlay.active { display: flex; }
-.modal { width: min(720px, 94%); background: #f9f9f9; border: 1px solid var(--border); border-radius: 12px; padding: 32px; box-shadow: var(--shadow-lg); }
+.modal { width: min(720px, 94%); background: #f9f9f9; border: 1px solid var(--border); border-radius: 7px; padding: 32px; box-shadow: var(--shadow-lg); }
 .modal__header { margin-bottom: 12px; }
 .modal__title { font-family: var(--font-heading); font-size: 1.75rem; margin: 0 0 8px 0; }
 .modal__desc { color: var(--text-muted); margin: 0 0 16px 0; }
-.modal__footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+.modal__footer { display: flex; flex-direction: column; gap: 0px; justify-content: center; align-items: center; margin-top: 16px; }
 .input { 
   width: 100%; 
   padding: 22px 16px 8px 16px; 

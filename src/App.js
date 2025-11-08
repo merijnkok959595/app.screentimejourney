@@ -4377,20 +4377,20 @@ function App() {
 
             <div>
               {/* Email - Read Only */}
-              <div className="input-container" style={{ marginBottom: '1rem' }}>
-                <label className="form-label">Email (Read-only)</label>
+              <div style={{ marginBottom: '1.5rem' }}>
+                <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Email (Read-only)</label>
                 <input 
                   className="input"
                   value={profileData?.email || ''}
                   readOnly
-                  style={{ backgroundColor: '#EEEEEE', cursor: 'not-allowed' }}
+                  style={{ backgroundColor: '#EEEEEE', cursor: 'not-allowed', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
                 />
-                <p className="helper" style={{ margin: '0.5rem 0 0 0' }}>Email cannot be changed as it's linked to your Shopify account.</p>
+                <p style={{ margin: '8px 0 0 4px', fontSize: '13px', color: '#6b7280', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>Email cannot be changed as it's linked to your Shopify account.</p>
               </div>
 
               {/* Username */}
-              <div className="input-container" style={{ marginBottom: '1rem' }}>
-                <label className="form-label">Username</label>
+              <div style={{ marginBottom: '1.5rem' }}>
+                <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Username</label>
                 <div style={{ position: 'relative' }}>
                   <input 
                     className={`input ${profileEditData.usernameValidationState === 'checking' ? 'input--loading' : 
@@ -4456,7 +4456,7 @@ function App() {
                     </div>
                   )}
                 </div>
-                <p className="helper" style={{ margin: '0.5rem 0 0 0', color: 
+                <p style={{ margin: '8px 0 0 4px', fontSize: '13px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', color: 
                   profileEditData.usernameValidationState === 'available' ? '#10b981' : 
                   profileEditData.usernameValidationState === 'taken' ? '#ef4444' : '#6b7280' }}>
                   {profileEditData.usernameValidationState === 'taken' ? 'Username already taken' :
@@ -4466,8 +4466,8 @@ function App() {
               </div>
 
               {/* Gender */}
-              <div style={{ marginBottom: '1rem' }}>
-                <label className="form-label">Gender</label>
+              <div style={{ marginBottom: '1.5rem' }}>
+                <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Gender</label>
                 <div className="radio-group">
                   <label className="radio-option">
                     <input 
@@ -4495,15 +4495,15 @@ function App() {
               </div>
 
               {/* WhatsApp */}
-              <div style={{ marginBottom: '1rem' }}>
-                <label className="form-label">WhatsApp (Optional)</label>
+              <div style={{ marginBottom: '1.5rem' }}>
+                <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>WhatsApp (Optional)</label>
                 
                 {/* Current WhatsApp Display */}
-                {profileData?.whatsapp && (
-                  <div style={{ marginBottom: '1rem', padding: '12px', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
+                {profileData?.whatsapp && !profileEditData.showWhatsAppEdit && (
+                  <div style={{ marginBottom: '1rem', padding: '16px', backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '7px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                       <div>
-                        <strong>Current: {profileData.whatsapp}</strong>
+                        <strong style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>Current: {profileData.whatsapp}</strong>
                         {profileData.whatsapp_opt_in && (
                           <span style={{ marginLeft: '8px', color: '#64748b', fontSize: '14px' }}>✓ Verified</span>
                         )}
@@ -4511,7 +4511,7 @@ function App() {
                       <button 
                         type="button"
                         className="btn-secondary"
-                        style={{ padding: '4px 8px', fontSize: '12px' }}
+                        style={{ padding: '6px 16px', fontSize: '13px', height: '32px', minHeight: '32px' }}
                         onClick={() => setProfileEditData(prev => ({...prev, showWhatsAppEdit: true}))}
                       >
                         Change
@@ -4673,31 +4673,31 @@ function App() {
               </div>
 
               {/* Commitment Data Section */}
-              <div style={{ marginBottom: '1rem' }}>
-                <label className="form-label">Your Commitment</label>
+              <div style={{ marginBottom: '1.5rem' }}>
+                <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Your Commitment</label>
                 
                 {/* Current Commitment Display */}
                 {profileData?.commitment_data && !profileEditData.showCommitmentEdit && (
-                  <div style={{ marginBottom: '1rem', padding: '16px', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
+                  <div style={{ marginBottom: '1rem', padding: '16px', backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '7px' }}>
                     <div style={{ marginBottom: '12px' }}>
-                      <strong style={{ color: '#1e293b', fontSize: '14px' }}>What you want to change:</strong>
-                      <p style={{ margin: '4px 0 0 0', color: '#475569' }}>"{profileData.commitment_data.q1}"</p>
+                      <strong style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>What you want to change:</strong>
+                      <p style={{ margin: '4px 0 0 0', color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>"{profileData.commitment_data.q1}"</p>
                     </div>
                     <div style={{ marginBottom: '12px' }}>
-                      <strong style={{ color: '#1e293b', fontSize: '14px' }}>What you want to gain:</strong>
-                      <p style={{ margin: '4px 0 0 0', color: '#475569' }}>"{profileData.commitment_data.q2}"</p>
+                      <strong style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>What you want to gain:</strong>
+                      <p style={{ margin: '4px 0 0 0', color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>"{profileData.commitment_data.q2}"</p>
                     </div>
                     <div style={{ marginBottom: '12px' }}>
-                      <strong style={{ color: '#1e293b', fontSize: '14px' }}>Who you're doing this for:</strong>
-                      <p style={{ margin: '4px 0 0 0', color: '#475569' }}>"{profileData.commitment_data.q3}"</p>
+                      <strong style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>Who you're doing this for:</strong>
+                      <p style={{ margin: '4px 0 0 0', color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>"{profileData.commitment_data.q3}"</p>
                     </div>
                     
                     <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontSize: '12px', color: '#64748b' }}>Click edit to update your commitment</span>
+                      <span style={{ fontSize: '13px', color: '#6b7280', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>Click edit to update your commitment</span>
                       <button 
                         type="button"
                         className="btn-secondary"
-                        style={{ padding: '6px 12px', fontSize: '14px' }}
+                        style={{ padding: '6px 16px', fontSize: '13px', height: '32px', minHeight: '32px' }}
                         onClick={() => setProfileEditData(prev => ({
                           ...prev, 
                           showCommitmentEdit: true,
@@ -4714,8 +4714,8 @@ function App() {
 
                 {/* Commitment Edit Form - Inline */}
                 {profileEditData.showCommitmentEdit && (
-                  <div style={{ marginBottom: '1rem', padding: '16px', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
-                    <h4 style={{ margin: '0 0 16px 0', color: '#374151', fontSize: '16px' }}>Update Your Commitment</h4>
+                  <div style={{ marginBottom: '1rem', padding: '16px', backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '7px' }}>
+                    <h4 style={{ margin: '0 0 16px 0', color: '#0F172A', fontSize: '16px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '500' }}>Update Your Commitment</h4>
                     
                     <div style={{ marginBottom: '16px' }}>
                       <label className="form-label">What do you want to quit or change?</label>
@@ -4948,7 +4948,8 @@ function App() {
 
               <div className="modal__footer">
                 <button
-                  className="btn btn--primary btn--full"
+                  className="btn-primary"
+                  style={{width: '100%'}}
                   disabled={
                     profileLoading || 
                     !profileEditData.username.trim() || 
@@ -4969,17 +4970,20 @@ function App() {
                 >
                   {profileLoading ? 'Saving...' : 'Save Changes'}
                 </button>
-                <button 
-                  className="btn-secondary"
-                  style={{width: '100%'}}
-                  onClick={() => {
-                    setShowProfileEdit(false);
-                    setProfileError('');
-                  }}
-                  disabled={profileLoading}
-                >
-                  Cancel
-                </button>
+                
+                {/* Cancel button - centered below */}
+                <div style={{display: 'flex', justifyContent: 'center', marginTop: '6px', width: '100%'}}>
+                  <button 
+                    className="btn-tertiary"
+                    onClick={() => {
+                      setShowProfileEdit(false);
+                      setProfileError('');
+                    }}
+                    disabled={profileLoading}
+                  >
+                    Cancel
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -5617,6 +5621,7 @@ function App() {
                               <div key={index} style={{marginBottom: '1.5rem'}}>
                                 {field.field_type === 'text' && (
                                   <>
+                                    <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>{field.label}</label>
                                     <div className="input-wrapper">
                                       <input 
                                         className={`input ${deviceFormErrors[field.field_name] ? 'input--invalid' : ''}`}
@@ -5637,7 +5642,7 @@ function App() {
                                         }}
                                         maxLength={field.max_length}
                                       />
-                                      <label className="form-label">{field.label}</label>
+                                      <label className="form-label">{field.placeholder}</label>
                                     </div>
                                     {deviceFormErrors[field.field_name] && (
                                       <p className="error-message">{deviceFormErrors[field.field_name]}</p>
