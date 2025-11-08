@@ -4027,8 +4027,8 @@ function App() {
                   aria-label="Toggle menu"
                 >
                   {!mobileMenuOpen ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="icon icon-hamburger" viewBox="0 0 20 16" width="20" height="20">
-                      <path fill="currentColor" d="M1 .5a.5.5 0 1 0 0 1h18a.5.5 0 0 0 0-1zM.5 8a.5.5 0 0 1 .5-.5h18a.5.5 0 0 1 0 1H1A.5.5 0 0 1 .5 8m0 7a.5.5 0 0 1 .5-.5h18a.5.5 0 0 1 0 1H1a.5.5 0 0 1-.5-.5"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="icon icon-hamburger" viewBox="0 0 18 16">
+                      <path fill="currentColor" d="M1 .5a.5.5 0 1 0 0 1h15.71a.5.5 0 0 0 0-1zM.5 8a.5.5 0 0 1 .5-.5h15.71a.5.5 0 0 1 0 1H1A.5.5 0 0 1 .5 8m0 7a.5.5 0 0 1 .5-.5h15.71a.5.5 0 0 1 0 1H1a.5.5 0 0 1-.5-.5"></path>
                     </svg>
                   ) : (
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="icon icon-close" viewBox="0 0 20 17" width="20" height="20">
@@ -6009,8 +6009,8 @@ function App() {
                   aria-label="Toggle menu"
                 >
                   {!mobileMenuOpen ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="icon icon-hamburger" viewBox="0 0 20 16" width="20" height="20">
-                      <path fill="currentColor" d="M1 .5a.5.5 0 1 0 0 1h18a.5.5 0 0 0 0-1zM.5 8a.5.5 0 0 1 .5-.5h18a.5.5 0 0 1 0 1H1A.5.5 0 0 1 .5 8m0 7a.5.5 0 0 1 .5-.5h18a.5.5 0 0 1 0 1H1a.5.5 0 0 1-.5-.5"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="icon icon-hamburger" viewBox="0 0 18 16">
+                      <path fill="currentColor" d="M1 .5a.5.5 0 1 0 0 1h15.71a.5.5 0 0 0 0-1zM.5 8a.5.5 0 0 1 .5-.5h15.71a.5.5 0 0 1 0 1H1A.5.5 0 0 1 .5 8m0 7a.5.5 0 0 1 .5-.5h15.71a.5.5 0 0 1 0 1H1a.5.5 0 0 1-.5-.5"></path>
                     </svg>
                   ) : (
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="icon icon-close" viewBox="0 0 20 17" width="20" height="20">
