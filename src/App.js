@@ -5699,9 +5699,34 @@ function App() {
                           
                           {/* Body Text for video steps */}
                           {currentFlow.steps[currentFlowStep - 1].body && (
-                            <p style={{marginBottom: '20px', fontSize: '16px', lineHeight: '1.5', textAlign: 'left', color: '#374151'}}>
-                              {currentFlow.steps[currentFlowStep - 1].body}
-                            </p>
+                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
+                              <p style={{margin: 0, fontSize: '16px', lineHeight: '1.5', color: '#374151'}}>
+                                {currentFlow.steps[currentFlowStep - 1].body}
+                              </p>
+                              {currentFlowStep === 4 && audioGuideData && (
+                                <button
+                                  onClick={() => {
+                                    setAudioGuideData(null);
+                                    console.log('🔄 Regenerating audio guide');
+                                  }}
+                                  style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    color: 'var(--brand-primary)',
+                                    textDecoration: 'underline',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    padding: '4px 0',
+                                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                                    fontWeight: 500,
+                                    whiteSpace: 'nowrap',
+                                    marginLeft: '16px'
+                                  }}
+                                >
+                                  New code
+                                </button>
+                              )}
+                            </div>
                           )}
                           
                           {/* Audio Guide for Setup Pincode step (step 4) */}
@@ -5710,7 +5735,7 @@ function App() {
                               {!audioGuideData ? (
                                 <div>
                                   <button
-                                    className="btn btn--outline btn--sm"
+                                    className="btn-secondary"
                                     onClick={generateAudioGuide}
                                     disabled={audioGenerating || !deviceFormData.device_type}
                                     style={{width: '100%'}}
@@ -5728,29 +5753,6 @@ function App() {
                                 </div>
                               ) : (
                                 <div>
-                                  {/* New code button above audio player */}
-                                  <div style={{textAlign: 'right', marginBottom: '8px'}}>
-                                    <button
-                                      onClick={() => {
-                                        setAudioGuideData(null);
-                                        console.log('🔄 Regenerating audio guide');
-                                      }}
-                                      style={{
-                                        background: 'transparent',
-                                        border: 'none',
-                                        color: 'var(--brand-primary)',
-                                        textDecoration: 'underline',
-                                        cursor: 'pointer',
-                                        fontSize: '14px',
-                                        padding: '4px 0',
-                                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
-                                        fontWeight: 500
-                                      }}
-                                    >
-                                      New code
-                                    </button>
-                                  </div>
-                                  
                                   {/* Audio player */}
                                   {(audioGuideData?.audioUrl || audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url) ? (
                                     <AudioPlayer audioUrl={(() => {
@@ -5901,16 +5903,7 @@ function App() {
                           }
                         }}
                       >
-                        {currentFlowStep === 1 ? (
-                          'Cancel'
-                        ) : (
-                          <>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                              <path d="M19 12H5M12 19l-7-7 7-7"/>
-                            </svg>
-                            Back
-                          </>
-                        )}
+                        {currentFlowStep === 1 ? 'Cancel' : 'Back'}
                       </button>
                     </div>
                   </div>

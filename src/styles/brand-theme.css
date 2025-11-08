@@ -1386,12 +1386,11 @@ p, span, div {
 .radio-custom {
   display: none;
 }
-/* Selected state - subtle background with thicker border */
+/* Selected state - subtle and professional */
 .radio-option input[type="radio"]:checked ~ .radio-label,
 .radio-option:has(input[type="radio"]:checked) {
-  background: rgba(15, 23, 42, 0.05); /* Very subtle tint */
-  border: 2px solid #0F172A; /* Thicker border when selected */
-  padding: 13px 15px; /* Adjust padding to compensate for thicker border */
+  background: rgba(15, 23, 42, 0.03); /* Very subtle background */
+  border-color: #0F172A; /* Same border thickness, just ensure color */
 }
 .radio-option:has(input[type="radio"]:checked) .radio-label {
   color: #0F172A; /* Keep text same color */
