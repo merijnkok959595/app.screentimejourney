@@ -200,12 +200,16 @@
     margin-top: 2.5rem;
   }
   
+  /* Override container padding for footer-inner on mobile */
+  .container.footer-inner {
+    padding: 8px 10px 0 22px !important; /* Left padding 22px = 10px base + 12px margin */
+    margin-left: 0 !important; /* Remove margin since we're using padding */
+  }
+  
   .footer-inner {
     grid-template-columns: 1fr;
     gap: 2.5rem;
     margin-bottom: 3rem;
-    padding: 8px 10px 0 10px; /* Added top padding for extra spacing */
-    margin-left: 12px; /* Increased from 6px for more left spacing */
   }
   
   .footer-bottom {
@@ -239,9 +243,9 @@
   }
   
   .footer-bottom {
-    padding-left: 10px; /* Reduced from 16px for wider content */
+    padding-left: 22px !important; /* 10px base + 12px margin for alignment with footer-inner */
     padding-right: 10px;
-    margin-left: 12px; /* Increased from 6px for more left spacing */
+    margin-left: 0 !important; /* Remove margin since we're using padding */
   }
   
   .footer-policies {
@@ -1352,7 +1356,7 @@ p, span, div {
     max-height: 52.5px !important; /* Scrolled mobile logo height */
   }
   
-  .header.scrolled .header .header-logo {
+  .header.scrolled .header-logo {
     width: 70px !important; /* Smaller container on scroll */
     height: 70px !important;
     padding: 5px !important; /* Less padding on scroll */
