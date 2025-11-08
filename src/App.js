@@ -4383,7 +4383,7 @@ function App() {
                   className="input"
                   value={profileData?.email || ''}
                   readOnly
-                  style={{ backgroundColor: '#EEEEEE', cursor: 'not-allowed', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                  style={{ backgroundColor: '#EEEEEE', cursor: 'not-allowed', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', padding: '16px' }}
                 />
                 <p style={{ margin: '8px 0 0 4px', fontSize: '13px', color: '#6b7280', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>Email cannot be changed as it's linked to your Shopify account.</p>
               </div>
@@ -4397,7 +4397,8 @@ function App() {
                       profileEditData.usernameValidationState === 'available' ? 'input--valid' : 
                       profileEditData.usernameValidationState === 'taken' ? 'input--invalid' : ''}`}
                     placeholder="theking" 
-                    value={profileEditData.username} 
+                    value={profileEditData.username}
+                    style={{ padding: '16px' }} 
                     onChange={async (e) => {
                       const value = e.target.value;
                       const sanitizedValue = value
@@ -4496,7 +4497,7 @@ function App() {
 
               {/* WhatsApp */}
               <div style={{ marginBottom: '1.5rem' }}>
-                <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>WhatsApp (Optional)</label>
+                <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>WhatsApp</label>
                 
                 {/* Current WhatsApp Display */}
                 {profileData?.whatsapp && !profileEditData.showWhatsAppEdit && (
@@ -4551,8 +4552,8 @@ function App() {
                       <div style={{ marginTop: '8px' }}>
                         <button 
                           type="button"
-                          className="btn btn--primary"
-                          style={{ padding: '6px 12px', fontSize: '14px', marginRight: '8px' }}
+                          className="btn-primary"
+                          style={{ width: '100%' }}
                           onClick={async () => {
                             const fullPhone = `${profileEditData.country_code}${profileEditData.whatsapp}`.replace(/\s/g, '');
                             setProfileEditData(prev => ({...prev, verifyingWhatsApp: true}));
@@ -4587,14 +4588,15 @@ function App() {
                         </button>
                         
                         {profileData?.whatsapp && (
-                          <button 
-                            type="button"
-                            className="btn-secondary"
-                            style={{ padding: '6px 12px', fontSize: '14px' }}
-                            onClick={() => setProfileEditData(prev => ({...prev, showWhatsAppEdit: false, whatsapp: '', whatsappCodeSent: false}))}
-                          >
-                            Cancel
-                          </button>
+                          <div style={{display: 'flex', justifyContent: 'center', marginTop: '6px', width: '100%'}}>
+                            <button 
+                              type="button"
+                              className="btn-tertiary"
+                              onClick={() => setProfileEditData(prev => ({...prev, showWhatsAppEdit: false, whatsapp: '', whatsappCodeSent: false}))}
+                            >
+                              Cancel
+                            </button>
+                          </div>
                         )}
                       </div>
                     )}
@@ -4706,7 +4708,7 @@ function App() {
                           commitmentQ3: profileData.commitment_data.q3 || ''
                         }))}
                       >
-                        Edit Commitment
+                        Edit
                       </button>
                     </div>
                   </div>
