@@ -2,7 +2,7 @@
   background: var(--brand-primary);
   color: #FFFFFF;
   text-align: left;
-  padding: 1rem 0 2.5rem 0;
+  padding: 2rem 0 2.5rem 0;
   margin-top: 3rem;
   position: relative;
 }
@@ -87,8 +87,8 @@
 
 .footer-title {
   font-family: var(--font-heading);
-  font-size: 20px;
-  font-weight: 400;
+  font-size: 22px;
+  font-weight: 500;
   color: #FFFFFF;
   margin: 0 0 1.5rem 0;
   text-transform: none;
@@ -107,7 +107,7 @@
   text-decoration: none; 
   font-family: var(--font-body);
   font-size: 0.95rem; 
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.6;
   transition: all 0.2s ease;
   position: relative;
@@ -115,25 +115,10 @@
   width: fit-content;
 }
 
-.footer-link::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: rgba(255,255,255,0.6);
-  transition: width 0.3s ease;
-}
-
 .footer-link:hover { 
   color: #FFFFFF;
   transform: translateX(3px);
   text-shadow: 0 0 8px rgba(138, 43, 226, 0.4), 0 0 16px rgba(138, 43, 226, 0.2);
-}
-
-.footer-link:hover::after {
-  width: 100%;
 }
 
 /* Footer bottom section */
@@ -159,7 +144,7 @@
   flex-wrap: wrap;
   gap: 1.5rem;
   font-family: var(--font-body);
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-weight: 400;
   padding-top: 1.5rem;
 }
@@ -169,7 +154,7 @@
   font-weight: 400;
   letter-spacing: 0.02em;
   white-space: nowrap;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
 }
 
 .footer-policy-links {
@@ -183,7 +168,7 @@
   color: #FFFFFF;
   text-decoration: underline;
   font-family: var(--font-body);
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-weight: 400;
   transition: all 0.2s ease;
   position: relative;
@@ -211,7 +196,7 @@
 
 @media (max-width: 768px) {
   .footer {
-    padding: 1rem 0 2rem 0;
+    padding: 2rem 0 2rem 0;
     margin-top: 2.5rem;
   }
   
