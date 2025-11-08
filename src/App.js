@@ -4504,7 +4504,7 @@ function App() {
                   <div style={{ marginBottom: '1rem', padding: '16px', backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '7px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                       <div>
-                        <strong style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>Current: {profileData.whatsapp}</strong>
+                        <span style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>{profileData.whatsapp}</span>
                         {profileData.whatsapp_opt_in && (
                           <span style={{ marginLeft: '8px', color: '#64748b', fontSize: '14px' }}>✓ Verified</span>
                         )}

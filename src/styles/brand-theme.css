@@ -1389,7 +1389,7 @@ p, span, div {
 }
 /* Selected state - subtle and professional */
 .radio-option:has(input[type="radio"]:checked) {
-  background: rgba(15, 23, 42, 0.08); /* Darker background for visibility */
+  background: rgba(15, 23, 42, 0.12); /* Even darker background for better visibility */
   border-color: #0F172A;
   box-shadow: none; /* Explicitly no shadow */
 }
