@@ -1007,11 +1007,6 @@ p, span, div {
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-.mobile-menu-toggle svg path {
-  stroke-width: 1.5;
-  stroke: currentColor;
-}
-
 .hamburger-line {
   width: 20px;
   height: 1.5px;
@@ -1022,7 +1017,7 @@ p, span, div {
 
 .mobile-menu-dropdown {
   position: fixed;
-  top: 127px; /* Start below header: 42px announcement bar + 85px header = 127px */
+  top: 128px; /* Start below header: 42px announcement + 85px header + 1px border = 128px */
   left: 0;
   bottom: 0;
   width: 100%;
@@ -1086,23 +1081,24 @@ p, span, div {
 
 .mobile-menu-item {
   display: block;
-  width: 100%;
-  padding: 1rem 0;
+  width: calc(100% + 4rem); /* Extend full width including padding */
+  margin-left: -2rem; /* Offset the nav padding */
+  padding: 1rem 2rem; /* Add padding back inside */
   background: none;
   border: none;
   text-align: left;
   color: var(--brand-text);
   text-decoration: none;
   font-family: var(--font-body);
-  font-size: 17px; /* 1px bigger */
+  font-size: 17.5px; /* 0.5px bigger */
   font-weight: 500;
   letter-spacing: 1px;
   cursor: pointer;
-  transition: box-shadow 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .mobile-menu-item:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background-color: rgba(15, 23, 42, 0.04); /* Darker grey like form fields */
 }
 
 .header-subtitle {
@@ -1227,12 +1223,12 @@ p, span, div {
   .header .header-logo {
     justify-self: center !important;
     order: 2 !important;
-    width: 70px !important;
-    height: 70px !important;
+    width: 85px !important; /* 70px logo + 7.5px padding each side */
+    height: 85px !important; /* 70px logo + 7.5px padding top/bottom */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    padding: 7.5px 0 !important;
+    padding: 7.5px !important; /* 7.5px padding all around */
   }
   
   .header .header-actions {
@@ -1306,12 +1302,12 @@ p, span, div {
   .header .header-logo {
     justify-self: center !important;
     order: 2 !important;
-    width: 70px !important; /* Fixed width = default mobile logo size */
-    height: 70px !important; /* Fixed height = 70x70px container */
+    width: 85px !important; /* 70px logo + 7.5px padding each side */
+    height: 85px !important; /* 70px logo + 7.5px padding top/bottom */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    padding: 7.5px 0 !important; /* 7.5px top and bottom padding */
+    padding: 7.5px !important; /* 7.5px padding all around */
   }
   
   .header .header-actions {
@@ -1389,12 +1385,12 @@ p, span, div {
   .header-logo {
     justify-self: center;
     order: 2;
-    width: 70px !important; /* Fixed width = default mobile logo size */
-    height: 70px !important; /* Fixed height = 70x70px container */
+    width: 85px !important; /* 70px logo + 7.5px padding each side */
+    height: 85px !important; /* 70px logo + 7.5px padding top/bottom */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    padding: 7.5px 0 !important; /* 7.5px top and bottom padding */
+    padding: 7.5px !important; /* 7.5px padding all around */
   }
   
   .header-actions {
