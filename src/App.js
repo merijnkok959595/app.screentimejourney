@@ -6716,18 +6716,18 @@ function App() {
 
             <div className="modal__content">
               <div style={{marginBottom: '32px'}}>
-                <p style={{color: '#6b7280', marginBottom: '24px'}}>
+                <p className="account-text" style={{marginBottom: '24px'}}>
                   Choose how you want to receive progress updates and leaderboard notifications. We've combined weekly and monthly updates into one toggle per channel.
                 </p>
                 
                 {/* Email Notifications */}
                 <div style={{marginBottom: '24px'}}>
-                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px', background: '#f9fafb', borderRadius: '12px', border: '1px solid #e5e7eb'}}>
+                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px', background: '#ffffff', borderRadius: '7px', border: '1px solid #e2e8f0'}}>
                     <div>
-                      <div style={{fontWeight: '600', color: '#374151', marginBottom: '4px', fontSize: '16px'}}>
+                      <div style={{fontWeight: '500', color: '#0F172A', marginBottom: '4px', fontSize: '16px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                         Email Notifications
                       </div>
-                      <div style={{fontSize: '14px', color: '#6b7280'}}>
+                      <div className="account-text">
                         Get weekly progress updates and monthly leaderboard rankings via email
                       </div>
                     </div>
@@ -6767,12 +6767,12 @@ function App() {
 
                 {/* WhatsApp Notifications */}
                 <div>
-                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px', background: '#f9fafb', borderRadius: '12px', border: '1px solid #e5e7eb'}}>
+                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px', background: '#ffffff', borderRadius: '7px', border: '1px solid #e2e8f0'}}>
                     <div>
-                      <div style={{fontWeight: '600', color: '#374151', marginBottom: '4px', fontSize: '16px'}}>
+                      <div style={{fontWeight: '500', color: '#0F172A', marginBottom: '4px', fontSize: '16px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                         WhatsApp Notifications
                       </div>
-                      <div style={{fontSize: '14px', color: '#6b7280'}}>
+                      <div className="account-text">
                         Get weekly progress updates and monthly leaderboard rankings via WhatsApp
                       </div>
                     </div>
@@ -6815,10 +6815,10 @@ function App() {
 
             <div className="modal__footer">
               <button
-                className="btn btn--primary btn--full"
+                className="btn-primary"
                 onClick={submitNotificationSettings}
                 disabled={notificationsSubmitting}
-                style={{width: '100%', marginBottom: '16px'}}
+                style={{width: '100%'}}
               >
                 {notificationsSubmitting ? (
                   <>
@@ -6826,19 +6826,19 @@ function App() {
                     Saving...
                   </>
                 ) : (
-                  <>
-                    Save settings
-                  </>
+                  'Save settings'
                 )}
               </button>
-              <button
-                className="link-back"
-                onClick={closeNotificationsFlow}
-                disabled={notificationsSubmitting}
-                style={{width: '100%', textAlign: 'center', background: 'none', border: 'none', color: '#6b7280', fontSize: '14px', cursor: 'pointer'}}
-              >
-                Cancel
-              </button>
+              
+              <div style={{display: 'flex', justifyContent: 'center', marginTop: '6px', width: '100%'}}>
+                <button
+                  className="btn-tertiary"
+                  onClick={closeNotificationsFlow}
+                  disabled={notificationsSubmitting}
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </>
         </div>
@@ -6856,44 +6856,44 @@ function App() {
 
             <div className="modal__content">
               <div style={{marginBottom: '16px'}}>
-                <p style={{fontSize: '16px', color: '#6b7280', marginBottom: '24px'}}>
+                <p className="account-text" style={{fontSize: '16px', marginBottom: '24px'}}>
                   Complete history of your account activity. Unlock codes are preserved here for easy access.
                 </p>
                 
-                <div style={{maxHeight: '500px', overflowY: 'auto', border: '1px solid #e5e7eb', borderRadius: '8px'}}>
+                <div style={{maxHeight: '500px', overflowY: 'auto', border: '1px solid #e2e8f0', borderRadius: '7px'}}>
                   {logs.map((log, index) => (
                     <div key={log.id} style={{
                       display: 'flex',
                       alignItems: 'flex-start',
                       padding: '16px',
-                      borderBottom: index < logs.length - 1 ? '1px solid #e5e7eb' : 'none',
-                      backgroundColor: '#fff'
+                      borderBottom: index < logs.length - 1 ? '1px solid #EEEEEE' : 'none',
+                      backgroundColor: '#ffffff'
                     }}>
 
                       <div style={{flex: 1}}>
-                        <div style={{fontWeight: '600', color: '#374151', marginBottom: '4px', fontSize: '16px'}}>
+                        <div style={{fontWeight: '500', color: '#0F172A', marginBottom: '4px', fontSize: '16px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                           {log.title}
                         </div>
-                        <div style={{fontSize: '14px', color: '#6b7280', marginBottom: '4px'}}>
+                        <div className="account-text" style={{marginBottom: '4px'}}>
                           {log.description}
                         </div>
                         {log.pincode && (
                           <div style={{
                             display: 'inline-block',
-                            background: '#f9fafb',
-                            border: '1px solid #e5e7eb',
-                            borderRadius: '12px',
+                            background: '#f9f9f9',
+                            border: '1px solid #e2e8f0',
+                            borderRadius: '7px',
                             padding: '2px 8px',
                             fontSize: '12px',
                             color: '#059669',
-                            fontFamily: 'monospace',
-                            fontWeight: '500',
+                            fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                            fontWeight: '600',
                             marginTop: '4px'
                           }}>
                             Code: {log.pincode} ✓
                           </div>
                         )}
-                        <div style={{fontSize: '13px', color: '#9ca3af', marginTop: '8px'}}>
+                        <div className="account-text" style={{fontSize: '12px', marginTop: '8px'}}>
                           {log.timestamp}
                         </div>
                       </div>
@@ -6906,13 +6906,13 @@ function App() {
                   <div style={{
                     textAlign: 'center',
                     padding: '40px',
-                    color: '#9ca3af',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px'
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '7px',
+                    backgroundColor: '#ffffff'
                   }}>
                     <div style={{fontSize: '40px', marginBottom: '16px'}}>📝</div>
-                    <p style={{margin: 0, fontSize: '16px'}}>No activity logs yet</p>
-                    <p style={{margin: '8px 0 0 0', fontSize: '14px'}}>Your activity will appear here as you use the app</p>
+                    <p className="account-text" style={{margin: 0, fontSize: '16px', fontWeight: '500'}}>No activity logs yet</p>
+                    <p className="account-text" style={{margin: '8px 0 0 0'}}>Your activity will appear here as you use the app</p>
                   </div>
                 )}
 
@@ -6921,13 +6921,14 @@ function App() {
             </div>
 
             <div className="modal__footer">
-              <button
-                className="btn btn--primary btn--full"
-                onClick={closeLogsFlow}
-                style={{width: '100%'}}
-              >
-                Close
-              </button>
+              <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
+                <button
+                  className="btn-tertiary"
+                  onClick={closeLogsFlow}
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </>
         </div>
