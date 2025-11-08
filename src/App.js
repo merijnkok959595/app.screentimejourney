@@ -4031,8 +4031,8 @@ function App() {
                       <path fill="currentColor" d="M1 .5a.5.5 0 1 0 0 1h15.71a.5.5 0 0 0 0-1zM.5 8a.5.5 0 0 1 .5-.5h15.71a.5.5 0 0 1 0 1H1A.5.5 0 0 1 .5 8m0 7a.5.5 0 0 1 .5-.5h15.71a.5.5 0 0 1 0 1H1a.5.5 0 0 1-.5-.5"></path>
                     </svg>
                   ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="icon icon-close" viewBox="0 0 20 17" width="20" height="20">
-                      <path fill="currentColor" d="M1.865 15.978a.5.5 0 0 0 .707.707l7.433-7.431 8.579 7.282a.501.501 0 0 0 .846-.37.5.5 0 0 0-.153-.351L10.712 8.546l8.417-7.416a.5.5 0 1 0-.707-.708L9.991 7.853 2.413.573a.5.5 0 1 0-.693.72l7.563 7.268z"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="icon icon-close" viewBox="0 0 18 17">
+                      <path fill="currentColor" d="M.865 15.978a.5.5 0 0 0 .707.707l7.433-7.431 7.579 7.282a.501.501 0 0 0 .846-.37.5.5 0 0 0-.153-.351L9.712 8.546l7.417-7.416a.5.5 0 1 0-.707-.708L8.991 7.853 1.413.573a.5.5 0 1 0-.693.72l7.563 7.268z"></path>
                     </svg>
                   )}
                 </button>
@@ -6013,8 +6013,8 @@ function App() {
                       <path fill="currentColor" d="M1 .5a.5.5 0 1 0 0 1h15.71a.5.5 0 0 0 0-1zM.5 8a.5.5 0 0 1 .5-.5h15.71a.5.5 0 0 1 0 1H1A.5.5 0 0 1 .5 8m0 7a.5.5 0 0 1 .5-.5h15.71a.5.5 0 0 1 0 1H1a.5.5 0 0 1-.5-.5"></path>
                     </svg>
                   ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="icon icon-close" viewBox="0 0 20 17" width="20" height="20">
-                      <path fill="currentColor" d="M1.865 15.978a.5.5 0 0 0 .707.707l7.433-7.431 8.579 7.282a.501.501 0 0 0 .846-.37.5.5 0 0 0-.153-.351L10.712 8.546l8.417-7.416a.5.5 0 1 0-.707-.708L9.991 7.853 2.413.573a.5.5 0 1 0-.693.72l7.563 7.268z"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="icon icon-close" viewBox="0 0 18 17">
+                      <path fill="currentColor" d="M.865 15.978a.5.5 0 0 0 .707.707l7.433-7.431 7.579 7.282a.501.501 0 0 0 .846-.37.5.5 0 0 0-.153-.351L9.712 8.546l7.417-7.416a.5.5 0 1 0-.707-.708L8.991 7.853 1.413.573a.5.5 0 1 0-.693.72l7.563 7.268z"></path>
                     </svg>
                   )}
                 </button>
