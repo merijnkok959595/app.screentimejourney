@@ -6065,7 +6065,6 @@ function App() {
                       target="_self" 
                       rel="noopener noreferrer"
                       onClick={() => setMobileMenuOpen(false)}
-                      style={{width: '100%', textAlign: 'center'}}
                     >
                       Home
                     </a>
@@ -6075,7 +6074,6 @@ function App() {
                         document.cookie = 'stj_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
                         window.location.href = 'https://xpvznx-9w.myshopify.com/account/logout?return_url=/';
                       }}
-                      style={{width: '100%'}}
                     >
                       Logout
                     </button>
