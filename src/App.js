@@ -6968,44 +6968,44 @@ function App() {
 
             <div className="modal__content">
               <div style={{marginBottom: '16px'}}>
-                <p style={{fontSize: '16px', color: '#6b7280', marginBottom: '24px'}}>
+                <p className="modal__desc" style={{fontSize: '15px', color: 'var(--text-muted)', marginBottom: '24px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                   Your subscription has been cancelled. Below are the pincodes for your devices in case you need them.
                 </p>
                 
-                <div style={{maxHeight: '500px', overflowY: 'auto', border: '1px solid #e5e7eb', borderRadius: '8px'}}>
+                <div style={{maxHeight: '500px', overflowY: 'auto', border: '1px solid #EEEEEE', borderRadius: '7px'}}>
                   {logs.map((log, index) => (
                     <div key={log.id} style={{
                       display: 'flex',
                       alignItems: 'flex-start',
                       padding: '16px',
-                      borderBottom: index < logs.length - 1 ? '1px solid #e5e7eb' : 'none',
+                      borderBottom: index < logs.length - 1 ? '1px solid #EEEEEE' : 'none',
                       backgroundColor: '#fff'
                     }}>
 
                       <div style={{flex: 1}}>
-                        <div style={{fontWeight: '600', color: '#374151', marginBottom: '4px', fontSize: '16px'}}>
+                        <div style={{fontWeight: '600', color: '#0F172A', marginBottom: '4px', fontSize: '15px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                           {log.title}
                         </div>
-                        <div style={{fontSize: '14px', color: '#6b7280', marginBottom: '4px'}}>
+                        <div style={{fontSize: '14px', color: 'var(--text-muted)', marginBottom: '4px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                           {log.description}
                         </div>
                         {log.pincode && (
                           <div style={{
                             display: 'inline-block',
                             background: '#f9fafb',
-                            border: '1px solid #e5e7eb',
-                            borderRadius: '12px',
-                            padding: '2px 8px',
+                            border: '1px solid #EEEEEE',
+                            borderRadius: '7px',
+                            padding: '4px 10px',
                             fontSize: '12px',
                             color: '#059669',
-                            fontFamily: 'monospace',
+                            fontFamily: 'SF Mono, Monaco, Cascadia Code, Roboto Mono, Consolas, Courier New, monospace',
                             fontWeight: '500',
                             marginTop: '4px'
                           }}>
                             Code: {log.pincode} ✓
                           </div>
                         )}
-                        <div style={{fontSize: '13px', color: '#9ca3af', marginTop: '8px'}}>
+                        <div style={{fontSize: '12px', color: '#9ca3af', marginTop: '8px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                           {log.timestamp}
                         </div>
                       </div>
@@ -7019,12 +7019,13 @@ function App() {
                     textAlign: 'center',
                     padding: '40px',
                     color: '#9ca3af',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px'
+                    border: '1px solid #EEEEEE',
+                    borderRadius: '7px',
+                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                   }}>
                     <div style={{fontSize: '40px', marginBottom: '16px'}}>📝</div>
-                    <p style={{margin: 0, fontSize: '16px'}}>No device pincodes found</p>
-                    <p style={{margin: '8px 0 0 0', fontSize: '14px'}}>No devices were added to your account</p>
+                    <p style={{margin: 0, fontSize: '15px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>No device pincodes found</p>
+                    <p style={{margin: '8px 0 0 0', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>No devices were added to your account</p>
                   </div>
                 )}
 
@@ -7035,8 +7036,8 @@ function App() {
             <div className="modal__footer">
               <a
                 href="https://www.screentimejourney.com/products/screentimejourney"
-                className="btn btn--primary btn--full"
-                style={{width: '100%', textAlign: 'center', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+                className="btn-primary"
+                style={{width: '100%', textAlign: 'center', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '48px'}}
               >
                 Subscribe Now
               </a>
