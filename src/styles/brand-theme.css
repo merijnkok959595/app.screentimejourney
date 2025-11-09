@@ -320,7 +320,7 @@
     font-size: 0.7rem;
   }
 }
-.badge { display: inline-flex; align-items: center; border-radius: 12px; font-size: 0.75rem; font-weight: 600; padding: 4px 8px; }
+.badge { display: inline-flex; align-items: center; border-radius: 7px; font-size: 0.75rem; font-weight: 600; padding: 4px 8px; }
 .badge--success { background: var(--success); color: #fff; }
 .badge--muted { background: #6b7280; color: #fff; }
 

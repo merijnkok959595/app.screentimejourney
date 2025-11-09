@@ -6168,7 +6168,7 @@ function App() {
                     color: profileData?.commitment_data ? '#059669' : '#0F172A',
                     backgroundColor: '#f9fafb',
                     padding: '2px 8px',
-                    borderRadius: '12px',
+                    borderRadius: '7px',
                     border: '1px solid #e5e7eb',
                     fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                   }}>
@@ -6318,7 +6318,7 @@ function App() {
                     color: (customerData?.subscription_status === 'cancelled' || customerData?.subscription_status === 'cancel_scheduled' || profileData?.subscription_status === 'cancelled' || profileData?.subscription_status === 'cancel_scheduled') ? '#dc2626' : '#059669',
                     backgroundColor: '#f9fafb',
                     padding: '2px 8px',
-                    borderRadius: '12px',
+                    borderRadius: '7px',
                     border: '1px solid #e5e7eb',
                     fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                   }}>
