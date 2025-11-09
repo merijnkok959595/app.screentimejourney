@@ -19,6 +19,7 @@ html, #root {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative; /* Ensure proper stacking context for sticky elements */
 }
 
 .App-header {
