@@ -6,11 +6,29 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 14px; /* Default desktop font size */
+  /* Improve text rendering on mobile */
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
 @media (max-width: 768px) {
   body {
-    font-size: 13px; /* Default mobile font size - increased for better readability */
+    font-size: 14px; /* Increased for better mobile readability */
+  }
+}
+
+/* Ensure proper viewport behavior on mobile */
+@media (max-width: 768px) {
+  html {
+    /* Prevent horizontal scroll on mobile */
+    overflow-x: hidden;
+    width: 100%;
+  }
+  
+  body {
+    /* Better touch scrolling */
+    -webkit-overflow-scrolling: touch;
+    overflow-x: hidden;
   }
 }
 

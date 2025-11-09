@@ -385,6 +385,27 @@ html, #root {
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
+/* Mobile optimizations for phone input */
+@media (max-width: 768px) {
+  .phone-input-group {
+    flex-direction: column; /* Stack vertically on mobile */
+    gap: 12px;
+  }
+  
+  .country-select {
+    width: 100%; /* Full width on mobile */
+    min-height: 50px; /* Touch-friendly */
+    font-size: 16px; /* Prevent iOS zoom */
+    padding: 14px 12px;
+  }
+  
+  .phone-input {
+    min-height: 50px; /* Touch-friendly */
+    font-size: 16px; /* Prevent iOS zoom */
+    padding: 14px 16px;
+  }
+}
+
 /* Button Improvements */
 .btn--full, .btn--primary.btn--full, .btn--secondary.btn--full {
   width: 100%;
@@ -510,6 +531,16 @@ html, #root {
   border-color: var(--brand-primary);
 }
 
+/* Mobile optimizations for code input */
+@media (max-width: 768px) {
+  .code-input {
+    font-size: 24px; /* Larger for better visibility */
+    letter-spacing: 6px; /* More spacing */
+    padding: 16px;
+    min-height: 56px; /* Touch-friendly */
+  }
+}
+
 /* Modal Footer Improvements */
 .modal__footer {
   margin-top: 2rem;
@@ -561,12 +592,16 @@ html, #root {
   }
   
   .dashboard-content {
-    padding: 1rem;
+    padding: 1.25rem 1.5rem; /* 20px horizontal, 24px vertical for better spacing */
   }
   
   .dashboard-grid {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 1.25rem; /* 20px gap between cards */
+  }
+  
+  .dashboard-card {
+    margin: 0 8px; /* 8px extra margin left/right for more breathing room */
   }
   
   .action-buttons {
@@ -577,6 +612,167 @@ html, #root {
   .primary-button, .secondary-button {
     width: 100%;
     max-width: 300px;
+    min-height: 48px; /* Touch-friendly */
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-content {
+    padding: 1rem 1.25rem; /* 20px horizontal on smaller screens */
+  }
+  
+  .dashboard-card {
+    margin: 0 4px; /* Less margin on very small screens */
+  }
+}
+
+/* === COMPREHENSIVE MOBILE OPTIMIZATIONS === */
+@media (max-width: 768px) {
+  /* Modal improvements */
+  .modal {
+    padding: 1.5rem 1.25rem;
+  }
+  
+  /* Enhanced modal spacing */
+  .modal__header {
+    margin-bottom: 1.25rem !important;
+  }
+  
+  .modal__title {
+    font-size: 1.5rem;
+    line-height: 1.3;
+  }
+  
+  .modal__desc {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  /* Input containers */
+  .input-container {
+    margin-bottom: 1.25rem;
+  }
+  
+  /* Radio groups - better spacing */
+  .radio-group {
+    gap: 12px;
+    margin: 1rem 0;
+  }
+  
+  .radio-option {
+    padding: 14px 12px;
+    min-height: 52px;
+    font-size: 16px; /* Prevent zoom */
+  }
+  
+  .radio-label {
+    font-size: 16px; /* Prevent zoom */
+  }
+  
+  /* Audio guide mobile optimization */
+  .audio-guide-container {
+    padding: 14px;
+    border-radius: 10px;
+  }
+  
+  .audio-guide-header {
+    margin-bottom: 10px;
+    font-size: 15px;
+  }
+  
+  .audio-pincode-display {
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  
+  .audio-pincode-number {
+    font-size: 28px; /* Larger on mobile */
+    letter-spacing: 6px;
+  }
+  
+  .audio-play-button {
+    min-height: 48px;
+    font-size: 16px;
+    padding: 0 20px;
+  }
+  
+  .audio-regenerate-link {
+    font-size: 15px;
+    padding: 10px;
+  }
+  
+  /* Helper text improvements */
+  .helper {
+    font-size: 14px !important;
+    line-height: 1.5;
+  }
+  
+  /* Error messages */
+  .error-message {
+    font-size: 14px !important;
+  }
+  
+  /* Step indicator */
+  .step-indicator {
+    font-size: 13px;
+  }
+  
+  /* Link buttons */
+  .link-back,
+  .link-inline,
+  .link-subtle,
+  .link-only {
+    font-size: 15px;
+    min-height: 44px; /* Touch-friendly */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+  }
+  
+  /* Verification options */
+  .verification-options {
+    gap: 8px;
+    margin-top: 1rem;
+  }
+  
+  /* Recording indicator */
+  .recording-indicator {
+    padding: 10px 16px;
+    font-size: 15px;
+  }
+  
+  .recording-text {
+    font-size: 15px;
+  }
+  
+  /* Audio visualizer */
+  .audio-visualizer {
+    height: 50px; /* Taller on mobile */
+    padding: 10px;
+  }
+  
+  /* Microphone permission */
+  .mic-permission {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+}
+
+/* Extra small mobile optimization */
+@media (max-width: 480px) {
+  .modal {
+    padding: 1.25rem 1rem;
+  }
+  
+  .modal__title {
+    font-size: 1.35rem;
+  }
+  
+  .audio-pincode-number {
+    font-size: 24px;
+    letter-spacing: 5px;
   }
 }
 
@@ -654,6 +850,7 @@ html, #root {
   border-radius: 12px;
   position: relative;
   overflow: hidden;
+  padding: 16px;
 }
 
 .audio-guide-container::before {
