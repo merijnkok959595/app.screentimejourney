@@ -469,7 +469,7 @@ html, #root {
   color: #ef4444;
   font-size: 12px; /* Smaller for better hierarchy */
   margin: 0.5rem 0 0 0;
-  padding: 0;
+  padding: 0 0 0 4px; /* Left padding for proper spacing from edge */
   text-align: left;
 }
 
@@ -592,16 +592,16 @@ html, #root {
   }
   
   .dashboard-content {
-    padding: 1.25rem 1.5rem; /* 20px horizontal, 24px vertical for better spacing */
+    padding: 1rem 1rem; /* 16px all around - more compact */
   }
   
   .dashboard-grid {
     grid-template-columns: 1fr;
-    gap: 1.25rem; /* 20px gap between cards */
+    gap: 1rem; /* 16px gap between cards */
   }
   
   .dashboard-card {
-    margin: 0 8px; /* 8px extra margin left/right for more breathing room */
+    margin: 0 4px; /* 4px extra margin left/right */
   }
   
   .action-buttons {
@@ -619,11 +619,11 @@ html, #root {
 
 @media (max-width: 480px) {
   .dashboard-content {
-    padding: 1rem 1.25rem; /* 20px horizontal on smaller screens */
+    padding: 0.875rem 0.875rem; /* 14px on smaller screens */
   }
   
   .dashboard-card {
-    margin: 0 4px; /* Less margin on very small screens */
+    margin: 0 2px; /* Less margin on very small screens */
   }
 }
 

@@ -1290,7 +1290,7 @@ p, span, div {
 
 @media (max-width: 768px) {
   .container {
-    padding: 0 20px; /* 20px horizontal margin to match vertical spacing */
+    padding: 0 12px; /* 12px horizontal margin - less space */
   }
   
   .header {
@@ -1306,14 +1306,14 @@ p, span, div {
   /* Milestone image - full width on mobile with consistent margins */
   .media-square {
     max-width: 100%; /* Full width on mobile */
-    margin: 20px auto; /* 20px top margin to match left/right container padding */
+    margin: 12px auto; /* 12px top margin to match left/right container padding */
     width: 100%;
   }
   
   /* Ensure card--hero (milestone section) uses same padding as dashboard */
   .card--hero {
-    padding: 0 20px; /* Match container padding for consistent widths */
-    margin-top: 20px; /* 20px top margin to match horizontal padding */
+    padding: 0 12px; /* Match container padding for consistent widths */
+    margin-top: 12px; /* 12px top margin to match horizontal padding */
   }
   
   .header .header-inner {
@@ -1382,13 +1382,13 @@ p, span, div {
   }
   
   .dashboard {
-    padding: 20px; /* 20px all around for consistent spacing */
-    margin: 20px 0; /* 20px top margin to match horizontal padding */
+    padding: 12px; /* 12px all around - more compact */
+    margin: 12px 0; /* 12px top margin to match horizontal padding */
   }
   
   /* Card margins on mobile */
   .card {
-    margin: 12px 0; /* Vertical spacing between cards */
+    margin: 10px 0; /* Vertical spacing between cards */
   }
   
   .grid-2,
@@ -1650,8 +1650,8 @@ p, span, div {
 .error-message {
   font-size: 12px; /* Smaller for better hierarchy */
   color: #dc2626;
-  margin: 8px 0 0 4px;
-  padding: 0;
+  margin: 8px 0 0 0;
+  padding: 0 0 0 4px; /* Left padding for proper spacing from edge */
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 400;
 }
