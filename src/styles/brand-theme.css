@@ -642,6 +642,9 @@ p, span, div {
 @media (max-width: 768px) {
   .announcement-bar {
     font-size: 12px;
+    position: sticky !important; /* Ensure sticky on mobile */
+    top: 0 !important;
+    z-index: 49 !important;
   }
 }
 
@@ -1297,6 +1300,9 @@ p, span, div {
     padding: 0 !important; /* No padding on header */
     background-color: #f9f9f9 !important; /* Match desktop background */
     transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: sticky !important; /* Ensure sticky on mobile */
+    top: 42px !important; /* Below announcement bar */
+    z-index: 50 !important; /* Above content, below modals */
   }
   
   .header.scrolled {

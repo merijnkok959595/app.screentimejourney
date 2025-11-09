@@ -5664,7 +5664,7 @@ function App() {
                               <div key={index} style={{marginBottom: '1.5rem'}}>
                                 {field.field_type === 'text' && (
                                   <>
-                                    <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '4px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>{field.label}</label>
+                                    <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>{field.label}</label>
                                     <div className="input-wrapper">
                                       <input 
                                         className={`input ${deviceFormErrors[field.field_name] ? 'input--invalid' : ''}`}
@@ -5695,7 +5695,7 @@ function App() {
                                 
                                 {field.field_type === 'radio' && (
                                   <>
-                                    <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '4px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>{field.label}</label>
+                                    <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>{field.label}</label>
                                     <div className="radio-group">
                                       {field.options.map((option, optIndex) => (
                                         <label key={optIndex} className="radio-option">
