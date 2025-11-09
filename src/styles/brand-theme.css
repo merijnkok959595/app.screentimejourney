@@ -1648,7 +1648,7 @@ p, span, div {
 
 /* Error Message Styling */
 .error-message {
-  font-size: 13px;
+  font-size: 12px; /* Smaller for better hierarchy */
   color: #dc2626;
   margin: 8px 0 0 4px;
   padding: 0;
@@ -1774,7 +1774,7 @@ p, span, div {
   
   /* Error messages */
   .error-message {
-    font-size: 14px; /* More visible */
+    font-size: 12px; /* Consistent smaller size */
   }
   
   /* Phone input row - stack on mobile for better UX */

@@ -467,7 +467,7 @@ html, #root {
 /* Error message styling */
 .error-message {
   color: #ef4444;
-  font-size: 14px;
+  font-size: 12px; /* Smaller for better hierarchy */
   margin: 0.5rem 0 0 0;
   padding: 0;
   text-align: left;
@@ -710,7 +710,7 @@ html, #root {
   
   /* Error messages */
   .error-message {
-    font-size: 14px !important;
+    font-size: 12px !important; /* Consistent smaller size */
   }
   
   /* Step indicator */
@@ -1170,10 +1170,10 @@ html, #root {
   background: #fef2f2;
   color: #dc2626;
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 7px; /* Match form field border radius */
   border: 1px solid #fecaca;
   margin: 12px 0;
-  font-size: 14px;
+  font-size: 12px; /* Smaller for better hierarchy */
 }
 
 .success-message {
