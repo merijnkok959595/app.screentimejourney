@@ -1035,7 +1035,7 @@ p, span, div {
 
 .mobile-menu-dropdown {
   position: fixed;
-  top: 128px; /* Start below header: 42px announcement + 85px header + 1px border = 128px */
+  top: calc(42px + 85px + 1px); /* Dynamic: announcement + header + border = 128px */
   left: 0;
   bottom: 0;
   width: 100%;
@@ -1043,10 +1043,15 @@ p, span, div {
   z-index: 98; /* Below header but above content */
   overflow-y: auto;
   transform: translateX(-100%);
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); /* Quick slide in */
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), top 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Add smooth transition for top position */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+/* When header is scrolled, adjust menu position - target descendant */
+.header.scrolled .mobile-menu-dropdown {
+  top: calc(42px + 70px + 1px); /* Scrolled: announcement + smaller header + border = 113px */
 }
 
 .mobile-menu-dropdown.mobile-menu-open {
