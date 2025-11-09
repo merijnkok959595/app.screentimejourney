@@ -1303,10 +1303,11 @@ p, span, div {
     padding: 0 !important; /* No padding on scroll */
   }
   
-  /* Milestone image sized smaller than content on mobile */
+  /* Milestone image - full width on mobile with consistent margins */
   .media-square {
-    max-width: 92%; /* Slightly smaller than full width */
+    max-width: 100%; /* Full width on mobile */
     margin: 20px auto; /* 20px top margin to match left/right container padding */
+    width: 100%;
   }
   
   /* Ensure card--hero (milestone section) uses same padding as dashboard */
