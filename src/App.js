@@ -5860,9 +5860,9 @@ function App() {
                   <div className="modal__footer">
                     {/* Step 3: Profile Generation & WARP Client Download */}
                     {currentFlowStep === 3 && currentFlow.flowType === 'device_setup_flow' && currentFlow.steps[currentFlowStep - 1]?.step_type !== 'pincode_display' && (
-                      <div style={{marginBottom: '12px', width: '100%'}}>
+                      <div style={{marginBottom: '4px', width: '100%'}}>
                         {/* Two buttons side by side */}
-                        <div style={{display: 'flex', gap: '12px', marginBottom: '8px'}}>
+                        <div style={{display: 'flex', gap: '12px', marginBottom: '0px'}}>
                           {/* Left: Generate/Download Profile Button */}
                           {!vpnProfileData ? (
                             <button
@@ -5888,10 +5888,8 @@ function App() {
                               style={{flex: 1, marginBottom: '0px'}}
                             >
                               <>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px'}}>
-                                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                  <polyline points="7,10 12,15 17,10"/>
-                                  <line x1="12" y1="15" x2="12" y2="3"/>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}>
+                                  <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 3v12"/>
                                 </svg>
                                 Download Profile
                               </>
@@ -5916,10 +5914,8 @@ function App() {
                         
                         {/* PIN display if applicable */}
                         {vpnProfileData && vpnProfileData.hasPincode && (
-                          <p style={{fontSize: '14px', color: '#6b7280', margin: '8px 0 0 0', textAlign: 'center'}}>
-                            <strong>PIN:</strong> {vpnProfileData.pincode}
-                            <br />
-                            <span style={{fontSize: '12px'}}>Save this PIN for support reference</span>
+                          <p style={{fontSize: '13px', color: '#6b7280', margin: '6px 0 0 0', textAlign: 'center'}}>
+                            <strong>PIN:</strong> {vpnProfileData.pincode} <span style={{fontSize: '11px'}}>(save for support)</span>
                           </p>
                         )}
                       </div>
