@@ -5909,13 +5909,6 @@ function App() {
                             </>
                           </button>
                         </div>
-                        
-                        {/* PIN display if applicable */}
-                        {vpnProfileData && vpnProfileData.hasPincode && (
-                          <p style={{fontSize: '13px', color: '#6b7280', margin: '6px 0 0 0', textAlign: 'center'}}>
-                            <strong>PIN:</strong> {vpnProfileData.pincode} <span style={{fontSize: '11px'}}>(save for support)</span>
-                          </p>
-                        )}
                       </div>
                     )}
                     
