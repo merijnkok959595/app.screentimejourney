@@ -1318,9 +1318,9 @@ function App() {
     }
   };
 
-  // VPN Profile generation functions
+  // Cloudflare WARP Profile generation (Zero Trust)
   const generateVPNProfile = async () => {
-    console.log('🔧 generateVPNProfile called', { 
+    console.log('🔧 generateVPNProfile called (Cloudflare WARP)', { 
       deviceFormData, 
       sharedPincode: !!sharedPincode 
     });
@@ -1334,120 +1334,155 @@ function App() {
     setProfileGenerating(true);
     
     try {
-      // Pincode is only required for macOS devices (for MDM profile removal)
-      // iOS devices can generate profiles without a pincode
+      // Generate UUID for tracking this specific profile
+      const profileUUID = `${generateUUID()}`;
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      console.log('🆔 Generated profile UUID:', profileUUID);
+      
+      // Get or generate PIN - ALWAYS store in stj_password
       let pincode = null;
       
       if (deviceFormData.device_type === 'macOS') {
-        // macOS requires a pincode for MDM profile removal
+        // macOS: Use shared pincode from audio guide
         if (!sharedPincode || !sharedPincode.pincode) {
-          console.error('❌ No shared pincode available. Audio guide must be generated first for macOS devices.');
-          alert('Please generate an audio guide first before creating the VPN profile for macOS.');
+          console.error('❌ No shared pincode available for macOS.');
+          alert('Please generate an audio guide first before creating the profile for macOS.');
           setProfileGenerating(false);
           return;
         }
         pincode = sharedPincode.pincode;
-        console.log('✅ Using shared pincode for macOS VPN profile');
+        console.log('✅ Using shared pincode for macOS profile:', pincode);
       } else {
-        // iOS devices don't require a pincode
-        console.log('✅ Generating iOS profile without pincode requirement');
+        // iOS: Generate new 4-digit pincode
+        pincode = Math.floor(1000 + Math.random() * 9000).toString();
+        console.log('✅ Generated new pincode for iOS profile:', pincode);
       }
       
-      // Get customer ID for VPN profile generation (using working account section pattern)
-      let customerId = customerData?.customerId;
-      
-      if (!customerId) {
-        // Extract customer ID from session cookie (same as account section)
-        const sessionCookie = document.cookie
-          .split('; ')
-          .find(row => row.startsWith('stj_session='));
+      // ALWAYS store PIN in stj_password table with profile UUID
+      console.log('💾 Storing PIN in stj_password table...');
+      try {
+        const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
         
-        console.log('🔍 VPN: Session cookie found:', !!sessionCookie);
-        
-        if (sessionCookie) {
-          try {
-            const cookieValue = sessionCookie.split('=')[1];
-            console.log('🔍 VPN: Raw cookie value:', cookieValue);
-            
-            // ALWAYS decode the cookie value first (it's URL encoded)
-            const decodedValue = decodeURIComponent(cookieValue);
-            console.log('🔍 VPN: URL decoded value:', decodedValue);
-            
-            const tokenData = JSON.parse(decodedValue);
-            console.log('🔍 VPN: Token data keys:', Object.keys(tokenData));
-            
-            const decoded = atob(tokenData.token);
-            console.log('🔍 VPN: Base64 decoded token:', decoded);
-            
-            const parts = decoded.split('|');
-            console.log('🔍 VPN: Token parts:', parts);
-            
-            customerId = parts[1]; // customer_id is the second part
-            console.log('✅ VPN: Extracted customer ID from session:', customerId);
-          } catch (err) {
-            console.error('❌ VPN: Failed to extract customer ID from session:', err);
-            console.error('❌ VPN: Cookie value that failed:', sessionCookie);
+        if (!isLocalDev) {
+          let customerId = customerData?.customerId;
+          if (!customerId) {
+            customerId = extractCustomerId();
+          }
+          
+          const pincodePayload = {
+            pincode: pincode,
+            uuid: profileUUID,
+            deviceType: deviceFormData.device_type,
+            deviceName: deviceFormData.device_name || 'Unnamed Device',
+            userId: customerId || 'unknown',
+            createdAt: new Date().toISOString(),
+            profileType: 'cloudflare_warp',
+            timestamp: timestamp
+          };
+          
+          const storeResponse = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/store_pincode`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(pincodePayload)
+          });
+          
+          if (storeResponse.ok) {
+            console.log('✅ PIN stored successfully in stj_password');
+          } else {
+            console.warn('⚠️ Failed to store PIN in database, but continuing...');
           }
         } else {
-          console.log('❌ VPN: No stj_session cookie found');
-          console.log('🔍 VPN: All cookies:', document.cookie);
+          console.log('🔧 Local dev: Skipping PIN storage');
         }
+      } catch (storeError) {
+        console.error('❌ Error storing PIN:', storeError);
+        // Continue anyway - don't block profile generation
       }
       
-      if (!customerId) {
-        console.error('❌ No customer ID available for VPN profile generation');
-        alert('Authentication required. Please login through Shopify first.');
-        setProfileGenerating(false);
-        return;
-      }
+      // Generate Cloudflare WARP profile content
+      const warpUUID = generateUUID();
+      const profileContent = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>PayloadContent</key>
+  <array>
+    <dict>
+      <key>PayloadDescription</key>
+      <string>Configures Cloudflare WARP with Zero Trust</string>
+      <key>PayloadDisplayName</key>
+      <string>WARP VPN Configuration</string>
+      <key>PayloadIdentifier</key>
+      <string>com.screentimejourney.warp.${warpUUID}</string>
+      <key>PayloadType</key>
+      <string>com.cloudflare.warp</string>
+      <key>PayloadUUID</key>
+      <string>${warpUUID}</string>
+      <key>PayloadVersion</key>
+      <integer>1</integer>
+      <key>Organization</key>
+      <string>screentimejourney</string>
+      <key>AutoConnect</key>
+      <integer>2</integer>
+      <key>SwitchLocked</key>
+      <true/>
+      <key>ServiceMode</key>
+      <string>warp</string>
+      <key>DisableAutoFallback</key>
+      <true/>
+      <key>SupportURL</key>
+      <string>https://screentimejourney.com/support</string>
+      <key>EnableDNSFiltering</key>
+      <true/>
+      <key>EnableFirewallFiltering</key>
+      <true/>
+    </dict>
+  </array>
+  <key>PayloadDescription</key>
+  <string>Enforces content filtering and prevents bypass via VPN. Profile ID: ${profileUUID}</string>
+  <key>PayloadDisplayName</key>
+  <string>Screen Time Journey Protection</string>
+  <key>PayloadIdentifier</key>
+  <string>com.screentimejourney.profile.${profileUUID}</string>
+  <key>PayloadOrganization</key>
+  <string>Screen Time Journey</string>
+  <key>PayloadRemovalDisallowed</key>
+  <true/>
+  <key>PayloadType</key>
+  <string>Configuration</string>
+  <key>PayloadUUID</key>
+  <string>${profileUUID}</string>
+  <key>PayloadVersion</key>
+  <integer>1</integer>
+  <key>PayloadScope</key>
+  <string>User</string>
+</dict>
+</plist>`;
       
-      console.log('🔧 Generating VPN profile for customer:', customerId);
+      // Create filename with UUID for tracking
+      const filename = `ScreenTimeJourney_${deviceFormData.device_type}_${profileUUID.split('-')[0]}_${timestamp}.mobileconfig`;
       
-      // Generate device_id early for tracking (or reuse existing one)
-      if (!currentDeviceId) {
-        setCurrentDeviceId(`device_${Date.now()}`);
-      }
-      const deviceId = currentDeviceId || `device_${Date.now()}`;
+      // Set profile data for download
+      const profileData = {
+        deviceType: deviceFormData.device_type,
+        hasPincode: true,
+        pincode: pincode,
+        profileUUID: profileUUID,
+        filename: filename,
+        downloadUrl: null, // Will be set after upload
+        s3_url: `https://wati-mobconfigs.s3.eu-north-1.amazonaws.com/${filename}`,
+        profileContent: profileContent,
+        timestamp: timestamp
+      };
       
-      // Call the backend API
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/generate_vpn_profile`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          device_type: deviceFormData.device_type,
-          device_name: deviceFormData.device_name,
-          customer_id: customerId,
-          device_id: deviceId,  // NEW: Pass device_id for tracking
-          pincode: pincode  // Pass the shared pincode for macOS devices
-        })
-      });
-      
-      const result = await response.json();
-      
-      if (response.ok && result.success) {
-        // Transform backend response to match frontend expectation
-        const profileData = {
-          deviceType: result.result.device_type,
-          hasPincode: result.result.has_pincode,
-          pincode: result.result.pincode,
-          profileUUID: result.result.profile_uuid,
-          filename: result.result.filename,
-          downloadUrl: result.result.download_url,
-          s3_url: result.result.s3_url,
-          profile_url: result.result.s3_profile_url || result.result.s3_url, // Store for device tracking
-          profileContent: null // Not needed for frontend display
-        };
-        setVpnProfileData(profileData);
-        console.log('✅ VPN profile generated:', profileData);
-      } else {
-        throw new Error(result.error || 'Failed to generate VPN profile');
-      }
+      setVpnProfileData(profileData);
+      console.log('✅ Cloudflare WARP profile generated with UUID:', profileUUID);
+      console.log('📱 Profile filename:', filename);
+      console.log('🔑 PIN for tracking:', pincode);
       
     } catch (error) {
-      console.error('❌ Error generating VPN profile:', error);
-      alert('Failed to generate VPN profile. Please try again.');
+      console.error('❌ Error generating Cloudflare WARP profile:', error);
+      alert('Failed to generate profile. Please try again.');
     } finally {
       setProfileGenerating(false);
     }
@@ -1582,38 +1617,29 @@ function App() {
       return;
     }
     
-    // Use the S3 URL for direct download and auto-open
-    if (vpnProfileData.s3_url || vpnProfileData.downloadUrl) {
-      const profileUrl = vpnProfileData.s3_url || vpnProfileData.downloadUrl;
-      
-      // Open the profile URL directly - iOS/macOS will handle it
-      window.open(profileUrl, '_blank');
-      
-      // Also trigger download
-      const link = document.createElement('a');
-      link.href = profileUrl;
-      link.download = vpnProfileData.filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      console.log('📱 Profile opened and downloaded:', vpnProfileData.filename);
-    } else {
-      // Fallback to blob method
-      const blob = new Blob([vpnProfileData.profileContent], { 
-        type: 'application/x-apple-aspen-config' 
-      });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = vpnProfileData.filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-      
-      console.log('📱 Profile downloaded (fallback):', vpnProfileData.filename);
-    }
+    console.log('📥 Downloading Cloudflare WARP profile:', vpnProfileData.filename);
+    console.log('🆔 Profile UUID:', vpnProfileData.profileUUID);
+    console.log('🔑 PIN:', vpnProfileData.pincode);
+    
+    // Generate and download profile directly from frontend
+    const blob = new Blob([vpnProfileData.profileContent], { 
+      type: 'application/x-apple-aspen-config' 
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = vpnProfileData.filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+    
+    console.log('✅ Profile downloaded successfully!');
+    console.log('📝 User should:');
+    console.log('   1. Install profile on device');
+    console.log('   2. Download WARP app from App Store');
+    console.log('   3. Login with: screentimejourney');
+    console.log('   4. Save PIN for support:', vpnProfileData.pincode);
   };
 
   // Audio Guide generation functions
@@ -5832,32 +5858,34 @@ function App() {
                   )}
 
                   <div className="modal__footer">
-                    {/* Download Profile Button for Setup Profile step (step 3) - only for device_setup_flow */}
+                    {/* Step 3: Profile Generation & WARP Client Download */}
                     {currentFlowStep === 3 && currentFlow.flowType === 'device_setup_flow' && currentFlow.steps[currentFlowStep - 1]?.step_type !== 'pincode_display' && (
-                      <div style={{marginBottom: '4px', width: '100%'}}>
-                        {!vpnProfileData ? (
-                          <button
-                            className="btn-secondary btn--no-hover"
-                            onClick={generateVPNProfile}
-                            disabled={profileGenerating || !deviceFormData.device_type}
-                            style={{width: '100%', marginBottom: '0px', minWidth: '100%', maxWidth: '100%'}}
-                          >
-                            {profileGenerating ? 'Generating...' : (
-                              <>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px'}}>
-                                  <circle cx="12" cy="12" r="3"/>
-                                  <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/>
-                                </svg>
-                                Generate Profile
-                              </>
-                            )}
-                          </button>
-                        ) : (
-                          <div style={{width: '100%'}}>
+                      <div style={{marginBottom: '12px', width: '100%'}}>
+                        {/* Two buttons side by side */}
+                        <div style={{display: 'flex', gap: '12px', marginBottom: '8px'}}>
+                          {/* Left: Generate/Download Profile Button */}
+                          {!vpnProfileData ? (
+                            <button
+                              className="btn-secondary btn--no-hover"
+                              onClick={generateVPNProfile}
+                              disabled={profileGenerating || !deviceFormData.device_type}
+                              style={{flex: 1, marginBottom: '0px'}}
+                            >
+                              {profileGenerating ? 'Generating...' : (
+                                <>
+                                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px'}}>
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/>
+                                  </svg>
+                                  Generate Profile
+                                </>
+                              )}
+                            </button>
+                          ) : (
                             <button
                               className="btn btn--outline"
                               onClick={downloadProfile}
-                              style={{width: '100%', marginBottom: '0px', minWidth: '100%', maxWidth: '100%'}}
+                              style={{flex: 1, marginBottom: '0px'}}
                             >
                               <>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px'}}>
@@ -5868,14 +5896,31 @@ function App() {
                                 Download Profile
                               </>
                             </button>
-                            {vpnProfileData.hasPincode && (
-                              <p style={{fontSize: '14px', color: '#6b7280', margin: '8px 0', textAlign: 'center'}}>
-                                <strong>Removal PIN:</strong> {vpnProfileData.pincode}
-                                <br />
-                                <span style={{fontSize: '12px'}}>Save this PIN - you'll need it to remove the profile later</span>
-                              </p>
-                            )}
-                          </div>
+                          )}
+                          
+                          {/* Right: Download WARP Client Button */}
+                          <button
+                            className="btn-secondary btn--no-hover"
+                            onClick={() => window.open('https://apps.apple.com/us/app/1-1-1-1-faster-internet/id1423538627', '_blank')}
+                            style={{flex: 1, marginBottom: '0px'}}
+                          >
+                            <>
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px'}}>
+                                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                                <line x1="12" y1="18" x2="12.01" y2="18"/>
+                              </svg>
+                              Download WARP Client
+                            </>
+                          </button>
+                        </div>
+                        
+                        {/* PIN display if applicable */}
+                        {vpnProfileData && vpnProfileData.hasPincode && (
+                          <p style={{fontSize: '14px', color: '#6b7280', margin: '8px 0 0 0', textAlign: 'center'}}>
+                            <strong>PIN:</strong> {vpnProfileData.pincode}
+                            <br />
+                            <span style={{fontSize: '12px'}}>Save this PIN for support reference</span>
+                          </p>
                         )}
                       </div>
                     )}
