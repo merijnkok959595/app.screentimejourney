@@ -5860,7 +5860,7 @@ function App() {
                   <div className="modal__footer">
                     {/* Step 3: Profile Generation & WARP Client Download */}
                     {currentFlowStep === 3 && currentFlow.flowType === 'device_setup_flow' && currentFlow.steps[currentFlowStep - 1]?.step_type !== 'pincode_display' && (
-                      <div style={{marginBottom: '4px', width: '100%'}}>
+                      <div style={{marginBottom: '12px', width: '100%'}}>
                         {/* Two buttons side by side */}
                         <div style={{display: 'flex', gap: '12px', marginBottom: '0px'}}>
                           {/* Left: Generate/Download Profile Button */}
@@ -5873,9 +5873,8 @@ function App() {
                             >
                               {profileGenerating ? 'Generating...' : (
                                 <>
-                                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px'}}>
-                                    <circle cx="12" cy="12" r="3"/>
-                                    <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/>
+                                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}>
+                                    <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 3v12"/>
                                   </svg>
                                   Generate Profile
                                 </>
@@ -5903,9 +5902,8 @@ function App() {
                             style={{flex: 1, marginBottom: '0px'}}
                           >
                             <>
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: '8px'}}>
-                                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
-                                <line x1="12" y1="18" x2="12.01" y2="18"/>
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}>
+                                <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 3v12"/>
                               </svg>
                               Download WARP Client
                             </>
