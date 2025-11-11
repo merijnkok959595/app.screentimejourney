@@ -635,6 +635,22 @@ function App() {
       handleAppProxy(urlParams);
     } else {
       console.log('📱 No authentication tokens, checking for existing session');
+      
+      // Check if subscription is still activating (from polling timeout)
+      const isActivating = urlParams.get('activating') === 'true';
+      if (isActivating) {
+        console.log('⏳ Subscription activation in progress');
+        setError('🎉 Your subscription is activating! The page will refresh automatically in a moment...');
+        
+        // Auto-refresh after 5 seconds to check again
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 5000);
+        
+        setLoading(false);
+        return;
+      }
+      
       // Check for existing session
       const sessionCookie = document.cookie
         .split('; ')
@@ -820,10 +836,21 @@ function App() {
       const cookieValue = encodeURIComponent(JSON.stringify(tokenData));
       document.cookie = `stj_session=${cookieValue}; path=/; secure; samesite=lax; max-age=86400`;
       
-      console.log('🍪 Session cookie set, redirecting to dashboard');
+      console.log('🍪 Session cookie set');
       
-      // Redirect to dashboard (root)
-      window.location.href = '/';
+      // NEW: Poll for subscription activation (webhook race condition fix)
+      console.log('⏳ Checking subscription status...');
+      setLoading(true);
+      const subscriptionActivated = await pollForSubscription(cid, 5); // Max 5 attempts = 10 seconds
+      
+      if (subscriptionActivated) {
+        console.log('✅ Subscription confirmed active, redirecting to dashboard');
+        window.location.href = '/';
+      } else {
+        console.log('⏰ Subscription still processing, redirecting with message');
+        // Redirect with a flag to show "subscription activating" message
+        window.location.href = '/?activating=true';
+      }
 
     } catch (err) {
       console.error('❌ SSO error:', err);
@@ -887,6 +914,46 @@ function App() {
       console.error('❌ Token verification error:', err);
       return { valid: false, error: err.message };
     }
+  };
+
+  // Function to poll for subscription activation (webhook race condition fix)
+  const pollForSubscription = async (customerId, maxAttempts = 5) => {
+    const apiUrl = process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws';
+    
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        console.log(`🔄 Polling attempt ${attempt}/${maxAttempts} - Checking subscription status...`);
+        
+        const response = await fetch(`${apiUrl}/get_profile`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ customer_id: customerId })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const status = data.profile?.subscription_status;
+          
+          console.log(`📊 Attempt ${attempt}: Subscription status = ${status}`);
+          
+          if (status === 'active') {
+            console.log('✅ Subscription is active!');
+            return true;
+          }
+        }
+        
+        // Wait 2 seconds before next attempt (unless it's the last attempt)
+        if (attempt < maxAttempts) {
+          console.log(`⏳ Waiting 2 seconds before next attempt...`);
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+      } catch (error) {
+        console.error(`❌ Polling attempt ${attempt} failed:`, error);
+      }
+    }
+    
+    console.log('⏰ Polling timeout - subscription not active after 10 seconds');
+    return false;
   };
 
   // Function to fetch milestone data
