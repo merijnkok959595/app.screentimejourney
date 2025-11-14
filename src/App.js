@@ -1364,8 +1364,8 @@ function App() {
         const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
         
         if (!isLocalDev) {
-          let customerId = customerData?.customerId;
-          if (!customerId) {
+      let customerId = customerData?.customerId;
+      if (!customerId) {
             customerId = extractCustomerId();
           }
           
@@ -1379,7 +1379,7 @@ function App() {
             profileType: 'cloudflare_warp',
             timestamp: timestamp
           };
-          
+            
           const storeResponse = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/store_pincode`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -1463,7 +1463,7 @@ function App() {
       const filename = `ScreenTimeJourney_${deviceFormData.device_type}_${profileUUID.split('-')[0]}_${timestamp}.mobileconfig`;
       
       // Set profile data for download
-      const profileData = {
+        const profileData = {
         deviceType: deviceFormData.device_type,
         hasPincode: true,
         pincode: pincode,
@@ -1473,9 +1473,9 @@ function App() {
         s3_url: `https://wati-mobconfigs.s3.eu-north-1.amazonaws.com/${filename}`,
         profileContent: profileContent,
         timestamp: timestamp
-      };
+        };
       
-      setVpnProfileData(profileData);
+        setVpnProfileData(profileData);
       console.log('✅ Cloudflare WARP profile generated with UUID:', profileUUID);
       console.log('📱 Profile filename:', filename);
       console.log('🔑 PIN for tracking:', pincode);
@@ -1622,18 +1622,18 @@ function App() {
     console.log('🔑 PIN:', vpnProfileData.pincode);
     
     // Generate and download profile directly from frontend
-    const blob = new Blob([vpnProfileData.profileContent], { 
-      type: 'application/x-apple-aspen-config' 
-    });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = vpnProfileData.filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-    
+      const blob = new Blob([vpnProfileData.profileContent], { 
+        type: 'application/x-apple-aspen-config' 
+      });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = vpnProfileData.filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
     console.log('✅ Profile downloaded successfully!');
     console.log('📝 User should:');
     console.log('   1. Install profile on device');
@@ -5864,23 +5864,23 @@ function App() {
                         {/* Two buttons side by side */}
                         <div style={{display: 'flex', gap: '12px', marginBottom: '0px'}}>
                           {/* Left: Generate/Download Profile Button */}
-                          {!vpnProfileData ? (
-                            <button
-                              className="btn-secondary btn--no-hover"
-                              onClick={generateVPNProfile}
-                              disabled={profileGenerating || !deviceFormData.device_type}
+                        {!vpnProfileData ? (
+                          <button
+                            className="btn-secondary btn--no-hover"
+                            onClick={generateVPNProfile}
+                            disabled={profileGenerating || !deviceFormData.device_type}
                               style={{flex: 1, marginBottom: '0px'}}
-                            >
-                              {profileGenerating ? 'Generating...' : (
-                                <>
+                          >
+                            {profileGenerating ? 'Generating...' : (
+                              <>
                                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}>
                                     <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 3v12"/>
-                                  </svg>
-                                  Generate Profile
-                                </>
-                              )}
-                            </button>
-                          ) : (
+                                </svg>
+                                Generate Profile
+                              </>
+                            )}
+                          </button>
+                        ) : (
                             <button
                               className="btn btn--outline"
                               onClick={downloadProfile}
@@ -5908,7 +5908,7 @@ function App() {
                               Download WARP Client
                             </>
                           </button>
-                        </div>
+                          </div>
                       </div>
                     )}
                     
@@ -7072,6 +7072,14 @@ function App() {
                 style={{width: '100%', textAlign: 'center', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '48px'}}
               >
                 Subscribe Now
+              </a>
+              
+              <a
+                href="https://www.screentimejourney.com"
+                className="btn-secondary"
+                style={{width: '100%', textAlign: 'center', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '48px', marginTop: '12px'}}
+              >
+                Home
               </a>
             </div>
           </>
