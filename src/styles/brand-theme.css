@@ -1549,12 +1549,12 @@ p, span, div {
   background: transparent;
   color: #0F172A;
   transition: border-width 0.15s ease, border-color 0.15s ease, padding 0.2s ease;
-  line-height: 1.4;
+  line-height: 1.5;
   min-height: 52px;
 }
 .input:focus,
 .input:not(:placeholder-shown) {
-  padding-top: 24px;
+  padding-top: 20px;
   padding-bottom: 8px;
 }
 .input:focus {
@@ -1563,6 +1563,7 @@ p, span, div {
   border-color: #0F172A;
   padding-left: 15px;
   padding-right: 15px;
+  padding-top: 19px;
   box-shadow: none; /* Remove shadow effect */
 }
 .input::placeholder {
@@ -1590,11 +1591,12 @@ p, span, div {
 }
 .input:focus ~ .form-label,
 .input:not(:placeholder-shown) ~ .form-label {
-  top: 6px;
-  font-size: 11px;
+  top: 2px;
+  font-size: 10px;
   color: #0F172A;
-  font-weight: 400;
+  font-weight: 500;
   transform: translateY(0);
+  line-height: 1;
 }
 
 /* Radio Button Styling - Button-like Toggle */
@@ -1745,18 +1747,19 @@ p, span, div {
   .input {
     padding: 8px 14px 12px 14px;
     font-size: 16px; /* Prevents iOS zoom on focus */
-    min-height: 56px; /* Touch-friendly height */
+    min-height: 54px; /* Touch-friendly height */
   }
   
   .input:focus,
   .input:not(:placeholder-shown) {
-    padding-top: 26px;
+    padding-top: 22px;
     padding-bottom: 8px;
   }
   
   .input:focus {
     padding-left: 13px;
     padding-right: 13px;
+    padding-top: 21px;
   }
   
   /* Form labels */
@@ -1767,8 +1770,9 @@ p, span, div {
   
   .input:focus ~ .form-label,
   .input:not(:placeholder-shown) ~ .form-label {
-    top: 6px;
-    font-size: 11px;
+    top: 2px;
+    font-size: 10px;
+    line-height: 1;
   }
   
   /* Radio buttons - larger touch targets */
