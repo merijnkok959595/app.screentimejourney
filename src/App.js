@@ -4399,7 +4399,7 @@ function App() {
                 <div className="modal__footer">
                   <button
                     className="btn-primary"
-                    style={{width: '100%'}}
+                    style={{width: '100%', marginBottom: '12px'}}
                     disabled={!phoneNumber || whatsappLoading}
                     onClick={sendWhatsAppCode}
                   >
