@@ -1572,11 +1572,13 @@ p, span, div {
   top: 50%;
   transform: translateY(-50%);
   font-size: 15px;
-  color: #9ca3af;
+  color: #6b7280;
   pointer-events: none;
   transition: all 0.2s ease;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 .input:focus ~ .form-label,
 .input:not(:placeholder-shown) ~ .form-label {

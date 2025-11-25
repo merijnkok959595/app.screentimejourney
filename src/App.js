@@ -4251,10 +4251,11 @@ function App() {
 
             {onboardStep === 1 && (
               <div>
-                <div className="input-container" style={{ position: 'relative' }}>
+                <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Username</label>
+                <div className="input-wrapper" style={{ position: 'relative' }}>
                   <input 
                     className={`input ${usernameValid === true ? 'input--valid' : usernameValid === false ? 'input--invalid' : ''}`}
-                    placeholder="theking" 
+                    placeholder=" " 
                     value={newUsername} 
                     onChange={(e) => {
                       const value = e.target.value;
@@ -4268,6 +4269,7 @@ function App() {
                       setUsernameError(''); // Clear any error messages
                     }}
                   />
+                  <label className="form-label">theking</label>
                   {usernameChecking && <span className="input-icon">⏳</span>}
                   {usernameValid === true && <span className="input-icon valid">✅</span>}
                   {usernameValid === false && <span className="input-icon invalid">❌</span>}
@@ -4330,39 +4332,50 @@ function App() {
 
             {onboardStep === 3 && (
               <div>
-                <p className="helper">Why do you want to change your screentime habits?</p>
-                <input 
-                  className="input" 
-                  placeholder="I want to be more present with my family" 
-                  value={whatToChange}
-                  onChange={(e) => {
-                    setWhatToChange(e.target.value);
-                    setCommitmentError(''); // Clear error on input
-                  }}
-                  maxLength="200"
-                />
-                <p className="helper" style={{ marginTop: '1rem' }}>How will this change your life?</p>
-                <input 
-                  className="input" 
-                  placeholder="I'll have more energy and focus for what matters" 
-                  value={whatToGain}
-                  onChange={(e) => {
-                    setWhatToGain(e.target.value);
-                    setCommitmentError(''); // Clear error on input
-                  }}
-                  maxLength="200"
-                />
-                <p className="helper" style={{ marginTop: '1rem' }}>Who in your life will be affected by these changes?</p>
-                <input 
-                  className="input" 
-                  placeholder="My partner and children" 
-                  value={doingThisFor}
-                  onChange={(e) => {
-                    setDoingThisFor(e.target.value);
-                    setCommitmentError(''); // Clear error on input
-                  }}
-                  maxLength="200"
-                />
+                <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Why do you want to change your screentime habits?</label>
+                <div className="input-wrapper">
+                  <input 
+                    className="input" 
+                    placeholder=" " 
+                    value={whatToChange}
+                    onChange={(e) => {
+                      setWhatToChange(e.target.value);
+                      setCommitmentError(''); // Clear error on input
+                    }}
+                    maxLength="200"
+                  />
+                  <label className="form-label">I want to be more present with my family</label>
+                </div>
+                
+                <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', marginTop: '1.5rem', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>How will this change your life?</label>
+                <div className="input-wrapper">
+                  <input 
+                    className="input" 
+                    placeholder=" " 
+                    value={whatToGain}
+                    onChange={(e) => {
+                      setWhatToGain(e.target.value);
+                      setCommitmentError(''); // Clear error on input
+                    }}
+                    maxLength="200"
+                  />
+                  <label className="form-label">I'll have more energy and focus for what matters</label>
+                </div>
+                
+                <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', marginTop: '1.5rem', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Who in your life will be affected by these changes?</label>
+                <div className="input-wrapper">
+                  <input 
+                    className="input" 
+                    placeholder=" " 
+                    value={doingThisFor}
+                    onChange={(e) => {
+                      setDoingThisFor(e.target.value);
+                      setCommitmentError(''); // Clear error on input
+                    }}
+                    maxLength="200"
+                  />
+                  <label className="form-label">My partner and children</label>
+                </div>
                 {commitmentError && <p className="error-message">{commitmentError}</p>}
                 <div className="modal__footer">
                   <button
@@ -4822,39 +4835,45 @@ function App() {
                     <h4 style={{ margin: '0 0 16px 0', color: '#0F172A', fontSize: '16px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '500' }}>Update Your Commitment</h4>
                     
                     <div style={{ marginBottom: '16px' }}>
-                      <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>What do you want to quit or change?</label>
-                      <input 
-                        type="text"
-                        className="input"
-                        placeholder="e.g., quit porn, reduce social media, stop gaming..."
-                        value={profileEditData.commitmentQ1 || ''}
-                        onChange={(e) => setProfileEditData(prev => ({...prev, commitmentQ1: e.target.value}))}
-                        style={{ padding: '16px' }}
-                      />
+                      <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>What do you want to quit or change?</label>
+                      <div className="input-wrapper">
+                        <input 
+                          type="text"
+                          className="input"
+                          placeholder=" "
+                          value={profileEditData.commitmentQ1 || ''}
+                          onChange={(e) => setProfileEditData(prev => ({...prev, commitmentQ1: e.target.value}))}
+                        />
+                        <label className="form-label">e.g., quit porn, reduce social media, stop gaming...</label>
+                      </div>
                     </div>
 
                     <div style={{ marginBottom: '16px' }}>
-                      <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>What do you want to gain or achieve?</label>
-                      <input 
-                        type="text"
-                        className="input"
-                        placeholder="e.g., more energy, better relationships, inner peace..."
-                        value={profileEditData.commitmentQ2 || ''}
-                        onChange={(e) => setProfileEditData(prev => ({...prev, commitmentQ2: e.target.value}))}
-                        style={{ padding: '16px' }}
-                      />
+                      <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>What do you want to gain or achieve?</label>
+                      <div className="input-wrapper">
+                        <input 
+                          type="text"
+                          className="input"
+                          placeholder=" "
+                          value={profileEditData.commitmentQ2 || ''}
+                          onChange={(e) => setProfileEditData(prev => ({...prev, commitmentQ2: e.target.value}))}
+                        />
+                        <label className="form-label">e.g., more energy, better relationships, inner peace...</label>
+                      </div>
                     </div>
 
                     <div style={{ marginBottom: '16px' }}>
-                      <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Who are you doing this for?</label>
-                      <input 
-                        type="text"
-                        className="input"
-                        placeholder="e.g., my family, my future self, my children..."
-                        value={profileEditData.commitmentQ3 || ''}
-                        onChange={(e) => setProfileEditData(prev => ({...prev, commitmentQ3: e.target.value}))}
-                        style={{ padding: '16px' }}
-                      />
+                      <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Who are you doing this for?</label>
+                      <div className="input-wrapper">
+                        <input 
+                          type="text"
+                          className="input"
+                          placeholder=" "
+                          value={profileEditData.commitmentQ3 || ''}
+                          onChange={(e) => setProfileEditData(prev => ({...prev, commitmentQ3: e.target.value}))}
+                        />
+                        <label className="form-label">e.g., my family, my future self, my children...</label>
+                      </div>
                     </div>
 
                     {/* Validation and Preview */}
@@ -5761,7 +5780,7 @@ function App() {
                                     <div className="input-wrapper">
                                       <input 
                                         className={`input ${deviceFormErrors[field.field_name] ? 'input--invalid' : ''}`}
-                                        placeholder={field.placeholder} 
+                                        placeholder=" "
                                         value={deviceFormData[field.field_name] || ''} 
                                         onChange={(e) => {
                                           setDeviceFormData(prev => ({
