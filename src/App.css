@@ -1203,13 +1203,13 @@ html, #root {
 .modal .input {
   width: 100% !important;
   padding: 13px 40px 13px 16px !important; /* Equal top/bottom padding, right padding for validation icon */
-  border: 1.5px solid #d1d5db !important;
-  border-radius: 8px !important;
+  border: 1px solid #0F172A !important; /* Match theme border color */
+  border-radius: 7px !important; /* Match theme border radius */
   font-size: 15px !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
   background: white !important;
   color: #0F172A !important;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+  transition: border-width 0.15s ease, border-color 0.15s ease !important;
   text-align: left !important;
   line-height: 1.4 !important;
   min-height: 48px !important;
@@ -1219,10 +1219,10 @@ html, #root {
 
 .modal .input:focus {
   outline: none !important;
-  border-color: #2E0456 !important;
+  border-color: #0F172A !important;
   border-width: 2px !important;
   padding: 12px 39px 12px 15px !important; /* Adjust for thicker border */
-  box-shadow: 0 0 0 3px rgba(46, 4, 86, 0.08) !important;
+  box-shadow: none !important; /* Remove shadow to match theme */
 }
 
 .modal .input::placeholder {
@@ -1286,48 +1286,56 @@ html, #root {
   flex: 0 0 auto !important;
   width: 100px !important;
   padding: 13px 8px !important;
-  border: 1.5px solid #d1d5db !important;
-  border-radius: 8px !important;
+  border: 1px solid #0F172A !important; /* Match theme */
+  border-radius: 7px !important; /* Match theme */
   background: white !important;
   font-size: 15px !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
   color: #0F172A !important;
   cursor: pointer !important;
   outline: none !important;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+  transition: border-width 0.15s ease, border-color 0.15s ease !important;
   min-height: 48px !important;
   display: flex !important;
   align-items: center !important;
+  appearance: none !important; /* Remove default styling */
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%230F172A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 8px center !important;
+  padding-right: 28px !important; /* Space for arrow */
 }
 
 .modal .country-select:focus {
-  border-color: #2E0456 !important;
+  border-color: #0F172A !important;
   border-width: 2px !important;
-  padding: 12px 7px !important;
-  box-shadow: 0 0 0 3px rgba(46, 4, 86, 0.08) !important;
+  padding: 12px 7px 12px 7px !important;
+  padding-right: 27px !important; /* Adjust for border */
+  box-shadow: none !important; /* Match theme */
 }
 
 .modal .phone-input {
   flex: 1 !important;
   padding: 13px 16px !important;
-  border: 1.5px solid #d1d5db !important;
-  border-radius: 8px !important;
+  border: 1px solid #0F172A !important; /* Match theme */
+  border-radius: 7px !important; /* Match theme */
   font-size: 15px !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
   background: white !important;
   color: #0F172A !important;
   outline: none !important;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+  transition: border-width 0.15s ease, border-color 0.15s ease !important;
   min-height: 48px !important;
   display: flex !important;
   align-items: center !important;
 }
 
 .modal .phone-input:focus {
-  border-color: #2E0456 !important;
+  border-color: #0F172A !important;
   border-width: 2px !important;
   padding: 12px 15px !important;
-  box-shadow: 0 0 0 3px rgba(46, 4, 86, 0.08) !important;
+  box-shadow: none !important; /* Match theme */
 }
 
 /* Fix button heights - ensure all buttons have same height */
