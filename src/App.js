@@ -2,6 +2,23 @@ import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import './styles/brand-theme.css';
 
+// Custom debounce hook for real-time username validation
+function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+    
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+  
+  return debouncedValue;
+}
+
 // Default milestone data as fallback (will be replaced by API data)
 const DEFAULT_MILESTONES = [
   {
@@ -435,6 +452,9 @@ function App() {
   const [usernameValid, setUsernameValid] = useState(null); // null, true, false
   const [usernameChecking, setUsernameChecking] = useState(false);
   const [usernameError, setUsernameError] = useState('');
+  
+  // Debounced username for real-time validation
+  const debouncedUsername = useDebounce(newUsername, 500);
   const [whatsappCode, setWhatsappCode] = useState('');
   const [whatsappCodeSent, setWhatsappCodeSent] = useState(false);
   const [whatsappLinked, setWhatsappLinked] = useState(false);
@@ -2793,6 +2813,19 @@ function App() {
     }
   };
 
+  // Auto-validate username as user types (with debounce)
+  useEffect(() => {
+    if (debouncedUsername && debouncedUsername.length >= 3) {
+      checkUsernameAvailability(debouncedUsername);
+    } else if (debouncedUsername && debouncedUsername.length > 0 && debouncedUsername.length < 3) {
+      setUsernameValid(null);
+      setUsernameError('Username must be at least 3 characters');
+    } else {
+      setUsernameValid(null);
+      setUsernameError('');
+    }
+  }, [debouncedUsername]);
+
   const checkUsernameAvailability = async (username) => {
     // Clear previous errors
     setUsernameError('');
@@ -4201,7 +4234,6 @@ function App() {
                       setUsernameValid(null); // Reset validation state
                       setUsernameError(''); // Clear any error messages
                     }}
-                    onBlur={() => checkUsernameAvailability(newUsername)}
                   />
                   {usernameChecking && <span className="input-icon">⏳</span>}
                   {usernameValid === true && <span className="input-icon valid">✅</span>}
