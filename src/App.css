@@ -1412,13 +1412,14 @@ html, #root {
 .PhoneInput {
   width: 100% !important;
   display: flex !important;
-  gap: 12px !important; /* Space between country selector and phone input */
+  gap: 0 !important; /* No gap - seamless connection */
 }
 
 .PhoneInputInput {
   padding: 13px 16px !important;
   border: 1px solid #0F172A !important;
-  border-radius: 7px !important;
+  border-radius: 0 7px 7px 0 !important; /* Round only right side */
+  border-left: none !important; /* Remove left border for seamless connection */
   font-size: 15px !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
   background: white !important;
@@ -1434,17 +1435,19 @@ html, #root {
   border-width: 2px !important;
   padding: 12px 15px !important;
   box-shadow: none !important;
+  border-left: none !important; /* Keep left border removed on focus */
 }
 
 .PhoneInputCountry {
-  padding: 0 14px !important;
+  padding: 0 12px !important;
   border: 1px solid #0F172A !important;
-  border-radius: 7px !important;
+  border-radius: 7px 0 0 7px !important; /* Round only left side */
+  border-right: 1px solid #e5e7eb !important; /* Light divider between flag and input */
   background: white !important;
   min-height: 48px !important;
   display: flex !important;
   align-items: center !important;
-  gap: 8px !important; /* Space between flag and dropdown arrow */
+  gap: 6px !important; /* Space between flag and dropdown arrow */
   flex-shrink: 0 !important; /* Don't shrink */
 }
 
@@ -1458,17 +1461,27 @@ html, #root {
 }
 
 .PhoneInputCountryIcon {
-  width: 28px !important;
-  height: 28px !important;
-  font-size: 24px !important; /* Larger emoji flags */
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  width: auto !important;
+  height: auto !important;
+  font-size: 22px !important; /* Clean emoji size */
+  line-height: 1 !important;
+  display: inline-block !important;
+  border: none !important; /* Remove any border */
+  background: none !important; /* Remove any background */
+  box-shadow: none !important; /* Remove any shadow */
+}
+
+.PhoneInputCountryIcon img {
+  display: none !important; /* Hide default flag images */
+}
+
+.PhoneInputCountryIconImg {
+  display: none !important; /* Hide default flag images */
 }
 
 .PhoneInputCountrySelectArrow {
   color: #0F172A !important;
   opacity: 0.7 !important;
-  width: 12px !important;
-  height: 12px !important;
+  width: 10px !important;
+  height: 10px !important;
 }
