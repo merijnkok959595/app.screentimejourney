@@ -1380,3 +1380,60 @@ html, #root {
   color: #374151 !important;
   border-color: #9ca3af !important;
 }
+
+/* React Phone Input Styling */
+.PhoneInput {
+  width: 100% !important;
+}
+
+.PhoneInputInput {
+  padding: 13px 16px !important;
+  border: 1px solid #0F172A !important;
+  border-radius: 7px !important;
+  font-size: 15px !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  background: white !important;
+  color: #0F172A !important;
+  outline: none !important;
+  transition: border-width 0.15s ease, border-color 0.15s ease !important;
+  min-height: 48px !important;
+  width: 100% !important;
+}
+
+.PhoneInputInput:focus {
+  border-color: #0F172A !important;
+  border-width: 2px !important;
+  padding: 12px 15px !important;
+  box-shadow: none !important;
+}
+
+.PhoneInputCountry {
+  padding: 0 12px !important;
+  border: 1px solid #0F172A !important;
+  border-radius: 7px !important;
+  margin-right: 8px !important;
+  background: white !important;
+  min-height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.PhoneInputCountrySelect {
+  font-size: 15px !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  border: none !important;
+  background: transparent !important;
+  outline: none !important;
+}
+
+.PhoneInputCountryIcon {
+  width: 24px !important;
+  height: 24px !important;
+  margin-right: 8px !important;
+}
+
+.PhoneInputCountrySelectArrow {
+  color: #0F172A !important;
+  opacity: 0.7 !important;
+  margin-left: 4px !important;
+}
