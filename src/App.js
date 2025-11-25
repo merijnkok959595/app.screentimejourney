@@ -3107,13 +3107,15 @@ function App() {
   const sendWhatsAppCode = async () => {
     setWhatsappError(''); // Clear any previous errors
     
-    if (!newWhatsapp.trim()) {
+    // Validate phone number from PhoneInput component
+    if (!phoneNumber || !phoneNumber.trim()) {
       setWhatsappError('Please enter your phone number');
       return;
     }
     
-    if (newWhatsapp.trim().length < 8) {
-      setWhatsappError('Phone number is too short');
+    // Use isPossiblePhoneNumber from react-phone-number-input for validation
+    if (!isPossiblePhoneNumber(phoneNumber)) {
+      setWhatsappError('Please enter a valid phone number');
       return;
     }
 
@@ -3130,8 +3132,8 @@ function App() {
           setResendCooldown(60); // Start 60-second cooldown
           setOnboardStep(5); // Move to verification step
           setWhatsappLoading(false);
-          console.log(`🔧 Local dev: Simulated sending code to ${newCountryCode}${newWhatsapp}`);
-          alert(`Demo: Verification code "123456" sent to ${newCountryCode}${newWhatsapp}`);
+          console.log(`🔧 Local dev: Simulated sending code to ${phoneNumber}`);
+          alert(`Demo: Verification code "123456" sent to ${phoneNumber}`);
         }, 1000);
         return;
       }
@@ -3156,7 +3158,7 @@ function App() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          phone_number: `${newCountryCode}${newWhatsapp}`.replace(/\s/g, ''),
+          phone_number: phoneNumber.replace(/\s/g, ''), // Use phoneNumber from PhoneInput
           customer_id: customerId
         })
       });
@@ -3231,7 +3233,7 @@ function App() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          phone_number: `${newCountryCode}${newWhatsapp}`.replace(/\s/g, ''),
+          phone_number: phoneNumber.replace(/\s/g, ''), // Use phoneNumber from PhoneInput
           code: whatsappCode,
           customer_id: customerId,
           username: newUsername || 'tempuser',
