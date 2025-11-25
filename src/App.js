@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import PhoneInput, { getCountryCallingCode } from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
 import './App.css';
 import './styles/brand-theme.css';
 
@@ -444,6 +446,8 @@ function App() {
   const [newGender, setNewGender] = useState('');
   const [newWhatsapp, setNewWhatsapp] = useState('');
   const [newCountryCode, setNewCountryCode] = useState('+31');
+  const [phoneNumber, setPhoneNumber] = useState(''); // Full phone number with country code
+  const [detectedCountry, setDetectedCountry] = useState('NL'); // Default to Netherlands
   const [whatToChange, setWhatToChange] = useState('');
   const [whatToGain, setWhatToGain] = useState('');
   const [doingThisFor, setDoingThisFor] = useState('');
@@ -554,6 +558,25 @@ function App() {
   
   // Payment wall state
   const [showPaymentWall, setShowPaymentWall] = useState(false);
+
+  // Geo-IP detection for automatic country selection
+  useEffect(() => {
+    const detectCountry = async () => {
+      try {
+        // Use ipapi.co for free geo-IP detection
+        const response = await fetch('https://ipapi.co/json/');
+        const data = await response.json();
+        if (data.country_code) {
+          setDetectedCountry(data.country_code);
+          console.log('Detected country:', data.country_code);
+        }
+      } catch (error) {
+        console.error('Failed to detect country:', error);
+        // Keep default country (NL)
+      }
+    };
+    detectCountry();
+  }, []);
 
   // Countdown timer for resend cooldown
   useEffect(() => {
@@ -4242,8 +4265,9 @@ function App() {
                 {usernameError && <p className="error-message">{usernameError}</p>}
                 <p className="helper">3-20 characters, letters and numbers only. This will be shown in your journey, messages and leaderboard.</p>
                 <div className="modal__footer">
-                                    <button
-                    className="btn btn--primary btn--full"
+                  <button
+                    className="btn-primary"
+                    style={{width: '100%'}}
                     disabled={!newUsername.trim() || (usernameValid !== null && usernameValid !== true)}
                     onClick={() => setOnboardStep(2)}
                   >
@@ -4282,7 +4306,8 @@ function App() {
                 <p className="helper">This sets visuals and milestones. You can change it later.</p>
                 <div className="modal__footer">
                   <button
-                    className="btn btn--primary btn--full" 
+                    className="btn-primary"
+                    style={{width: '100%'}}
                     disabled={!newGender} 
                     onClick={() => setOnboardStep(3)}
                   >
@@ -4332,7 +4357,8 @@ function App() {
                 <div className="modal__footer">
                   <button
                     type="button"
-                    className="btn btn--primary btn--full" 
+                    className="btn-primary"
+                    style={{width: '100%'}}
                     disabled={!whatToChange.trim() || !whatToGain.trim() || !doingThisFor.trim() || commitmentValidating} 
                     onClick={(e) => {
                       e.preventDefault();
@@ -4349,34 +4375,32 @@ function App() {
             {onboardStep === 4 && (
               <div>
                 <p className="helper">Get daily motivation and accountability messages.</p>
-                <div className="phone-input-group">
-                  <select 
-                    className="country-select" 
-                    value={newCountryCode} 
-                    onChange={(e) => setNewCountryCode(e.target.value)}
-                  >
-                    <option value="+31">🇳🇱 +31</option>
-                    <option value="+1">🇺🇸 +1</option>
-                    <option value="+44">🇬🇧 +44</option>
-                    <option value="+49">🇩🇪 +49</option>
-                    <option value="+33">🇫🇷 +33</option>
-                    <option value="+34">🇪🇸 +34</option>
-                    <option value="+39">🇮🇹 +39</option>
-                    <option value="+32">🇧🇪 +32</option>
-                  </select>
-                  <input 
-                    className="phone-input" 
-                    placeholder="612345678" 
-                    value={newWhatsapp}
-                    onChange={(e) => setNewWhatsapp(e.target.value)}
-                    type="tel"
+                <div style={{ marginBottom: '1rem' }}>
+                  <PhoneInput
+                    international
+                    defaultCountry={detectedCountry}
+                    value={phoneNumber}
+                    onChange={(value) => {
+                      setPhoneNumber(value || '');
+                      // Extract country code and phone number
+                      if (value) {
+                        const match = value.match(/^\+(\d+)/);
+                        if (match) {
+                          setNewCountryCode('+' + match[1].split(/[^\d]/)[0]);
+                          setNewWhatsapp(value.replace(/^\+\d+/, '').replace(/\D/g, ''));
+                        }
+                      }
+                    }}
+                    className="phone-input-international"
+                    placeholder="Enter phone number"
                   />
                 </div>
                 {whatsappError && <p className="error-message">{whatsappError}</p>}
                 <div className="modal__footer">
                   <button
-                    className="btn btn--primary btn--full"
-                    disabled={!newWhatsapp.trim() || whatsappLoading}
+                    className="btn-primary"
+                    style={{width: '100%'}}
+                    disabled={!phoneNumber || whatsappLoading}
                     onClick={sendWhatsAppCode}
                   >
                     {whatsappLoading ? 'Sending code...' : 'Validate'}
@@ -4412,7 +4436,8 @@ function App() {
                 {whatsappError && <p className="error-message">{whatsappError}</p>}
                 <div className="modal__footer">
                   <button
-                    className="btn btn--primary btn--full"
+                    className="btn-primary"
+                    style={{width: '100%'}}
                     disabled={whatsappCode.length !== 6 || whatsappLoading || profileLoading}
                     onClick={verifyWhatsAppCode}
                   >
