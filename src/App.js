@@ -167,7 +167,7 @@ const getMockDeviceData = (scenario = 'ground_zero') => {
 };
 
 // Progress Section Component (Theme-styled card)
-const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail = "", customerGender = "male", percentile = 6, devices, milestones = DEFAULT_MILESTONES, startDeviceFlow }) => {
+const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail = "", customerGender = "male", percentile = 6, devices, milestones = DEFAULT_MILESTONES, startDeviceFlow, customerFirstName = "" }) => {
   // Get the latest device from devices array (sorted by added_at, most recent first)
   // Filter out any undefined/null devices and handle missing added_at properties
   const realLatestDevice = devices && devices.length > 0 
@@ -188,18 +188,24 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
   const progress = calculateProgress(deviceData, userGender, milestones);
   const { daysInFocus, progressPercentage, currentLevel, daysToNext, finalGoalDays } = progress;
   
-  // Extract first name - prioritize username over email
+  // Extract first name - prioritize actual first_name, then username, then email
   let firstName = "Friend"; // Default fallback
   
-  if (customerName && customerName.trim()) {
-    // Use username without @ if present, capitalize first letter
+  if (customerFirstName && customerFirstName.trim()) {
+    // Use actual first name if provided
+    firstName = customerFirstName.charAt(0).toUpperCase() + customerFirstName.slice(1);
+  } else if (customerName && customerName.trim()) {
+    // Fallback to username without @ if present, capitalize first letter
     firstName = customerName.replace('@', '');
     firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
   } else if (customerEmail && customerEmail.includes('@')) {
-    // Fallback to email name if no username
+    // Last fallback to email name
     const emailName = customerEmail.split('@')[0];
     firstName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
   }
+  
+  // Calculate percentile based on devices - 0% if no devices
+  const actualPercentile = (devices && devices.length > 0) ? percentile : 0;
   
   // Check if using default or API milestones for debugging
   const isUsingDefault = milestones === DEFAULT_MILESTONES;
@@ -221,7 +227,7 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
 
         <div style={{paddingBottom: '8px'}}>
           <h2 className="journey-greeting journey-greeting--big">Hi {firstName},</h2>
-          <p className="journey-line" style={{marginBottom: '12px'}}>You are among the top <strong>{percentile}%</strong> in the world 🌍</p>
+          <p className="journey-line" style={{marginBottom: '12px'}}>You are among the top <strong>{actualPercentile}%</strong> in the world 🌍</p>
           <p className="journey-line" style={{marginBottom: '12px'}}>Right now, you are <strong>{currentLevel.title} {currentLevel.emoji}</strong> with <strong>{daysInFocus}</strong> days in focus.</p>
           {currentLevel.next_level_title && (
             <p className="journey-line journey-line--next" style={{marginBottom: '12px'}}>Next up: <strong>{currentLevel.next_level_title} {currentLevel.next_level_emoji}</strong> in <strong>{daysToNext}</strong> days.</p>
@@ -6190,6 +6196,7 @@ function App() {
           <ProgressSection 
               latestDevice={null}
               customerName={profileData?.username || customerData?.username || "Friend"}
+              customerFirstName={profileData?.first_name || customerData?.first_name || ""}
               customerEmail={profileData?.email || customerData?.email || ""}
               customerGender={profileData?.gender || customerData?.gender || "male"}
               percentile={percentile}
