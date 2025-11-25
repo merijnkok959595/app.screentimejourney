@@ -188,15 +188,17 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
   const progress = calculateProgress(deviceData, userGender, milestones);
   const { daysInFocus, progressPercentage, currentLevel, daysToNext, finalGoalDays } = progress;
   
-  // Extract first name from email or use username
-  let firstName = customerName;
-  if (customerEmail && customerEmail.includes('@')) {
-    // Extract name before @ and capitalize first letter
+  // Extract first name - prioritize username over email
+  let firstName = "Friend"; // Default fallback
+  
+  if (customerName && customerName.trim()) {
+    // Use username without @ if present, capitalize first letter
+    firstName = customerName.replace('@', '');
+    firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+  } else if (customerEmail && customerEmail.includes('@')) {
+    // Fallback to email name if no username
     const emailName = customerEmail.split('@')[0];
     firstName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
-  } else if (customerName) {
-    // Use username without @ if present
-    firstName = customerName.replace('@', '');
   }
   
   // Check if using default or API milestones for debugging
