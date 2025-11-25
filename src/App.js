@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import PhoneInput, { getCountryCallingCode } from 'react-phone-number-input';
+import PhoneInput, { getCountryCallingCode, isPossiblePhoneNumber } from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import './App.css';
 import './styles/brand-theme.css';
