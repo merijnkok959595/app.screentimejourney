@@ -1464,12 +1464,10 @@ html, #root {
   margin: 0 !important;
 }
 
-/* Flag emoji styling - clean display without any box */
+/* Flag styling - show the default flag images cleanly */
 .PhoneInputCountryIcon {
-  width: auto !important;
-  height: auto !important;
-  font-size: 24px !important; /* Visible emoji size */
-  line-height: 1 !important;
+  width: 24px !important;
+  height: 18px !important;
   display: inline-block !important;
   border: none !important; /* Remove any border */
   background: none !important; /* Remove any background */
@@ -1477,21 +1475,28 @@ html, #root {
   padding: 0 !important;
   margin: 0 !important;
   vertical-align: middle !important;
+  overflow: hidden !important;
 }
 
-/* Hide all default flag images - only show emoji */
+/* Show flag images without borders */
 .PhoneInputCountryIcon img,
-.PhoneInputCountryIconImg,
-.PhoneInputCountryIcon--square,
-.PhoneInputCountryIcon--border {
-  display: none !important; /* Hide default flag images */
+.PhoneInputCountryIconImg {
+  display: block !important; /* Show flag images */
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+  border-radius: 2px !important; /* Slight rounding */
+  object-fit: cover !important;
 }
 
-/* Ensure emoji flags are visible */
-.PhoneInputCountryIcon::before {
+/* Remove square border styling */
+.PhoneInputCountryIcon--square {
   border: none !important;
-  background: none !important;
   box-shadow: none !important;
+}
+
+.PhoneInputCountryIcon--border {
+  border: none !important;
 }
 
 .PhoneInputCountrySelectArrow {
