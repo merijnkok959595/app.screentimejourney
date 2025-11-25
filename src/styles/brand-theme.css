@@ -1541,7 +1541,7 @@ p, span, div {
 .modal__footer { display: flex; flex-direction: column; gap: 0px; justify-content: center; align-items: center; margin-top: 16px; }
 .input { 
   width: 100%; 
-  padding: 26px 16px 10px 16px; 
+  padding: 30px 16px 12px 16px; 
   border: 1px solid #0F172A; 
   border-radius: 7px; 
   font-size: 15px;
@@ -1555,7 +1555,7 @@ p, span, div {
   outline: none;
   border-width: 2px;
   border-color: #0F172A;
-  padding: 25px 15px 9px 15px; /* Adjust padding to compensate for thicker border */
+  padding: 29px 15px 11px 15px; /* Adjust padding to compensate for thicker border */
   box-shadow: none; /* Remove shadow effect */
 }
 .input::placeholder {
@@ -1583,7 +1583,7 @@ p, span, div {
 }
 .input:focus ~ .form-label,
 .input:not(:placeholder-shown) ~ .form-label {
-  top: 8px;
+  top: 6px;
   font-size: 11px;
   color: #0F172A;
   font-weight: 400;
@@ -1736,13 +1736,13 @@ p, span, div {
   
   /* Input fields - touch-friendly */
   .input {
-    padding: 26px 14px 10px 14px; /* More top padding for floating label */
+    padding: 30px 14px 12px 14px; /* More top padding for floating label */
     font-size: 16px; /* Prevents iOS zoom on focus */
-    min-height: 54px; /* Touch-friendly height */
+    min-height: 58px; /* Touch-friendly height */
   }
   
   .input:focus {
-    padding: 25px 13px 9px 13px; /* Adjust for border increase */
+    padding: 29px 13px 11px 13px; /* Adjust for border increase */
   }
   
   /* Form labels */
@@ -1753,7 +1753,7 @@ p, span, div {
   
   .input:focus ~ .form-label,
   .input:not(:placeholder-shown) ~ .form-label {
-    top: 8px;
+    top: 6px;
     font-size: 11px;
   }
   
