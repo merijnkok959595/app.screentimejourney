@@ -4650,7 +4650,7 @@ function App() {
                           cursor: 'pointer',
                           padding: 0
                         }}
-                        onClick={() => setProfileEditData(prev => ({...prev, showWhatsAppEdit: true}))}
+                        onClick={() => setProfileEditData(prev => ({...prev, showWhatsAppEdit: true, editPhoneNumber: profileData.whatsapp || ''}))}
                       >
                         Change
                       </button>
@@ -4661,38 +4661,29 @@ function App() {
                 {/* WhatsApp Edit Form */}
                 {(!profileData?.whatsapp || profileEditData.showWhatsAppEdit) && (
                   <>
-                    <div className="phone-input-group">
-                      <select 
-                        className="country-select" 
-                        value={profileEditData.country_code} 
-                        onChange={(e) => setProfileEditData(prev => ({...prev, country_code: e.target.value}))}
-                      >
-                        <option value="+31">🇳🇱 +31</option>
-                        <option value="+1">🇺🇸 +1</option>
-                        <option value="+44">🇬🇧 +44</option>
-                        <option value="+49">🇩🇪 +49</option>
-                        <option value="+33">🇫🇷 +33</option>
-                        <option value="+34">🇪🇸 +34</option>
-                        <option value="+39">🇮🇹 +39</option>
-                        <option value="+32">🇧🇪 +32</option>
-                      </select>
-                      <input 
-                        className="phone-input" 
-                        placeholder="612345678" 
-                        value={profileEditData.whatsapp}
-                        onChange={(e) => setProfileEditData(prev => ({...prev, whatsapp: e.target.value}))}
-                        type="tel"
-                      />
-                    </div>
+                    <PhoneInput
+                      international
+                      defaultCountry={detectedCountry}
+                      value={profileEditData.editPhoneNumber || ''}
+                      onChange={(value) => {
+                        setProfileEditData(prev => ({...prev, editPhoneNumber: value || ''}));
+                      }}
+                      className="phone-input-international"
+                      placeholder="Enter phone number"
+                    />
                     
-                    {profileEditData.whatsapp && (
+                    {profileEditData.editPhoneNumber && (
                       <div style={{ marginTop: '8px' }}>
                         <button 
                           type="button"
                           className="btn-primary"
                           style={{ width: '100%' }}
                           onClick={async () => {
-                            const fullPhone = `${profileEditData.country_code}${profileEditData.whatsapp}`.replace(/\s/g, '');
+                            if (!isPossiblePhoneNumber(profileEditData.editPhoneNumber)) {
+                              setProfileError('Please enter a valid phone number');
+                              return;
+                            }
+                            
                             setProfileEditData(prev => ({...prev, verifyingWhatsApp: true}));
                             
                             try {
@@ -4701,7 +4692,7 @@ function App() {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({
-                                  phone_number: fullPhone,
+                                  phone_number: profileEditData.editPhoneNumber,
                                   customer_id: customerId
                                 })
                               });
@@ -4761,13 +4752,12 @@ function App() {
                               
                               try {
                                 const customerId = extractCustomerId();
-                                const fullPhone = `${profileEditData.country_code}${profileEditData.whatsapp}`.replace(/\s/g, '');
                                 
                                 const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/verify_whatsapp_code`, {
                                   method: 'POST',
                                   headers: { 'Content-Type': 'application/json' },
                                   body: JSON.stringify({
-                                    phone_number: fullPhone,
+                                    phone_number: profileEditData.editPhoneNumber,
                                     code: profileEditData.whatsappCode,
                                     customer_id: customerId,
                                     username: profileEditData.username || profileData?.username,
