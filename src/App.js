@@ -4851,15 +4851,15 @@ function App() {
                     
                     <div style={{ marginBottom: '0', paddingRight: '80px' }}>
                       <div style={{ padding: '12px 0', borderBottom: '1px solid #EEEEEE' }}>
-                        <strong style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>What you want to change:</strong>
+                        <div style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>What you want to change:</div>
                         <p style={{ margin: '4px 0 0 0', color: '#6b7280', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>"{profileData.commitment_data.q1}"</p>
                       </div>
                       <div style={{ padding: '12px 0', borderBottom: '1px solid #EEEEEE' }}>
-                        <strong style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>What you want to gain:</strong>
+                        <div style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>What you want to gain:</div>
                         <p style={{ margin: '4px 0 0 0', color: '#6b7280', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>"{profileData.commitment_data.q2}"</p>
                       </div>
                       <div style={{ padding: '12px 0' }}>
-                        <strong style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>Who you're doing this for:</strong>
+                        <div style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>Who you're doing this for:</div>
                         <p style={{ margin: '4px 0 0 0', color: '#6b7280', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>"{profileData.commitment_data.q3}"</p>
                       </div>
                     </div>
@@ -4873,44 +4873,38 @@ function App() {
                     
                     <div style={{ marginBottom: '16px' }}>
                       <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>What do you want to quit or change?</label>
-                      <div className="input-wrapper">
-                        <input 
-                          type="text"
-                          className="input"
-                          placeholder=" "
-                          value={profileEditData.commitmentQ1 || ''}
-                          onChange={(e) => setProfileEditData(prev => ({...prev, commitmentQ1: e.target.value}))}
-                        />
-                        <label className="form-label">e.g., quit porn, reduce social media, stop gaming...</label>
-                      </div>
+                      <input 
+                        type="text"
+                        className="input"
+                        placeholder="e.g., quit porn, reduce social media, stop gaming..."
+                        value={profileEditData.commitmentQ1 || ''}
+                        onChange={(e) => setProfileEditData(prev => ({...prev, commitmentQ1: e.target.value}))}
+                        style={{padding: '16px'}}
+                      />
                     </div>
 
                     <div style={{ marginBottom: '16px' }}>
                       <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>What do you want to gain or achieve?</label>
-                      <div className="input-wrapper">
-                        <input 
-                          type="text"
-                          className="input"
-                          placeholder=" "
-                          value={profileEditData.commitmentQ2 || ''}
-                          onChange={(e) => setProfileEditData(prev => ({...prev, commitmentQ2: e.target.value}))}
-                        />
-                        <label className="form-label">e.g., more energy, better relationships, inner peace...</label>
-                      </div>
+                      <input 
+                        type="text"
+                        className="input"
+                        placeholder="e.g., more energy, better relationships, inner peace..."
+                        value={profileEditData.commitmentQ2 || ''}
+                        onChange={(e) => setProfileEditData(prev => ({...prev, commitmentQ2: e.target.value}))}
+                        style={{padding: '16px'}}
+                      />
                     </div>
 
                     <div style={{ marginBottom: '16px' }}>
                       <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Who are you doing this for?</label>
-                      <div className="input-wrapper">
-                        <input 
-                          type="text"
-                          className="input"
-                          placeholder=" "
-                          value={profileEditData.commitmentQ3 || ''}
-                          onChange={(e) => setProfileEditData(prev => ({...prev, commitmentQ3: e.target.value}))}
-                        />
-                        <label className="form-label">e.g., my family, my future self, my children...</label>
-                      </div>
+                      <input 
+                        type="text"
+                        className="input"
+                        placeholder="e.g., my family, my future self, my children..."
+                        value={profileEditData.commitmentQ3 || ''}
+                        onChange={(e) => setProfileEditData(prev => ({...prev, commitmentQ3: e.target.value}))}
+                        style={{padding: '16px'}}
+                      />
                     </div>
 
                     {/* Validation and Preview */}
