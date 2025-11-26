@@ -4733,16 +4733,14 @@ function App() {
                     {profileEditData.whatsappCodeSent && (
                       <div style={{ marginTop: '12px', padding: '16px', backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '7px' }}>
                         <label className="form-label" style={{ marginBottom: '8px', position: 'static', transform: 'none', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400' }}>Enter 6-digit verification code</label>
-                        <div style={{ display: 'flex', gap: '8px' }}>
+                        <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
                           <input 
                             type="text"
                             className="input"
                             placeholder="123456"
                             value={profileEditData.whatsappCode || ''}
                             onChange={(e) => {
-                              setProfileEditData(prev => ({...prev, whatsappCode: e.target.value.replace(/\D/g, '').slice(0, 6)}));
-                              // Clear error when user types
-                              if (profileError) setProfileError('');
+                              setProfileEditData(prev => ({...prev, whatsappCode: e.target.value.replace(/\D/g, '').slice(0, 6), verificationError: ''}));
                             }}
                             style={{ flex: 1, padding: '16px' }}
                           />
@@ -4752,8 +4750,7 @@ function App() {
                             onClick={async () => {
                               if (profileEditData.whatsappCode?.length !== 6) return;
                               
-                              setProfileEditData(prev => ({...prev, verifyingCode: true}));
-                              setProfileError(''); // Clear any previous errors
+                              setProfileEditData(prev => ({...prev, verifyingCode: true, verificationError: ''}));
                               
                               try {
                                 const customerId = extractCustomerId();
@@ -4777,17 +4774,18 @@ function App() {
                                     whatsappVerified: true,
                                     whatsappCodeSent: false,
                                     showWhatsAppEdit: false,
-                                    editPhoneNumber: ''
+                                    editPhoneNumber: '',
+                                    verificationError: ''
                                   }));
                                   setProfileError('');
                                   // Refresh profile data
                                   fetchProfileData();
                                 } else {
-                                  setProfileError(result.error || 'Invalid verification code');
+                                  setProfileEditData(prev => ({...prev, verificationError: result.error || 'Invalid verification code'}));
                                 }
                               } catch (error) {
                                 console.error('Error verifying code:', error);
-                                setProfileError('Failed to verify code');
+                                setProfileEditData(prev => ({...prev, verificationError: 'Failed to verify code'}));
                               } finally {
                                 setProfileEditData(prev => ({...prev, verifyingCode: false}));
                               }
@@ -4797,8 +4795,8 @@ function App() {
                             {profileEditData.verifyingCode ? 'Verifying...' : 'Verify'}
                           </button>
                         </div>
-                        {profileError && profileError.includes('verification code') && (
-                          <p className="error-message" style={{ marginTop: '8px', marginBottom: 0 }}>{profileError}</p>
+                        {profileEditData.verificationError && (
+                          <p className="error-message" style={{ marginTop: 0, marginBottom: 0 }}>{profileEditData.verificationError}</p>
                         )}
                       </div>
                     )}
@@ -4931,21 +4929,6 @@ function App() {
                         }}>
                           {profileEditData.commitmentValidation.feedback}
                         </p>
-                        {profileEditData.commitmentValidation.surrender_text && (
-                          <>
-                            <strong style={{ color: '#374151', fontSize: '14px' }}>New Commitment Statement:</strong>
-                            <p style={{ 
-                              margin: '4px 0 0 0', 
-                              fontStyle: 'italic',
-                              color: '#4b5563',
-                              padding: '8px',
-                              backgroundColor: 'rgba(255,255,255,0.5)',
-                              borderRadius: '6px'
-                            }}>
-                              "{profileEditData.commitmentValidation.surrender_text}"
-                            </p>
-                          </>
-                        )}
                       </div>
                     )}
 
@@ -5027,8 +5010,8 @@ function App() {
                         <>
                           <button 
                             type="button"
-                            className="btn-primary"
-                            style={{ backgroundColor: '#10b981', width: '100%' }}
+                            className="btn-success"
+                            style={{ width: '100%' }}
                             onClick={async () => {
                               setProfileEditData(prev => ({...prev, commitmentSaving: true}));
                               
