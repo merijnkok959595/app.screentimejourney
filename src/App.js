@@ -4731,8 +4731,8 @@ function App() {
                     
                     {/* Verification Code Input */}
                     {profileEditData.whatsappCodeSent && (
-                      <div style={{ marginTop: '12px', padding: '12px', backgroundColor: '#fef3c7', border: '1px solid #fbbf24', borderRadius: '8px' }}>
-                        <label className="form-label" style={{ marginBottom: '8px' }}>Enter 6-digit verification code</label>
+                      <div style={{ marginTop: '12px', padding: '16px', backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '7px' }}>
+                        <label className="form-label" style={{ marginBottom: '8px', position: 'static', transform: 'none', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400' }}>Enter 6-digit verification code</label>
                         <div style={{ display: 'flex', gap: '8px' }}>
                           <input 
                             type="text"
