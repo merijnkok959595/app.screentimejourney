@@ -1550,6 +1550,8 @@ function App() {
   const generateProfileContent = (deviceType, pincode, uuid) => {
     const mainUUID = generateUUID();
     const dnsUUID = generateUUID();
+    const webFilterUUID = generateUUID();
+    const restrictionsUUID = generateUUID();
     
     if (deviceType === 'iOS') {
       return `<?xml version="1.0" encoding="UTF-8"?>
@@ -1558,17 +1560,17 @@ function App() {
 <dict>
   <key>PayloadContent</key>
   <array>
+    <!-- 1. CleanBrowsing DNS over HTTPS -->
     <dict>
       <key>DNSSettings</key>
       <dict>
-        <key>ServerAddresses</key>
-        <array>
-          <string>185.228.168.168</string>
-          <string>185.228.169.168</string>
-        </array>
+        <key>DNSProtocol</key>
+        <string>HTTPS</string>
+        <key>ServerURL</key>
+        <string>https://doh.cleanbrowsing.org/doh/adult-filter/</string>
       </dict>
       <key>PayloadDisplayName</key>
-      <string>CleanBrowsing Family Safe DNS</string>
+      <string>CleanBrowsing Adult Filter DNS</string>
       <key>PayloadIdentifier</key>
       <string>com.merijnkokbv.cleanbrowsingdns</string>
       <key>PayloadType</key>
@@ -1578,9 +1580,89 @@ function App() {
       <key>PayloadVersion</key>
       <integer>1</integer>
     </dict>
+    
+    <!-- 2. Apple Built-in Web Content Filter (Limit Adult Websites) -->
+    <dict>
+      <key>PayloadType</key>
+      <string>com.apple.webcontent-filter</string>
+      <key>PayloadIdentifier</key>
+      <string>com.merijnkokbv.webcontentfilter</string>
+      <key>PayloadUUID</key>
+      <string>${webFilterUUID}</string>
+      <key>PayloadDisplayName</key>
+      <string>Web Content Filter</string>
+      <key>PayloadVersion</key>
+      <integer>1</integer>
+      <key>FilterType</key>
+      <string>BuiltIn</string>
+      <key>AutoFilterEnabled</key>
+      <true/>
+      <key>PermittedURLs</key>
+      <array/>
+    </dict>
+    
+    <!-- 3. Application Access Restrictions -->
+    <dict>
+      <key>PayloadType</key>
+      <string>com.apple.applicationaccess</string>
+      <key>PayloadIdentifier</key>
+      <string>com.merijnkokbv.restrictions</string>
+      <key>PayloadUUID</key>
+      <string>${restrictionsUUID}</string>
+      <key>PayloadDisplayName</key>
+      <string>Content Restrictions</string>
+      <key>PayloadVersion</key>
+      <integer>1</integer>
+      
+      <!-- Block Explicit Content -->
+      <key>allowExplicitContent</key>
+      <false/>
+      <key>allowBookstoreErotica</key>
+      <false/>
+      
+      <!-- Enforce SafeSearch -->
+      <key>forceAssistantProfanityFilter</key>
+      <true/>
+      
+      <!-- Content Ratings -->
+      <key>ratingRegion</key>
+      <string>us</string>
+      <key>ratingApps</key>
+      <integer>200</integer>
+      <key>ratingMovies</key>
+      <integer>1000</integer>
+      <key>ratingTVShows</key>
+      <integer>1000</integer>
+      
+      <!-- Safari Settings -->
+      <key>safariAllowAutoFill</key>
+      <true/>
+      <key>safariForceFraudWarning</key>
+      <true/>
+      <key>safariAllowPopups</key>
+      <false/>
+      
+      <!-- Disable Private Browsing -->
+      <key>allowSafariPrivateBrowsing</key>
+      <false/>
+      
+      <!-- Disable Safari Extensions -->
+      <key>allowSafariExtensions</key>
+      <false/>
+      
+      <!-- Prevent VPN Bypass -->
+      <key>allowVPNCreation</key>
+      <false/>
+      
+      <!-- Restrict Multiplayer Gaming -->
+      <key>allowMultiplayerGaming</key>
+      <false/>
+      <key>allowAddingGameCenterFriends</key>
+      <false/>
+    </dict>
   </array>
   <key>PayloadDescription</key>
-  <string>Enforces CleanBrowsing Family Safe DNS filtering for iOS devices</string>
+  <string>Multi-layer protection: DNS + Web Filter + Content Restrictions + Safari Protection + Gaming Restrictions</string>
   <key>PayloadDisplayName</key>
   <string>MK#ScreentimeTransformation_${uuid}</string>
   <key>PayloadIdentifier</key>
@@ -1600,23 +1682,26 @@ function App() {
     } else {
       // macOS with pincode
       const passwordUUID = generateUUID();
+      const macWebFilterUUID = generateUUID();
+      const macRestrictionsUUID = generateUUID();
+      
       return `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
   <key>PayloadContent</key>
   <array>
+    <!-- 1. CleanBrowsing DNS over HTTPS -->
     <dict>
       <key>DNSSettings</key>
       <dict>
-        <key>ServerAddresses</key>
-        <array>
-          <string>185.228.168.168</string>
-          <string>185.228.169.168</string>
-        </array>
+        <key>DNSProtocol</key>
+        <string>HTTPS</string>
+        <key>ServerURL</key>
+        <string>https://doh.cleanbrowsing.org/doh/adult-filter/</string>
       </dict>
       <key>PayloadDisplayName</key>
-      <string>CleanBrowsing Family Safe DNS</string>
+      <string>CleanBrowsing Adult Filter DNS</string>
       <key>PayloadIdentifier</key>
       <string>com.merijnkokbv.cleanbrowsingdns</string>
       <key>PayloadType</key>
@@ -1626,6 +1711,68 @@ function App() {
       <key>PayloadVersion</key>
       <integer>1</integer>
     </dict>
+    
+    <!-- 2. Apple Built-in Web Content Filter (Limit Adult Websites) -->
+    <dict>
+      <key>PayloadType</key>
+      <string>com.apple.webcontent-filter</string>
+      <key>PayloadIdentifier</key>
+      <string>com.merijnkokbv.webcontentfilter</string>
+      <key>PayloadUUID</key>
+      <string>${macWebFilterUUID}</string>
+      <key>PayloadDisplayName</key>
+      <string>Web Content Filter</string>
+      <key>PayloadVersion</key>
+      <integer>1</integer>
+      <key>FilterType</key>
+      <string>BuiltIn</string>
+      <key>AutoFilterEnabled</key>
+      <true/>
+      <key>PermittedURLs</key>
+      <array/>
+    </dict>
+    
+    <!-- 3. Application Access Restrictions -->
+    <dict>
+      <key>PayloadType</key>
+      <string>com.apple.applicationaccess.new</string>
+      <key>PayloadIdentifier</key>
+      <string>com.merijnkokbv.restrictions</string>
+      <key>PayloadUUID</key>
+      <string>${macRestrictionsUUID}</string>
+      <key>PayloadDisplayName</key>
+      <string>Content Restrictions</string>
+      <key>PayloadVersion</key>
+      <integer>1</integer>
+      
+      <!-- Parental Controls -->
+      <key>familyControlsEnabled</key>
+      <true/>
+      
+      <!-- Safari Settings -->
+      <key>safariAcceptCookies</key>
+      <integer>2</integer>
+      <key>safariForceFraudWarning</key>
+      <true/>
+      <key>safariAllowPopups</key>
+      <false/>
+      
+      <!-- Disable Private Browsing -->
+      <key>allowSafariPrivateBrowsing</key>
+      <false/>
+      
+      <!-- Disable Safari Extensions -->
+      <key>allowSafariExtensions</key>
+      <false/>
+      
+      <!-- Restrict Multiplayer Gaming -->
+      <key>allowMultiplayerGaming</key>
+      <false/>
+      <key>allowAddingGameCenterFriends</key>
+      <false/>
+    </dict>
+    
+    <!-- 4. Profile Removal Password -->
     <dict>
       <key>PayloadDisplayName</key>
       <string>Profile Removal Password</string>
@@ -1642,7 +1789,7 @@ function App() {
     </dict>
   </array>
   <key>PayloadDescription</key>
-  <string>Enforces CleanBrowsing Family Safe DNS filtering with uninstall PIN for macOS devices</string>
+  <string>Multi-layer protection: DNS + Web Filter + Content Restrictions + Safari Protection + Gaming Restrictions + PIN Protection</string>
   <key>PayloadDisplayName</key>
   <string>MK#ScreentimeTransformation_${uuid}</string>
   <key>PayloadIdentifier</key>
