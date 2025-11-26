@@ -545,11 +545,10 @@ def verify_whatsapp_verification_code(payload: Dict[str, Any]) -> Dict[str, Any]
         auth_table = dynamodb.Table(AUTH_TABLE_NAME)
         
         try:
-            # Query using composite key (phone_number + code)
+            # Query using phone_number as primary key
             response = auth_table.get_item(
                 Key={
-                    'phone_number': phone,
-                    'code': code
+                    'phone_number': phone
                 }
             )
         except Exception as e:
@@ -557,13 +556,17 @@ def verify_whatsapp_verification_code(payload: Dict[str, Any]) -> Dict[str, Any]
             return json_resp({'error': 'Invalid verification code'}, 400)
         
         if 'Item' not in response:
-            print(f"❌ No auth record found for phone: {phone}, code: {code}")
+            print(f"❌ No auth record found for phone: {phone}")
             return json_resp({'error': 'Invalid verification code'}, 400)
         
         auth_item = response['Item']
         print(f"✅ Found auth record: {auth_item}")
         
-        # No need to check code again since we used it in the key
+        # Verify the code matches
+        stored_code = auth_item.get('code', '')
+        if stored_code != code:
+            print(f"❌ Code mismatch: provided={code}, stored={stored_code}")
+            return json_resp({'error': 'Invalid verification code'}, 400)
         
         # Check if code has expired
         if datetime.now().timestamp() > auth_item['expires_at']:
@@ -601,8 +604,7 @@ def verify_whatsapp_verification_code(payload: Dict[str, Any]) -> Dict[str, Any]
         
         auth_table.update_item(
             Key={
-                'phone_number': phone,
-                'code': code
+                'phone_number': phone
             },
             UpdateExpression=update_expression,
             ExpressionAttributeValues=expression_values
@@ -4630,6 +4632,12 @@ def handle_seal_subscription_created(payload: Dict[str, Any]) -> Dict[str, Any]:
         else:
             print(f"⚠️ No billing country code found in Seal webhook")
         
+        # Extract first_name and last_name from Seal payload
+        first_name = payload.get('first_name', '')
+        last_name = payload.get('last_name', '')
+        if first_name or last_name:
+            print(f"👤 Customer name: {first_name} {last_name}")
+        
         # Extract UTM data if available
         utm_data = {}
         # Seal may have different structure - adjust as needed
@@ -4651,19 +4659,36 @@ def handle_seal_subscription_created(payload: Dict[str, Any]) -> Dict[str, Any]:
             country=country_code
         )
         
-        # Also store subscription_created_at separately for billing calculations
+        # Also store subscription_created_at, first_name, and last_name separately
         if success:
             try:
                 dynamodb = boto3.resource('dynamodb')
                 table = dynamodb.Table(os.environ.get('SUBSCRIBERS_TABLE', 'stj_subscribers'))
+                
+                # Build update expression dynamically based on what we have
+                update_expr_parts = ['subscription_created_at = :created_at']
+                expr_values = {':created_at': subscription_created_at}
+                
+                if first_name:
+                    update_expr_parts.append('first_name = :first_name')
+                    expr_values[':first_name'] = first_name
+                
+                if last_name:
+                    update_expr_parts.append('last_name = :last_name')
+                    expr_values[':last_name'] = last_name
+                
+                update_expression = 'SET ' + ', '.join(update_expr_parts)
+                
                 table.update_item(
                     Key={'customer_id': customer_id},
-                    UpdateExpression='SET subscription_created_at = :created_at',
-                    ExpressionAttributeValues={':created_at': subscription_created_at}
+                    UpdateExpression=update_expression,
+                    ExpressionAttributeValues=expr_values
                 )
                 print(f"📅 Stored subscription_created_at: {subscription_created_at}")
+                if first_name or last_name:
+                    print(f"👤 Stored customer name: {first_name} {last_name}")
             except Exception as e:
-                print(f"⚠️ Failed to store subscription_created_at: {e}")
+                print(f"⚠️ Failed to store subscription data: {e}")
         
         if success:
             return json_resp({"success": True, "message": "Subscription processed"})
@@ -4684,9 +4709,32 @@ def handle_seal_subscription_cancelled(payload: Dict[str, Any]) -> Dict[str, Any
         
         customer_id = str(payload.get('customer_id', payload.get('customer', {}).get('id', '')))
         customer_email = payload.get('email') or payload.get('customer_email') or payload.get('customer', {}).get('email', '')
+        webhook_subscription_id = str(payload.get('id', ''))
         
         if not customer_id:
             return json_resp({"error": "Missing customer_id"}, 400)
+        
+        # CHECK IF THIS IS AN OLD/OUTDATED SUBSCRIPTION WEBHOOK
+        # Get current subscription ID from DynamoDB
+        try:
+            dynamodb = boto3.resource('dynamodb')
+            table = dynamodb.Table(os.environ.get('SUBSCRIBERS_TABLE', 'stj_subscribers'))
+            response = table.get_item(Key={'customer_id': customer_id})
+            
+            if 'Item' in response:
+                current_subscription_id = response['Item'].get('seal_subscription_id', '')
+                
+                # If webhook is for a different (older) subscription, ignore it
+                if current_subscription_id and webhook_subscription_id and current_subscription_id != webhook_subscription_id:
+                    print(f"⚠️ IGNORING outdated webhook: webhook subscription_id={webhook_subscription_id}, current subscription_id={current_subscription_id}")
+                    return json_resp({
+                        "success": True, 
+                        "message": f"Ignored outdated webhook for old subscription {webhook_subscription_id}"
+                    })
+                else:
+                    print(f"✅ Webhook subscription_id matches current subscription: {webhook_subscription_id}")
+        except Exception as db_error:
+            print(f"⚠️ Could not verify subscription ID from DB: {db_error} - proceeding with webhook")
         
         # CHECK ACTUAL STATUS IN PAYLOAD - don't trust the webhook topic alone!
         # Seal sometimes sends "subscription/cancelled" topic even when status is "ACTIVE"
@@ -4868,7 +4916,8 @@ def handler(event, context):
             elif path.endswith("/update_notifications"):
                 print(f"📞 Update_notifications called with body: {body}")
                 response = update_notification_settings(body)
-            
+                print(f"📤 Update_notifications response: {response}")
+                return response
             elif path.endswith("/unsubscribe_email"):
                 print(f"📞 Unsubscribe_email called with body: {body}")
                 response = unsubscribe_email_notifications(body)
