@@ -7291,7 +7291,13 @@ function App() {
                   Your subscription has been cancelled. Below are the pincodes for your devices in case you need them.
                 </p>
                 
-                <div style={{maxHeight: '500px', overflowY: 'auto', border: '1px solid #EEEEEE', borderRadius: '7px'}}>
+                <div style={{
+                  maxHeight: window.innerWidth <= 768 ? '300px' : '500px', 
+                  overflowY: 'auto', 
+                  border: '1px solid #EEEEEE', 
+                  borderRadius: '7px',
+                  marginBottom: '16px'
+                }}>
                   {logs.map((log, index) => (
                     <div key={log.id} style={{
                       display: 'flex',
@@ -7352,11 +7358,20 @@ function App() {
               </div>
             </div>
 
-            <div className="modal__footer">
+            <div className="modal__footer" style={{display: 'flex', flexDirection: 'column', gap: '12px', width: '100%'}}>
               <a
                 href="https://www.screentimejourney.com/products/screentimejourney"
                 className="btn-primary"
-                style={{width: '100%', textAlign: 'center', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '48px'}}
+                style={{
+                  width: '100%', 
+                  textAlign: 'center', 
+                  textDecoration: 'none', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  minHeight: '48px',
+                  fontSize: '16px'
+                }}
               >
                 Subscribe Now
               </a>
@@ -7367,12 +7382,14 @@ function App() {
                   width: '100%', 
                   textAlign: 'center', 
                   textDecoration: 'underline', 
+                  textUnderlineOffset: '4px',
+                  textDecorationThickness: '1px',
                   display: 'block', 
-                  marginTop: '16px',
+                  padding: '12px 0',
                   color: '#0F172A',
                   fontSize: '15px',
                   fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
-                  fontWeight: '400',
+                  fontWeight: '500',
                   transition: 'color 0.2s ease'
                 }}
                 onMouseEnter={(e) => e.target.style.color = '#6b7280'}
