@@ -65,10 +65,15 @@ body {
   line-height: 1.6;
   margin: 0;
   padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+  width: 100%;
+  position: relative;
 }
 
 html, #root { 
-  background: var(--page-bg); 
+  background: var(--page-bg);
+  overflow-x: hidden; /* Prevent horizontal scroll */
+  width: 100%;
 }
 
 /* === TYPOGRAPHY === */
@@ -771,7 +776,7 @@ p, span, div {
   padding: 8px 16px; 
   border: 1px solid #0F172A; 
   border-radius: 7px; 
-  font-size: 13px;
+  font-size: 16px; /* Prevents iOS auto-zoom */
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background: transparent;
   color: #0F172A;
@@ -1820,6 +1825,9 @@ p, span, div {
     max-height: 80dvh; /* Dynamic viewport height - accounts for mobile keyboard */
     border-radius: 12px;
     overflow-y: auto;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+    max-width: 100vw; /* Ensure modal never exceeds viewport width */
+    box-sizing: border-box; /* Include padding in width calculation */
   }
   
   .modal__title {
