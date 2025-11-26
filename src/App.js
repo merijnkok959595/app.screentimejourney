@@ -1066,7 +1066,7 @@ function App() {
                     ]
                   }
                 ],
-                action_button: 'Continue to Setup Guide'
+                action_button: 'Next step'
               },
               {
                 step: 2,
@@ -5947,54 +5947,37 @@ function App() {
                     {/* Step 3: Profile Generation & WARP Client Download */}
                     {currentFlowStep === 3 && currentFlow.flowType === 'device_setup_flow' && currentFlow.steps[currentFlowStep - 1]?.step_type !== 'pincode_display' && (
                       <div style={{marginBottom: '12px', width: '100%'}}>
-                        {/* Two buttons side by side */}
-                        <div style={{display: 'flex', gap: '12px', marginBottom: '0px'}}>
-                          {/* Left: Generate/Download Profile Button */}
+                        {/* Generate/Download Profile Button */}
                         {!vpnProfileData ? (
                           <button
-                            className="btn-secondary btn--no-hover"
+                            className="btn-secondary"
                             onClick={generateVPNProfile}
                             disabled={profileGenerating || !deviceFormData.device_type}
-                              style={{flex: 1, marginBottom: '0px'}}
+                            style={{width: '100%', marginBottom: '0px'}}
                           >
                             {profileGenerating ? 'Generating...' : (
                               <>
-                                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}>
-                                    <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 3v12"/>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}>
+                                  <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 3v12"/>
                                 </svg>
                                 Generate Profile
                               </>
                             )}
                           </button>
                         ) : (
-                            <button
-                              className="btn btn--outline"
-                              onClick={downloadProfile}
-                              style={{flex: 1, marginBottom: '0px'}}
-                            >
-                              <>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}>
-                                  <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 3v12"/>
-                                </svg>
-                                Download Profile
-                              </>
-                            </button>
-                          )}
-                          
-                          {/* Right: Download WARP Client Button */}
                           <button
-                            className="btn-secondary btn--no-hover"
-                            onClick={() => window.open('https://apps.apple.com/us/app/1-1-1-1-faster-internet/id1423538627', '_blank')}
-                            style={{flex: 1, marginBottom: '0px'}}
+                            className="btn-secondary"
+                            onClick={downloadProfile}
+                            style={{width: '100%', marginBottom: '0px'}}
                           >
                             <>
                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}>
                                 <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 3v12"/>
                               </svg>
-                              Download WARP Client
+                              Download Profile
                             </>
                           </button>
-                          </div>
+                        )}
                       </div>
                     )}
                     
@@ -6804,6 +6787,8 @@ function App() {
                     onClick={submitCancellation}
                     disabled={cancelSubmitting}
                     style={{background: '#dc2626', borderColor: '#dc2626', color: '#fff', width: '100%'}}
+                    onMouseEnter={(e) => e.target.style.background = '#b91c1c'}
+                    onMouseLeave={(e) => e.target.style.background = '#dc2626'}
                   >
                     {cancelSubmitting ? (
                       <div className="spinner" style={{
@@ -7166,10 +7151,22 @@ function App() {
               
               <a
                 href="https://www.screentimejourney.com"
-                className="btn-secondary"
-                style={{width: '100%', textAlign: 'center', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '48px', marginTop: '12px'}}
+                style={{
+                  width: '100%', 
+                  textAlign: 'center', 
+                  textDecoration: 'underline', 
+                  display: 'block', 
+                  marginTop: '16px',
+                  color: '#0F172A',
+                  fontSize: '15px',
+                  fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                  fontWeight: '400',
+                  transition: 'color 0.2s ease'
+                }}
+                onMouseEnter={(e) => e.target.style.color = '#6b7280'}
+                onMouseLeave={(e) => e.target.style.color = '#0F172A'}
               >
-                Home
+                Return to home
               </a>
             </div>
           </>
