@@ -1544,18 +1544,18 @@ p, span, div {
   padding: 8px 16px; 
   border: 1px solid #0F172A; 
   border-radius: 7px; 
-  font-size: 14px;
+  font-size: 13px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background: transparent;
   color: #0F172A;
   transition: border-width 0.15s ease, border-color 0.15s ease, padding 0.2s ease;
-  line-height: 1.5;
+  line-height: 1.4;
   min-height: 52px;
 }
 .input:focus,
 .input:not(:placeholder-shown) {
-  padding-top: 22px;
-  padding-bottom: 14px;
+  padding-top: 24px;
+  padding-bottom: 12px;
 }
 .input:focus {
   outline: none;
@@ -1563,8 +1563,8 @@ p, span, div {
   border-color: #0F172A;
   padding-left: 15px;
   padding-right: 15px;
-  padding-top: 21px;
-  padding-bottom: 13px;
+  padding-top: 23px;
+  padding-bottom: 11px;
   box-shadow: none; /* Remove shadow effect */
 }
 .input::placeholder {
@@ -1592,7 +1592,7 @@ p, span, div {
 }
 .input:focus ~ .form-label,
 .input:not(:placeholder-shown) ~ .form-label {
-  top: 8px;
+  top: 10px;
   font-size: 10px;
   color: #0F172A;
   font-weight: 500;
@@ -1747,21 +1747,21 @@ p, span, div {
   /* Input fields - touch-friendly */
   .input {
     padding: 8px 14px;
-    font-size: 16px; /* Prevents iOS zoom on focus */
+    font-size: 15px; /* Slightly smaller but still prevents iOS zoom */
     min-height: 54px; /* Touch-friendly height */
   }
   
   .input:focus,
   .input:not(:placeholder-shown) {
-    padding-top: 24px;
-    padding-bottom: 16px;
+    padding-top: 26px;
+    padding-bottom: 14px;
   }
   
   .input:focus {
     padding-left: 13px;
     padding-right: 13px;
-    padding-top: 23px;
-    padding-bottom: 15px;
+    padding-top: 25px;
+    padding-bottom: 13px;
   }
   
   /* Form labels */
@@ -1772,7 +1772,7 @@ p, span, div {
   
   .input:focus ~ .form-label,
   .input:not(:placeholder-shown) ~ .form-label {
-    top: 8px;
+    top: 10px;
     font-size: 10px;
     line-height: 1;
   }
