@@ -1753,7 +1753,7 @@ p, span, div {
   /* === FORMS === */
   .input {
     padding: 8px 14px;
-    font-size: 15px;
+    font-size: 16px; /* 16px prevents iOS zoom on focus */
     min-height: 54px;
   }
   
@@ -1812,10 +1812,12 @@ p, span, div {
   
   /* === MODAL === */
   .modal {
-    width: calc(100% - 32px);
-    padding: 24px 20px;
-    max-height: 85vh;
+    width: calc(100% - 24px);
+    padding: 20px 16px;
+    max-height: 80vh;
+    max-height: 80dvh; /* Dynamic viewport height - accounts for mobile keyboard */
     border-radius: 12px;
+    overflow-y: auto;
   }
   
   .modal__title {
@@ -1838,6 +1840,7 @@ p, span, div {
   .modal__footer {
     gap: var(--mobile-spacing-sm);
     margin-top: 20px;
+    padding-bottom: env(safe-area-inset-bottom, 0px); /* Account for iPhone home indicator */
   }
   
   /* === GRID === */
@@ -1993,14 +1996,14 @@ p, span, div {
   }
   
   .mobile-menu-toggle {
-    width: 40px;
-    height: 40px;
-    padding: 6px;
+    width: 36px;
+    height: 36px;
+    padding: 8px;
   }
   
   .mobile-menu-toggle svg {
-    width: 28px;
-    height: 28px;
+    width: 20px;
+    height: 20px;
     color: var(--brand-primary);
     fill: var(--brand-primary);
   }
@@ -2008,11 +2011,12 @@ p, span, div {
   .mobile-menu-toggle svg path,
   .mobile-menu-toggle svg line {
     stroke: var(--brand-primary);
+    stroke-width: 1.5px;
   }
   
   .hamburger-line {
-    width: 28px;
-    height: 1.5px;
+    width: 20px;
+    height: 1px;
     background-color: var(--brand-primary);
   }
   

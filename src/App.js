@@ -7110,7 +7110,15 @@ function App() {
               >
                 {notificationsSubmitting ? (
                   <>
-                    <div className="spinner" style={{width: '16px', height: '16px', marginRight: '8px', borderWidth: '2px'}}></div>
+                    <div style={{
+                      width: '16px',
+                      height: '16px',
+                      border: '2px solid transparent',
+                      borderTop: '2px solid white',
+                      borderRadius: '50%',
+                      animation: 'spin 1s linear infinite',
+                      marginRight: '8px'
+                    }}></div>
                     Saving...
                   </>
                 ) : (
@@ -7148,7 +7156,7 @@ function App() {
                   Complete history of your account activity. Unlock codes are preserved here for easy access.
                 </p>
                 
-                <div style={{maxHeight: '500px', overflowY: 'auto', border: '1px solid #e2e8f0', borderRadius: '7px'}}>
+                <div style={{maxHeight: window.innerWidth <= 768 ? '300px' : '500px', overflowY: 'auto', border: '1px solid #e2e8f0', borderRadius: '7px'}}>
                   {logs.map((log, index) => (
                     <div key={log.id} style={{
                       display: 'flex',
@@ -7208,7 +7216,7 @@ function App() {
               </div>
             </div>
 
-            <div className="modal__footer">
+            <div className="modal__footer" style={{marginBottom: window.innerWidth <= 768 ? '16px' : '0'}}>
               <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
                 <button
                   className="btn-tertiary"
