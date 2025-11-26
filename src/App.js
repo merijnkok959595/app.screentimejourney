@@ -576,6 +576,8 @@ function App() {
   const [unlockPincode, setUnlockPincode] = useState(null);
   const [recordingTime, setRecordingTime] = useState(0);
   const [recordingTimer, setRecordingTimer] = useState(null);
+  const previewAudioRef = useRef(null); // Ref for recorded audio playback
+  const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
   const [animationId, setAnimationId] = useState(null);
 
   // Subscription cancellation state
@@ -2256,10 +2258,13 @@ function App() {
 
       // Create FormData for audio upload
       const formData = new FormData();
-      formData.append('audio', audioBlob, 'surrender.webm');
+      // Use correct file extension based on blob type
+      const fileExtension = audioBlob.type.split('/')[1] || 'webm';
+      formData.append('audio', audioBlob, `surrender.${fileExtension}`);
       formData.append('user_id', customerData?.customerId || extractCustomerId());
       formData.append('device_id', currentFlow.deviceId);
       formData.append('surrender_text', currentFlow.steps[currentFlowStep - 1].surrender_text || surrenderText);
+      console.log('🎵 Sending audio with type:', audioBlob.type, 'extension:', fileExtension);
 
       // Submit to backend for ChatGPT validation
       const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/validate_surrender`, {
@@ -3036,6 +3041,19 @@ function App() {
       setUsernameError('');
     }
   }, [debouncedUsername]);
+
+  // Scroll modal to top when opened (especially important on mobile)
+  useEffect(() => {
+    if (showDeviceFlow || showOnboarding || showProfileEdit || showCancelFlow || showNotificationsFlow) {
+      // Small delay to ensure modal is rendered
+      setTimeout(() => {
+        const modal = document.querySelector('.modal-overlay.active .modal');
+        if (modal) {
+          modal.scrollTop = 0;
+        }
+      }, 100);
+    }
+  }, [showDeviceFlow, showOnboarding, showProfileEdit, showCancelFlow, showNotificationsFlow]);
 
   const checkUsernameAvailability = async (username) => {
     // Clear previous errors
@@ -5422,26 +5440,26 @@ function App() {
                                     {recordingTime}s
                                   </div>
                                   
-                                  {/* Audio Visualizer - Vertical Bars */}
+                                  {/* Audio Visualizer - Horizontal Bars */}
                                   <div style={{
                                     display: 'flex',
-                                    alignItems: 'flex-end',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
                                     justifyContent: 'center',
-                                    gap: '4px',
+                                    gap: '3px',
                                     width: '100%',
-                                    maxWidth: '300px',
-                                    height: '60px',
-                                    marginTop: '8px'
+                                    maxWidth: '200px',
+                                    marginTop: '12px'
                                   }}>
-                                    {[...Array(12)].map((_, i) => (
+                                    {[...Array(5)].map((_, i) => (
                                       <div
                                         key={i}
                                         style={{
-                                          flex: 1,
-                                          height: `${Math.min(100, Math.max(20, (audioLevels[i % audioLevels.length] || Math.random() * 50 + 20)))}%`,
-                                          background: 'linear-gradient(180deg, #2E0456, #440B6C)',
+                                          width: `${Math.min(100, Math.max(30, (audioLevels[i % audioLevels.length] || Math.random() * 50 + 30)))}%`,
+                                          height: '3px',
+                                          background: 'linear-gradient(90deg, #2E0456, #440B6C)',
                                           borderRadius: '2px',
-                                          transition: 'height 0.1s ease',
+                                          transition: 'width 0.1s ease',
                                           animation: 'pulse 1.5s ease-in-out infinite',
                                           animationDelay: `${i * 0.1}s`
                                         }}
@@ -5494,8 +5512,8 @@ function App() {
                                       </>
                                     ) : (
                                       <>
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                          <circle cx="12" cy="12" r="3"/>
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                                          <circle cx="12" cy="12" r="5"/>
                                         </svg>
                                         Start Recording
                                       </>
@@ -5564,20 +5582,37 @@ function App() {
                                       <button
                                         onClick={async () => {
                                           try {
-                                            console.log('🎵 Playing audio, blob size:', audioBlob.size, 'bytes');
-                                            const audioUrl = URL.createObjectURL(audioBlob);
-                                            const audio = new Audio(audioUrl);
+                                            // If already playing, pause it
+                                            if (isPreviewPlaying && previewAudioRef.current) {
+                                              previewAudioRef.current.pause();
+                                              setIsPreviewPlaying(false);
+                                              return;
+                                            }
+
+                                            // Create new audio if needed
+                                            if (!previewAudioRef.current) {
+                                              console.log('🎵 Creating audio, blob size:', audioBlob.size, 'bytes');
+                                              const audioUrl = URL.createObjectURL(audioBlob);
+                                              const audio = new Audio(audioUrl);
+                                              
+                                              audio.onloadstart = () => console.log('🔄 Audio loading started');
+                                              audio.oncanplay = () => console.log('✅ Audio can play');
+                                              audio.onerror = (e) => console.error('❌ Audio error:', e);
+                                              audio.onended = () => {
+                                                setIsPreviewPlaying(false);
+                                                URL.revokeObjectURL(audioUrl);
+                                              };
+                                              
+                                              previewAudioRef.current = audio;
+                                            }
                                             
-                                            audio.onloadstart = () => console.log('🔄 Audio loading started');
-                                            audio.oncanplay = () => console.log('✅ Audio can play');
-                                            audio.onerror = (e) => console.error('❌ Audio error:', e);
-                                            audio.onended = () => URL.revokeObjectURL(audioUrl);
-                                            
-                                            await audio.play();
+                                            await previewAudioRef.current.play();
+                                            setIsPreviewPlaying(true);
                                             console.log('🎵 Audio playback started');
                                           } catch (error) {
                                             console.error('❌ Error playing audio:', error);
                                             alert('Failed to play audio. Please try recording again.');
+                                            setIsPreviewPlaying(false);
                                           }
                                         }}
                                         style={{
@@ -5592,12 +5627,19 @@ function App() {
                                           cursor: 'pointer',
                                           transition: 'transform 0.2s ease'
                                         }}
-                                        onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}
-                                        onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                                        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+                                        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
                                       >
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-                                          <polygon points="5,3 19,12 5,21"/>
-                                        </svg>
+                                        {isPreviewPlaying ? (
+                                          <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                                            <rect x="6" y="4" width="4" height="16"/>
+                                            <rect x="14" y="4" width="4" height="16"/>
+                                          </svg>
+                                        ) : (
+                                          <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                                            <polygon points="5,3 19,12 5,21"/>
+                                          </svg>
+                                        )}
                                       </button>
                                       <div style={{flex: 1}}>
                                         <div style={{
@@ -5621,6 +5663,12 @@ function App() {
                                   {/* Record Again Button */}
                                   <button
                                     onClick={() => {
+                                      // Stop and clean up audio if playing
+                                      if (previewAudioRef.current) {
+                                        previewAudioRef.current.pause();
+                                        previewAudioRef.current = null;
+                                      }
+                                      setIsPreviewPlaying(false);
                                       setAudioBlob(null);
                                       setIsRecording(false);
                                       setRecordingTime(0);
@@ -5687,26 +5735,26 @@ function App() {
                                     {recordingTime}s
                                   </div>
                                   
-                                  {/* Audio Visualizer - Vertical Bars */}
+                                  {/* Audio Visualizer - Horizontal Bars */}
                                   <div style={{
                                     display: 'flex',
-                                    alignItems: 'flex-end',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
                                     justifyContent: 'center',
-                                    gap: '4px',
+                                    gap: '3px',
                                     width: '100%',
-                                    maxWidth: '300px',
-                                    height: '60px',
-                                    marginTop: '8px'
+                                    maxWidth: '200px',
+                                    marginTop: '12px'
                                   }}>
-                                    {[...Array(12)].map((_, i) => (
+                                    {[...Array(5)].map((_, i) => (
                                       <div
                                         key={i}
                                         style={{
-                                          flex: 1,
-                                          height: `${Math.min(100, Math.max(20, (audioLevels[i % audioLevels.length] || Math.random() * 50 + 20)))}%`,
-                                          background: 'linear-gradient(180deg, #2E0456, #440B6C)',
+                                          width: `${Math.min(100, Math.max(30, (audioLevels[i % audioLevels.length] || Math.random() * 50 + 30)))}%`,
+                                          height: '3px',
+                                          background: 'linear-gradient(90deg, #2E0456, #440B6C)',
                                           borderRadius: '2px',
-                                          transition: 'height 0.1s ease',
+                                          transition: 'width 0.1s ease',
                                           animation: 'pulse 1.5s ease-in-out infinite',
                                           animationDelay: `${i * 0.1}s`
                                         }}
@@ -5829,20 +5877,37 @@ function App() {
                                       <button
                                         onClick={async () => {
                                           try {
-                                            console.log('🎵 Playing audio, blob size:', audioBlob.size, 'bytes');
-                                            const audioUrl = URL.createObjectURL(audioBlob);
-                                            const audio = new Audio(audioUrl);
+                                            // If already playing, pause it
+                                            if (isPreviewPlaying && previewAudioRef.current) {
+                                              previewAudioRef.current.pause();
+                                              setIsPreviewPlaying(false);
+                                              return;
+                                            }
+
+                                            // Create new audio if needed
+                                            if (!previewAudioRef.current) {
+                                              console.log('🎵 Creating audio, blob size:', audioBlob.size, 'bytes');
+                                              const audioUrl = URL.createObjectURL(audioBlob);
+                                              const audio = new Audio(audioUrl);
+                                              
+                                              audio.onloadstart = () => console.log('🔄 Audio loading started');
+                                              audio.oncanplay = () => console.log('✅ Audio can play');
+                                              audio.onerror = (e) => console.error('❌ Audio error:', e);
+                                              audio.onended = () => {
+                                                setIsPreviewPlaying(false);
+                                                URL.revokeObjectURL(audioUrl);
+                                              };
+                                              
+                                              previewAudioRef.current = audio;
+                                            }
                                             
-                                            audio.onloadstart = () => console.log('🔄 Audio loading started');
-                                            audio.oncanplay = () => console.log('✅ Audio can play');
-                                            audio.onerror = (e) => console.error('❌ Audio error:', e);
-                                            audio.onended = () => URL.revokeObjectURL(audioUrl);
-                                            
-                                            await audio.play();
+                                            await previewAudioRef.current.play();
+                                            setIsPreviewPlaying(true);
                                             console.log('🎵 Audio playback started');
                                           } catch (error) {
                                             console.error('❌ Error playing audio:', error);
                                             alert('Failed to play audio. Please try recording again.');
+                                            setIsPreviewPlaying(false);
                                           }
                                         }}
                                         style={{
@@ -5857,12 +5922,19 @@ function App() {
                                           cursor: 'pointer',
                                           transition: 'transform 0.2s ease'
                                         }}
-                                        onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}
-                                        onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                                        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+                                        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
                                       >
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-                                          <polygon points="5,3 19,12 5,21"/>
-                                        </svg>
+                                        {isPreviewPlaying ? (
+                                          <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                                            <rect x="6" y="4" width="4" height="16"/>
+                                            <rect x="14" y="4" width="4" height="16"/>
+                                          </svg>
+                                        ) : (
+                                          <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                                            <polygon points="5,3 19,12 5,21"/>
+                                          </svg>
+                                        )}
                                       </button>
                                       <div style={{flex: 1}}>
                                         <div style={{
@@ -5886,6 +5958,12 @@ function App() {
                                   {/* Record Again Button */}
                                   <button
                                     onClick={() => {
+                                      // Stop and clean up audio if playing
+                                      if (previewAudioRef.current) {
+                                        previewAudioRef.current.pause();
+                                        previewAudioRef.current = null;
+                                      }
+                                      setIsPreviewPlaying(false);
                                       setAudioBlob(null);
                                       setIsRecording(false);
                                       setRecordingTime(0);
