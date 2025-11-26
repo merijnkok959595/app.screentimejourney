@@ -924,6 +924,40 @@ p, span, div {
   }
 }
 
+/* Danger Button - Red with Red Hover Effect */
+.btn-danger {
+  background: #dc2626;
+  color: #FFFFFF;
+  border: none;
+  padding: 0 30px;
+  height: 47px;
+  border-radius: 7px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.btn-danger:hover {
+  background: #b91c1c;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-danger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* Tertiary Button - Simple Underlined Text (Back, Cancel) */
 .btn-tertiary {
   background: transparent;
@@ -1549,13 +1583,13 @@ p, span, div {
   background: transparent;
   color: #0F172A;
   transition: border-width 0.15s ease, border-color 0.15s ease, padding 0.2s ease;
-  line-height: 1.4;
+  line-height: 1.3;
   min-height: 52px;
 }
 .input:focus,
 .input:not(:placeholder-shown) {
-  padding-top: 28px;
-  padding-bottom: 10px;
+  padding-top: 24px;
+  padding-bottom: 12px;
 }
 .input:focus {
   outline: none;
@@ -1563,8 +1597,8 @@ p, span, div {
   border-color: #0F172A;
   padding-left: 15px;
   padding-right: 15px;
-  padding-top: 27px;
-  padding-bottom: 9px;
+  padding-top: 23px;
+  padding-bottom: 11px;
   box-shadow: none; /* Remove shadow effect */
 }
 .input::placeholder {
@@ -1592,7 +1626,7 @@ p, span, div {
 }
 .input:focus ~ .form-label,
 .input:not(:placeholder-shown) ~ .form-label {
-  top: 10px;
+  top: 8px;
   font-size: 10px;
   color: #0F172A;
   font-weight: 500;
@@ -1753,15 +1787,15 @@ p, span, div {
   
   .input:focus,
   .input:not(:placeholder-shown) {
-    padding-top: 30px;
-    padding-bottom: 12px;
+    padding-top: 26px;
+    padding-bottom: 14px;
   }
   
   .input:focus {
     padding-left: 13px;
     padding-right: 13px;
-    padding-top: 29px;
-    padding-bottom: 11px;
+    padding-top: 25px;
+    padding-bottom: 13px;
   }
   
   /* Form labels */
@@ -1772,7 +1806,7 @@ p, span, div {
   
   .input:focus ~ .form-label,
   .input:not(:placeholder-shown) ~ .form-label {
-    top: 10px;
+    top: 8px;
     font-size: 10px;
     line-height: 1;
   }

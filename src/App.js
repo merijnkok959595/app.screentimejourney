@@ -6780,20 +6780,10 @@ function App() {
               {cancelStep === 3 && (
                 <>
                   <button
-                    className="btn-primary"
+                    className="btn-danger"
                     onClick={submitCancellation}
                     disabled={cancelSubmitting}
-                    style={{background: '#dc2626', borderColor: '#dc2626', color: '#fff', width: '100%'}}
-                    onMouseEnter={(e) => {
-                      e.target.style.background = '#b91c1c';
-                      e.target.style.boxShadow = '0 4px 12px rgba(220, 38, 38, 0.4)';
-                      e.target.style.transform = 'translateY(-2px)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.background = '#dc2626';
-                      e.target.style.boxShadow = 'none';
-                      e.target.style.transform = 'translateY(0)';
-                    }}
+                    style={{width: '100%'}}
                   >
                     {cancelSubmitting ? (
                       <div className="spinner" style={{
