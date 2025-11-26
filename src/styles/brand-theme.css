@@ -1554,8 +1554,8 @@ p, span, div {
 }
 .input:focus,
 .input:not(:placeholder-shown) {
-  padding-top: 24px;
-  padding-bottom: 12px;
+  padding-top: 28px;
+  padding-bottom: 10px;
 }
 .input:focus {
   outline: none;
@@ -1563,8 +1563,8 @@ p, span, div {
   border-color: #0F172A;
   padding-left: 15px;
   padding-right: 15px;
-  padding-top: 23px;
-  padding-bottom: 11px;
+  padding-top: 27px;
+  padding-bottom: 9px;
   box-shadow: none; /* Remove shadow effect */
 }
 .input::placeholder {
@@ -1753,15 +1753,15 @@ p, span, div {
   
   .input:focus,
   .input:not(:placeholder-shown) {
-    padding-top: 26px;
-    padding-bottom: 14px;
+    padding-top: 30px;
+    padding-bottom: 12px;
   }
   
   .input:focus {
     padding-left: 13px;
     padding-right: 13px;
-    padding-top: 25px;
-    padding-bottom: 13px;
+    padding-top: 29px;
+    padding-bottom: 11px;
   }
   
   /* Form labels */
