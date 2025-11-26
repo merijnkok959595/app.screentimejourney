@@ -6396,18 +6396,29 @@ function App() {
             </div>
           )}
           
-          {/* Journey progress - full width */}
-          <ProgressSection 
-              latestDevice={null}
-              customerName={profileData?.username || customerData?.username || "Friend"}
-              customerFirstName={profileData?.first_name || customerData?.first_name || ""}
-              customerEmail={profileData?.email || customerData?.email || ""}
-              customerGender={profileData?.gender || customerData?.gender || "male"}
-              percentile={percentile}
-              devices={devices}
-              milestones={milestones}
-              startDeviceFlow={startDeviceFlow}
-            />
+          {/* Milestones Section */}
+          <div style={{marginBottom: '24px'}}>
+            <h2 style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '2rem',
+              color: '#0F172A',
+              marginBottom: '20px',
+              textAlign: 'center'
+            }}>
+              The Milestones
+            </h2>
+            <ProgressSection 
+                latestDevice={null}
+                customerName={profileData?.username || customerData?.username || "Friend"}
+                customerFirstName={profileData?.first_name || customerData?.first_name || ""}
+                customerEmail={profileData?.email || customerData?.email || ""}
+                customerGender={profileData?.gender || customerData?.gender || "male"}
+                percentile={percentile}
+                devices={devices}
+                milestones={milestones}
+                startDeviceFlow={startDeviceFlow}
+              />
+          </div>
 
           {/* Separator */}
           <hr style={{border: 'none', borderTop: '1px solid #EEEEEE', margin: '48px 0'}} />
