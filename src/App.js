@@ -6476,15 +6476,6 @@ function App() {
           
           {/* Milestones Section */}
           <div style={{marginBottom: '24px'}}>
-            <h2 style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: '2rem',
-              color: '#0F172A',
-              marginBottom: '20px',
-              textAlign: 'center'
-            }}>
-              The Milestones
-            </h2>
             <ProgressSection 
                 latestDevice={null}
                 customerName={profileData?.username || customerData?.username || "Friend"}
