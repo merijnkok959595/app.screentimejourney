@@ -4849,17 +4849,19 @@ function App() {
                       Edit
                     </button>
                     
-                    <div style={{ marginBottom: '12px', paddingRight: '80px' }}>
-                      <strong style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>What you want to change:</strong>
-                      <p style={{ margin: '4px 0 0 0', color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>"{profileData.commitment_data.q1}"</p>
-                    </div>
-                    <div style={{ marginBottom: '12px' }}>
-                      <strong style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>What you want to gain:</strong>
-                      <p style={{ margin: '4px 0 0 0', color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>"{profileData.commitment_data.q2}"</p>
-                    </div>
-                    <div style={{ marginBottom: '0' }}>
-                      <strong style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>Who you're doing this for:</strong>
-                      <p style={{ margin: '4px 0 0 0', color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>"{profileData.commitment_data.q3}"</p>
+                    <div style={{ marginBottom: '0', paddingRight: '80px' }}>
+                      <div style={{ padding: '12px 0', borderBottom: '1px solid #EEEEEE' }}>
+                        <strong style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>What you want to change:</strong>
+                        <p style={{ margin: '4px 0 0 0', color: '#6b7280', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>"{profileData.commitment_data.q1}"</p>
+                      </div>
+                      <div style={{ padding: '12px 0', borderBottom: '1px solid #EEEEEE' }}>
+                        <strong style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>What you want to gain:</strong>
+                        <p style={{ margin: '4px 0 0 0', color: '#6b7280', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>"{profileData.commitment_data.q2}"</p>
+                      </div>
+                      <div style={{ padding: '12px 0' }}>
+                        <strong style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>Who you're doing this for:</strong>
+                        <p style={{ margin: '4px 0 0 0', color: '#6b7280', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>"{profileData.commitment_data.q3}"</p>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -5812,28 +5814,26 @@ function App() {
                                 {field.field_type === 'text' && (
                                   <>
                                     <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>{field.label}</label>
-                                    <div className="input-wrapper">
-                                      <input 
-                                        className={`input ${deviceFormErrors[field.field_name] ? 'input--invalid' : ''}`}
-                                        placeholder=" "
-                                        value={deviceFormData[field.field_name] || ''} 
-                                        onChange={(e) => {
-                                          setDeviceFormData(prev => ({
-                                            ...prev, 
-                                            [field.field_name]: e.target.value
+                                    <input 
+                                      className={`input ${deviceFormErrors[field.field_name] ? 'input--invalid' : ''}`}
+                                      placeholder={field.placeholder}
+                                      value={deviceFormData[field.field_name] || ''} 
+                                      onChange={(e) => {
+                                        setDeviceFormData(prev => ({
+                                          ...prev, 
+                                          [field.field_name]: e.target.value
+                                        }));
+                                        // Clear error when user starts typing
+                                        if (deviceFormErrors[field.field_name]) {
+                                          setDeviceFormErrors(prev => ({
+                                            ...prev,
+                                            [field.field_name]: ''
                                           }));
-                                          // Clear error when user starts typing
-                                          if (deviceFormErrors[field.field_name]) {
-                                            setDeviceFormErrors(prev => ({
-                                              ...prev,
-                                              [field.field_name]: ''
-                                            }));
-                                          }
-                                        }}
-                                        maxLength={field.max_length}
-                                      />
-                                      <label className="form-label">{field.placeholder}</label>
-                                    </div>
+                                        }
+                                      }}
+                                      maxLength={field.max_length}
+                                      style={{padding: '16px'}}
+                                    />
                                     {deviceFormErrors[field.field_name] && (
                                       <p className="error-message">{deviceFormErrors[field.field_name]}</p>
                                     )}
