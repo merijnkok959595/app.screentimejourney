@@ -4627,7 +4627,7 @@ function App() {
                       <button 
                         type="button"
                         className="btn-secondary"
-                        style={{ padding: '6px 16px', fontSize: '13px', height: '32px', minHeight: '32px' }}
+                        style={{ padding: '4px 12px', fontSize: '12px', height: '28px', minHeight: '28px' }}
                         onClick={() => setProfileEditData(prev => ({...prev, showWhatsAppEdit: true}))}
                       >
                         Change
@@ -4802,7 +4802,7 @@ function App() {
                     <button 
                       type="button"
                       className="btn-secondary"
-                      style={{ padding: '6px 16px', fontSize: '13px', height: '32px', minHeight: '32px', position: 'absolute', top: '16px', right: '16px' }}
+                      style={{ padding: '4px 12px', fontSize: '12px', height: '28px', minHeight: '28px', position: 'absolute', top: '16px', right: '16px' }}
                       onClick={() => setProfileEditData(prev => ({
                         ...prev, 
                         showCommitmentEdit: true,
@@ -6517,31 +6517,37 @@ function App() {
               </div>
               <div style={{margin: '0 0 16px 0'}}>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #EEEEEE'}}>
-                  <span style={{fontSize: '14px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>Email notifications</span>
+                  <span style={{fontSize: '14px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', flex: 1, minWidth: 0}}>Email notifications</span>
                   <span style={{
                     fontSize: '12px',
                     fontWeight: '500',
                     color: notificationSettings.email_enabled ? '#059669' : '#0F172A',
                     backgroundColor: '#f9f9f9',
-                    padding: '2px 8px',
+                    padding: '4px 10px',
                     borderRadius: '7px',
                     border: '1px solid #e5e7eb',
-                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
+                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                    whiteSpace: 'nowrap',
+                    minWidth: '80px',
+                    textAlign: 'center'
                   }}>
                     {notificationSettings.email_enabled ? '✓ Enabled' : '✗ Disabled'}
                   </span>
                 </div>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0'}}>
-                  <span style={{fontSize: '14px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>WhatsApp notifications</span>
+                  <span style={{fontSize: '14px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', flex: 1, minWidth: 0}}>WhatsApp notifications</span>
                   <span style={{
                     fontSize: '12px',
                     fontWeight: '500',
                     color: notificationSettings.whatsapp_enabled ? '#059669' : '#0F172A',
                     backgroundColor: '#f9f9f9',
-                    padding: '2px 8px',
+                    padding: '4px 10px',
                     borderRadius: '7px',
                     border: '1px solid #e5e7eb',
-                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
+                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                    whiteSpace: 'nowrap',
+                    minWidth: '80px',
+                    textAlign: 'center'
                   }}>
                     {notificationSettings.whatsapp_enabled ? '✓ Enabled' : '✗ Disabled'}
                   </span>
