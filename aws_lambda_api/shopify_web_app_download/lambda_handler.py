@@ -16,7 +16,7 @@ import uuid
 import secrets
 import random
 import base64
-from typing import Dict, Any, Tuple, Optional
+from typing import Dict, Any, Tuple, Optional, List
 from datetime import datetime, timedelta
 import dateutil.parser
 from decimal import Decimal
@@ -1416,6 +1416,368 @@ def get_milestones(payload: Dict[str, Any]) -> Dict[str, Any]:
         import traceback
         print(f"❌ Full traceback: {traceback.format_exc()}")
         return json_resp({'error': 'Failed to get milestones'}, 500)
+
+
+def get_device_registration_date(devices: List[Dict]) -> Optional[datetime]:
+    """Get the FIRST device registration date (earliest device)"""
+    if not devices:
+        return None
+    
+    earliest_date = None
+    
+    for device in devices:
+        # Handle DynamoDB Map structure
+        device_data = device.get('M', device) if 'M' in device else device
+        
+        # Try multiple date fields
+        date_str = (
+            device_data.get('addedDate', {}).get('S') if isinstance(device_data.get('addedDate'), dict)
+            else device_data.get('addedDate',
+            device_data.get('created_at', {}).get('S') if isinstance(device_data.get('created_at'), dict)
+            else device_data.get('created_at',
+            device_data.get('added_at', {}).get('S') if isinstance(device_data.get('added_at'), dict)
+            else device_data.get('added_at')))
+        )
+        
+        if not date_str:
+            continue
+        
+        try:
+            if isinstance(date_str, str):
+                device_date = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+            else:
+                device_date = datetime.fromtimestamp(float(date_str))
+            
+            if earliest_date is None or device_date < earliest_date:
+                earliest_date = device_date
+        except:
+            continue
+    
+    return earliest_date
+
+
+def get_milestone_for_days(milestones: List[Dict], days: int, gender: str) -> Optional[Dict]:
+    """Find the milestone that corresponds to the given number of days"""
+    gender_milestones = [m for m in milestones if m.get('gene', m.get('gender', '')).lower() == gender.lower()]
+    sorted_milestones = sorted(gender_milestones, key=lambda m: int(m.get('milestone_day', m.get('days_required', 0))))
+    
+    current = None
+    for milestone in sorted_milestones:
+        required_days = int(milestone.get('milestone_day', milestone.get('days_required', 0)))
+        if days >= required_days:
+            current = milestone
+        else:
+            break
+    
+    return current
+
+
+def get_next_milestone(milestones: List[Dict], days: int, gender: str) -> Optional[Dict]:
+    """Find the NEXT milestone after the current one"""
+    gender_milestones = [m for m in milestones if m.get('gene', m.get('gender', '')).lower() == gender.lower()]
+    sorted_milestones = sorted(gender_milestones, key=lambda m: int(m.get('milestone_day', m.get('days_required', 0))))
+    
+    for milestone in sorted_milestones:
+        required_days = int(milestone.get('milestone_day', milestone.get('days_required', 0)))
+        if days < required_days:
+            return milestone
+    
+    return None
+
+
+def calculate_percentile_simple(all_subscribers: List[Dict], user_days: int) -> int:
+    """Calculate percentile based on days in focus"""
+    if not all_subscribers:
+        return 100
+    
+    # Count how many users have fewer days
+    users_below = 0
+    total_users = 0
+    
+    for subscriber in all_subscribers:
+        devices = subscriber.get('devices', [])
+        if not devices:
+            continue
+        
+        device_reg_date = get_device_registration_date(devices)
+        if not device_reg_date:
+            continue
+        
+        days = max(0, (datetime.now(device_reg_date.tzinfo) - device_reg_date).days)
+        total_users += 1
+        
+        if days < user_days:
+            users_below += 1
+    
+    if total_users == 0:
+        return 100
+    
+    # Percentile = (users below / total users) * 100
+    percentile = int((users_below / total_users) * 100)
+    return max(0, min(100, percentile))
+
+
+def get_social_share_data(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Get user data for social share page by customer_id
+    
+    Expected payload:
+    {
+        "customer_id": "7893456123456"
+    }
+    
+    Returns all data needed for social share widget including milestone thumbnail
+    """
+    try:
+        customer_id = payload.get('customer_id')
+        
+        if not customer_id:
+            return json_resp({'error': 'customer_id is required'}, 400)
+        
+        print(f"🔍 Fetching social share data for customer: {customer_id}")
+        
+        # Get user from database
+        dynamodb = boto3.resource('dynamodb')
+        table = dynamodb.Table(os.environ.get('SUBSCRIBERS_TABLE', 'stj_subscribers'))
+        
+        response = table.get_item(Key={'customer_id': customer_id})
+        
+        if 'Item' not in response:
+            return json_resp({'error': 'Customer not found'}, 404)
+        
+        user = response['Item']
+        
+        print(f"👤 User found: {user.get('email', 'no-email')}")
+        print(f"   Username: {user.get('username', 'none')}")
+        print(f"   Gender: {user.get('gender', 'none')}")
+        
+        # Extract user data
+        gender = user.get('gender', user.get('commitment_data', {}).get('gender', 'male'))
+        
+        # Get firstname from various sources in the database
+        firstname = (
+            user.get('first_name') or 
+            user.get('firstname') or
+            user.get('shopify_data', {}).get('customer', {}).get('first_name') or
+            user.get('webhook_data', {}).get('customer', {}).get('first_name') or
+            user.get('shopify_data', {}).get('subscription_created_data', {}).get('first_name')
+        )
+        
+        # If still no firstname, fall back to username
+        if not firstname:
+            username = user.get('username', 'Champion')
+            firstname = username.capitalize()
+        
+        print(f"📝 Processed data - firstname: {firstname}, gender: {gender}")
+        
+        # Get devices and calculate days in focus (same as leaderboard)
+        devices = user.get('devices', [])
+        device_reg_date = get_device_registration_date(devices)
+        
+        if device_reg_date:
+            from datetime import datetime
+            days = max(0, (datetime.now(device_reg_date.tzinfo) - device_reg_date).days)
+        else:
+            days = 0
+        
+        print(f"📅 Days in focus: {days}")
+        
+        # Get milestone data
+        milestones_table = dynamodb.Table(os.environ.get('MILESTONES_TABLE', 'stj_system'))
+        print(f"📊 Querying milestones table for gender: {gender}")
+        
+        milestones_response = milestones_table.scan()
+        all_milestones = milestones_response.get('Items', [])
+        
+        print(f"📊 Found {len(all_milestones)} total milestones")
+        
+        # Use the same helper functions as leaderboard
+        current_milestone = get_milestone_for_days(all_milestones, days, gender)
+        next_milestone = get_next_milestone(all_milestones, days, gender)
+        
+        # Fallback to defaults if no milestones found
+        if not current_milestone:
+            print(f"⚠️ No milestone found for day {days}, using defaults")
+            return json_resp({
+                'success': True,
+                'firstname': firstname,
+                'level': 0,
+                'days': days,
+                'rank': 100,
+                'next_level': 1,
+                'gender': gender,
+                'color_code': '2e2e2e',
+                'next_color_code': '5b1b1b',
+                'current_title': 'Ground Zero',
+                'current_emoji': '🪨',
+                'next_title': 'Fighter',
+                'next_emoji': '🥊',
+                'days_to_next': 7 - days if days < 7 else 0,
+                'media_url': 'https://wati-files.s3.eu-north-1.amazonaws.com/Milestones/male_level_0_groundzero.jpg',
+                'description': 'Every journey starts from the ground. You\'ve chosen to rise from where you stand.'
+            })
+        
+        # Calculate real percentile using all subscribers (same as leaderboard)
+        subscribers_response = table.scan()
+        all_subscribers = subscribers_response.get('Items', [])
+        percentile = calculate_percentile_simple(all_subscribers, days)
+        
+        # Prepare response data (same structure as leaderboard)
+        current_level = current_milestone.get('title', 'Ground Zero')
+        current_emoji = current_milestone.get('emoji', '🪨')
+        current_level_num = current_milestone.get('level', 0)
+        
+        if next_milestone:
+            next_level = next_milestone.get('title', 'Fighter')
+            next_emoji = next_milestone.get('emoji', '🥊')
+            next_level_num = next_milestone.get('level', 1)
+            next_milestone_days = int(next_milestone.get('milestone_day', 7))
+            days_to_next = max(0, next_milestone_days - days)
+            next_color_code = next_milestone.get('color_code', '5b1b1b')
+        else:
+            # User is at max level
+            next_level = current_level
+            next_emoji = current_emoji
+            next_level_num = current_level_num
+            days_to_next = 0
+            next_color_code = current_milestone.get('color_code', '2e2e2e')
+        
+        response_data = {
+            'success': True,
+            'firstname': firstname,
+            'level': current_level_num,
+            'days': days,
+            'rank': percentile,
+            'next_level': next_level_num,
+            'gender': gender,
+            'color_code': current_milestone.get('color_code', '2e2e2e'),
+            'next_color_code': next_color_code,
+            'current_title': current_level,
+            'current_emoji': current_emoji,
+            'next_title': next_level,
+            'next_emoji': next_emoji,
+            'days_to_next': days_to_next,
+            'media_url': current_milestone.get('media_url', ''),
+            'description': current_milestone.get('description', '')
+        }
+        
+        print(f"✅ Social share data fetched for {firstname}: Level {response_data['level']}, {days} days")
+        print(f"📸 Milestone thumbnail: {response_data['media_url']}")
+        
+        return json_resp(response_data)
+        
+    except Exception as e:
+        print(f"❌ Error fetching social share data: {e}")
+        import traceback
+        print(f"❌ Full traceback: {traceback.format_exc()}")
+        return json_resp({'error': 'Failed to get social share data'}, 500)
+
+
+def generate_milestone_video(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Generate personalized milestone video reel using Remotion Lambda
+    
+    Expected payload:
+    {
+        "firstname": "Merijn",
+        "level": 3,
+        "days": 30,
+        "rank": 8.5,
+        "next_level": 4,
+        "gender": "male",
+        "color_code": "6b705c",
+        "next_color_code": "3b1f4a",
+        "customer_id": "123456789"
+    }
+    """
+    try:
+        import time
+        print(f"🎬 Video generation request: {payload}")
+        
+        # Extract user data
+        customer_id = payload.get('customer_id', 'guest')
+        firstname = payload.get('firstname', 'Champion')
+        level = payload.get('level', 0)
+        days = payload.get('days', 0)
+        rank = payload.get('rank', 0)
+        next_level = payload.get('nextLevel', payload.get('next_level', 1))
+        gender = payload.get('gender', 'male')
+        color_code = payload.get('color_code', '2e2e2e')
+        next_color_code = payload.get('next_color_code', '5b1b1b')
+        current_title = payload.get('currentTitle', 'Ground Zero')
+        current_emoji = payload.get('currentEmoji', '🪨')
+        next_title = payload.get('nextTitle', 'Fighter')
+        next_emoji = payload.get('nextEmoji', '🥊')
+        
+        # Validate required fields
+        if not firstname:
+            return json_resp({'error': 'firstname is required'}, 400)
+        
+        print(f"✅ Validated video request for {firstname} (Level {level}, {days} days)")
+        
+        # Remotion Lambda configuration
+        REMOTION_REGION = os.environ.get('REMOTION_REGION', 'eu-north-1')
+        
+        # Prepare bridge Lambda payload
+        bridge_payload = {
+            'firstname': firstname,
+            'currentTitle': current_title,
+            'currentEmoji': current_emoji,
+            'days': days,
+            'rank': rank,
+            'nextTitle': next_title,
+            'nextEmoji': next_emoji,
+            'colorCode': color_code,
+            'nextColorCode': next_color_code,
+            'gender': gender,
+            'customer_id': customer_id
+        }
+        
+        print(f"🎬 Calling Node.js bridge Lambda with: {json.dumps(bridge_payload, indent=2)}")
+        
+        # Invoke bridge Lambda
+        lambda_client = boto3.client('lambda', region_name=REMOTION_REGION)
+        response = lambda_client.invoke(
+            FunctionName='remotion-bridge',
+            InvocationType='RequestResponse',
+            Payload=json.dumps(bridge_payload)
+        )
+        
+        # Parse bridge response
+        result = json.loads(response['Payload'].read())
+        print(f"📦 Bridge Lambda response: {result}")
+        
+        # Handle both direct response and API Gateway format
+        if 'body' in result:
+            body = json.loads(result['body']) if isinstance(result['body'], str) else result['body']
+        else:
+            body = result
+        
+        if 'errorMessage' in result or 'errorType' in result:
+            error_msg = result.get('errorMessage', 'Unknown error')
+            raise Exception(f"Bridge Lambda error: {error_msg}")
+        
+        if not body.get('success'):
+            error_msg = body.get('error', 'Unknown error')
+            raise Exception(f"Video generation failed: {error_msg}")
+        
+        video_url = body.get('video_url')
+        
+        if not video_url:
+            raise Exception("No video URL returned from Remotion")
+        
+        print(f"✅ Video generated successfully: {video_url}")
+        
+        return json_resp({
+            'success': True,
+            'video_url': video_url,
+            'url': video_url,  # Also include 'url' for compatibility
+            'message': 'Video generated successfully'
+        })
+        
+    except Exception as e:
+        print(f"❌ Error generating video: {e}")
+        import traceback
+        print(f"❌ Full traceback: {traceback.format_exc()}")
+        return json_resp({'error': f'Failed to generate video: {str(e)}'}, 500)
 
 
 def get_system_config(payload: Dict[str, Any]) -> Dict[str, Any]:
@@ -2837,9 +3199,9 @@ Press {d4} <break time="{sleep}s"/>"""
                 instruction_script = generate_instruction_script([first, second, third, fourth])
 
                 # Warning tags (matching your n8n workflow)
-                warning_tags = """DO NOT LOG OUT FROM ICLOUD
+                warning_tags = """DO NOT LOG IN WITH ICLOUD
 <break time="2s"/>
-I REPEAT, DON'T LOG OUT FROM ICLOUD
+I REPEAT, DON'T LOG IN WITH ICLOUD
 <break time="2s"/>
 See the instruction video for how to move around logging in with iCloud."""
 
@@ -4902,6 +5264,16 @@ def handler(event, context):
                 print(f"📞 Get_milestones called with body: {body}")
                 response = get_milestones(body)
                 print(f"📤 Get_milestones response: {response}")
+                return response
+            elif path.endswith("/get_social_share_data"):
+                print(f"📞 Get_social_share_data called with body: {body}")
+                response = get_social_share_data(body)
+                print(f"📤 Get_social_share_data response: {response}")
+                return response
+            elif path.endswith("/generate_milestone_video"):
+                print(f"📞 Generate_milestone_video called with body: {body}")
+                response = generate_milestone_video(body)
+                print(f"📤 Generate_milestone_video response: {response}")
                 return response
             elif path.endswith("/get_leaderboard"):
                 print(f"📞 Get_leaderboard called with body: {body}")
