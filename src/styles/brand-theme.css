@@ -255,7 +255,7 @@ p, span, div {
 
 .mobile-menu-toggle svg path,
 .mobile-menu-toggle svg line {
-  stroke: var(--brand-primary);
+  stroke: none; /* Remove stroke - SVG uses fill only */
 }
 
 .hamburger-line {
@@ -2020,8 +2020,7 @@ p, span, div {
   
   .mobile-menu-toggle svg path,
   .mobile-menu-toggle svg line {
-    stroke: var(--brand-primary);
-    stroke-width: 1.5px;
+    stroke: none; /* Remove stroke - SVG uses fill only */
   }
   
   .hamburger-line {
@@ -2066,9 +2065,10 @@ p, span, div {
   }
   
   .footer-policy-links {
-    gap: 1rem;
-    flex-direction: column;
+    gap: 0.75rem;
+    flex-direction: row; /* Keep links horizontal on same line */
     align-items: center;
+    justify-content: center;
   }
   
   .footer-policy-link {
@@ -2077,6 +2077,8 @@ p, span, div {
   
   .footer-policies {
     font-size: 0.7rem;
+    flex-direction: column; /* Stack copyright above links */
+    gap: 0.5rem;
   }
   
   .footer-policies > span {
