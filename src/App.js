@@ -6025,11 +6025,14 @@ function App() {
                             margin: '0 auto'
                           }}></div>
                         ) : (
-                          <>
-                            {currentFlow.steps && currentFlow.steps[currentFlowStep - 1] 
-                              ? currentFlow.steps[currentFlowStep - 1].action_button 
-                              : 'Next Step'} →
-                          </>
+                          <span style={{display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', position: 'relative'}}>
+                            <span style={{position: 'absolute', left: '50%', transform: 'translateX(-50%)'}}>
+                              {currentFlow.steps && currentFlow.steps[currentFlowStep - 1] 
+                                ? currentFlow.steps[currentFlowStep - 1].action_button 
+                                : 'Next Step'}
+                            </span>
+                            <span style={{marginLeft: 'auto', paddingLeft: '8px'}}>→</span>
+                          </span>
                         )}
                       </button>
                     )}
