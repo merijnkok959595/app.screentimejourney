@@ -4626,8 +4626,17 @@ function App() {
                       </div>
                       <button 
                         type="button"
-                        className="btn-secondary"
-                        style={{ padding: '4px 12px', fontSize: '12px', height: '28px', minHeight: '28px' }}
+                        style={{ 
+                          background: 'none',
+                          border: 'none',
+                          color: '#2E0456',
+                          fontSize: '13px',
+                          fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                          textDecoration: 'underline',
+                          textUnderlineOffset: '3px',
+                          cursor: 'pointer',
+                          padding: 0
+                        }}
                         onClick={() => setProfileEditData(prev => ({...prev, showWhatsAppEdit: true}))}
                       >
                         Change
@@ -4801,8 +4810,20 @@ function App() {
                     {/* Edit button in absolute position (top right) */}
                     <button 
                       type="button"
-                      className="btn-secondary"
-                      style={{ padding: '4px 12px', fontSize: '12px', height: '28px', minHeight: '28px', position: 'absolute', top: '16px', right: '16px' }}
+                      style={{ 
+                        background: 'none',
+                        border: 'none',
+                        color: '#2E0456',
+                        fontSize: '13px',
+                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                        textDecoration: 'underline',
+                        textUnderlineOffset: '3px',
+                        cursor: 'pointer',
+                        padding: 0,
+                        position: 'absolute',
+                        top: '16px',
+                        right: '16px'
+                      }}
                       onClick={() => setProfileEditData(prev => ({
                         ...prev, 
                         showCommitmentEdit: true,
@@ -6851,70 +6872,92 @@ function App() {
                 </p>
                 
                 {/* Email Notifications */}
-                <div style={{marginBottom: '16px'}}>
-                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: '1px solid #EEEEEE'}}>
-                    <div style={{flex: 1, minWidth: 0}}>
-                      <div style={{fontWeight: '500', color: '#0F172A', marginBottom: '4px', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
-                        Email notifications
+                <div style={{marginBottom: '24px'}}>
+                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px', background: '#ffffff', borderRadius: '7px', border: '1px solid #e2e8f0'}}>
+                    <div>
+                      <div style={{fontWeight: '500', color: '#0F172A', marginBottom: '4px', fontSize: '16px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
+                        Email Notifications
                       </div>
-                      <div style={{fontSize: '13px', color: '#6b7280', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
-                        Weekly progress updates and monthly leaderboard rankings
+                      <div style={{fontSize: '14px', color: '#6b7280', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
+                        Get weekly progress updates and monthly leaderboard rankings via email
                       </div>
                     </div>
-                    <span 
-                      onClick={() => updateNotificationSetting('email_enabled', !notificationSettings.email_enabled)}
-                      style={{
-                        fontSize: '12px',
-                        fontWeight: '500',
-                        color: notificationSettings.email_enabled ? '#059669' : '#0F172A',
-                        backgroundColor: '#f9f9f9',
-                        padding: '4px 10px',
-                        borderRadius: '7px',
-                        border: '1px solid #e5e7eb',
-                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
-                        whiteSpace: 'nowrap',
-                        minWidth: '80px',
-                        textAlign: 'center',
+                    <label style={{position: 'relative', display: 'inline-block', width: '44px', height: '24px', flexShrink: 0, marginLeft: '16px'}}>
+                      <input
+                        type="checkbox"
+                        checked={notificationSettings.email_enabled}
+                        onChange={(e) => updateNotificationSetting('email_enabled', e.target.checked)}
+                        style={{opacity: 0, width: 0, height: 0}}
+                      />
+                      <span style={{
+                        position: 'absolute',
                         cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}
-                    >
-                      {notificationSettings.email_enabled ? '✓ Enabled' : '✗ Disabled'}
-                    </span>
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundColor: notificationSettings.email_enabled ? '#2E0456' : '#ccc',
+                        transition: '0.3s',
+                        borderRadius: '24px'
+                      }}>
+                        <span style={{
+                          position: 'absolute',
+                          content: '',
+                          height: '18px',
+                          width: '18px',
+                          left: notificationSettings.email_enabled ? '23px' : '3px',
+                          bottom: '3px',
+                          backgroundColor: 'white',
+                          transition: '0.3s',
+                          borderRadius: '50%'
+                        }}></span>
+                      </span>
+                    </label>
                   </div>
                 </div>
 
                 {/* WhatsApp Notifications */}
                 <div>
-                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0'}}>
-                    <div style={{flex: 1, minWidth: 0}}>
-                      <div style={{fontWeight: '500', color: '#0F172A', marginBottom: '4px', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
-                        WhatsApp notifications
+                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px', background: '#ffffff', borderRadius: '7px', border: '1px solid #e2e8f0'}}>
+                    <div>
+                      <div style={{fontWeight: '500', color: '#0F172A', marginBottom: '4px', fontSize: '16px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
+                        WhatsApp Notifications
                       </div>
-                      <div style={{fontSize: '13px', color: '#6b7280', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
-                        Weekly progress updates and monthly leaderboard rankings
+                      <div style={{fontSize: '14px', color: '#6b7280', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
+                        Get weekly progress updates and monthly leaderboard rankings via WhatsApp
                       </div>
                     </div>
-                    <span 
-                      onClick={() => updateNotificationSetting('whatsapp_enabled', !notificationSettings.whatsapp_enabled)}
-                      style={{
-                        fontSize: '12px',
-                        fontWeight: '500',
-                        color: notificationSettings.whatsapp_enabled ? '#059669' : '#0F172A',
-                        backgroundColor: '#f9f9f9',
-                        padding: '4px 10px',
-                        borderRadius: '7px',
-                        border: '1px solid #e5e7eb',
-                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
-                        whiteSpace: 'nowrap',
-                        minWidth: '80px',
-                        textAlign: 'center',
+                    <label style={{position: 'relative', display: 'inline-block', width: '44px', height: '24px', flexShrink: 0, marginLeft: '16px'}}>
+                      <input
+                        type="checkbox"
+                        checked={notificationSettings.whatsapp_enabled}
+                        onChange={(e) => updateNotificationSetting('whatsapp_enabled', e.target.checked)}
+                        style={{opacity: 0, width: 0, height: 0}}
+                      />
+                      <span style={{
+                        position: 'absolute',
                         cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}
-                    >
-                      {notificationSettings.whatsapp_enabled ? '✓ Enabled' : '✗ Disabled'}
-                    </span>
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundColor: notificationSettings.whatsapp_enabled ? '#2E0456' : '#ccc',
+                        transition: '0.3s',
+                        borderRadius: '24px'
+                      }}>
+                        <span style={{
+                          position: 'absolute',
+                          content: '',
+                          height: '18px',
+                          width: '18px',
+                          left: notificationSettings.whatsapp_enabled ? '23px' : '3px',
+                          bottom: '3px',
+                          backgroundColor: 'white',
+                          transition: '0.3s',
+                          borderRadius: '50%'
+                        }}></span>
+                      </span>
+                    </label>
                   </div>
                 </div>
 
