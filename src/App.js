@@ -4739,8 +4739,12 @@ function App() {
                             className="input"
                             placeholder="123456"
                             value={profileEditData.whatsappCode || ''}
-                            onChange={(e) => setProfileEditData(prev => ({...prev, whatsappCode: e.target.value.replace(/\D/g, '').slice(0, 6)}))}
-                            style={{ flex: 1 }}
+                            onChange={(e) => {
+                              setProfileEditData(prev => ({...prev, whatsappCode: e.target.value.replace(/\D/g, '').slice(0, 6)}));
+                              // Clear error when user types
+                              if (profileError) setProfileError('');
+                            }}
+                            style={{ flex: 1, padding: '16px' }}
                           />
                           <button 
                             type="button"
@@ -4749,6 +4753,7 @@ function App() {
                               if (profileEditData.whatsappCode?.length !== 6) return;
                               
                               setProfileEditData(prev => ({...prev, verifyingCode: true}));
+                              setProfileError(''); // Clear any previous errors
                               
                               try {
                                 const customerId = extractCustomerId();
@@ -4771,7 +4776,8 @@ function App() {
                                     ...prev, 
                                     whatsappVerified: true,
                                     whatsappCodeSent: false,
-                                    showWhatsAppEdit: false
+                                    showWhatsAppEdit: false,
+                                    editPhoneNumber: ''
                                   }));
                                   setProfileError('');
                                   // Refresh profile data
@@ -4791,6 +4797,9 @@ function App() {
                             {profileEditData.verifyingCode ? 'Verifying...' : 'Verify'}
                           </button>
                         </div>
+                        {profileError && profileError.includes('verification code') && (
+                          <p className="error-message" style={{ marginTop: '8px', marginBottom: 0 }}>{profileError}</p>
+                        )}
                       </div>
                     )}
                   </>
