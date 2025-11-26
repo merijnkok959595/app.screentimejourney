@@ -4618,10 +4618,22 @@ function App() {
                 {profileData?.whatsapp && !profileEditData.showWhatsAppEdit && (
                   <div style={{ marginBottom: '1rem', padding: '16px', backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '7px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span style={{ color: '#0F172A', fontSize: '14px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>{profileData.whatsapp}</span>
                         {profileData.whatsapp_opt_in && (
-                          <span style={{ marginLeft: '8px', color: '#64748b', fontSize: '14px' }}>✓ Verified</span>
+                          <span style={{
+                            fontSize: '12px',
+                            fontWeight: '500',
+                            color: '#059669',
+                            backgroundColor: '#f9f9f9',
+                            padding: '4px 10px',
+                            borderRadius: '7px',
+                            border: '1px solid #e5e7eb',
+                            fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                            whiteSpace: 'nowrap'
+                          }}>
+                            ✓ Verified
+                          </span>
                         )}
                       </div>
                       <button 
