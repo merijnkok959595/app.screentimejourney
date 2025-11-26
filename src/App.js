@@ -21,6 +21,39 @@ function useDebounce(value, delay) {
   return debouncedValue;
 }
 
+// Helper function to scroll input into view when keyboard appears
+const handleInputFocus = (e) => {
+  // Only on mobile devices
+  if (window.innerWidth <= 768) {
+    // Wait for keyboard animation (iOS ~300ms, Android ~200ms)
+    setTimeout(() => {
+      const input = e.target;
+      const modal = input.closest('.modal');
+      
+      if (modal) {
+        // Scroll within modal
+        const inputRect = input.getBoundingClientRect();
+        const modalRect = modal.getBoundingClientRect();
+        
+        // If input is below the visible area, scroll it into view
+        if (inputRect.bottom > modalRect.bottom - 100) {
+          input.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'nearest'
+          });
+        }
+      } else {
+        // Fallback: scroll in viewport
+        e.target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }
+    }, 300);
+  }
+};
+
 // Default milestone data as fallback (will be replaced by API data)
 const DEFAULT_MILESTONES = [
   {
@@ -4415,6 +4448,7 @@ function App() {
                       setUsernameValid(null); // Reset validation state
                       setUsernameError(''); // Clear any error messages
                     }}
+                    onFocus={handleInputFocus}
                   />
                   <label className="form-label">theking</label>
                   {usernameChecking && <span className="input-icon">⏳</span>}
@@ -4489,6 +4523,7 @@ function App() {
                       setWhatToChange(e.target.value);
                       setCommitmentError(''); // Clear error on input
                     }}
+                    onFocus={handleInputFocus}
                     maxLength="200"
                   />
                   <label className="form-label">I want to be more present with my family</label>
@@ -4504,6 +4539,7 @@ function App() {
                       setWhatToGain(e.target.value);
                       setCommitmentError(''); // Clear error on input
                     }}
+                    onFocus={handleInputFocus}
                     maxLength="200"
                   />
                   <label className="form-label">I'll have more energy and focus for what matters</label>
@@ -4519,6 +4555,7 @@ function App() {
                       setDoingThisFor(e.target.value);
                       setCommitmentError(''); // Clear error on input
                     }}
+                    onFocus={handleInputFocus}
                     maxLength="200"
                   />
                   <label className="form-label">My partner and children</label>
@@ -4601,6 +4638,7 @@ function App() {
                   placeholder="123456" 
                   value={whatsappCode}
                   onChange={(e) => setWhatsappCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  onFocus={handleInputFocus}
                   maxLength="6"
                 />
                 {whatsappError && <p className="error-message">{whatsappError}</p>}
@@ -4661,6 +4699,7 @@ function App() {
                     placeholder="theking" 
                     value={profileEditData.username}
                     style={{ padding: '16px' }} 
+                    onFocus={handleInputFocus}
                     onChange={async (e) => {
                       const value = e.target.value;
                       const sanitizedValue = value
@@ -4889,6 +4928,7 @@ function App() {
                             onChange={(e) => {
                               setProfileEditData(prev => ({...prev, whatsappCode: e.target.value.replace(/\D/g, '').slice(0, 6), verificationError: ''}));
                             }}
+                            onFocus={handleInputFocus}
                             style={{ flex: 1, padding: '16px' }}
                           />
                           <button 
@@ -5023,6 +5063,7 @@ function App() {
                         placeholder="e.g., quit porn, reduce social media, stop gaming..."
                         value={profileEditData.commitmentQ1 || ''}
                         onChange={(e) => setProfileEditData(prev => ({...prev, commitmentQ1: e.target.value}))}
+                        onFocus={handleInputFocus}
                         style={{padding: '16px'}}
                       />
                     </div>
@@ -5035,6 +5076,7 @@ function App() {
                         placeholder="e.g., more energy, better relationships, inner peace..."
                         value={profileEditData.commitmentQ2 || ''}
                         onChange={(e) => setProfileEditData(prev => ({...prev, commitmentQ2: e.target.value}))}
+                        onFocus={handleInputFocus}
                         style={{padding: '16px'}}
                       />
                     </div>
@@ -5047,6 +5089,7 @@ function App() {
                         placeholder="e.g., my family, my future self, my children..."
                         value={profileEditData.commitmentQ3 || ''}
                         onChange={(e) => setProfileEditData(prev => ({...prev, commitmentQ3: e.target.value}))}
+                        onFocus={handleInputFocus}
                         style={{padding: '16px'}}
                       />
                     </div>
@@ -5954,6 +5997,7 @@ function App() {
                                           }));
                                         }
                                       }}
+                                      onFocus={handleInputFocus}
                                       maxLength={field.max_length}
                                       style={{padding: '16px'}}
                                     />
@@ -6851,6 +6895,7 @@ function App() {
                     <textarea
                       value={cancelFeedback}
                       onChange={(e) => setCancelFeedback(e.target.value)}
+                      onFocus={handleInputFocus}
                       placeholder="What could we have done better? Any suggestions for improvement?"
                       rows={5}
                       className="input"

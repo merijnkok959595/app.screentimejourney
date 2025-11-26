@@ -1074,6 +1074,7 @@ p, span, div {
   justify-content: center; 
   z-index: 99999;
   padding: 20px 0;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 .modal-overlay.active { 
@@ -1091,6 +1092,7 @@ p, span, div {
   overflow-y: auto;
   position: relative;
   z-index: 100000;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 .modal__header { 
