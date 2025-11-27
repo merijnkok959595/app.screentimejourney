@@ -2355,8 +2355,9 @@ function App() {
           setSurrenderError(result.feedback || result.message || 'Your recording did not match the required text. Please try again.');
         }
       } else {
-        // Show actual error from API
-        throw new Error(result.error || result.message || 'Unable to process audio file');
+        // Show user-friendly feedback from API, fallback to error message
+        const errorMessage = result.feedback || result.error || result.message || 'Unable to process audio file';
+        throw new Error(errorMessage);
       }
 
     } catch (error) {
@@ -6710,9 +6711,19 @@ function App() {
                       </div>
                       <div style={{display: 'flex', gap: '6px', alignItems: 'center'}}>
                         <button 
-                          className="btn-secondary"
+                          style={{
+                            background: 'transparent',
+                            border: 'none',
+                            color: '#2E0456',
+                            fontSize: '12px',
+                            fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                            fontWeight: '500',
+                            textDecoration: 'underline',
+                            textUnderlineOffset: '3px',
+                            cursor: 'pointer',
+                            padding: 0
+                          }}
                           onClick={() => startDeviceFlow('device_unlock_flow', device.id)}
-                          style={{fontSize: '12px', padding: '4px 12px', height: '32px', minHeight: '32px'}}
                         >
                           Unlock
                         </button>
