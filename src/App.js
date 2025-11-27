@@ -4476,7 +4476,7 @@ function App() {
                   backgroundColor: '#f8f9fa', 
                   border: '1px solid var(--brand-separator)', 
                   borderRadius: 'var(--radius-md)',
-                  textAlign: 'left'
+                  textAlign: 'center'
                 }}>
                   <summary style={{ cursor: 'pointer', fontWeight: '500', color: 'var(--text-muted)' }}>
                     Technical Details
@@ -5477,7 +5477,7 @@ function App() {
                             
                             {/* Surrender Text */}
                             <div style={{background: '#ffffff', padding: '20px', borderRadius: '7px', border: '1px solid #e2e8f0', marginBottom: '20px'}}>
-                              <p className="account-text" style={{margin: 0, fontSize: '15px', lineHeight: '1.7', fontStyle: 'italic', textAlign: 'left'}}>
+                              <p className="account-text" style={{margin: 0, fontSize: '15px', lineHeight: '1.7', fontStyle: 'italic', textAlign: 'center'}}>
                                 "{currentFlow.steps[currentFlowStep - 1].surrender_text || surrenderText}"
                               </p>
                             </div>
@@ -5525,9 +5525,9 @@ function App() {
                                     {[...Array(8)].map((_, i) => (
                                       <div
                                         key={i}
-                                        className="audio-visualizer-bar audio-visualizer-bar--active"
+                                        className="audio-visualizer-bar"
                                         style={{
-                                          height: `${Math.min(24, Math.max(3, (audioLevels[i % audioLevels.length] || 3)))}px`
+                                          height: `${Math.min(40, Math.max(3, (audioLevels[i] || 3)))}px`
                                         }}
                                       ></div>
                                     ))}
@@ -5758,7 +5758,7 @@ function App() {
                             
                             {/* Surrender Text */}
                             <div style={{background: '#ffffff', padding: '20px', borderRadius: '7px', border: '1px solid #e2e8f0', marginBottom: '20px'}}>
-                              <p className="account-text" style={{margin: 0, fontSize: '15px', lineHeight: '1.7', fontStyle: 'italic', textAlign: 'left'}}>
+                              <p className="account-text" style={{margin: 0, fontSize: '15px', lineHeight: '1.7', fontStyle: 'italic', textAlign: 'center'}}>
                                 "{currentFlow.steps[currentFlowStep - 1].surrender_text || surrenderText}"
                               </p>
                             </div>
@@ -5806,9 +5806,9 @@ function App() {
                                     {[...Array(8)].map((_, i) => (
                                       <div
                                         key={i}
-                                        className="audio-visualizer-bar audio-visualizer-bar--active"
+                                        className="audio-visualizer-bar"
                                         style={{
-                                          height: `${Math.min(24, Math.max(3, (audioLevels[i % audioLevels.length] || 3)))}px`
+                                          height: `${Math.min(40, Math.max(3, (audioLevels[i] || 3)))}px`
                                         }}
                                       ></div>
                                     ))}
@@ -6099,7 +6099,7 @@ function App() {
                       ) : currentFlow.steps[currentFlowStep - 1].step_type === 'form' ? (
                         <>
                           {/* Body Text for form - Left aligned */}
-                          <p style={{marginBottom: '20px', fontSize: '16px', lineHeight: '1.5', textAlign: 'left', color: '#374151'}}>
+                          <p style={{marginBottom: '20px', fontSize: '16px', lineHeight: '1.5', textAlign: 'center', color: '#374151'}}>
                             {currentFlow.steps[currentFlowStep - 1].body}
                           </p>
                           
@@ -7078,8 +7078,8 @@ function App() {
               )}
 
               {cancelStep === 3 && (
-                <div style={{textAlign: 'left', marginBottom: '20px'}}>
-                  <div style={{background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '7px', padding: '20px', marginBottom: '24px', textAlign: 'left'}}>
+                <div style={{textAlign: 'center', marginBottom: '20px'}}>
+                  <div style={{background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '7px', padding: '20px', marginBottom: '24px', textAlign: 'center'}}>
                     <h4 className="account-text" style={{margin: '0 0 16px 0', fontSize: '16px', fontWeight: '500'}}>
                       Cancellation Summary
                     </h4>
@@ -7106,7 +7106,7 @@ function App() {
                     Your subscription has been cancelled and you will receive a confirmation email shortly.
                   </p>
                   
-                  <div style={{textAlign: 'left', marginBottom: '24px', padding: '16px', background: '#f9fafb', borderRadius: '8px'}}>
+                  <div style={{textAlign: 'center', marginBottom: '24px', padding: '16px', background: '#f9fafb', borderRadius: '8px'}}>
                     <h5 style={{margin: '0 0 8px 0', fontSize: '14px', fontWeight: '600', color: '#374151'}}>
                       What happens next:
                     </h5>

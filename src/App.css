@@ -956,33 +956,7 @@ html, #root {
   text-decoration: none;
 }
 
-/* Audio Visualizer for Voice Recording */
-.audio-visualizer {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 3px;
-  height: 40px;
-  padding: 8px;
-  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-  border: 1px solid #f87171;
-  border-radius: 8px;
-  margin: 12px 0;
-}
-
-.audio-bar {
-  width: 4px;
-  background: linear-gradient(to top, #dc2626 0%, #ef4444 50%, #f87171 100%);
-  border-radius: 2px;
-  transition: height 0.1s ease;
-  min-height: 4px;
-  opacity: 0.7;
-}
-
-.audio-bar.active {
-  opacity: 1;
-  box-shadow: 0 0 4px rgba(220, 38, 38, 0.5);
-}
+/* Audio Visualizer - removed, using brand-theme.css instead */
 
 .recording-indicator {
   display: flex;
