@@ -268,7 +268,7 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
           <p className="journey-line journey-line--path">You're on your path to <strong>{userGender === 'male' ? 'King' : 'Queen'} 👑</strong> in <strong>{finalGoalDays}</strong> days.</p>
           
           {/* Add Device Button */}
-          <div style={{marginTop: '20px'}}>
+          <div style={{marginTop: '20px', position: 'relative'}}>
             <button 
               className={`btn-primary ${devices.length === 0 ? 'btn-primary--animated' : ''}`}
               onClick={() => devices.length < 3 && startDeviceFlow('device_setup_flow')}
@@ -276,15 +276,24 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
               style={{
                 width: '100%',
                 ...(devices.length >= 3 && {
-                  backgroundColor: '#f3f4f6',
-                  color: '#9ca3af',
-                  border: '1px solid #e5e7eb',
                   cursor: 'not-allowed',
-                  opacity: 0.7
+                  position: 'relative'
                 })
               }}
             >
               {devices.length >= 3 ? 'Maximum Reached' : (devices.length === 0 ? 'Start Now' : 'Add New Device')}
+              {devices.length >= 3 && (
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: 'rgba(255, 255, 255, 0.7)',
+                  borderRadius: '8px',
+                  pointerEvents: 'none'
+                }} />
+              )}
             </button>
           </div>
         </div>
@@ -6664,23 +6673,32 @@ function App() {
                   ))
                 )}
               </div>
-              <div style={{marginTop: 'auto'}}>
+              <div style={{marginTop: 'auto', position: 'relative'}}>
                 <button 
                   className="btn-secondary" 
                   style={{
                     width: '100%',
                     ...(devices.length >= 3 && {
-                      backgroundColor: '#f3f4f6',
-                      color: '#9ca3af',
-                      border: '1px solid #e5e7eb',
                       cursor: 'not-allowed',
-                      opacity: 0.7
+                      position: 'relative'
                     })
                   }} 
                   onClick={() => devices.length < 3 && startDeviceFlow('device_setup_flow')}
                   disabled={devices.length >= 3}
                 >
                   {devices.length >= 3 ? 'Maximum Reached' : 'Add New Device'}
+                  {devices.length >= 3 && (
+                    <div style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      background: 'rgba(255, 255, 255, 0.7)',
+                      borderRadius: '8px',
+                      pointerEvents: 'none'
+                    }} />
+                  )}
                 </button>
               </div>
             </div>
