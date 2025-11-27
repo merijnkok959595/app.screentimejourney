@@ -1116,6 +1116,13 @@ p, span, div {
   display: flex; 
 }
 
+/* Pause animations behind modal to prevent flickering */
+body:has(.modal-overlay.active) .btn-primary--animated,
+body:has(.modal-overlay.active) .btn-primary--animated::after,
+body:has(.modal-overlay.active) .btn-primary--animated::before {
+  animation-play-state: paused !important;
+}
+
 .modal { 
   width: min(720px, 94%); 
   background: #f9f9f9; 
