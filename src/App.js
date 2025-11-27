@@ -302,7 +302,7 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
 
         <div style={{paddingBottom: '8px'}}>
           <h2 className="journey-greeting journey-greeting--big">Hi{firstName ? ` ${firstName}` : ''},</h2>
-          <p className="journey-line" style={{marginBottom: '12px'}}>You are among the top <strong>{actualPercentile}%</strong> in the world 🌍</p>
+          <p className="journey-line" style={{marginBottom: '12px'}}>You are among the top <strong>{actualPercentile}%</strong> in the world 🌍.</p>
           <p className="journey-line" style={{marginBottom: '12px'}}>Right now, you are <strong>{currentLevel.title} {currentLevel.emoji}</strong> with <strong>{daysInFocus}</strong> days in focus.</p>
           {currentLevel.milestone_fact && (
             <p className="journey-line" style={{marginBottom: '12px'}}>🧠 {currentLevel.milestone_fact}</p>
