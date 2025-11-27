@@ -369,7 +369,7 @@ p, span, div {
 .btn-primary,
 .btn-outline-primary {
   background: var(--brand-primary);
-  color: #FFFFFF;
+  color: #FFFFFF !important;
   border: none;
   padding: 0 30px;
   height: 47px;
