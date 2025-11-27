@@ -2690,11 +2690,34 @@ def validate_surrender(form_data) -> Dict[str, Any]:
             
             # More specific error handling for transcription
             if status_code == 401:
-                return json_resp({'error': 'OpenAI API authentication failed'}, 500)
+                return json_resp({
+                    'success': False,
+                    'error': 'OpenAI API authentication failed',
+                    'feedback': 'Audio processing service unavailable. Please try again later.'
+                }, 500)
             elif status_code == 400:
-                return json_resp({'error': 'Audio file format not supported or corrupted'}, 500)
+                # Try to extract specific error from OpenAI response
+                try:
+                    error_data = json.loads(error_msg)
+                    specific_error = error_data.get('error', {}).get('message', 'Audio format not supported')
+                    print(f"🔍 OpenAI audio error details: {specific_error}")
+                    return json_resp({
+                        'success': False,
+                        'error': specific_error,
+                        'feedback': 'Your audio recording could not be processed. Please try recording again using the built-in recorder.'
+                    }, 500)
+                except:
+                    return json_resp({
+                        'success': False,
+                        'error': 'Audio file format not supported',
+                        'feedback': 'Your audio recording could not be processed. Please try recording again using the built-in recorder.'
+                    }, 500)
             else:
-                return json_resp({'error': f'Transcription error: {error_msg[:200]}'}, 500)
+                return json_resp({
+                    'success': False,
+                    'error': f'Transcription error: {error_msg[:200]}',
+                    'feedback': 'Failed to process your recording. Please try again.'
+                }, 500)
         
         transcription_result = transcription_response.json()
         user_transcript = transcription_result.get('text', '').strip()
