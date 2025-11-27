@@ -4549,11 +4549,12 @@ function App() {
                 <div className="modal__footer">
                   <button
                     className="btn-primary"
-                    style={{width: '100%'}}
+                    style={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'}}
                     disabled={!newUsername.trim() || (usernameValid !== null && usernameValid !== true)}
                     onClick={() => setOnboardStep(2)}
                   >
-                    Next →
+                    <span>Next</span>
+                    <span>→</span>
                   </button>
                 </div>
               </div>
@@ -4589,11 +4590,12 @@ function App() {
                 <div className="modal__footer">
                   <button
                     className="btn-primary"
-                    style={{width: '100%'}}
+                    style={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'}}
                     disabled={!newGender} 
                     onClick={() => setOnboardStep(3)}
                   >
-                    Next →
+                    <span>Next</span>
+                    <span>→</span>
                   </button>
                   <button className="link-back" onClick={() => setOnboardStep(1)}>Back</button>
                 </div>
@@ -4654,14 +4656,21 @@ function App() {
                   <button
                     type="button"
                     className="btn-primary"
-                    style={{width: '100%'}}
+                    style={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'}}
                     disabled={!whatToChange.trim() || !whatToGain.trim() || !doingThisFor.trim() || commitmentValidating} 
                     onClick={(e) => {
                       e.preventDefault();
                       validateCommitment();
                     }}
                   >
-                    {commitmentValidating ? 'Validating...' : 'Next →'}
+                    {commitmentValidating ? (
+                      'Validating...'
+                    ) : (
+                      <>
+                        <span>Next</span>
+                        <span>→</span>
+                      </>
+                    )}
                   </button>
                   <button type="button" className="link-back" onClick={() => setOnboardStep(2)}>Back</button>
                 </div>
@@ -6317,7 +6326,11 @@ function App() {
                         style={{
                           width: '100%',
                           opacity: surrenderSubmitting || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && !audioGuideData) ? 0.7 : 1,
-                          cursor: surrenderSubmitting || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && !audioGuideData) ? 'not-allowed' : 'pointer'
+                          cursor: surrenderSubmitting || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && !audioGuideData) ? 'not-allowed' : 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '8px'
                         }}
                       >
                         {surrenderSubmitting ? (
@@ -6332,9 +6345,10 @@ function App() {
                           }}></div>
                         ) : (
                           <>
-                            {currentFlow.steps && currentFlow.steps[currentFlowStep - 1] 
+                            <span>{currentFlow.steps && currentFlow.steps[currentFlowStep - 1] 
                               ? currentFlow.steps[currentFlowStep - 1].action_button 
-                              : 'Next step'} →
+                              : 'Next step'}</span>
+                            <span>→</span>
                           </>
                         )}
                       </button>
@@ -7117,9 +7131,10 @@ function App() {
                   <button
                     className="btn-primary"
                     onClick={nextCancelStep}
-                    style={{width: '100%'}}
+                    style={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'}}
                   >
-                    Continue →
+                    <span>Continue</span>
+                    <span>→</span>
                   </button>
                   
                   <div style={{display: 'flex', justifyContent: 'center', marginTop: '6px', width: '100%'}}>
