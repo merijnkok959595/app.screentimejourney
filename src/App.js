@@ -63,6 +63,7 @@ const DEFAULT_MILESTONES = [
     "title": "Ground Zero",
     "emoji": "🪨",
     "description": "Every journey starts from the ground. You've chosen to rise from where you stand.",
+    "milestone_fact": "Dopamine receptors beginning their recovery.",
     "milestone_day": 0,
     "media_url": "https://wati-files.s3.eu-north-1.amazonaws.com/Milestones/male_level_0_groundzero.jpg",
     "next_level_title": "Fighter",
@@ -77,6 +78,7 @@ const DEFAULT_MILESTONES = [
     "title": "Fighter",
     "emoji": "🥊",
     "description": "You've stepped into the fight. Each day you stay the course, your strength builds silently.",
+    "milestone_fact": "Dopamine sensitivity increases by ~15%.",
     "milestone_day": 14,
     "media_url": "https://wati-files.s3.eu-north-1.amazonaws.com/Milestones/male_level_1_fighter.jpg",
     "next_level_title": "King",
@@ -91,6 +93,7 @@ const DEFAULT_MILESTONES = [
     "title": "King",
     "emoji": "👑",
     "description": "You've walked the path fully. Quiet strength and clarity mark the way you stand today.",
+    "milestone_fact": "Complete dopamine receptor reset achieved.",
     "milestone_day": 365,
     "media_url": "https://wati-files.s3.eu-north-1.amazonaws.com/Milestones/male_level_10_theking.jpg",
     "next_level_title": null,
@@ -262,6 +265,9 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
           <h2 className="journey-greeting journey-greeting--big">Hi {firstName},</h2>
           <p className="journey-line" style={{marginBottom: '12px'}}>You are among the top <strong>{actualPercentile}%</strong> in the world 🌍</p>
           <p className="journey-line" style={{marginBottom: '12px'}}>Right now, you are <strong>{currentLevel.title} {currentLevel.emoji}</strong> with <strong>{daysInFocus}</strong> days in focus.</p>
+          {currentLevel.milestone_fact && (
+            <p className="journey-line" style={{marginBottom: '12px', color: '#6b7280', fontStyle: 'italic'}}>🧠 {currentLevel.milestone_fact}</p>
+          )}
           {currentLevel.next_level_title && (
             <p className="journey-line journey-line--next" style={{marginBottom: '12px'}}>Next up: <strong>{currentLevel.next_level_title} {currentLevel.next_level_emoji}</strong> in <strong>{daysToNext}</strong> days.</p>
           )}
