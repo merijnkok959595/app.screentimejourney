@@ -4775,7 +4775,7 @@ function App() {
 
             <div>
               {/* Email - Read Only */}
-              <div style={{ marginBottom: '1.5rem' }}>
+              <div style={{ marginBottom: '20px' }}>
                 <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Email (Read-only)</label>
                 <input 
                   className="input"
@@ -4787,7 +4787,7 @@ function App() {
               </div>
 
               {/* Username */}
-              <div style={{ marginBottom: '1.5rem' }}>
+              <div style={{ marginBottom: '20px' }}>
                 <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Username</label>
                 <div style={{ position: 'relative' }}>
                   <input 
@@ -4866,7 +4866,7 @@ function App() {
               </div>
 
               {/* Gender */}
-              <div style={{ marginBottom: '1.5rem' }}>
+              <div style={{ marginBottom: '20px' }}>
                 <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Gender</label>
                 <div className="radio-group">
                   <label className="radio-option">
@@ -4895,7 +4895,7 @@ function App() {
               </div>
 
               {/* WhatsApp */}
-              <div style={{ marginBottom: '1.5rem' }}>
+              <div style={{ marginBottom: '24px' }}>
                 <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>WhatsApp</label>
                 
                 {/* Current WhatsApp Display */}
@@ -7090,7 +7090,7 @@ function App() {
                     </div>
                   </div>
 
-                  <div style={{background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '7px', padding: '16px', marginBottom: '20px'}}>
+                  <div style={{background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '7px', padding: '16px', marginBottom: '24px'}}>
                     <p className="account-text" style={{margin: 0, color: '#dc2626', fontWeight: '500'}}>
                       ⚠️ <strong>Important:</strong> Cancelling will permanently delete your progress, device configurations, and journey data. This cannot be undone.
                     </p>
@@ -7099,14 +7099,14 @@ function App() {
               )}
 
               {cancelStep === 4 && (
-                <div style={{textAlign: 'center', marginBottom: '20px'}}>
+                <div style={{textAlign: 'center', marginBottom: '24px'}}>
                   <div style={{fontSize: '3rem', marginBottom: '16px'}}>✅</div>
                   
-                  <p style={{fontSize: '14px', lineHeight: '1.5', color: '#6b7280', marginBottom: '20px'}}>
+                  <p style={{fontSize: '14px', lineHeight: '1.5', color: '#6b7280', marginBottom: '24px'}}>
                     Your subscription has been cancelled and you will receive a confirmation email shortly.
                   </p>
                   
-                  <div style={{textAlign: 'left', marginBottom: '20px', padding: '16px', background: '#f9fafb', borderRadius: '8px'}}>
+                  <div style={{textAlign: 'left', marginBottom: '24px', padding: '16px', background: '#f9fafb', borderRadius: '8px'}}>
                     <h5 style={{margin: '0 0 8px 0', fontSize: '14px', fontWeight: '600', color: '#374151'}}>
                       What happens next:
                     </h5>
