@@ -4506,7 +4506,7 @@ function App() {
     <div className="App">
         {/* Account Onboarding Modal */}
         <div className={`modal-overlay ${showOnboarding ? 'active' : ''}`}>
-          <div className="modal" role="dialog" aria-modal="true" aria-labelledby="onboard-title">
+          <div className="modal" role="dialog" aria-modal="true" aria-labelledby="onboard-title" style={{maxWidth: '800px'}}>
             <div className="modal__header">
               <div className="step-indicator">Step {onboardStep} of 5</div>
               <h3 id="onboard-title" className="modal__title">
@@ -4768,7 +4768,7 @@ function App() {
 
         {/* Profile Edit Modal */}
         <div className={`modal-overlay ${showProfileEdit ? 'active' : ''}`}>
-          <div className="modal" role="dialog" aria-modal="true" aria-labelledby="profile-edit-title">
+          <div className="modal" role="dialog" aria-modal="true" aria-labelledby="profile-edit-title" style={{maxWidth: '800px'}}>
             <div className="modal__header">
               <h3 id="profile-edit-title" className="modal__title">Edit Profile</h3>
             </div>
@@ -6720,7 +6720,7 @@ function App() {
               </div>
               <div style={{marginTop: 'auto', position: 'relative'}}>
                 <button 
-                  className="btn-secondary" 
+                  className={`btn-secondary ${devices.length === 0 ? 'btn-primary--animated' : ''}`}
                   style={{
                     width: '100%',
                     ...(devices.length >= 3 && {
@@ -7018,7 +7018,7 @@ function App() {
 
       {/* Subscription Cancellation Flow Modal */}
       <div className={`modal-overlay ${showCancelFlow ? 'active' : ''}`}>
-        <div className="modal" role="dialog" aria-modal="true" aria-labelledby="cancel-flow-title" style={{maxWidth: '600px'}}>
+        <div className="modal" role="dialog" aria-modal="true" aria-labelledby="cancel-flow-title" style={{maxWidth: '800px'}}>
           <>
             <div className="modal__header">
               <div className="step-indicator">{cancelStep === 4 ? '' : `Step ${cancelStep - 1} of 2`}</div>
@@ -7184,7 +7184,7 @@ function App() {
 
       {/* Notification Settings Modal */}
       <div className={`modal-overlay ${showNotificationsFlow ? 'active' : ''}`}>
-        <div className="modal" role="dialog" aria-modal="true" aria-labelledby="notifications-title" style={{maxWidth: '600px'}}>
+        <div className="modal" role="dialog" aria-modal="true" aria-labelledby="notifications-title" style={{maxWidth: '800px'}}>
           <>
             <div className="modal__header">
               <h3 id="notifications-title" className="modal__title">
