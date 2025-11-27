@@ -1361,6 +1361,7 @@ def get_milestones(payload: Dict[str, Any]) -> Dict[str, Any]:
                         'title': str(item.get('title', '')),
                         'emoji': str(item.get('emoji', '🎯')),
                         'description': str(item.get('description', '')),
+                        'milestone_fact': str(item.get('milestone_fact', '')) if item.get('milestone_fact') else None,
                         'milestone_day': int(item.get('milestone_day', 0)) if item.get('milestone_day') is not None else 0,
                         'media_url': str(item.get('media_url', '')) if item.get('media_url') else '',
                         'next_level_title': str(item.get('next_level_title', '')) if item.get('next_level_title') else None,
