@@ -5000,7 +5000,7 @@ function App() {
                         </button>
                         
                         {profileData?.whatsapp && (
-                          <div style={{display: 'flex', justifyContent: 'center', marginTop: '6px', width: '100%'}}>
+                          <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
                             <button 
                               type="button"
                               className="btn-tertiary"
@@ -5096,7 +5096,7 @@ function App() {
               </div>
 
               {/* Commitment Data Section */}
-              <div style={{ marginBottom: '1.5rem' }}>
+              <div style={{ marginBottom: '24px' }}>
                 <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Your Commitment</label>
                 
                 {/* Current Commitment Display */}
@@ -5275,7 +5275,7 @@ function App() {
                             {profileEditData.commitmentValidating ? 'Validating...' : 'Validate'}
                           </button>
                           
-                          <div style={{display: 'flex', justifyContent: 'center', marginTop: '6px', width: '100%'}}>
+                          <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
                             <button 
                               type="button"
                               className="btn-tertiary"
@@ -5351,7 +5351,7 @@ function App() {
                             {profileEditData.commitmentSaving ? 'Saving...' : 'Save Commitment'}
                           </button>
                           
-                          <div style={{display: 'flex', justifyContent: 'center', marginTop: '6px', width: '100%'}}>
+                          <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
                             <button 
                               type="button"
                               className="btn-tertiary"
