@@ -6104,12 +6104,12 @@ function App() {
                           </p>
                           
                           {/* Form Fields */}
-                          <div style={{marginBottom: '20px'}}>
+                          <div style={{marginBottom: '24px'}}>
                             {currentFlow.steps[currentFlowStep - 1].form_fields.map((field, index) => (
-                              <div key={index} style={{marginBottom: '1.5rem'}}>
+                              <div key={index} style={{marginBottom: '20px'}}>
                                 {field.field_type === 'text' && (
                                   <>
-                                    <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>{field.label}</label>
+                                    <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>{field.label}</label>
                                     <input 
                                       className={`input ${deviceFormErrors[field.field_name] ? 'input--invalid' : ''}`}
                                       placeholder={field.placeholder}
@@ -6139,7 +6139,7 @@ function App() {
                                 
                                 {field.field_type === 'radio' && (
                                   <>
-                                    <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>{field.label}</label>
+                                    <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>{field.label}</label>
                                     <div className="radio-group">
                                       {field.options.map((option, optIndex) => (
                                         <label key={optIndex} className="radio-option">
@@ -6178,7 +6178,7 @@ function App() {
                       ) : (
                         <>
                           {/* Video Player for video steps */}
-                          <div style={{marginBottom: '20px', borderRadius: '8px', overflow: 'hidden', backgroundColor: '#EEEEEE'}}>
+                          <div style={{marginBottom: '24px', borderRadius: '8px', overflow: 'hidden', backgroundColor: '#EEEEEE'}}>
                             <video 
                               controls 
                               style={{width: '100%', height: 'auto', maxHeight: '300px'}}
@@ -6191,7 +6191,7 @@ function App() {
                           
                           {/* Body Text for video steps */}
                           {currentFlow.steps[currentFlowStep - 1].body && (
-                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
+                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px'}}>
                               <p style={{margin: 0, fontSize: '16px', lineHeight: '1.5', color: '#374151'}}>
                                 {currentFlow.steps[currentFlowStep - 1].body}
                               </p>
@@ -6223,7 +6223,7 @@ function App() {
                           
                           {/* Audio Guide for Setup Pincode step (step 4) */}
                           {currentFlowStep === 4 && (
-                            <div style={{marginBottom: '20px'}}>
+                            <div style={{marginBottom: '24px'}}>
                               {!audioGuideData ? (
                                 <div>
                                   <button
@@ -6278,7 +6278,7 @@ function App() {
                   <div className="modal__footer">
                     {/* Step 3: Profile Generation & WARP Client Download */}
                     {currentFlowStep === 3 && currentFlow.flowType === 'device_setup_flow' && currentFlow.steps[currentFlowStep - 1]?.step_type !== 'pincode_display' && (
-                      <div style={{marginBottom: '12px', width: '100%'}}>
+                      <div style={{marginBottom: '24px', width: '100%'}}>
                         {/* Generate/Download Profile Button */}
                         {!vpnProfileData ? (
                           <button
