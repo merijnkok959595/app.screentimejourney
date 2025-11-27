@@ -266,8 +266,9 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
           <p className="journey-line" style={{marginBottom: '12px'}}>You are among the top <strong>{actualPercentile}%</strong> in the world 🌍</p>
           <p className="journey-line" style={{marginBottom: '12px'}}>Right now, you are <strong>{currentLevel.title} {currentLevel.emoji}</strong> with <strong>{daysInFocus}</strong> days in focus.</p>
           {currentLevel.milestone_fact && (
-            <p className="journey-line" style={{marginBottom: '12px', color: '#6b7280', fontStyle: 'italic'}}>🧠 {currentLevel.milestone_fact}</p>
+            <p className="journey-line" style={{marginBottom: '12px', color: '#6b7280'}}>🧠 {currentLevel.milestone_fact}</p>
           )}
+          {!currentLevel.milestone_fact && console.log('⚠️ No milestone_fact found for level:', currentLevel)}
           {currentLevel.next_level_title && (
             <p className="journey-line journey-line--next" style={{marginBottom: '12px'}}>Next up: <strong>{currentLevel.next_level_title} {currentLevel.next_level_emoji}</strong> in <strong>{daysToNext}</strong> days.</p>
           )}
@@ -283,7 +284,9 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
                 width: '100%',
                 ...(devices.length >= 3 && {
                   cursor: 'not-allowed',
-                  position: 'relative'
+                  position: 'relative',
+                  opacity: 0.6,
+                  pointerEvents: 'none'
                 })
               }}
             >
@@ -295,7 +298,7 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
                   left: 0,
                   right: 0,
                   bottom: 0,
-                  background: 'rgba(255, 255, 255, 0.7)',
+                  background: 'rgba(255, 255, 255, 0.4)',
                   borderRadius: '8px',
                   pointerEvents: 'none'
                 }} />
@@ -6686,7 +6689,9 @@ function App() {
                     width: '100%',
                     ...(devices.length >= 3 && {
                       cursor: 'not-allowed',
-                      position: 'relative'
+                      position: 'relative',
+                      opacity: 0.6,
+                      pointerEvents: 'none'
                     })
                   }} 
                   onClick={() => devices.length < 3 && startDeviceFlow('device_setup_flow')}
@@ -6700,7 +6705,7 @@ function App() {
                       left: 0,
                       right: 0,
                       bottom: 0,
-                      background: 'rgba(255, 255, 255, 0.7)',
+                      background: 'rgba(255, 255, 255, 0.4)',
                       borderRadius: '8px',
                       pointerEvents: 'none'
                     }} />
