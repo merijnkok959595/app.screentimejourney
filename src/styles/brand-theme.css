@@ -389,6 +389,13 @@ p, span, div {
   isolation: isolate;
 }
 
+.btn-primary span,
+.btn-primary *,
+.btn-outline-primary span,
+.btn-outline-primary * {
+  color: #FFFFFF !important;
+}
+
 .btn-primary--animated {
   animation: pulse-heartbeat 6.5s ease-in-out infinite;
 }
@@ -451,7 +458,7 @@ p, span, div {
 .btn-secondary,
 .btn-outline-secondary {
   background: #FFFFFF;
-  color: var(--brand-primary);
+  color: var(--brand-primary) !important;
   border: 1px solid var(--brand-primary);
   padding: 0 30px;
   height: 47px;
@@ -469,6 +476,13 @@ p, span, div {
   overflow: hidden;
   z-index: 1;
   transition: color 0.5s ease;
+}
+
+.btn-secondary span,
+.btn-secondary *,
+.btn-outline-secondary span,
+.btn-outline-secondary * {
+  color: var(--brand-primary) !important;
 }
 
 .btn-secondary::before,
