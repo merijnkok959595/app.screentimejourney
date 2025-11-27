@@ -2125,16 +2125,16 @@ function App() {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       console.log('✅ Got media stream');
       
-      // Choose compatible audio format - prefer WebM/Opus for best Whisper API compatibility
+      // Choose compatible audio format - prefer OGG/Opus for best Whisper API compatibility
       let options = {};
-      if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
-        options.mimeType = 'audio/webm;codecs=opus';
-      } else if (MediaRecorder.isTypeSupported('audio/webm')) {
-        options.mimeType = 'audio/webm';
-      } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
+      if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
         options.mimeType = 'audio/ogg;codecs=opus';
+      } else if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+        options.mimeType = 'audio/webm;codecs=opus';
       } else if (MediaRecorder.isTypeSupported('audio/wav')) {
         options.mimeType = 'audio/wav';
+      } else if (MediaRecorder.isTypeSupported('audio/webm')) {
+        options.mimeType = 'audio/webm';
       } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
         options.mimeType = 'audio/mp4';
       }
@@ -2202,17 +2202,17 @@ function App() {
 
       recorder.onstop = () => {
         // Use the same mimeType as recording for consistency
-        let mimeType = options.mimeType || 'audio/webm';
+        let mimeType = options.mimeType || 'audio/ogg';
         if (!mimeType) {
-          // Fallback logic if no mimeType was set
-          if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+          // Fallback logic if no mimeType was set (match startRecording priority)
+          if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
+            mimeType = 'audio/ogg;codecs=opus';
+          } else if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
             mimeType = 'audio/webm;codecs=opus';
-          } else if (MediaRecorder.isTypeSupported('audio/webm')) {
-            mimeType = 'audio/webm';
           } else if (MediaRecorder.isTypeSupported('audio/wav')) {
             mimeType = 'audio/wav';
-          } else if (MediaRecorder.isTypeSupported('audio/ogg')) {
-            mimeType = 'audio/ogg';
+          } else if (MediaRecorder.isTypeSupported('audio/webm')) {
+            mimeType = 'audio/webm';
           }
         }
         
