@@ -65,14 +65,12 @@ body {
   line-height: 1.6;
   margin: 0;
   padding: 0;
-  overflow-x: hidden; /* Prevent horizontal scroll */
   width: 100%;
   position: relative;
 }
 
 html, #root { 
   background: var(--page-bg);
-  overflow-x: hidden; /* Prevent horizontal scroll */
   width: 100%;
 }
 
