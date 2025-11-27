@@ -125,7 +125,7 @@ p, span, div {
   letter-spacing: 1px;
   position: sticky;
   top: 0;
-  z-index: 49;
+  z-index: 100; /* Above header (50) and mobile menu (99) */
 }
 
 /* === HEADER === */
@@ -1647,7 +1647,7 @@ p, span, div {
     font-size: 12px;
     position: sticky;
     top: 0;
-    z-index: 49;
+    z-index: 100; /* Above header (99) and mobile menu (98) */
   }
   
   /* === HEADER === */
