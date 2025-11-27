@@ -278,12 +278,21 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
                 {devices.length === 0 ? 'Start Now' : 'Add Device'}
               </button>
             ) : (
-              <div style={{textAlign: 'center', padding: '12px', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '2px dashed #dee2e6'}}>
-                <div style={{color: '#6c757d', fontSize: '14px', fontWeight: '500'}}>
-                  Maximum Devices Reached
+              <div className="max-devices-notice">
+                <div className="max-devices-notice__icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
                 </div>
-                <div style={{color: '#868e96', fontSize: '12px', marginTop: '4px'}}>
-                  Remove a device to add a new one
+                <div className="max-devices-notice__content">
+                  <div className="max-devices-notice__title">
+                    Maximum reached
+                  </div>
+                  <div className="max-devices-notice__desc">
+                    Remove a device to add a new one
+                  </div>
                 </div>
               </div>
             )}
