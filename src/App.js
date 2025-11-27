@@ -2125,16 +2125,18 @@ function App() {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       console.log('✅ Got media stream');
       
-      // Choose compatible audio format
+      // Choose compatible audio format - prefer WebM/Opus for best Whisper API compatibility
       let options = {};
-      if (MediaRecorder.isTypeSupported('audio/mp4')) {
-        options.mimeType = 'audio/mp4';
-      } else if (MediaRecorder.isTypeSupported('audio/wav')) {
-        options.mimeType = 'audio/wav';
-      } else if (MediaRecorder.isTypeSupported('audio/ogg')) {
-        options.mimeType = 'audio/ogg';
+      if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+        options.mimeType = 'audio/webm;codecs=opus';
       } else if (MediaRecorder.isTypeSupported('audio/webm')) {
         options.mimeType = 'audio/webm';
+      } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
+        options.mimeType = 'audio/ogg;codecs=opus';
+      } else if (MediaRecorder.isTypeSupported('audio/wav')) {
+        options.mimeType = 'audio/wav';
+      } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
+        options.mimeType = 'audio/mp4';
       }
       
       console.log('🎙️ Using audio format:', options.mimeType || 'default');
@@ -2199,14 +2201,19 @@ function App() {
       };
 
       recorder.onstop = () => {
-        // Use a more compatible audio format
-        let mimeType = 'audio/webm';
-        if (MediaRecorder.isTypeSupported('audio/mp4')) {
-          mimeType = 'audio/mp4';
-        } else if (MediaRecorder.isTypeSupported('audio/wav')) {
-          mimeType = 'audio/wav';
-        } else if (MediaRecorder.isTypeSupported('audio/ogg')) {
-          mimeType = 'audio/ogg';
+        // Use the same mimeType as recording for consistency
+        let mimeType = options.mimeType || 'audio/webm';
+        if (!mimeType) {
+          // Fallback logic if no mimeType was set
+          if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+            mimeType = 'audio/webm;codecs=opus';
+          } else if (MediaRecorder.isTypeSupported('audio/webm')) {
+            mimeType = 'audio/webm';
+          } else if (MediaRecorder.isTypeSupported('audio/wav')) {
+            mimeType = 'audio/wav';
+          } else if (MediaRecorder.isTypeSupported('audio/ogg')) {
+            mimeType = 'audio/ogg';
+          }
         }
         
         const blob = new Blob(chunks, { type: mimeType });
@@ -6711,19 +6718,9 @@ function App() {
                       </div>
                       <div style={{display: 'flex', gap: '6px', alignItems: 'center'}}>
                         <button 
-                          style={{
-                            background: 'transparent',
-                            border: 'none',
-                            color: '#2E0456',
-                            fontSize: '12px',
-                            fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
-                            fontWeight: '500',
-                            textDecoration: 'underline',
-                            textUnderlineOffset: '3px',
-                            cursor: 'pointer',
-                            padding: 0
-                          }}
+                          className="btn-secondary"
                           onClick={() => startDeviceFlow('device_unlock_flow', device.id)}
+                          style={{fontSize: '12px', padding: '4px 12px', height: '32px', minHeight: '32px'}}
                         >
                           Unlock
                         </button>
