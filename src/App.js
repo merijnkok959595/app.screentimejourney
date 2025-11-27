@@ -6359,7 +6359,7 @@ function App() {
                     )}
                     
                     {/* Cancel/Back Button - Centered Below */}
-                    <div style={{display: 'flex', justifyContent: 'center', marginTop: '6px', width: '100%'}}>
+                    <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
                       <button 
                         className="btn-tertiary"
                         onClick={() => {
