@@ -56,6 +56,7 @@ const handleInputFocus = (e) => {
 
 // Default milestone data as fallback (will be replaced by API data)
 const DEFAULT_MILESTONES = [
+  // Male milestones
   {
     "gene": "male",
     "level": 0,
@@ -100,6 +101,52 @@ const DEFAULT_MILESTONES = [
     "next_level_emoji": null,
     "days_to_next": null,
     "level_template": "m10"
+  },
+  // Female milestones
+  {
+    "gene": "female",
+    "level": 0,
+    "days_range": "0",
+    "title": "Awakening",
+    "emoji": "🌸",
+    "description": "Every journey starts from the ground. You've chosen to rise from where you stand.",
+    "milestone_fact": "Dopamine receptors beginning their recovery.",
+    "milestone_day": 0,
+    "media_url": "https://wati-files.s3.eu-north-1.amazonaws.com/Milestones/female_level_0_awakening.jpg",
+    "next_level_title": "Blossoming",
+    "next_level_emoji": "🌺",
+    "days_to_next": 7,
+    "level_template": ""
+  },
+  {
+    "gene": "female",
+    "level": 1,
+    "days_range": "7–14",
+    "title": "Blossoming",
+    "emoji": "🌺",
+    "description": "You've stepped into the journey. Each day you stay the course, your strength builds silently.",
+    "milestone_fact": "Dopamine sensitivity increases by ~15%.",
+    "milestone_day": 14,
+    "media_url": "https://wati-files.s3.eu-north-1.amazonaws.com/Milestones/female_level_1_blossoming.jpg",
+    "next_level_title": "Queen",
+    "next_level_emoji": "👑",
+    "days_to_next": 351,
+    "level_template": "f1"
+  },
+  {
+    "gene": "female",
+    "level": 10,
+    "days_range": "365+",
+    "title": "The Queen",
+    "emoji": "👑",
+    "description": "You've walked the path fully. Quiet strength and clarity mark the way you stand today.",
+    "milestone_fact": "Complete dopamine receptor reset achieved.",
+    "milestone_day": 365,
+    "media_url": "https://wati-files.s3.eu-north-1.amazonaws.com/Milestones/female_level_10_thequeen.jpg",
+    "next_level_title": null,
+    "next_level_emoji": null,
+    "days_to_next": null,
+    "level_template": "f10"
   }
 ];
 
