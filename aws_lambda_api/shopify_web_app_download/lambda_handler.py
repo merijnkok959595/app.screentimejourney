@@ -2356,13 +2356,32 @@ def get_devices(payload: Dict[str, Any]) -> Dict[str, Any]:
         customer = response['Item']
         devices = customer.get('devices', [])
         
+        # Calculate real-time percentile based on all users with active devices
+        percentile = 0
+        if devices:
+            # Get device registration date to calculate days in focus
+            device_reg_date = get_device_registration_date(devices)
+            if device_reg_date:
+                # Use timezone-aware datetime for comparison
+                from datetime import timezone
+                now_utc = datetime.now(timezone.utc)
+                days_in_focus = (now_utc - device_reg_date).days
+                
+                # Get all subscribers to calculate percentile
+                subscribers_response = table.scan()
+                all_subscribers = subscribers_response.get('Items', [])
+                percentile = calculate_percentile_simple(all_subscribers, days_in_focus)
+                
+                print(f"📊 User has {days_in_focus} days in focus, percentile: {percentile}%")
+        
         print(f"✅ Retrieved {len(devices)} devices for customer {customer_id}")
         
         return json_resp({
             'success': True,
             'devices': devices,
             'total_devices': len(devices),
-            'max_devices': 3
+            'max_devices': 3,
+            'percentile': percentile  # Add real-time percentile
         })
         
     except Exception as e:
