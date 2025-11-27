@@ -578,6 +578,7 @@ function App() {
   const [audioBlob, setAudioBlob] = useState(null);
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [surrenderSubmitting, setSurrenderSubmitting] = useState(false);
+  const [surrenderError, setSurrenderError] = useState('');
   const [audioLevels, setAudioLevels] = useState([]);
   const [audioContext, setAudioContext] = useState(null);
   const [analyser, setAnalyser] = useState(null);
@@ -2072,6 +2073,7 @@ function App() {
   const startRecording = async () => {
     try {
       console.log('🎤 Starting recording...');
+      setSurrenderError(''); // Clear any previous errors
       
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       console.log('✅ Got media stream');
@@ -2239,11 +2241,12 @@ function App() {
 
   const submitSurrender = async () => {
     if (!audioBlob) {
-      alert('Please record your surrender message first.');
+      setSurrenderError('Please record your surrender message first.');
       return;
     }
 
     setSurrenderSubmitting(true);
+    setSurrenderError(''); // Clear previous errors
 
     try {
       // Check if this is local development
@@ -2301,7 +2304,7 @@ function App() {
           // Move to step 2 (pincode display)
           setCurrentFlowStep(2);
         } else {
-          alert(`❌ ${result.feedback || 'Surrender not approved. Please record the complete text clearly.'}`);
+          setSurrenderError(result.feedback || 'Surrender not approved. Please record the complete text clearly.');
         }
       } else {
         throw new Error(result.error || 'Failed to validate surrender');
@@ -2309,7 +2312,7 @@ function App() {
 
     } catch (error) {
       console.error('❌ Error submitting surrender:', error);
-      alert('Failed to submit surrender. Please try again.');
+      setSurrenderError(error.message || 'Failed to submit surrender. Please try again.');
     } finally {
       setSurrenderSubmitting(false);
     }
@@ -6288,6 +6291,24 @@ function App() {
                           </>
                         )}
                       </button>
+                    )}
+                    
+                    {/* Surrender Error Message */}
+                    {surrenderError && (currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && (
+                      <div style={{
+                        marginTop: '12px',
+                        padding: '12px 16px',
+                        background: '#FEE2E2',
+                        border: '1px solid #FCA5A5',
+                        borderRadius: '7px',
+                        color: '#991B1B',
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        textAlign: 'center',
+                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
+                      }}>
+                        ❌ {surrenderError}
+                      </div>
                     )}
                     
                     {/* Cancel/Back Button - Centered Below */}
