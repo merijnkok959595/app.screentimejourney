@@ -726,6 +726,35 @@ function App() {
     };
   }, []);
 
+  // Close modals on ESC key
+  useEffect(() => {
+    const handleEscKey = (event) => {
+      if (event.key === 'Escape' || event.keyCode === 27) {
+        // Close any open modal
+        if (showDeviceFlow) {
+          setShowDeviceFlow(false);
+          setCurrentFlow(null);
+          setCurrentFlowStep(1);
+        } else if (showProfileEdit) {
+          setShowProfileEdit(false);
+        } else if (showNotificationsFlow) {
+          setShowNotificationsFlow(false);
+        } else if (showCancelFlow) {
+          setShowCancelFlow(false);
+        } else if (showLogsFlow) {
+          setShowLogsFlow(false);
+        } else if (showPaymentWall) {
+          setShowPaymentWall(false);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleEscKey);
+    return () => {
+      window.removeEventListener('keydown', handleEscKey);
+    };
+  }, [showDeviceFlow, showProfileEdit, showNotificationsFlow, showCancelFlow, showLogsFlow, showPaymentWall]);
+
   // Load devices when customer data is available
   useEffect(() => {
     console.log('🔍 Device loading useEffect triggered:', {
@@ -2122,21 +2151,25 @@ function App() {
       console.log('🎤 Starting recording...');
       setSurrenderError(''); // Clear any previous errors
       
+      // Save scroll position to prevent page jump
+      const scrollY = window.scrollY;
+      
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       console.log('✅ Got media stream');
       
-      // Choose compatible audio format - prefer OGG/Opus for best Whisper API compatibility
+      // Choose compatible audio format - prefer formats that work reliably with Whisper API
+      // Priority: MP4 (Safari), WAV (universal), OGG (Chrome/Firefox)
       let options = {};
-      if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
+      if (MediaRecorder.isTypeSupported('audio/mp4')) {
+        options.mimeType = 'audio/mp4';
+      } else if (MediaRecorder.isTypeSupported('audio/wav')) {
+        options.mimeType = 'audio/wav';
+      } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
         options.mimeType = 'audio/ogg;codecs=opus';
       } else if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
         options.mimeType = 'audio/webm;codecs=opus';
-      } else if (MediaRecorder.isTypeSupported('audio/wav')) {
-        options.mimeType = 'audio/wav';
       } else if (MediaRecorder.isTypeSupported('audio/webm')) {
         options.mimeType = 'audio/webm';
-      } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
-        options.mimeType = 'audio/mp4';
       }
       
       console.log('🎙️ Using audio format:', options.mimeType || 'default');
@@ -2202,15 +2235,17 @@ function App() {
 
       recorder.onstop = () => {
         // Use the same mimeType as recording for consistency
-        let mimeType = options.mimeType || 'audio/ogg';
+        let mimeType = options.mimeType || 'audio/mp4';
         if (!mimeType) {
           // Fallback logic if no mimeType was set (match startRecording priority)
-          if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
+          if (MediaRecorder.isTypeSupported('audio/mp4')) {
+            mimeType = 'audio/mp4';
+          } else if (MediaRecorder.isTypeSupported('audio/wav')) {
+            mimeType = 'audio/wav';
+          } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
             mimeType = 'audio/ogg;codecs=opus';
           } else if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
             mimeType = 'audio/webm;codecs=opus';
-          } else if (MediaRecorder.isTypeSupported('audio/wav')) {
-            mimeType = 'audio/wav';
           } else if (MediaRecorder.isTypeSupported('audio/webm')) {
             mimeType = 'audio/webm';
           }
@@ -2240,6 +2275,11 @@ function App() {
       // Start audio visualization immediately
       updateAudioLevels();
       
+      // Restore scroll position after state update to prevent page jump
+      setTimeout(() => {
+        window.scrollTo(0, scrollY);
+      }, 0);
+      
       console.log('🎤 Recording started with audio visualization');
     } catch (error) {
       console.error('❌ Error starting recording:', error);
@@ -2254,6 +2294,9 @@ function App() {
       animationId,
       recordingTimer: !!recordingTimer
     });
+    
+    // Save scroll position to prevent page jump
+    const scrollY = window.scrollY;
     
     if (mediaRecorder && isRecording) {
       console.log('🛑 Stopping recording...');
@@ -2283,6 +2326,11 @@ function App() {
         setRecordingTimer(null);
         console.log('⏰ Timer cleared');
       }
+      
+      // Restore scroll position after state update to prevent page jump
+      setTimeout(() => {
+        window.scrollTo(0, scrollY);
+      }, 0);
       
       console.log('🛑 Recording stopped successfully');
     } else {
