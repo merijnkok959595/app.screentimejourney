@@ -269,33 +269,23 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
           
           {/* Add Device Button */}
           <div style={{marginTop: '20px'}}>
-            {devices.length < 3 ? (
-              <button 
-                className={`btn-primary ${devices.length === 0 ? 'btn-primary--animated' : ''}`}
-                onClick={() => startDeviceFlow('device_setup_flow')}
-                style={{width: '100%'}}
-              >
-                {devices.length === 0 ? 'Start Now' : 'Add Device'}
-              </button>
-            ) : (
-              <div className="max-devices-notice">
-                <div className="max-devices-notice__icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <line x1="12" y1="8" x2="12" y2="12"/>
-                    <line x1="12" y1="16" x2="12.01" y2="16"/>
-                  </svg>
-                </div>
-                <div className="max-devices-notice__content">
-                  <div className="max-devices-notice__title">
-                    Maximum reached
-                  </div>
-                  <div className="max-devices-notice__desc">
-                    Remove a device to add a new one
-                  </div>
-                </div>
-              </div>
-            )}
+            <button 
+              className={`btn-primary ${devices.length === 0 ? 'btn-primary--animated' : ''}`}
+              onClick={() => devices.length < 3 && startDeviceFlow('device_setup_flow')}
+              disabled={devices.length >= 3}
+              style={{
+                width: '100%',
+                ...(devices.length >= 3 && {
+                  backgroundColor: '#f3f4f6',
+                  color: '#9ca3af',
+                  border: '1px solid #e5e7eb',
+                  cursor: 'not-allowed',
+                  opacity: 0.7
+                })
+              }}
+            >
+              {devices.length >= 3 ? 'Maximum Reached' : (devices.length === 0 ? 'Start Now' : 'Add New Device')}
+            </button>
           </div>
         </div>
       </div>
@@ -6675,28 +6665,23 @@ function App() {
                 )}
               </div>
               <div style={{marginTop: 'auto'}}>
-                {devices.length < 3 ? (
-                  <button 
-                    className="btn-secondary" 
-                    style={{width: '100%'}} 
-                    onClick={() => startDeviceFlow('device_setup_flow')}
-                  >
-                    Add Device
-                  </button>
-                ) : (
-                  <div style={{
-                    textAlign: 'center', 
-                    padding: '8px', 
-                    backgroundColor: '#f8f9fa', 
-                    borderRadius: '6px', 
-                    border: '1px dashed #dee2e6',
-                    fontSize: '14px',
-                    color: '#0F172A',
-                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
-                  }}>
-                    Maximum reached
-                  </div>
-                )}
+                <button 
+                  className="btn-secondary" 
+                  style={{
+                    width: '100%',
+                    ...(devices.length >= 3 && {
+                      backgroundColor: '#f3f4f6',
+                      color: '#9ca3af',
+                      border: '1px solid #e5e7eb',
+                      cursor: 'not-allowed',
+                      opacity: 0.7
+                    })
+                  }} 
+                  onClick={() => devices.length < 3 && startDeviceFlow('device_setup_flow')}
+                  disabled={devices.length >= 3}
+                >
+                  {devices.length >= 3 ? 'Maximum Reached' : 'Add New Device'}
+                </button>
               </div>
             </div>
           </div>
