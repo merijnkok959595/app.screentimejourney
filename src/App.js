@@ -5522,12 +5522,12 @@ function App() {
                                   
                                   {/* Audio Visualizer */}
                                   <div className="audio-visualizer">
-                                    {[...Array(8)].map((_, i) => (
+                                    {[...Array(24)].map((_, i) => (
                                       <div
                                         key={i}
                                         className="audio-visualizer-bar"
                                         style={{
-                                          height: `${Math.min(40, Math.max(3, (audioLevels[i] || 3)))}px`
+                                          height: `${Math.min(40, Math.max(3, (audioLevels[i % audioLevels.length] || 3)))}px`
                                         }}
                                       ></div>
                                     ))}
@@ -5578,10 +5578,7 @@ function App() {
                                       </>
                                     ) : (
                                       <>
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                                          <circle cx="12" cy="12" r="5"/>
-                                        </svg>
-                                        Start Recording
+                                        🎤 Start Recording
                                       </>
                                     )}
                                   </button>
@@ -5634,7 +5631,7 @@ function App() {
                                   
                                   {/* Audio Player Preview */}
                                   <div style={{
-                                    background: '#f9f9f9',
+                                    background: 'transparent',
                                     borderRadius: '7px',
                                     padding: '16px',
                                     marginBottom: '16px',
@@ -5803,12 +5800,12 @@ function App() {
                                   
                                   {/* Audio Visualizer */}
                                   <div className="audio-visualizer">
-                                    {[...Array(8)].map((_, i) => (
+                                    {[...Array(24)].map((_, i) => (
                                       <div
                                         key={i}
                                         className="audio-visualizer-bar"
                                         style={{
-                                          height: `${Math.min(40, Math.max(3, (audioLevels[i] || 3)))}px`
+                                          height: `${Math.min(40, Math.max(3, (audioLevels[i % audioLevels.length] || 3)))}px`
                                         }}
                                       ></div>
                                     ))}
@@ -5859,10 +5856,7 @@ function App() {
                                       </>
                                     ) : (
                                       <>
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                          <circle cx="12" cy="12" r="3"/>
-                                        </svg>
-                                        Start Recording
+                                        🎤 Start Recording
                                       </>
                                     )}
                                   </button>
@@ -5915,7 +5909,7 @@ function App() {
                                   
                                   {/* Audio Player Preview */}
                                   <div style={{
-                                    background: '#f9f9f9',
+                                    background: 'transparent',
                                     borderRadius: '7px',
                                     padding: '16px',
                                     marginBottom: '16px',
@@ -6098,8 +6092,8 @@ function App() {
                         </>
                       ) : currentFlow.steps[currentFlowStep - 1].step_type === 'form' ? (
                         <>
-                          {/* Body Text for form - Left aligned */}
-                          <p style={{marginBottom: '20px', fontSize: '16px', lineHeight: '1.5', textAlign: 'center', color: '#374151'}}>
+                          {/* Body Text for form - Centered */}
+                          <p style={{marginBottom: '20px', fontSize: '16px', lineHeight: '1.5', textAlign: 'center', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                             {currentFlow.steps[currentFlowStep - 1].body}
                           </p>
                           
@@ -6356,20 +6350,9 @@ function App() {
                     
                     {/* Surrender Error Message */}
                     {surrenderError && (currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && (
-                      <div style={{
-                        marginTop: '12px',
-                        padding: '12px 16px',
-                        background: '#FEE2E2',
-                        border: '1px solid #FCA5A5',
-                        borderRadius: '7px',
-                        color: '#991B1B',
-                        fontSize: '14px',
-                        fontWeight: '500',
-                        textAlign: 'center',
-                        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
-                      }}>
+                      <p className="error-message" style={{width: '100%', textAlign: 'center'}}>
                         ❌ {surrenderError}
-                      </div>
+                      </p>
                     )}
                     
                     {/* Cancel/Back Button - Centered Below */}

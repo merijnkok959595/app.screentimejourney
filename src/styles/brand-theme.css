@@ -2308,19 +2308,19 @@ p, span, div {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  gap: 8px;
+  gap: 4px;
   width: 100%;
-  max-width: 300px;
+  max-width: 400px;
   height: 50px;
   margin: 12px auto 0;
 }
 
 .audio-visualizer-bar {
   flex: 1;
-  min-width: 8px;
+  min-width: 3px;
   height: 3px;
   background: linear-gradient(180deg, var(--brand-primary), var(--brand-primary-dark));
-  border-radius: 3px;
+  border-radius: 2px;
   transition: height 0.1s ease-out;
   will-change: height;
 }
