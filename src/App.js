@@ -2351,15 +2351,18 @@ function App() {
           // Move to step 2 (pincode display)
           setCurrentFlowStep(2);
         } else {
-          setSurrenderError(result.feedback || 'Surrender not approved. Please record the complete text clearly.');
+          // Show actual ChatGPT feedback (e.g., "Audio didn't match text" or "Recording unclear")
+          setSurrenderError(result.feedback || result.message || 'Your recording did not match the required text. Please try again.');
         }
       } else {
-        throw new Error(result.error || 'Failed to validate surrender');
+        // Show actual error from API
+        throw new Error(result.error || result.message || 'Unable to process audio file');
       }
 
     } catch (error) {
       console.error('❌ Error submitting surrender:', error);
-      setSurrenderError(error.message || 'Failed to submit surrender. Please try again.');
+      // Show actual error message (could be network, format, or API error)
+      setSurrenderError(error.message || 'Unable to process your recording. Please try again.');
     } finally {
       setSurrenderSubmitting(false);
     }
