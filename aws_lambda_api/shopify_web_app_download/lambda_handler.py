@@ -2626,9 +2626,26 @@ def validate_surrender(form_data) -> Dict[str, Any]:
         headers = {'Authorization': f'Bearer {api_key}'}
         
         # Prepare audio file for transcription
-        # Detect audio format from filename or default to webm
-        audio_filename = form_data.get('audio', {}).get('filename', 'surrender.webm')
-        audio_extension = audio_filename.split('.')[-1] if '.' in audio_filename else 'webm'
+        # Detect audio format from the raw audio data
+        # Try to detect format from magic bytes or default to webm
+        audio_filename = 'surrender.webm'  # Default filename
+        audio_extension = 'webm'  # Default extension
+        
+        # Try to detect audio format from magic bytes
+        if isinstance(audio_file, bytes) and len(audio_file) > 12:
+            # MP4/M4A magic bytes
+            if audio_file[4:8] == b'ftyp':
+                audio_extension = 'mp4'
+                audio_filename = 'surrender.mp4'
+            # WAV magic bytes
+            elif audio_file[:4] == b'RIFF' and audio_file[8:12] == b'WAVE':
+                audio_extension = 'wav'
+                audio_filename = 'surrender.wav'
+            # OGG magic bytes
+            elif audio_file[:4] == b'OggS':
+                audio_extension = 'ogg'
+                audio_filename = 'surrender.ogg'
+        
         mime_type = f'audio/{audio_extension}'
         
         print(f"🎵 Audio format detected: {audio_extension}, MIME: {mime_type}")
