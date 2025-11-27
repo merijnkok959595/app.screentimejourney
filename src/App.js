@@ -271,20 +271,12 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
   const progress = calculateProgress(deviceData, userGender, milestones);
   const { daysInFocus, progressPercentage, currentLevel, daysToNext, finalGoalDays } = progress;
   
-  // Extract first name - prioritize actual first_name, then username, then email
-  let firstName = "Friend"; // Default fallback
+  // Extract first name - only use if customerFirstName exists
+  let firstName = ""; // Default to empty (will just show "Hi,")
   
   if (customerFirstName && customerFirstName.trim()) {
     // Use actual first name if provided
     firstName = customerFirstName.charAt(0).toUpperCase() + customerFirstName.slice(1);
-  } else if (customerName && customerName.trim()) {
-    // Fallback to username without @ if present, capitalize first letter
-    firstName = customerName.replace('@', '');
-    firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
-  } else if (customerEmail && customerEmail.includes('@')) {
-    // Last fallback to email name
-    const emailName = customerEmail.split('@')[0];
-    firstName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
   }
   
   // Calculate percentile based on devices - 0% if no devices
@@ -309,7 +301,7 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
         </div>
 
         <div style={{paddingBottom: '8px'}}>
-          <h2 className="journey-greeting journey-greeting--big">Hi {firstName},</h2>
+          <h2 className="journey-greeting journey-greeting--big">Hi{firstName ? ` ${firstName}` : ''},</h2>
           <p className="journey-line" style={{marginBottom: '12px'}}>You are among the top <strong>{actualPercentile}%</strong> in the world 🌍</p>
           <p className="journey-line" style={{marginBottom: '12px'}}>Right now, you are <strong>{currentLevel.title} {currentLevel.emoji}</strong> with <strong>{daysInFocus}</strong> days in focus.</p>
           {currentLevel.milestone_fact && (
