@@ -314,9 +314,10 @@ p, span, div {
 
 .mobile-menu-actions .btn-primary,
 .mobile-menu-actions .btn-secondary {
-  height: 34px;
+  height: 48px; /* Match other mobile buttons */
   padding: 0 18px;
-  font-size: 13px;
+  font-size: 16px; /* Consistent with all mobile buttons */
+  font-weight: 600;
   flex: 1;
 }
 
@@ -1751,7 +1752,7 @@ p, span, div {
   .btn-outline-primary,
   .btn-secondary,
   .btn-outline-secondary {
-    font-size: 13px;
+    font-size: 16px; /* Consistent 16px for all mobile buttons - prevents iOS zoom */
     font-weight: 600;
     height: 48px;
     position: relative; /* Ensure animated effects work on mobile */
@@ -1759,8 +1760,15 @@ p, span, div {
   }
   
   .btn-tertiary {
-    font-size: 12px;
+    font-size: 16px; /* Match other buttons */
     font-weight: 600;
+  }
+  
+  .btn-danger,
+  .btn-success {
+    font-size: 16px; /* Consistent with other buttons */
+    font-weight: 600;
+    height: 48px;
   }
   
   /* === FORMS === */
