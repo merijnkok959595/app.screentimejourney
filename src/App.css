@@ -339,11 +339,12 @@ html, #root {
 .radio-label {
   font-size: 16px;
   font-weight: 500;
-  color: #374151;
+  color: #0F172A;
 }
 
 .radio-option input[type="radio"]:checked ~ .radio-label {
-  color: #667eea;
+  color: #0F172A;
+  font-weight: 500;
 }
 
 /* Phone Input Styles */
