@@ -403,7 +403,8 @@ p, span, div {
   color: #FFFFFF !important;
 }
 
-.btn-primary--animated {
+.btn-primary--animated,
+.btn-secondary.btn-primary--animated {
   animation: pulse-heartbeat 6.5s ease-in-out infinite;
 }
 
@@ -419,7 +420,8 @@ p, span, div {
   100% { left: 100%; }
 }
 
-.btn-primary--animated::after {
+.btn-primary--animated::after,
+.btn-secondary.btn-primary--animated::after {
   content: '';
   position: absolute;
   top: 0;
@@ -1118,8 +1120,11 @@ p, span, div {
 
 /* Pause animations behind modal to prevent flickering */
 .App:has(.modal-overlay.active) .btn-primary--animated,
+.App:has(.modal-overlay.active) .btn-secondary.btn-primary--animated,
 .App:has(.modal-overlay.active) .btn-primary--animated::after,
-.App:has(.modal-overlay.active) .btn-primary--animated::before {
+.App:has(.modal-overlay.active) .btn-secondary.btn-primary--animated::after,
+.App:has(.modal-overlay.active) .btn-primary--animated::before,
+.App:has(.modal-overlay.active) .btn-secondary.btn-primary--animated::before {
   animation-play-state: paused !important;
 }
 
