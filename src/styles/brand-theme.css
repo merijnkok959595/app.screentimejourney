@@ -1754,6 +1754,8 @@ p, span, div {
     font-size: 13px;
     font-weight: 600;
     height: 48px;
+    position: relative; /* Ensure animated effects work on mobile */
+    overflow: hidden; /* Ensure sheen effect stays within button */
   }
   
   .btn-tertiary {

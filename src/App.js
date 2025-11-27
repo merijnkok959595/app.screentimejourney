@@ -3724,11 +3724,23 @@ function App() {
       if (result.success && result.devices) {
         console.log(`✅ Loaded ${result.devices.length} devices from backend:`, result.devices);
         setDevices(result.devices);
+        
+        // Update percentile from API response (real-time calculation)
+        if (typeof result.percentile === 'number') {
+          setPercentile(result.percentile);
+          console.log(`📊 Real-time percentile updated: Top ${result.percentile}%`);
+        } else {
+          // Default to 0% if no devices
+          setPercentile(0);
+          console.log('📊 No percentile data, defaulting to 0%');
+        }
+        
         return result.devices; // Return the loaded devices
       } else {
         console.log('📱 No devices found in backend (success=false or devices empty), starting with empty array');
         console.log('📱 Full result:', JSON.stringify(result));
         setDevices([]);
+        setPercentile(0); // No devices = 0%
         return []; // Return empty array
       }
       
