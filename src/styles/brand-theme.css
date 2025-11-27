@@ -1116,11 +1116,15 @@ p, span, div {
   display: flex; 
 }
 
-/* Pause animations behind modal to prevent flickering */
-body:has(.modal-overlay.active) .btn-primary--animated,
-body:has(.modal-overlay.active) .btn-primary--animated::after,
-body:has(.modal-overlay.active) .btn-primary--animated::before {
+/* Stop all animations when modal is open to prevent flickering */
+body:has(.modal-overlay.active) * {
   animation-play-state: paused !important;
+}
+
+/* Except modal animations should continue */
+body:has(.modal-overlay.active) .modal-overlay.active *,
+body:has(.modal-overlay.active) .modal-overlay.active {
+  animation-play-state: running !important;
 }
 
 .modal { 
@@ -2315,16 +2319,16 @@ body:has(.modal-overlay.active) .btn-primary--animated::before {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  gap: 4px;
+  gap: 3px;
   width: 100%;
-  max-width: 400px;
+  max-width: 500px;
   height: 50px;
   margin: 12px auto 0;
 }
 
 .audio-visualizer-bar {
   flex: 1;
-  min-width: 3px;
+  min-width: 4px;
   height: 3px;
   background: linear-gradient(180deg, var(--brand-primary), var(--brand-primary-dark));
   border-radius: 2px;

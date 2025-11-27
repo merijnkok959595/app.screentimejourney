@@ -6092,8 +6092,8 @@ function App() {
                         </>
                       ) : currentFlow.steps[currentFlowStep - 1].step_type === 'form' ? (
                         <>
-                          {/* Body Text for form - Centered */}
-                          <p style={{marginBottom: '20px', fontSize: '16px', lineHeight: '1.5', textAlign: 'center', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
+                          {/* Body Text for form - Left aligned */}
+                          <p style={{marginBottom: '20px', fontSize: '16px', lineHeight: '1.5', textAlign: 'left', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                             {currentFlow.steps[currentFlowStep - 1].body}
                           </p>
                           
@@ -6351,7 +6351,7 @@ function App() {
                     {/* Surrender Error Message */}
                     {surrenderError && (currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && (
                       <p className="error-message" style={{width: '100%', textAlign: 'center'}}>
-                        ❌ {surrenderError}
+                        {surrenderError}
                       </p>
                     )}
                     
