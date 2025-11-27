@@ -396,6 +396,13 @@ p, span, div {
   color: #FFFFFF !important;
 }
 
+.btn-primary:hover span,
+.btn-primary:hover *,
+.btn-outline-primary:hover span,
+.btn-outline-primary:hover * {
+  color: #FFFFFF !important;
+}
+
 .btn-primary--animated {
   animation: pulse-heartbeat 6.5s ease-in-out infinite;
 }
@@ -503,7 +510,14 @@ p, span, div {
 
 .btn-secondary:hover,
 .btn-outline-secondary:hover {
-  color: #FFFFFF;
+  color: #FFFFFF !important;
+}
+
+.btn-secondary:hover span,
+.btn-secondary:hover *,
+.btn-outline-secondary:hover span,
+.btn-outline-secondary:hover * {
+  color: #FFFFFF !important;
 }
 
 .btn-secondary:hover::before,
