@@ -1116,15 +1116,11 @@ p, span, div {
   display: flex; 
 }
 
-/* Stop all animations when modal is open to prevent flickering */
-body:has(.modal-overlay.active) * {
+/* Pause animations behind modal to prevent flickering */
+.App:has(.modal-overlay.active) .btn-primary--animated,
+.App:has(.modal-overlay.active) .btn-primary--animated::after,
+.App:has(.modal-overlay.active) .btn-primary--animated::before {
   animation-play-state: paused !important;
-}
-
-/* Except modal animations should continue */
-body:has(.modal-overlay.active) .modal-overlay.active *,
-body:has(.modal-overlay.active) .modal-overlay.active {
-  animation-play-state: running !important;
 }
 
 .modal { 
