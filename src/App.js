@@ -5424,7 +5424,7 @@ function App() {
                 </button>
                 
                 {/* Cancel button - centered below */}
-                <div style={{display: 'flex', justifyContent: 'center', marginTop: '6px', width: '100%'}}>
+                <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
                   <button 
                     className="btn-tertiary"
                     onClick={() => {
@@ -7137,7 +7137,7 @@ function App() {
                     <span>→</span>
                   </button>
                   
-                  <div style={{display: 'flex', justifyContent: 'center', marginTop: '6px', width: '100%'}}>
+                  <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
                     <button
                       className="btn-tertiary"
                       onClick={closeCancelFlow}
@@ -7172,7 +7172,7 @@ function App() {
                     )}
                   </button>
                   
-                  <div style={{display: 'flex', justifyContent: 'center', marginTop: '6px', width: '100%'}}>
+                  <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
                     <button
                       className="btn-tertiary"
                       onClick={() => setCancelStep(2)}
@@ -7333,7 +7333,7 @@ function App() {
                 )}
               </button>
               
-              <div style={{display: 'flex', justifyContent: 'center', marginTop: '6px', width: '100%'}}>
+              <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
                 <button
                   className="btn-tertiary"
                   onClick={closeNotificationsFlow}
