@@ -2252,38 +2252,54 @@ function App() {
       }
       
       const mediaRecorder = new MediaRecorder(stream, options);
-      const audioChunks = [];
+      
+      // Store chunks in a ref-like variable attached to the recorder itself
+      // This ensures chunks persist across the recording lifecycle
+      mediaRecorder.audioChunks = [];
       
       mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunks.push(event.data);
-          console.log('📦 Audio chunk received:', event.data.size, 'bytes');
+        if (event.data && event.data.size > 0) {
+          mediaRecorder.audioChunks.push(event.data);
+          console.log('📦 Audio chunk received:', event.data.size, 'bytes, total chunks:', mediaRecorder.audioChunks.length);
         }
       };
       
       mediaRecorder.onstop = () => {
-        console.log('🛑 MediaRecorder stopped, creating blob...');
-        const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType });
-        console.log('🎵 Final audio blob:', audioBlob.size, 'bytes, type:', audioBlob.type);
+        console.log('🛑 MediaRecorder stopped');
+        console.log('📦 Total chunks collected:', mediaRecorder.audioChunks.length);
         
-        if (audioBlob.size === 0) {
-          console.error('❌ Empty blob!');
-          alert('Recording failed - empty audio file. Please try again.');
+        if (mediaRecorder.audioChunks.length === 0) {
+          console.error('❌ No audio chunks collected!');
+          alert('Recording failed - no audio data captured. Please try again.');
           return;
         }
         
-        // Determine file extension based on MIME type
-        let extension = 'webm'; // default
-        if (audioBlob.type.includes('ogg')) extension = 'ogg';
-        else if (audioBlob.type.includes('mp4')) extension = 'm4a';
-        else if (audioBlob.type.includes('webm')) extension = 'webm';
-        
-        const audioFile = new File([audioBlob], `surrender.${extension}`, { 
-          type: audioBlob.type 
-        });
-        
-        console.log('✅ Audio file created:', audioFile.name, audioFile.size, 'bytes');
-        setAudioBlob(audioFile);
+        // Give MediaRecorder time to finalize the last chunk
+        setTimeout(() => {
+          console.log('🔄 Creating final blob from', mediaRecorder.audioChunks.length, 'chunks...');
+          
+          const audioBlob = new Blob(mediaRecorder.audioChunks, { type: mediaRecorder.mimeType });
+          console.log('🎵 Final audio blob:', audioBlob.size, 'bytes, type:', audioBlob.type);
+          
+          if (audioBlob.size === 0) {
+            console.error('❌ Empty blob!');
+            alert('Recording failed - empty audio file. Please try again.');
+            return;
+          }
+          
+          // Determine file extension based on MIME type
+          let extension = 'webm'; // default
+          if (audioBlob.type.includes('ogg')) extension = 'ogg';
+          else if (audioBlob.type.includes('mp4')) extension = 'm4a';
+          else if (audioBlob.type.includes('webm')) extension = 'webm';
+          
+          const audioFile = new File([audioBlob], `surrender.${extension}`, { 
+            type: audioBlob.type 
+          });
+          
+          console.log('✅ Audio file created:', audioFile.name, audioFile.size, 'bytes');
+          setAudioBlob(audioFile);
+        }, 100); // 100ms delay to ensure final chunk is written
       };
       
       setMediaRecorder(mediaRecorder);
