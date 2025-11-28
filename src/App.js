@@ -4557,15 +4557,19 @@ function App() {
               />
             </a>
             
-            {/* Navigation Links - Empty for auth page */}
+            {/* Navigation Links */}
             <nav className="header-nav">
+              <a href="https://www.screentimejourney.com/pages/about-me" target="_self" rel="noopener noreferrer">About Me</a>
+              <a href="https://www.screentimejourney.com/products/screentimejourney" target="_self" rel="noopener noreferrer">Start Now</a>
+              <a href="https://www.screentimejourney.com/pages/milestones" target="_self" rel="noopener noreferrer">Milestones</a>
+              <a href="https://www.screentimejourney.com/pages/leaderboard" target="_self" rel="noopener noreferrer">Leaderboard</a>
             </nav>
             
             {/* Action Buttons */}
             <div className="header-actions">
               <div className="header-buttons-desktop">
-                <a className="btn-outline-primary" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">Home</a>
-                <a className="btn-primary" href="https://www.screentimejourney.com/customer_authentication/login?return_to=%2Fapps%2Fscreen-time-journey%3Fsource%3Dheader%26from%3D%2F" target="_self" rel="noopener noreferrer">Login</a>
+                <a className="btn-primary" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">Home</a>
+                <a className="btn-outline-primary" href="https://www.screentimejourney.com/customer_authentication/login?return_to=%2Fapps%2Fscreen-time-journey%3Fsource%3Dheader%26from%3D%2F" target="_self" rel="noopener noreferrer">Login</a>
               </div>
             </div>
           </div>
@@ -4579,11 +4583,11 @@ function App() {
             }}>
               <div className="card-header">
                 <h3 className="card-title" style={{ 
+                  textAlign: 'center',
+                  fontFamily: 'var(--font-heading)',
                   fontSize: '24px',
                   fontWeight: '600',
-                  color: '#0F172A',
-                  marginBottom: '8px',
-                  fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
+                  marginBottom: '8px'
                 }}>
                   Authentication Required
                 </h3>
@@ -4592,19 +4596,21 @@ function App() {
               <div style={{ padding: 'var(--spacing-lg)' }}>
                 <p style={{ 
                   fontSize: '16px', 
-                  color: '#64748B', 
+                  color: 'var(--brand-text)', 
                   marginBottom: '24px',
                   lineHeight: '1.6',
-                  fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
+                  fontFamily: 'var(--font-body)',
+                  textAlign: 'center'
                 }}>
                   Your session has expired or could not be verified. Please log in through your store to access your dashboard.
                 </p>
                 
                 <p style={{ 
                   fontSize: '14px', 
-                  color: '#94A3B8', 
+                  color: 'var(--text-muted)', 
                   marginBottom: '32px',
-                  fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
+                  fontFamily: 'var(--font-body)',
+                  textAlign: 'center'
                 }}>
                   For security purposes, you must authenticate through your Screen Time Journey account to access the dashboard.
                 </p>
@@ -4615,10 +4621,7 @@ function App() {
                     onClick={() => {
                       window.location.href = 'https://www.screentimejourney.com/customer_authentication/login?return_to=%2Fapps%2Fscreen-time-journey%3Fsource%3Dheader%26from%3D%2F';
                     }}
-                    style={{ 
-                      flex: 1,
-                      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
-                    }}
+                    style={{ flex: 1 }}
                   >
                     Login
                   </button>
@@ -4626,10 +4629,7 @@ function App() {
                   <button 
                     className="btn-secondary"
                     onClick={() => window.location.href = 'https://www.screentimejourney.com'}
-                    style={{ 
-                      flex: 1,
-                      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
-                    }}
+                    style={{ flex: 1 }}
                   >
                     Return to Home
                   </button>
@@ -4638,17 +4638,17 @@ function App() {
                 <details style={{
                   marginTop: '32px', 
                   padding: '16px', 
-                  backgroundColor: '#F8FAFC', 
-                  border: '1px solid #E2E8F0', 
-                  borderRadius: '8px',
+                  backgroundColor: 'var(--card-bg)', 
+                  border: '1px solid var(--brand-separator)', 
+                  borderRadius: 'var(--radius-md)',
                   textAlign: 'left'
                 }}>
                   <summary style={{ 
                     cursor: 'pointer', 
                     fontWeight: '500', 
-                    color: '#64748B',
+                    color: 'var(--text-muted)',
                     fontSize: '14px',
-                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                    fontFamily: 'var(--font-body)',
                     textAlign: 'center'
                   }}>
                     Technical Details
@@ -4656,7 +4656,7 @@ function App() {
                   <pre style={{
                     fontSize: '12px', 
                     marginTop: '12px',
-                    fontFamily: 'Monaco, Courier, monospace', 
+                    fontFamily: 'var(--font-mono)', 
                     color: 'var(--text-muted)',
                     whiteSpace: 'pre-wrap',
                     wordBreak: 'break-word'
