@@ -4547,7 +4547,7 @@ function App() {
           </div>
         </div>
 
-        <header className="header">
+        <header className="header" style={{ background: '#f9f9f9' }}>
           <div className="header-inner">
             {/* Logo */}
             <a className="header-logo" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">
@@ -4580,7 +4580,8 @@ function App() {
             <div className="modal" style={{ 
               maxWidth: '600px', 
               margin: '0 auto',
-              boxShadow: 'var(--shadow-sm)'
+              boxShadow: 'var(--shadow-sm)',
+              background: '#f9f9f9'
             }}>
               <div className="modal__header">
                 <h3 className="modal__title" style={{ textAlign: 'center' }}>
