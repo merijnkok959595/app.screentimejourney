@@ -2383,13 +2383,23 @@ function App() {
         console.log('✅ Recording stopped and cleaned up');
 
         // Scroll to bottom of the modal to show the submit button
-        setTimeout(() => {
+        // Try multiple times to ensure it works after state updates
+        const scrollToBottom = () => {
           const modal = document.querySelector('.modal__content');
           if (modal) {
             modal.scrollTo({ top: modal.scrollHeight, behavior: 'smooth' });
-            console.log('📍 Scrolled to bottom of modal');
+            console.log('📍 Scrolled modal to bottom, scrollHeight:', modal.scrollHeight);
+          } else {
+            console.log('⚠️ Modal not found, trying window scroll');
+            // Fallback: scroll window to bottom
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
           }
-        }, 100);
+        };
+        
+        // Execute scroll multiple times to handle React re-renders
+        setTimeout(scrollToBottom, 50);
+        setTimeout(scrollToBottom, 150);
+        setTimeout(scrollToBottom, 300);
 
         console.log('🛑 Stop recording completed');
       });
@@ -4311,32 +4321,54 @@ function App() {
             // Reload profile data to refresh activity logs
             await fetchProfileData();
             
-            // Now remove device permanently from DynamoDB
-            console.log('🗑️ Removing device from DynamoDB...');
-            const removeResponse = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/remove_device`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                customer_id: customerData?.customerId || extractCustomerId(),
-                device_id: currentFlow.deviceId
-              })
-            });
+            // Schedule device removal for later (when modal closes or after 15 seconds)
+            const deviceIdToRemove = currentFlow.deviceId;
+            const customerIdForRemoval = customerData?.customerId || extractCustomerId();
             
-            if (removeResponse.ok) {
-              const removeResult = await removeResponse.json();
-              console.log('✅ Device permanently removed from DynamoDB:', removeResult);
-              
-              // Remove device from local state
-              setDevices(prev => prev.filter(d => d.id !== currentFlow.deviceId));
-              console.log('🗑️ Device removed from local state');
-              
-            } else {
-              console.error('❌ Failed to remove device from DynamoDB:', removeResponse.status);
-              // Still remove from local state even if backend fails
-              setDevices(prev => prev.filter(d => d.id !== currentFlow.deviceId));
-            }
+            // Function to remove device
+            const removeDeviceFromBackend = async () => {
+              console.log('🗑️ Removing device from DynamoDB...');
+              try {
+                const removeResponse = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/remove_device`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    customer_id: customerIdForRemoval,
+                    device_id: deviceIdToRemove
+                  })
+                });
+                
+                if (removeResponse.ok) {
+                  const removeResult = await removeResponse.json();
+                  console.log('✅ Device permanently removed from DynamoDB:', removeResult);
+                } else {
+                  console.error('❌ Failed to remove device from DynamoDB:', removeResponse.status);
+                }
+                
+                // Remove device from local state
+                setDevices(prev => prev.filter(d => d.id !== deviceIdToRemove));
+                console.log('🗑️ Device removed from local state');
+              } catch (error) {
+                console.error('❌ Error removing device:', error);
+                // Still remove from local state even if backend fails
+                setDevices(prev => prev.filter(d => d.id !== deviceIdToRemove));
+              }
+            };
+            
+            // Set up delayed removal (15 seconds)
+            const removalTimeout = setTimeout(() => {
+              console.log('⏰ 15 seconds passed, removing device...');
+              removeDeviceFromBackend();
+            }, 15000);
+            
+            // Store timeout ID in currentFlow so we can trigger it early on modal close
+            setCurrentFlow(prev => ({
+              ...prev,
+              deviceRemovalTimeout: removalTimeout,
+              deviceRemovalFunction: removeDeviceFromBackend
+            }));
             
           } else {
             console.error('❌ Failed to auto-unlock device:', response.status);
@@ -4352,6 +4384,24 @@ function App() {
       setTimeout(autoUnlockDevice, 1000);
     }
   }, [showDeviceFlow, currentFlow, currentFlowStep, devices, customerData]);
+  
+  // Cleanup: Trigger device removal if user leaves page/closes browser
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (currentFlow?.deviceRemovalTimeout) {
+        console.log('👋 User leaving page, triggering device removal...');
+        clearTimeout(currentFlow.deviceRemovalTimeout);
+        if (currentFlow.deviceRemovalFunction) {
+          currentFlow.deviceRemovalFunction();
+        }
+      }
+    };
+    
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [currentFlow]);
   
   const unlockDevice = async (deviceId) => {
     const device = devices.find(d => d.id === deviceId);
@@ -6557,6 +6607,15 @@ function App() {
                         onClick={() => {
                           // Check if this is Step 2 with pincode display (Close button)
                           if (currentFlowStep === 2 && currentFlow.steps[currentFlowStep - 1]?.step_type === 'pincode_display') {
+                            // Trigger device removal immediately when user closes modal
+                            if (currentFlow.deviceRemovalTimeout) {
+                              console.log('🔄 User closed modal, triggering device removal now...');
+                              clearTimeout(currentFlow.deviceRemovalTimeout);
+                              if (currentFlow.deviceRemovalFunction) {
+                                currentFlow.deviceRemovalFunction();
+                              }
+                            }
+                            
                             // Close the entire modal
                             if (currentAudio) {
                               currentAudio.pause();
