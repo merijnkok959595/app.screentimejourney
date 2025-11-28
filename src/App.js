@@ -670,31 +670,28 @@ function App() {
       // Extract country code from existing WhatsApp number (e.g., "+31627207989" → "NL")
       const phoneWithCode = profileData.whatsapp;
       
-      // Common country code to country mapping
+      // Extended country code to country mapping (covers 50+ most common countries)
       const countryCodeMap = {
+        // North America
         '+1': 'US',
-        '+31': 'NL',
-        '+32': 'BE',
-        '+33': 'FR',
-        '+34': 'ES',
-        '+39': 'IT',
-        '+41': 'CH',
-        '+43': 'AT',
-        '+44': 'GB',
-        '+45': 'DK',
-        '+46': 'SE',
-        '+47': 'NO',
-        '+48': 'PL',
-        '+49': 'DE',
-        '+351': 'PT',
-        '+352': 'LU',
-        '+353': 'IE',
-        '+358': 'FI',
-        '+420': 'CZ',
-        '+61': 'AU',
-        '+81': 'JP',
-        '+86': 'CN',
-        '+91': 'IN'
+        // Europe
+        '+31': 'NL', '+32': 'BE', '+33': 'FR', '+34': 'ES', '+39': 'IT',
+        '+41': 'CH', '+43': 'AT', '+44': 'GB', '+45': 'DK', '+46': 'SE',
+        '+47': 'NO', '+48': 'PL', '+49': 'DE', '+351': 'PT', '+352': 'LU',
+        '+353': 'IE', '+358': 'FI', '+420': 'CZ', '+30': 'GR', '+36': 'HU',
+        '+40': 'RO', '+359': 'BG', '+385': 'HR', '+386': 'SI', '+421': 'SK',
+        // Middle East & Africa
+        '+20': 'EG', '+27': 'ZA', '+212': 'MA', '+213': 'DZ', '+216': 'TN',
+        '+234': 'NG', '+254': 'KE', '+966': 'SA', '+971': 'AE', '+972': 'IL',
+        '+974': 'QA', '+962': 'JO', '+961': 'LB', '+90': 'TR',
+        // Asia & Pacific
+        '+61': 'AU', '+64': 'NZ', '+81': 'JP', '+82': 'KR', '+86': 'CN',
+        '+91': 'IN', '+92': 'PK', '+93': 'AF', '+94': 'LK', '+95': 'MM',
+        '+60': 'MY', '+62': 'ID', '+63': 'PH', '+65': 'SG', '+66': 'TH',
+        '+84': 'VN', '+852': 'HK', '+886': 'TW', '+880': 'BD',
+        // Latin America
+        '+52': 'MX', '+54': 'AR', '+55': 'BR', '+56': 'CL', '+57': 'CO',
+        '+51': 'PE', '+58': 'VE', '+507': 'PA', '+506': 'CR'
       };
       
       // Try to match country code from WhatsApp number
