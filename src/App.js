@@ -4577,27 +4577,21 @@ function App() {
 
         <div className="container" style={{ marginTop: '40px' }}>
           <main className="dashboard">
-            <div className="card" style={{ 
+            <div className="modal" style={{ 
               maxWidth: '600px', 
               margin: '0 auto'
             }}>
-              <div className="card-header">
-                <h3 className="card-title" style={{ 
-                  textAlign: 'center',
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '24px',
-                  fontWeight: '600',
-                  marginBottom: '8px'
-                }}>
+              <div className="modal__header">
+                <h3 className="modal__title">
                   Authentication Required
                 </h3>
               </div>
               
-              <div style={{ padding: 'var(--spacing-lg)' }}>
+              <div className="modal__content">
                 <p style={{ 
                   fontSize: '16px', 
                   color: 'var(--brand-text)', 
-                  marginBottom: '24px',
+                  marginBottom: '20px',
                   lineHeight: '1.6',
                   fontFamily: 'var(--font-body)',
                   textAlign: 'center'
@@ -4614,29 +4608,29 @@ function App() {
                 }}>
                   For security purposes, you must authenticate through your Screen Time Journey account to access the dashboard.
                 </p>
+              </div>
 
-                <div style={{ display: 'flex', gap: '12px', justifyContent: 'stretch' }}>
-                  <button 
-                    className="btn-primary"
-                    onClick={() => {
-                      window.location.href = 'https://www.screentimejourney.com/customer_authentication/login?return_to=%2Fapps%2Fscreen-time-journey%3Fsource%3Dheader%26from%3D%2F';
-                    }}
-                    style={{ flex: 1 }}
-                  >
-                    Login
-                  </button>
-                  
-                  <button 
-                    className="btn-secondary"
-                    onClick={() => window.location.href = 'https://www.screentimejourney.com'}
-                    style={{ flex: 1 }}
-                  >
-                    Return to Home
-                  </button>
-                </div>
-
+              <div className="modal__footer">
+                <button 
+                  className="btn-primary"
+                  onClick={() => {
+                    window.location.href = 'https://www.screentimejourney.com/customer_authentication/login?return_to=%2Fapps%2Fscreen-time-journey%3Fsource%3Dheader%26from%3D%2F';
+                  }}
+                  style={{ width: '100%' }}
+                >
+                  Login
+                </button>
+                
+                <button 
+                  className="link-back"
+                  onClick={() => window.location.href = 'https://www.screentimejourney.com'}
+                >
+                  Return to Home
+                </button>
+              </div>
+              
                 <details style={{
-                  marginTop: '32px', 
+                  marginTop: '20px', 
                   padding: '16px', 
                   backgroundColor: 'var(--card-bg)', 
                   border: '1px solid var(--brand-separator)', 
