@@ -2274,9 +2274,14 @@ function App() {
           return;
         }
         
-        // Give MediaRecorder time to finalize the last chunk
+        // Give MediaRecorder more time to finalize all chunks
         setTimeout(() => {
           console.log('🔄 Creating final blob from', mediaRecorder.audioChunks.length, 'chunks...');
+          
+          // Log each chunk size for debugging
+          mediaRecorder.audioChunks.forEach((chunk, index) => {
+            console.log(`   Chunk ${index + 1}: ${chunk.size} bytes, type: ${chunk.type}`);
+          });
           
           const audioBlob = new Blob(mediaRecorder.audioChunks, { type: mediaRecorder.mimeType });
           console.log('🎵 Final audio blob:', audioBlob.size, 'bytes, type:', audioBlob.type);
@@ -2284,6 +2289,12 @@ function App() {
           if (audioBlob.size === 0) {
             console.error('❌ Empty blob!');
             alert('Recording failed - empty audio file. Please try again.');
+            return;
+          }
+          
+          if (audioBlob.size < 1000) {
+            console.error('❌ Audio file too small:', audioBlob.size, 'bytes');
+            alert('Recording too short or failed. Please try again.');
             return;
           }
           
@@ -2299,7 +2310,7 @@ function App() {
           
           console.log('✅ Audio file created:', audioFile.name, audioFile.size, 'bytes');
           setAudioBlob(audioFile);
-        }, 100); // 100ms delay to ensure final chunk is written
+        }, 300); // 300ms delay for more reliable chunk finalization
       };
       
       setMediaRecorder(mediaRecorder);
@@ -2352,9 +2363,9 @@ function App() {
         }
       };
 
-      // ✅ START RECORDING
-      mediaRecorder.start(1000); // Collect data every second
-      console.log('🔴 MediaRecorder started');
+      // ✅ START RECORDING - No timeslice = record as ONE chunk (more reliable)
+      mediaRecorder.start(); // Record entire session as single chunk
+      console.log('🔴 MediaRecorder started (recording as single chunk)');
       
       setIsRecording(true);
       updateAudioLevels();
