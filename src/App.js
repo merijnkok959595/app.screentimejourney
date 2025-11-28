@@ -6330,10 +6330,12 @@ function App() {
                           </div>
                           
                           {/* Body Text for video steps */}
-                          {currentFlow.steps[currentFlowStep - 1].body && (
+                          {(currentFlow.steps[currentFlowStep - 1].body || currentFlowStep === 3) && (
                             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px'}}>
                               <p style={{margin: 0, fontSize: '16px', lineHeight: '1.5', color: '#374151'}}>
-                                {currentFlow.steps[currentFlowStep - 1].body}
+                                {currentFlowStep === 3 
+                                  ? 'Download and install the VPN configuration profile for enhanced protection (optional).' 
+                                  : currentFlow.steps[currentFlowStep - 1].body}
                               </p>
                               {currentFlowStep === 4 && audioGuideData && (
                                 <button
