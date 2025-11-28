@@ -2146,6 +2146,70 @@ function App() {
   };
 
   // Voice recording functions for surrender
+  // Robust audio format selection based on browser and platform
+  const getBestAudioFormat = () => {
+    // Detect browser and platform
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isSafari = /safari/.test(userAgent) && !/chrome/.test(userAgent);
+    const isIOS = /iphone|ipad|ipod/.test(userAgent);
+    const isAndroid = /android/.test(userAgent);
+    const isChrome = /chrome/.test(userAgent) && !/edge/.test(userAgent);
+    const isFirefox = /firefox/.test(userAgent);
+    
+    console.log('🌐 Browser detection:', { isSafari, isIOS, isAndroid, isChrome, isFirefox });
+    
+    // Define format priority based on platform and browser
+    // Whisper API best supports: WebM Opus > OGG Opus > WAV > FLAC
+    let formatPriority = [];
+    
+    if (isIOS || (isSafari && !isIOS)) {
+      // iOS Safari and Desktop Safari: Prefer OGG/WAV (WebM support is limited)
+      formatPriority = [
+        'audio/ogg;codecs=opus',
+        'audio/wav',
+        'audio/webm;codecs=opus',
+        'audio/webm',
+        'audio/ogg'
+      ];
+    } else if (isAndroid) {
+      // Android: Prefer WebM Opus (best support)
+      formatPriority = [
+        'audio/webm;codecs=opus',
+        'audio/ogg;codecs=opus',
+        'audio/webm',
+        'audio/wav'
+      ];
+    } else if (isChrome || isFirefox) {
+      // Chrome/Firefox Desktop: WebM Opus is ideal
+      formatPriority = [
+        'audio/webm;codecs=opus',
+        'audio/ogg;codecs=opus',
+        'audio/webm',
+        'audio/wav'
+      ];
+    } else {
+      // Default fallback for other browsers
+      formatPriority = [
+        'audio/webm;codecs=opus',
+        'audio/ogg;codecs=opus',
+        'audio/wav',
+        'audio/webm'
+      ];
+    }
+    
+    // Test each format in priority order
+    for (const format of formatPriority) {
+      if (MediaRecorder.isTypeSupported(format)) {
+        console.log('✅ Selected audio format:', format);
+        return { mimeType: format };
+      }
+    }
+    
+    // No format specified - let browser choose default
+    console.log('⚠️ No preferred format supported, using browser default');
+    return {};
+  };
+
   const startRecording = async () => {
     try {
       console.log('🎤 Starting recording...');
@@ -2157,23 +2221,10 @@ function App() {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       console.log('✅ Got media stream');
       
-      // Choose compatible audio format - prefer formats that work reliably with Whisper API
-      // Priority: WebM Opus (best for Whisper), OGG Opus (fallback), WAV (universal fallback)
-      // Avoid MP4 from Safari as it uses incompatible codec with Whisper
-      let options = {};
-      if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
-        options.mimeType = 'audio/webm;codecs=opus';
-      } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
-        options.mimeType = 'audio/ogg;codecs=opus';
-      } else if (MediaRecorder.isTypeSupported('audio/webm')) {
-        options.mimeType = 'audio/webm';
-      } else if (MediaRecorder.isTypeSupported('audio/wav')) {
-        options.mimeType = 'audio/wav';
-      } else if (MediaRecorder.isTypeSupported('audio/ogg')) {
-        options.mimeType = 'audio/ogg';
-      }
+      // Get the best audio format for this browser/platform
+      const options = getBestAudioFormat();
       
-      console.log('🎙️ Using audio format:', options.mimeType || 'default');
+      console.log('🎙️ Using audio format:', options.mimeType || 'browser default');
       const recorder = new MediaRecorder(stream, options);
       const chunks = [];
 
