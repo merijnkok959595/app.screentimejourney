@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PhoneInput, { getCountryCallingCode, isPossiblePhoneNumber } from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
+import RecordRTC from 'recordrtc';
 import './App.css';
 import './styles/brand-theme.css';
 
@@ -629,6 +630,8 @@ function App() {
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
   const [mediaRecorder, setMediaRecorder] = useState(null);
+  const [recordRTC, setRecordRTC] = useState(null); // RecordRTC instance for reliable cross-browser recording
+  const [audioStream, setAudioStream] = useState(null); // Store stream for cleanup
   const [surrenderSubmitting, setSurrenderSubmitting] = useState(false);
   const [surrenderError, setSurrenderError] = useState('');
   const [audioLevels, setAudioLevels] = useState([]);
@@ -2207,76 +2210,41 @@ function App() {
     });
   };
 
-  // Voice recording functions for surrender
-  // Robust audio format selection based on browser and platform
-  const getBestAudioFormat = () => {
-    // Production-grade Safari detection (Chrome pretends to be Safari)
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    
-    console.log('🌐 Browser detection - isSafari:', isSafari);
-    
-    // Log all supported formats for debugging
-    const formats = ['audio/wav', 'audio/mp4', 'audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus', 'audio/ogg'];
-    console.log('📊 Supported formats:', formats.map(f => `${f}: ${MediaRecorder.isTypeSupported(f)}`).join(', '));
-    
-    if (isSafari) {
-      // Safari: Try formats that work with backend conversion
-      // Safari's MediaRecorder doesn't support WAV, so we use MP4 but rely on backend FFmpeg
-      if (MediaRecorder.isTypeSupported('audio/mp4')) {
-        console.log('🍎 Safari - using audio/mp4 (backend will convert via FFmpeg)');
-        return { mimeType: 'audio/mp4' };
-      }
-      
-      // Fallback: no format specified, let Safari choose default
-      console.log('🍎 Safari - using browser default (backend will convert)');
-      return {};
-    }
-    
-    // Chrome, Firefox, Edge, Android: Use WebM Opus (best Whisper compatibility)
-    if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
-      console.log('✅ Selected audio format: audio/webm;codecs=opus');
-      return { mimeType: 'audio/webm;codecs=opus' };
-    }
-    
-    if (MediaRecorder.isTypeSupported('audio/webm')) {
-      console.log('✅ Selected audio format: audio/webm');
-      return { mimeType: 'audio/webm' };
-    }
-    
-    // Final fallback
-    console.log('⚠️ Fallback to browser default');
-    return {};
-  };
+  // Voice recording functions for surrender - Using RecordRTC for reliability
+  // RecordRTC produces consistent WAV files that work perfectly with OpenAI Whisper
+  // No more browser-specific bugs, codec issues, or format incompatibilities!
 
   const startRecording = async () => {
     try {
-      console.log('🎤 Starting recording...');
-      setSurrenderError(''); // Clear any previous errors
+      console.log('🎤 Starting RecordRTC recording (WAV format for universal compatibility)...');
+      setSurrenderError('');
       
-      // Save scroll position to prevent page jump
       const scrollY = window.scrollY;
       
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Request microphone with audio enhancements
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true
+        }
+      });
       console.log('✅ Got media stream');
       
-      // Get the best audio format for this browser/platform
-      let options = getBestAudioFormat();
+      // Store stream for cleanup
+      setAudioStream(stream);
       
-      console.log('🎙️ Attempting audio format:', options.mimeType || 'browser default');
+      // ✅ CREATE RECORDRTC INSTANCE - UNIVERSAL WAV FORMAT
+      const recorder = new RecordRTC(stream, {
+        type: 'audio',
+        mimeType: 'audio/wav',
+        recorderType: RecordRTC.StereoAudioRecorder,
+        desiredSampRate: 16000, // Whisper-optimized
+        numberOfAudioChannels: 1 // Mono for smaller files
+      });
       
-      // Try to create MediaRecorder with the preferred format
-      let recorder;
-      try {
-        recorder = new MediaRecorder(stream, options);
-        console.log('✅ MediaRecorder created with format:', recorder.mimeType);
-      } catch (formatError) {
-        console.warn('⚠️ Format not supported, trying browser default:', formatError);
-        // If the format fails, try with no format specified (browser default)
-        recorder = new MediaRecorder(stream);
-        console.log('✅ MediaRecorder created with browser default:', recorder.mimeType);
-        options = {}; // Update options to reflect what we're using
-      }
-      const chunks = [];
+      console.log('✅ RecordRTC configured: WAV @ 16kHz mono');
+      setRecordRTC(recorder);
 
       // Reset recording time
       setRecordingTime(0);
@@ -2286,9 +2254,8 @@ function App() {
         setRecordingTime(prev => prev + 1);
       }, 1000);
       setRecordingTimer(timer);
-      console.log('⏰ Timer started');
 
-      // Set up audio visualization
+      // Audio visualization setup
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const analyserNode = audioCtx.createAnalyser();
       const source = audioCtx.createMediaStreamSource(stream);
@@ -2301,12 +2268,11 @@ function App() {
       setAudioContext(audioCtx);
       setAnalyser(analyserNode);
 
-      // Animation function for multiple audio bars arranged horizontally
+      // Visualization animation
       const updateAudioLevels = () => {
         if (analyserNode) {
           analyserNode.getByteFrequencyData(dataArray);
           
-          // Create multiple bars (30 bars for smooth visualization)
           const bars = [];
           const barCount = 30;
           const samplesPerBar = Math.floor(bufferLength / barCount);
@@ -2317,147 +2283,98 @@ function App() {
               sum += dataArray[i * samplesPerBar + j];
             }
             const average = sum / samplesPerBar;
-            const height = Math.max(4, (average / 255) * 100); // Minimum 4%, max 100%
+            const height = Math.max(4, (average / 255) * 100);
             bars.push(height);
           }
           
           setAudioLevels(bars);
           
-          // Continue animation while recording
           const newAnimationId = requestAnimationFrame(updateAudioLevels);
           setAnimationId(newAnimationId);
         }
       };
 
-      recorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          chunks.push(event.data);
-        }
-      };
-
-      recorder.onstop = () => {
-        // Use the same mimeType as recording for consistency
-        // If no mimeType was set, use the actual recorded type
-        const mimeType = options.mimeType || recorder.mimeType || 'audio/mp4';
-        
-        const blob = new Blob(chunks, { type: mimeType });
-        console.log('🎵 Audio blob created with type:', mimeType, 'size:', blob.size);
-        console.log('🎵 Actual recorder mimeType:', recorder.mimeType);
-        
-        // Determine file extension based on MIME type for backend processing
-        let extension = 'webm';
-        if (mimeType.includes('mp4') || mimeType.includes('mp4a') || mimeType.includes('m4a')) {
-          extension = 'm4a';
-        } else if (mimeType.includes('wav')) {
-          extension = 'wav';
-        } else if (mimeType.includes('ogg')) {
-          extension = 'ogg';
-        } else if (mimeType.includes('webm')) {
-          extension = 'webm';
-        }
-        
-        console.log('📁 Audio file extension:', extension);
-        
-        setAudioBlob(blob);
-        stream.getTracks().forEach(track => track.stop());
-        
-        // Clean up audio context
-        if (audioCtx) {
-          audioCtx.close();
-        }
-        setAudioLevels([]);
-      };
-
-      recorder.start();
-      console.log('📹 MediaRecorder started');
-      
-      setMediaRecorder(recorder);
-      console.log('💾 MediaRecorder set in state');
+      // ✅ START RECORDING
+      recorder.startRecording();
+      console.log('🔴 RecordRTC recording started');
       
       setIsRecording(true);
-      console.log('🔴 isRecording set to TRUE');
-      
-      // Start audio visualization immediately
       updateAudioLevels();
       
-      // Restore scroll position after state update to prevent page jump
       setTimeout(() => {
         window.scrollTo(0, scrollY);
       }, 0);
       
-      console.log('🎤 Recording started with audio visualization');
+      console.log('✅ Recording initialized successfully');
     } catch (error) {
       console.error('❌ Error starting recording:', error);
-      console.error('Error name:', error.name);
-      console.error('Error message:', error.message);
       
       if (error.name === 'NotAllowedError') {
         alert('Microphone access denied. Please allow microphone access in your browser settings.');
       } else if (error.name === 'NotFoundError') {
         alert('No microphone found. Please connect a microphone and try again.');
-      } else if (error.name === 'NotSupportedError') {
-        alert('Audio recording is not supported in this browser. Please try Chrome or Firefox.');
       } else {
-        alert('Failed to start recording: ' + error.message);
+        alert('Failed to start recording. Please try again.');
       }
     }
   };
 
   const stopRecording = () => {
-    console.log('🔍 stopRecording called with state:', {
-      mediaRecorder: !!mediaRecorder,
-      isRecording,
-      animationId,
-      recordingTimer: !!recordingTimer
-    });
+    console.log('🛑 Stopping RecordRTC recording...');
     
-    // Save scroll position to prevent page jump
     const scrollY = window.scrollY;
     
-    if (mediaRecorder && isRecording) {
-      console.log('🛑 Stopping recording...');
-      
-      // Stop animation first
+    if (recordRTC && isRecording) {
+      // Stop animation
       if (animationId) {
         cancelAnimationFrame(animationId);
         setAnimationId(null);
-        console.log('🎬 Animation stopped');
       }
       
-      // Stop recording
-      try {
-        mediaRecorder.stop();
-        console.log('📹 MediaRecorder.stop() called');
-      } catch (error) {
-        console.error('❌ Error stopping mediaRecorder:', error);
-      }
+      // ✅ STOP RECORDRTC AND GET BLOB
+      recordRTC.stopRecording(async () => {
+        // Get the WAV blob
+        const blob = recordRTC.getBlob();
+        console.log('🎵 WAV blob created:', blob.size, 'bytes');
+        
+        // ✅ CREATE FILE OBJECT WITH .WAV EXTENSION
+        const file = new File([blob], 'surrender.wav', { type: 'audio/wav' });
+        setAudioBlob(file);
+        
+        // Clean up stream
+        if (audioStream) {
+          audioStream.getTracks().forEach(track => track.stop());
+          setAudioStream(null);
+        }
+        
+        // Clean up audio context
+        if (audioContext) {
+          audioContext.close();
+          setAudioContext(null);
+        }
+        
+        setAudioLevels([]);
+        setRecordRTC(null);
+        
+        console.log('✅ Recording stopped and WAV file ready');
+      });
       
       setIsRecording(false);
-      setMediaRecorder(null);
-      console.log('🔄 State updated: isRecording=false, mediaRecorder=null');
       
       // Clear timer
       if (recordingTimer) {
         clearInterval(recordingTimer);
         setRecordingTimer(null);
-        console.log('⏰ Timer cleared');
       }
       
-      // Restore scroll position after state update to prevent page jump
-      // Use requestAnimationFrame to ensure DOM has updated before restoring scroll
+      // Restore scroll position
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           window.scrollTo(0, scrollY);
-          console.log('📍 Scroll position restored to:', scrollY);
         });
       });
       
       console.log('🛑 Recording stopped successfully');
-    } else {
-      console.log('⚠️ Cannot stop recording - conditions not met:', {
-        hasMediaRecorder: !!mediaRecorder,
-        isCurrentlyRecording: isRecording
-      });
     }
   };
 
