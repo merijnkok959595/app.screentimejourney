@@ -4539,7 +4539,7 @@ function App() {
         {/* Announcement Bar */}
         <div className="announcement-bar">
           <div className="container" style={{
-            fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+            fontFamily: 'var(--font-heading)',
             color: '#ffffff',
             fontWeight: 600
           }}>
@@ -4579,7 +4579,8 @@ function App() {
           <main className="dashboard">
             <div className="modal" style={{ 
               maxWidth: '600px', 
-              margin: '0 auto'
+              margin: '0 auto',
+              boxShadow: 'var(--shadow-sm)'
             }}>
               <div className="modal__header">
                 <h3 className="modal__title" style={{ textAlign: 'center' }}>
@@ -4591,22 +4592,12 @@ function App() {
                 <p style={{ 
                   fontSize: '16px', 
                   color: 'var(--brand-text)', 
-                  marginBottom: '20px',
+                  marginBottom: '24px',
                   lineHeight: '1.6',
                   fontFamily: 'var(--font-body)',
                   textAlign: 'center'
                 }}>
                   Your session has expired or could not be verified. Please log in through your store to access your dashboard.
-                </p>
-                
-                <p style={{ 
-                  fontSize: '14px', 
-                  color: 'var(--text-muted)', 
-                  marginBottom: '32px',
-                  fontFamily: 'var(--font-body)',
-                  textAlign: 'center'
-                }}>
-                  For security purposes, you must authenticate through your Screen Time Journey account to access the dashboard.
                 </p>
 
                 <details style={{
