@@ -2148,67 +2148,32 @@ function App() {
   // Voice recording functions for surrender
   // Robust audio format selection based on browser and platform
   const getBestAudioFormat = () => {
-    // Detect browser and platform
-    const userAgent = navigator.userAgent.toLowerCase();
-    const isSafari = /safari/.test(userAgent) && !/chrome/.test(userAgent);
-    const isIOS = /iphone|ipad|ipod/.test(userAgent);
-    const isAndroid = /android/.test(userAgent);
-    const isChrome = /chrome/.test(userAgent) && !/edge/.test(userAgent);
-    const isFirefox = /firefox/.test(userAgent);
+    // Production-grade Safari detection (Chrome pretends to be Safari)
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     
-    console.log('🌐 Browser detection:', { isSafari, isIOS, isAndroid, isChrome, isFirefox });
+    console.log('🌐 Browser detection - isSafari:', isSafari);
     
-    // Define format priority based on platform and browser
-    // Whisper API best supports: WebM Opus > OGG Opus > WAV > FLAC
-    let formatPriority = [];
-    
-    if (isIOS || (isSafari && !isIOS)) {
-      // iOS Safari and Desktop Safari: AVOID WebM (Safari generates corrupted WebM files)
-      // Safari's WebM has EBML header issues that fail in both Whisper and FFmpeg
-      formatPriority = [
-        'audio/wav',           // Best for Safari - no compression issues
-        'audio/mp4',           // M4A fallback
-        'audio/ogg;codecs=opus', // OGG as last resort
-        'audio/ogg'
-      ];
-      console.log('🍎 Safari detected - avoiding WebM format (known corruption bug)');
-    } else if (isAndroid) {
-      // Android: Prefer WebM Opus (best support)
-      formatPriority = [
-        'audio/webm;codecs=opus',
-        'audio/ogg;codecs=opus',
-        'audio/webm',
-        'audio/wav'
-      ];
-    } else if (isChrome || isFirefox) {
-      // Chrome/Firefox Desktop: WebM Opus is ideal
-      formatPriority = [
-        'audio/webm;codecs=opus',
-        'audio/ogg;codecs=opus',
-        'audio/webm',
-        'audio/wav'
-      ];
-    } else {
-      // Default fallback for other browsers
-      formatPriority = [
-        'audio/webm;codecs=opus',
-        'audio/ogg;codecs=opus',
-        'audio/wav',
-        'audio/webm'
-      ];
+    if (isSafari) {
+      // Safari MUST use audio/mp4 with AAC
+      // WebM on Safari produces corrupted files with EBML header errors
+      console.log('🍎 Safari detected - forcing audio/mp4 (ONLY reliable Safari format)');
+      return { mimeType: 'audio/mp4' };
     }
     
-    // Test each format in priority order
-    for (const format of formatPriority) {
-      if (MediaRecorder.isTypeSupported(format)) {
-        console.log('✅ Selected audio format:', format);
-        return { mimeType: format };
-      }
+    // Chrome, Firefox, Edge, Android: Use WebM Opus (best Whisper compatibility)
+    if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+      console.log('✅ Selected audio format: audio/webm;codecs=opus');
+      return { mimeType: 'audio/webm;codecs=opus' };
     }
     
-    // No format specified - let browser choose default
-    console.log('⚠️ No preferred format supported, using browser default');
-    return {};
+    if (MediaRecorder.isTypeSupported('audio/webm')) {
+      console.log('✅ Selected audio format: audio/webm');
+      return { mimeType: 'audio/webm' };
+    }
+    
+    // Final fallback
+    console.log('⚠️ Fallback to audio/mp4');
+    return { mimeType: 'audio/mp4' };
   };
 
   const startRecording = async () => {
@@ -2288,41 +2253,23 @@ function App() {
 
       recorder.onstop = () => {
         // Use the same mimeType as recording for consistency
-        let mimeType = options.mimeType || 'audio/wav';
-        if (!mimeType) {
-          // Fallback logic if no mimeType was set (should never happen now)
-          const userAgent = navigator.userAgent.toLowerCase();
-          const isSafari = /safari/.test(userAgent) && !/chrome/.test(userAgent);
-          
-          if (isSafari) {
-            // Safari: Avoid WebM due to corruption bugs
-            if (MediaRecorder.isTypeSupported('audio/wav')) {
-              mimeType = 'audio/wav';
-            } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
-              mimeType = 'audio/mp4';
-            } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
-              mimeType = 'audio/ogg;codecs=opus';
-            } else if (MediaRecorder.isTypeSupported('audio/ogg')) {
-              mimeType = 'audio/ogg';
-            }
-          } else {
-            // Other browsers: WebM is fine
-            if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
-              mimeType = 'audio/webm;codecs=opus';
-            } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
-              mimeType = 'audio/ogg;codecs=opus';
-            } else if (MediaRecorder.isTypeSupported('audio/webm')) {
-              mimeType = 'audio/webm';
-            } else if (MediaRecorder.isTypeSupported('audio/wav')) {
-              mimeType = 'audio/wav';
-            } else if (MediaRecorder.isTypeSupported('audio/ogg')) {
-              mimeType = 'audio/ogg';
-            }
-          }
-        }
+        const mimeType = options.mimeType || 'audio/mp4';
         
         const blob = new Blob(chunks, { type: mimeType });
         console.log('🎵 Audio blob created with type:', mimeType, 'size:', blob.size);
+        
+        // Determine file extension based on MIME type for backend processing
+        let extension = 'webm';
+        if (mimeType.includes('mp4')) {
+          extension = 'm4a';
+        } else if (mimeType.includes('wav')) {
+          extension = 'wav';
+        } else if (mimeType.includes('ogg')) {
+          extension = 'ogg';
+        }
+        
+        console.log('📁 Audio file extension:', extension);
+        
         setAudioBlob(blob);
         stream.getTracks().forEach(track => track.stop());
         
