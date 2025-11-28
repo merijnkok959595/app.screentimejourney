@@ -2322,6 +2322,13 @@ function App() {
   const stopRecording = () => {
     console.log('🛑 Stopping RecordRTC recording...');
     
+    // Capture current scroll positions BEFORE any changes
+    const modal = document.querySelector('.modal__content');
+    const modalScrollY = modal ? modal.scrollTop : 0;
+    const windowScrollY = window.scrollY;
+    
+    console.log('📍 Captured scroll - modal:', modalScrollY, 'window:', windowScrollY);
+    
     if (recordRTC && isRecording) {
       // Stop animation
       if (animationId) {
@@ -2382,24 +2389,24 @@ function App() {
 
         console.log('✅ Recording stopped and cleaned up');
 
-        // Scroll to bottom of the modal to show the submit button
-        // Try multiple times to ensure it works after state updates
-        const scrollToBottom = () => {
-          const modal = document.querySelector('.modal__content');
-          if (modal) {
-            modal.scrollTo({ top: modal.scrollHeight, behavior: 'smooth' });
-            console.log('📍 Scrolled modal to bottom, scrollHeight:', modal.scrollHeight);
-          } else {
-            console.log('⚠️ Modal not found, trying window scroll');
-            // Fallback: scroll window to bottom
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        // Prevent any scroll changes - lock scroll position
+        const preventScroll = () => {
+          const currentModal = document.querySelector('.modal__content');
+          if (currentModal) {
+            currentModal.scrollTop = modalScrollY;
+            console.log('🔒 Locked modal scroll at:', modalScrollY);
           }
+          window.scrollTo({ top: windowScrollY, behavior: 'instant' });
+          console.log('🔒 Locked window scroll at:', windowScrollY);
         };
         
-        // Execute scroll multiple times to handle React re-renders
-        setTimeout(scrollToBottom, 50);
-        setTimeout(scrollToBottom, 150);
-        setTimeout(scrollToBottom, 300);
+        // Execute immediately and after React re-renders
+        preventScroll();
+        requestAnimationFrame(preventScroll);
+        setTimeout(preventScroll, 0);
+        setTimeout(preventScroll, 50);
+        setTimeout(preventScroll, 100);
+        setTimeout(preventScroll, 200);
 
         console.log('🛑 Stop recording completed');
       });
@@ -4318,8 +4325,8 @@ function App() {
             const result = await response.json();
             console.log('✅ Device auto-unlocked successfully:', result);
             
-            // Reload profile data to refresh activity logs
-            await fetchProfileData();
+            // Don't reload profile data yet - wait until device is removed
+            // This prevents dashboard from refreshing while user is viewing Step 2
             
             // Schedule device removal for later (when modal closes or after 15 seconds)
             const deviceIdToRemove = currentFlow.deviceId;
@@ -4350,6 +4357,10 @@ function App() {
                 // Remove device from local state
                 setDevices(prev => prev.filter(d => d.id !== deviceIdToRemove));
                 console.log('🗑️ Device removed from local state');
+                
+                // Now reload profile data to refresh activity logs
+                await fetchProfileData();
+                console.log('🔄 Profile data reloaded after device removal');
               } catch (error) {
                 console.error('❌ Error removing device:', error);
                 // Still remove from local state even if backend fails
