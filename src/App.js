@@ -2322,7 +2322,9 @@ function App() {
   const stopRecording = () => {
     console.log('🛑 Stopping RecordRTC recording...');
     
+    // Capture scroll position BEFORE any state changes
     const scrollY = window.scrollY;
+    console.log('📍 Captured scroll position:', scrollY);
     
     if (recordRTC && isRecording) {
       // Stop animation
@@ -2348,12 +2350,16 @@ function App() {
         if (!blob || blob.size === 0) {
           console.error('❌ Empty WAV blob from RecordRTC!');
           alert('Recording failed - empty audio file. Please try again.');
+          // Restore scroll even on error
+          window.scrollTo({ top: scrollY, behavior: 'instant' });
           return;
         }
 
         if (blob.size < 8000) {
           console.error('❌ WAV file too small:', blob.size, 'bytes');
           alert('Recording too short. Please record for at least 5 seconds and try again.');
+          // Restore scroll even on error
+          window.scrollTo({ top: scrollY, behavior: 'instant' });
           return;
         }
 
@@ -2384,12 +2390,16 @@ function App() {
 
         console.log('✅ Recording stopped and cleaned up');
 
-        // Restore scroll position
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            window.scrollTo(0, scrollY);
-          });
-        });
+        // Restore scroll position with multiple attempts to ensure it sticks
+        const restoreScroll = () => {
+          window.scrollTo({ top: scrollY, behavior: 'instant' });
+          console.log('📍 Restored scroll to:', scrollY);
+        };
+        
+        restoreScroll();
+        requestAnimationFrame(restoreScroll);
+        setTimeout(restoreScroll, 0);
+        setTimeout(restoreScroll, 50);
 
         console.log('🛑 Stop recording completed');
       });
@@ -6532,24 +6542,23 @@ function App() {
                       </p>
                     )}
                     
-                    {/* Surrender Success Message - Green Box */}
+                    {/* Surrender Success Message - Green Box (same style as device unlocked) */}
                     {surrenderSuccess && (currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && (
                       <div style={{
                         width: '100%',
-                        background: '#10b981',
-                        border: '1px solid #059669',
+                        background: '#f0fdf4',
+                        border: '1px solid #bbf7d0',
                         borderRadius: '7px',
-                        padding: '16px 20px',
-                        marginBottom: '16px'
+                        padding: '12px',
+                        marginBottom: '16px',
+                        textAlign: 'center'
                       }}>
                         <p style={{
                           margin: 0,
-                          color: '#ffffff',
-                          fontSize: '15px',
-                          lineHeight: '1.6',
-                          textAlign: 'center',
-                          fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
-                          fontWeight: '500'
+                          fontSize: '13px',
+                          color: '#16a34a',
+                          fontWeight: '500',
+                          fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                         }}>
                           {surrenderSuccess}
                         </p>
@@ -6561,7 +6570,32 @@ function App() {
                       <button 
                         className="btn-tertiary"
                         onClick={() => {
-                          if (currentFlowStep === 1) {
+                          // Check if this is Step 2 with pincode display (Close button)
+                          if (currentFlowStep === 2 && currentFlow.steps[currentFlowStep - 1]?.step_type === 'pincode_display') {
+                            // Close the entire modal
+                            if (currentAudio) {
+                              currentAudio.pause();
+                              currentAudio.currentTime = 0;
+                              setCurrentAudio(null);
+                            }
+                            setShowDeviceFlow(false);
+                            setCurrentFlow(null);
+                            setCurrentFlowStep(1);
+                            setDeviceFormData({
+                              device_name: '',
+                              device_type: ''
+                            });
+                            setDeviceFormErrors({});
+                            setVpnProfileData(null);
+                            setAudioGuideData(null);
+                            setAudioHasBeenPlayed(false);
+                            setSharedPincode(null);
+                            setAudioBlob(null);
+                            setIsRecording(false);
+                            setSurrenderSubmitting(false);
+                            setSurrenderApproved(false);
+                            setUnlockPincode(null);
+                          } else if (currentFlowStep === 1) {
                             // Step 1: Cancel - Close flow and return to dashboard
                             if (currentAudio) {
                               currentAudio.pause();
