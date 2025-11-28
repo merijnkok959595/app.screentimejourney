@@ -2199,21 +2199,27 @@ function App() {
       setAudioContext(audioCtx);
       setAnalyser(analyserNode);
 
-      // Animation function for single connected audio bar
+      // Animation function for multiple audio bars arranged horizontally
       const updateAudioLevels = () => {
         if (analyserNode) {
           analyserNode.getByteFrequencyData(dataArray);
           
-          // Calculate average audio level across all frequencies
-          let sum = 0;
-          for (let i = 0; i < bufferLength; i++) {
-            sum += dataArray[i];
-          }
-          const average = sum / bufferLength;
-          const normalizedLevel = Math.max(5, (average / 255) * 100); // Minimum 5%, max 100%
+          // Create multiple bars (30 bars for smooth visualization)
+          const bars = [];
+          const barCount = 30;
+          const samplesPerBar = Math.floor(bufferLength / barCount);
           
-          // Store as single value instead of array
-          setAudioLevels([normalizedLevel]);
+          for (let i = 0; i < barCount; i++) {
+            let sum = 0;
+            for (let j = 0; j < samplesPerBar; j++) {
+              sum += dataArray[i * samplesPerBar + j];
+            }
+            const average = sum / samplesPerBar;
+            const height = Math.max(4, (average / 255) * 100); // Minimum 4%, max 100%
+            bars.push(height);
+          }
+          
+          setAudioLevels(bars);
           
           // Continue animation while recording
           const newAnimationId = requestAnimationFrame(updateAudioLevels);
@@ -5573,26 +5579,31 @@ function App() {
                                     {recordingTime}s
                                   </div>
                                   
-                                  {/* Audio Visualizer - Single Connected Bar */}
+                                  {/* Audio Visualizer - Small bars on horizontal X, moving vertically on Y */}
                                   <div style={{
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
+                                    gap: '3px',
                                     width: '100%',
-                                    maxWidth: '500px',
-                                    height: '40px',
+                                    maxWidth: '400px',
+                                    height: '50px',
                                     margin: '16px auto'
                                   }}>
-                                    <div
-                                      style={{
-                                        width: '100%',
-                                        maxWidth: '400px',
-                                        height: `${Math.min(40, Math.max(4, audioLevels[0] || 4))}px`,
-                                        background: 'linear-gradient(90deg, #8B5CF6, #A78BFA)',
-                                        borderRadius: '20px',
-                                        transition: 'height 0.05s ease-out'
-                                      }}
-                                    ></div>
+                                    {audioLevels.map((level, i) => (
+                                      <div
+                                        key={i}
+                                        style={{
+                                          flex: '1',
+                                          minWidth: '4px',
+                                          maxWidth: '12px',
+                                          height: `${Math.min(50, Math.max(4, level / 2))}px`,
+                                          background: '#2E0456',
+                                          borderRadius: '2px',
+                                          transition: 'height 0.08s ease-out'
+                                        }}
+                                      ></div>
+                                    ))}
                                   </div>
                                 </div>
                               </div>
@@ -5860,26 +5871,31 @@ function App() {
                                     {recordingTime}s
                                   </div>
                                   
-                                  {/* Audio Visualizer - Single Connected Bar */}
+                                  {/* Audio Visualizer - Small bars on horizontal X, moving vertically on Y */}
                                   <div style={{
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
+                                    gap: '3px',
                                     width: '100%',
-                                    maxWidth: '500px',
-                                    height: '40px',
+                                    maxWidth: '400px',
+                                    height: '50px',
                                     margin: '16px auto'
                                   }}>
-                                    <div
-                                      style={{
-                                        width: '100%',
-                                        maxWidth: '400px',
-                                        height: `${Math.min(40, Math.max(4, audioLevels[0] || 4))}px`,
-                                        background: 'linear-gradient(90deg, #8B5CF6, #A78BFA)',
-                                        borderRadius: '20px',
-                                        transition: 'height 0.05s ease-out'
-                                      }}
-                                    ></div>
+                                    {audioLevels.map((level, i) => (
+                                      <div
+                                        key={i}
+                                        style={{
+                                          flex: '1',
+                                          minWidth: '4px',
+                                          maxWidth: '12px',
+                                          height: `${Math.min(50, Math.max(4, level / 2))}px`,
+                                          background: '#2E0456',
+                                          borderRadius: '2px',
+                                          transition: 'height 0.08s ease-out'
+                                        }}
+                                      ></div>
+                                    ))}
                                   </div>
                                 </div>
                               </div>
