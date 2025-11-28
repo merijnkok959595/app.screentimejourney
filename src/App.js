@@ -2216,7 +2216,7 @@ function App() {
 
   const startRecording = async () => {
     try {
-      console.log('🎤 Starting RecordRTC recording (WAV format for universal compatibility)...');
+      console.log('🎤 Starting native MediaRecorder (browser codec → backend converts to MP3)...');
       setSurrenderError('');
       
       const scrollY = window.scrollY;
@@ -2226,7 +2226,8 @@ function App() {
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
-          autoGainControl: true
+          autoGainControl: true,
+          sampleRate: 16000 // Request 16kHz if supported
         }
       });
       console.log('✅ Got media stream');
@@ -2234,24 +2235,58 @@ function App() {
       // Store stream for cleanup
       setAudioStream(stream);
       
-      // ✅ CREATE RECORDRTC INSTANCE - UNIVERSAL WAV FORMAT
-      // Use StereoAudioRecorder which generates proper WAV files with PCM encoding
-      const recorder = new RecordRTC(stream, {
-        type: 'audio',
-        mimeType: 'audio/wav',
-        recorderType: RecordRTC.StereoAudioRecorder,
-        numberOfAudioChannels: 1, // Mono
-        desiredSampRate: 16000, // 16kHz for Whisper
-        timeSlice: 1000, // Get data every second for stability
-        bufferSize: 16384, // Larger buffer for better quality
-        // Ensure we get PCM WAV format
-        disableLogs: false
-      });
+      // ✅ USE NATIVE MEDIARECORDER - Let browser choose best codec
+      // Backend FFmpeg will convert to MP3 for Whisper
+      let options = { mimeType: '' };
+      if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+        options.mimeType = 'audio/webm;codecs=opus';
+        console.log('✅ Using WebM Opus codec');
+      } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
+        options.mimeType = 'audio/ogg;codecs=opus';
+        console.log('✅ Using OGG Opus codec');
+      } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
+        options.mimeType = 'audio/mp4';
+        console.log('✅ Using MP4 codec');
+      } else {
+        console.log('⚠️ No preferred codec, using browser default');
+      }
       
-      console.log('✅ RecordRTC configured: WAV @ 16kHz mono with PCM encoding');
-      console.log('📊 Recorder state:', recorder.state);
-      console.log('📊 Recorder type:', recorder.getInternalRecorder()?.constructor?.name);
-      setRecordRTC(recorder);
+      const mediaRecorder = new MediaRecorder(stream, options);
+      const audioChunks = [];
+      
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunks.push(event.data);
+          console.log('📦 Audio chunk received:', event.data.size, 'bytes');
+        }
+      };
+      
+      mediaRecorder.onstop = () => {
+        console.log('🛑 MediaRecorder stopped, creating blob...');
+        const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType });
+        console.log('🎵 Final audio blob:', audioBlob.size, 'bytes, type:', audioBlob.type);
+        
+        if (audioBlob.size === 0) {
+          console.error('❌ Empty blob!');
+          alert('Recording failed - empty audio file. Please try again.');
+          return;
+        }
+        
+        // Determine file extension based on MIME type
+        let extension = 'webm'; // default
+        if (audioBlob.type.includes('ogg')) extension = 'ogg';
+        else if (audioBlob.type.includes('mp4')) extension = 'm4a';
+        else if (audioBlob.type.includes('webm')) extension = 'webm';
+        
+        const audioFile = new File([audioBlob], `surrender.${extension}`, { 
+          type: audioBlob.type 
+        });
+        
+        console.log('✅ Audio file created:', audioFile.name, audioFile.size, 'bytes');
+        setAudioBlob(audioFile);
+      };
+      
+      setMediaRecorder(mediaRecorder);
 
       // Reset recording time
       setRecordingTime(0);
@@ -2302,8 +2337,8 @@ function App() {
       };
 
       // ✅ START RECORDING
-      recorder.startRecording();
-      console.log('🔴 RecordRTC recording started');
+      mediaRecorder.start(1000); // Collect data every second
+      console.log('🔴 MediaRecorder started');
       
       setIsRecording(true);
       updateAudioLevels();
@@ -2327,18 +2362,18 @@ function App() {
   };
 
   const stopRecording = () => {
-    console.log('🛑 Stopping RecordRTC recording...');
+    console.log('🛑 Stopping MediaRecorder...');
     
     const scrollY = window.scrollY;
     
-    if (recordRTC && isRecording) {
+    if (mediaRecorder && isRecording) {
       // Stop animation
       if (animationId) {
         cancelAnimationFrame(animationId);
         setAnimationId(null);
       }
       
-      // Clear timer FIRST
+      // Clear timer
       if (recordingTimer) {
         clearInterval(recordingTimer);
         setRecordingTimer(null);
@@ -2346,55 +2381,33 @@ function App() {
       
       setIsRecording(false);
       
-      // ✅ STOP RECORDRTC AND GET BLOB - USE CORRECT ASYNC PATTERN
-      recordRTC.stopRecording(() => {
-        console.log('🔄 RecordRTC stopped, getting blob...');
-        
-        // Get the WAV blob - THIS IS CRITICAL
-        const blob = recordRTC.getBlob();
-        console.log('🎵 WAV blob size:', blob.size, 'bytes');
-        console.log('🎵 WAV blob type:', blob.type);
-        
-        // Verify blob is not empty
-        if (!blob || blob.size === 0) {
-          console.error('❌ Empty blob received from RecordRTC!');
-          alert('Recording failed - empty audio file. Please try again.');
-          return;
-        }
-        
-        // ✅ CREATE FILE WITH PROPER WAV EXTENSION
-        const file = new File([blob], 'surrender.wav', { 
-          type: 'audio/wav',
-          lastModified: Date.now()
-        });
-        
-        console.log('📁 File created:', file.name, file.size, 'bytes', file.type);
-        setAudioBlob(file);
-        
-        // Clean up stream
-        if (audioStream) {
-          console.log('🧹 Stopping audio tracks...');
-          audioStream.getTracks().forEach(track => track.stop());
-          setAudioStream(null);
-        }
-        
-        // Clean up audio context
-        if (audioContext) {
-          console.log('🧹 Closing audio context...');
-          audioContext.close();
-          setAudioContext(null);
-        }
-        
-        setAudioLevels([]);
-        setRecordRTC(null);
-        
-        console.log('✅ Recording stopped and WAV file ready for submission');
-        
-        // Restore scroll position
+      // ✅ STOP MEDIARECORDER - onstop handler will process the blob
+      mediaRecorder.stop();
+      console.log('🔴 MediaRecorder stop signal sent');
+      
+      // Clean up stream
+      if (audioStream) {
+        console.log('🧹 Stopping audio tracks...');
+        audioStream.getTracks().forEach(track => track.stop());
+        setAudioStream(null);
+      }
+      
+      // Clean up audio context
+      if (audioContext) {
+        console.log('🧹 Closing audio context...');
+        audioContext.close();
+        setAudioContext(null);
+      }
+      
+      setAudioLevels([]);
+      setMediaRecorder(null);
+      
+      console.log('✅ Recording stopped and cleaned up');
+      
+      // Restore scroll position
+      requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            window.scrollTo(0, scrollY);
-          });
+          window.scrollTo(0, scrollY);
         });
       });
       
@@ -2444,25 +2457,18 @@ function App() {
         throw new Error('Audio blob is empty');
       }
       
-      // Read first 100 bytes to verify WAV header
-      const arrayBuffer = await audioBlob.slice(0, 100).arrayBuffer();
-      const headerBytes = new Uint8Array(arrayBuffer);
-      console.log('📊 First 44 bytes (WAV header):', Array.from(headerBytes.slice(0, 44)).map(b => b.toString(16).padStart(2, '0')).join(' '));
+      // Determine file extension from MIME type
+      let fileExtension = 'webm'; // default
+      if (audioBlob.type.includes('ogg')) fileExtension = 'ogg';
+      else if (audioBlob.type.includes('mp4')) fileExtension = 'm4a';
+      else if (audioBlob.type.includes('webm')) fileExtension = 'webm';
+      else if (audioBlob.type.includes('wav')) fileExtension = 'wav';
       
-      // Check for RIFF header
-      const riffHeader = String.fromCharCode(...headerBytes.slice(0, 4));
-      const waveHeader = String.fromCharCode(...headerBytes.slice(8, 12));
-      console.log('📊 RIFF header:', riffHeader, '(should be "RIFF")');
-      console.log('📊 WAVE header:', waveHeader, '(should be "WAVE")');
-      
-      if (riffHeader !== 'RIFF' || waveHeader !== 'WAVE') {
-        console.error('❌ CRITICAL: Invalid WAV file - missing RIFF/WAVE headers!');
-        throw new Error('Invalid WAV file format');
-      }
+      console.log('🎙️ Audio format:', audioBlob.type, '→ extension:', fileExtension);
+      console.log('📦 Backend will convert to MP3 for Whisper');
       
       // Create FormData for audio upload
       const formData = new FormData();
-      const fileExtension = 'wav'; // Always use WAV extension
       formData.append('audio', audioBlob, `surrender.${fileExtension}`);
       formData.append('user_id', customerData?.customerId || extractCustomerId());
       formData.append('device_id', currentFlow.deviceId);
@@ -2472,7 +2478,7 @@ function App() {
       console.log('  - Type:', audioBlob.type);
       console.log('  - Size:', audioBlob.size, 'bytes');
       console.log('  - Extension:', fileExtension);
-      console.log('  - Headers: VALID ✅');
+      console.log('  - Backend: Will convert to MP3 for Whisper');
       console.log('============================');
 
       // Submit to backend for ChatGPT validation
