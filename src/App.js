@@ -4581,7 +4581,7 @@ function App() {
               maxWidth: '600px', 
               margin: '0 auto',
               boxShadow: 'var(--shadow-sm)',
-              background: '#f9f9f9'
+              background: '#FFFFFF'
             }}>
               <div className="modal__header">
                 <h3 className="modal__title" style={{ textAlign: 'center' }}>
