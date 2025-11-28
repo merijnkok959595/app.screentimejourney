@@ -16,6 +16,8 @@ import uuid
 import secrets
 import random
 import base64
+import subprocess
+import tempfile
 from typing import Dict, Any, Tuple, Optional, List
 from datetime import datetime, timedelta
 import dateutil.parser
@@ -2640,55 +2642,123 @@ def validate_surrender(form_data) -> Dict[str, Any]:
         if not api_key:
             return json_resp({'error': 'OpenAI API key not configured'}, 500)
         
-        # Step 1: Transcribe audio using OpenAI Whisper
+        # Step 1: Transcribe audio using OpenAI Whisper (with auto-conversion fallback)
         print("🎤 Transcribing audio with Whisper...")
         
         headers = {'Authorization': f'Bearer {api_key}'}
         
-        # Prepare audio file for transcription
-        # Detect audio format from the raw audio data
-        # Try to detect format from magic bytes or default to webm
-        audio_filename = 'surrender.webm'  # Default filename
-        audio_extension = 'webm'  # Default extension
-        
-        # Try to detect audio format from magic bytes
+        # Detect audio format from magic bytes
+        audio_extension = 'webm'  # Default
         if isinstance(audio_file, bytes) and len(audio_file) > 12:
-            # MP4/M4A magic bytes
             if audio_file[4:8] == b'ftyp':
                 audio_extension = 'mp4'
-                audio_filename = 'surrender.mp4'
-            # WAV magic bytes
             elif audio_file[:4] == b'RIFF' and audio_file[8:12] == b'WAVE':
                 audio_extension = 'wav'
-                audio_filename = 'surrender.wav'
-            # OGG magic bytes
             elif audio_file[:4] == b'OggS':
                 audio_extension = 'ogg'
-                audio_filename = 'surrender.ogg'
+            elif audio_file[:4] == b'\x1aE\xdf\xa3':  # WebM/Matroska
+                audio_extension = 'webm'
         
-        mime_type = f'audio/{audio_extension}'
+        print(f"🎵 Audio format detected: {audio_extension}")
         
-        print(f"🎵 Audio format detected: {audio_extension}, MIME: {mime_type}")
+        # Helper function to try transcription
+        def try_transcription(audio_data, filename, mime):
+            files = {
+                'file': (filename, audio_data, mime),
+                'model': (None, 'whisper-1'),
+                'response_format': (None, 'json'),
+                'language': (None, 'en')
+            }
+            return requests.post(
+                'https://api.openai.com/v1/audio/transcriptions',
+                headers=headers,
+                files=files
+            )
         
-        files = {
-            'file': (audio_filename, audio_file, mime_type),
-            'model': (None, 'whisper-1'),
-            'response_format': (None, 'json'),
-            'language': (None, 'en')
-        }
-        
-        transcription_response = requests.post(
-            'https://api.openai.com/v1/audio/transcriptions',
-            headers=headers,
-            files=files
+        # Try transcription with original format
+        transcription_response = try_transcription(
+            audio_file,
+            f'surrender.{audio_extension}',
+            f'audio/{audio_extension}'
         )
         
+        # If transcription failed with 400 (format issue), try auto-conversion with FFmpeg
+        if not transcription_response.ok and transcription_response.status_code == 400:
+            error_msg = transcription_response.text
+            print(f"⚠️ First attempt failed (HTTP 400): {error_msg}")
+            print("🔄 Attempting auto-conversion with FFmpeg to OGG Opus...")
+            
+            try:
+                import subprocess
+                import tempfile
+                
+                # Write original audio to temp file
+                with tempfile.NamedTemporaryFile(delete=False, suffix=f'.{audio_extension}') as temp_input:
+                    temp_input.write(audio_file)
+                    temp_input_path = temp_input.name
+                
+                # Create output file path
+                temp_output_path = temp_input_path.replace(f'.{audio_extension}', '.ogg')
+                
+                # Convert to OGG Opus (widely supported by Whisper)
+                # -y: overwrite output
+                # -i: input file
+                # -vn: no video
+                # -c:a libopus: use Opus codec
+                # -b:a 96k: audio bitrate
+                # -ar 16000: sample rate (Whisper prefers 16kHz)
+                ffmpeg_cmd = [
+                    'ffmpeg',
+                    '-y',
+                    '-i', temp_input_path,
+                    '-vn',
+                    '-c:a', 'libopus',
+                    '-b:a', '96k',
+                    '-ar', '16000',
+                    temp_output_path
+                ]
+                
+                result = subprocess.run(
+                    ffmpeg_cmd,
+                    capture_output=True,
+                    text=True,
+                    timeout=30
+                )
+                
+                if result.returncode == 0 and os.path.exists(temp_output_path):
+                    # Read converted file
+                    with open(temp_output_path, 'rb') as f:
+                        converted_audio = f.read()
+                    
+                    print(f"✅ FFmpeg conversion successful: {len(converted_audio)} bytes")
+                    
+                    # Retry transcription with converted audio
+                    transcription_response = try_transcription(
+                        converted_audio,
+                        'surrender.ogg',
+                        'audio/ogg'
+                    )
+                    
+                    # Clean up temp files
+                    os.remove(temp_input_path)
+                    os.remove(temp_output_path)
+                else:
+                    print(f"❌ FFmpeg conversion failed: {result.stderr}")
+                    # Clean up temp files
+                    os.remove(temp_input_path)
+                    if os.path.exists(temp_output_path):
+                        os.remove(temp_output_path)
+            
+            except Exception as ffmpeg_error:
+                print(f"❌ FFmpeg conversion error: {str(ffmpeg_error)}")
+                # Continue with original error handling
+        
+        # Final error handling after potential conversion attempt
         if not transcription_response.ok:
             error_msg = transcription_response.text
             status_code = transcription_response.status_code
             print(f"❌ Transcription failed (HTTP {status_code}): {error_msg}")
             
-            # More specific error handling for transcription
             if status_code == 401:
                 return json_resp({
                     'success': False,
@@ -2696,7 +2766,6 @@ def validate_surrender(form_data) -> Dict[str, Any]:
                     'feedback': 'Audio processing service unavailable. Please try again later.'
                 }, 500)
             elif status_code == 400:
-                # Try to extract specific error from OpenAI response
                 try:
                     error_data = json.loads(error_msg)
                     specific_error = error_data.get('error', {}).get('message', 'Audio format not supported')
