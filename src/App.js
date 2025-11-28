@@ -2216,104 +2216,34 @@ function App() {
 
   const startRecording = async () => {
     try {
-      console.log('🎤 Starting native MediaRecorder (browser codec → backend converts to MP3)...');
+      console.log('🎤 Starting RecordRTC recording (WAV → backend converts to MP3)...');
       setSurrenderError('');
+      setAudioBlob(null);
       
       const scrollY = window.scrollY;
       
-      // Request microphone with audio enhancements
-      const stream = await navigator.mediaDevices.getUserMedia({ 
+      // Request microphone access
+      const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
-          autoGainControl: true,
-          sampleRate: 16000 // Request 16kHz if supported
+          autoGainControl: true
         }
       });
-      console.log('✅ Got media stream');
+      console.log('✅ Got media stream for RecordRTC');
       
       // Store stream for cleanup
       setAudioStream(stream);
-      
-      // ✅ USE NATIVE MEDIARECORDER - Let browser choose best codec
-      // Backend FFmpeg will convert to MP3 for Whisper
-      let options = { mimeType: '' };
-      if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
-        options.mimeType = 'audio/webm;codecs=opus';
-        console.log('✅ Using WebM Opus codec');
-      } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
-        options.mimeType = 'audio/ogg;codecs=opus';
-        console.log('✅ Using OGG Opus codec');
-      } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
-        options.mimeType = 'audio/mp4';
-        console.log('✅ Using MP4 codec');
-      } else {
-        console.log('⚠️ No preferred codec, using browser default');
-      }
-      
-      const mediaRecorder = new MediaRecorder(stream, options);
-      
-      // Store chunks in a ref-like variable attached to the recorder itself
-      // This ensures chunks persist across the recording lifecycle
-      mediaRecorder.audioChunks = [];
-      
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data && event.data.size > 0) {
-          mediaRecorder.audioChunks.push(event.data);
-          console.log('📦 Audio chunk received:', event.data.size, 'bytes, total chunks:', mediaRecorder.audioChunks.length);
-        }
-      };
-      
-      mediaRecorder.onstop = () => {
-        console.log('🛑 MediaRecorder stopped');
-        console.log('📦 Total chunks collected:', mediaRecorder.audioChunks.length);
-        
-        if (mediaRecorder.audioChunks.length === 0) {
-          console.error('❌ No audio chunks collected!');
-          alert('Recording failed - no audio data captured. Please try again.');
-          return;
-        }
-        
-        // Give MediaRecorder more time to finalize all chunks
-        setTimeout(() => {
-          console.log('🔄 Creating final blob from', mediaRecorder.audioChunks.length, 'chunks...');
-          
-          // Log each chunk size for debugging
-          mediaRecorder.audioChunks.forEach((chunk, index) => {
-            console.log(`   Chunk ${index + 1}: ${chunk.size} bytes, type: ${chunk.type}`);
-          });
-          
-          const audioBlob = new Blob(mediaRecorder.audioChunks, { type: mediaRecorder.mimeType });
-          console.log('🎵 Final audio blob:', audioBlob.size, 'bytes, type:', audioBlob.type);
-          
-          if (audioBlob.size === 0) {
-            console.error('❌ Empty blob!');
-            alert('Recording failed - empty audio file. Please try again.');
-            return;
-          }
-          
-          if (audioBlob.size < 1000) {
-            console.error('❌ Audio file too small:', audioBlob.size, 'bytes');
-            alert('Recording too short or failed. Please try again.');
-            return;
-          }
-          
-          // Determine file extension based on MIME type
-          let extension = 'webm'; // default
-          if (audioBlob.type.includes('ogg')) extension = 'ogg';
-          else if (audioBlob.type.includes('mp4')) extension = 'm4a';
-          else if (audioBlob.type.includes('webm')) extension = 'webm';
-          
-          const audioFile = new File([audioBlob], `surrender.${extension}`, { 
-            type: audioBlob.type 
-          });
-          
-          console.log('✅ Audio file created:', audioFile.name, audioFile.size, 'bytes');
-          setAudioBlob(audioFile);
-        }, 300); // 300ms delay for more reliable chunk finalization
-      };
-      
-      setMediaRecorder(mediaRecorder);
+
+      // ✅ CREATE RECORDRTC INSTANCE - WAV FORMAT
+      const recorder = new RecordRTC(stream, {
+        type: 'audio',
+        mimeType: 'audio/wav',
+        recorderType: RecordRTC.StereoAudioRecorder,
+        numberOfAudioChannels: 1 // mono is fine for voice and smaller files
+      });
+
+      setRecordRTC(recorder);
 
       // Reset recording time
       setRecordingTime(0);
@@ -2363,9 +2293,9 @@ function App() {
         }
       };
 
-      // ✅ START RECORDING - No timeslice = record as ONE chunk (more reliable)
-      mediaRecorder.start(); // Record entire session as single chunk
-      console.log('🔴 MediaRecorder started (recording as single chunk)');
+      // ✅ START RECORDING
+      recorder.startRecording();
+      console.log('🔴 RecordRTC recording started (WAV)');
       
       setIsRecording(true);
       updateAudioLevels();
@@ -2389,11 +2319,11 @@ function App() {
   };
 
   const stopRecording = () => {
-    console.log('🛑 Stopping MediaRecorder...');
+    console.log('🛑 Stopping RecordRTC recording...');
     
     const scrollY = window.scrollY;
     
-    if (mediaRecorder && isRecording) {
+    if (recordRTC && isRecording) {
       // Stop animation
       if (animationId) {
         cancelAnimationFrame(animationId);
@@ -2408,37 +2338,60 @@ function App() {
       
       setIsRecording(false);
       
-      // ✅ STOP MEDIARECORDER - onstop handler will process the blob
-      mediaRecorder.stop();
-      console.log('🔴 MediaRecorder stop signal sent');
-      
-      // Clean up stream
-      if (audioStream) {
-        console.log('🧹 Stopping audio tracks...');
-        audioStream.getTracks().forEach(track => track.stop());
-        setAudioStream(null);
-      }
-      
-      // Clean up audio context
-      if (audioContext) {
-        console.log('🧹 Closing audio context...');
-        audioContext.close();
-        setAudioContext(null);
-      }
-      
-      setAudioLevels([]);
-      setMediaRecorder(null);
-      
-      console.log('✅ Recording stopped and cleaned up');
-      
-      // Restore scroll position
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          window.scrollTo(0, scrollY);
+      // ✅ STOP RECORDRTC AND GET WAV BLOB
+      recordRTC.stopRecording(() => {
+        console.log('🔄 RecordRTC stopped, getting WAV blob...');
+        const blob = recordRTC.getBlob();
+        console.log('🎵 WAV blob size:', blob?.size, 'bytes, type:', blob?.type);
+
+        if (!blob || blob.size === 0) {
+          console.error('❌ Empty WAV blob from RecordRTC!');
+          alert('Recording failed - empty audio file. Please try again.');
+          return;
+        }
+
+        if (blob.size < 8000) {
+          console.error('❌ WAV file too small:', blob.size, 'bytes');
+          alert('Recording too short. Please record for at least 5 seconds and try again.');
+          return;
+        }
+
+        // ✅ CREATE FILE WITH .WAV EXTENSION
+        const file = new File([blob], 'surrender.wav', {
+          type: 'audio/wav'
         });
+
+        console.log('✅ WAV file created for upload:', file.name, file.size, 'bytes', file.type);
+        setAudioBlob(file);
+
+        // Clean up stream
+        if (audioStream) {
+          console.log('🧹 Stopping audio tracks...');
+          audioStream.getTracks().forEach(track => track.stop());
+          setAudioStream(null);
+        }
+
+        // Clean up audio context
+        if (audioContext) {
+          console.log('🧹 Closing audio context...');
+          audioContext.close();
+          setAudioContext(null);
+        }
+
+        setAudioLevels([]);
+        setRecordRTC(null);
+
+        console.log('✅ Recording stopped and cleaned up');
+
+        // Restore scroll position
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            window.scrollTo(0, scrollY);
+          });
+        });
+
+        console.log('🛑 Stop recording completed');
       });
-      
-      console.log('🛑 Stop recording initiated');
     }
   };
 
