@@ -1584,15 +1584,15 @@ function App() {
             customerId = extractCustomerId();
           }
           
+          // ✅ Match backend expected format (snake_case)
           const pincodePayload = {
             pincode: pincode,
             uuid: profileUUID,
-            deviceType: deviceFormData.device_type,
-            deviceName: deviceFormData.device_name || 'Unnamed Device',
-            userId: customerId || 'unknown',
-            createdAt: new Date().toISOString(),
-            profileType: 'cloudflare_warp',
-            timestamp: timestamp
+            device_type: deviceFormData.device_type,
+            device_name: deviceFormData.device_name || 'Unnamed Device',
+            customer_id: customerId || 'unknown',
+            method: 'create',
+            purpose: 'vpn_profile'
           };
             
           const storeResponse = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/store_pincode`, {
