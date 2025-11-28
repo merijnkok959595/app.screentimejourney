@@ -2235,15 +2235,22 @@ function App() {
       setAudioStream(stream);
       
       // ✅ CREATE RECORDRTC INSTANCE - UNIVERSAL WAV FORMAT
+      // Use StereoAudioRecorder which generates proper WAV files with PCM encoding
       const recorder = new RecordRTC(stream, {
         type: 'audio',
         mimeType: 'audio/wav',
         recorderType: RecordRTC.StereoAudioRecorder,
-        desiredSampRate: 16000, // Whisper-optimized
-        numberOfAudioChannels: 1 // Mono for smaller files
+        numberOfAudioChannels: 1, // Mono
+        desiredSampRate: 16000, // 16kHz for Whisper
+        timeSlice: 1000, // Get data every second for stability
+        bufferSize: 16384, // Larger buffer for better quality
+        // Ensure we get PCM WAV format
+        disableLogs: false
       });
       
-      console.log('✅ RecordRTC configured: WAV @ 16kHz mono');
+      console.log('✅ RecordRTC configured: WAV @ 16kHz mono with PCM encoding');
+      console.log('📊 Recorder state:', recorder.state);
+      console.log('📊 Recorder type:', recorder.getInternalRecorder()?.constructor?.name);
       setRecordRTC(recorder);
 
       // Reset recording time
@@ -2331,24 +2338,49 @@ function App() {
         setAnimationId(null);
       }
       
-      // ✅ STOP RECORDRTC AND GET BLOB
-      recordRTC.stopRecording(async () => {
-        // Get the WAV blob
-        const blob = recordRTC.getBlob();
-        console.log('🎵 WAV blob created:', blob.size, 'bytes');
+      // Clear timer FIRST
+      if (recordingTimer) {
+        clearInterval(recordingTimer);
+        setRecordingTimer(null);
+      }
+      
+      setIsRecording(false);
+      
+      // ✅ STOP RECORDRTC AND GET BLOB - USE CORRECT ASYNC PATTERN
+      recordRTC.stopRecording(() => {
+        console.log('🔄 RecordRTC stopped, getting blob...');
         
-        // ✅ CREATE FILE OBJECT WITH .WAV EXTENSION
-        const file = new File([blob], 'surrender.wav', { type: 'audio/wav' });
+        // Get the WAV blob - THIS IS CRITICAL
+        const blob = recordRTC.getBlob();
+        console.log('🎵 WAV blob size:', blob.size, 'bytes');
+        console.log('🎵 WAV blob type:', blob.type);
+        
+        // Verify blob is not empty
+        if (!blob || blob.size === 0) {
+          console.error('❌ Empty blob received from RecordRTC!');
+          alert('Recording failed - empty audio file. Please try again.');
+          return;
+        }
+        
+        // ✅ CREATE FILE WITH PROPER WAV EXTENSION
+        const file = new File([blob], 'surrender.wav', { 
+          type: 'audio/wav',
+          lastModified: Date.now()
+        });
+        
+        console.log('📁 File created:', file.name, file.size, 'bytes', file.type);
         setAudioBlob(file);
         
         // Clean up stream
         if (audioStream) {
+          console.log('🧹 Stopping audio tracks...');
           audioStream.getTracks().forEach(track => track.stop());
           setAudioStream(null);
         }
         
         // Clean up audio context
         if (audioContext) {
+          console.log('🧹 Closing audio context...');
           audioContext.close();
           setAudioContext(null);
         }
@@ -2356,25 +2388,17 @@ function App() {
         setAudioLevels([]);
         setRecordRTC(null);
         
-        console.log('✅ Recording stopped and WAV file ready');
-      });
-      
-      setIsRecording(false);
-      
-      // Clear timer
-      if (recordingTimer) {
-        clearInterval(recordingTimer);
-        setRecordingTimer(null);
-      }
-      
-      // Restore scroll position
-      requestAnimationFrame(() => {
+        console.log('✅ Recording stopped and WAV file ready for submission');
+        
+        // Restore scroll position
         requestAnimationFrame(() => {
-          window.scrollTo(0, scrollY);
+          requestAnimationFrame(() => {
+            window.scrollTo(0, scrollY);
+          });
         });
       });
       
-      console.log('🛑 Recording stopped successfully');
+      console.log('🛑 Stop recording initiated');
     }
   };
 
@@ -2407,15 +2431,49 @@ function App() {
         return;
       }
 
+      // ✅ EXTENSIVE LOGGING FOR DEBUGGING
+      console.log('==== AUDIO BLOB DETAILS ====');
+      console.log('📊 Blob type:', audioBlob.type);
+      console.log('📊 Blob size:', audioBlob.size, 'bytes');
+      console.log('📊 Blob instanceof File:', audioBlob instanceof File);
+      console.log('📊 Blob instanceof Blob:', audioBlob instanceof Blob);
+      
+      // Verify blob is valid
+      if (!audioBlob || audioBlob.size === 0) {
+        console.error('❌ CRITICAL: Audio blob is empty or null!');
+        throw new Error('Audio blob is empty');
+      }
+      
+      // Read first 100 bytes to verify WAV header
+      const arrayBuffer = await audioBlob.slice(0, 100).arrayBuffer();
+      const headerBytes = new Uint8Array(arrayBuffer);
+      console.log('📊 First 44 bytes (WAV header):', Array.from(headerBytes.slice(0, 44)).map(b => b.toString(16).padStart(2, '0')).join(' '));
+      
+      // Check for RIFF header
+      const riffHeader = String.fromCharCode(...headerBytes.slice(0, 4));
+      const waveHeader = String.fromCharCode(...headerBytes.slice(8, 12));
+      console.log('📊 RIFF header:', riffHeader, '(should be "RIFF")');
+      console.log('📊 WAVE header:', waveHeader, '(should be "WAVE")');
+      
+      if (riffHeader !== 'RIFF' || waveHeader !== 'WAVE') {
+        console.error('❌ CRITICAL: Invalid WAV file - missing RIFF/WAVE headers!');
+        throw new Error('Invalid WAV file format');
+      }
+      
       // Create FormData for audio upload
       const formData = new FormData();
-      // Use correct file extension based on blob type
-      const fileExtension = audioBlob.type.split('/')[1] || 'webm';
+      const fileExtension = 'wav'; // Always use WAV extension
       formData.append('audio', audioBlob, `surrender.${fileExtension}`);
       formData.append('user_id', customerData?.customerId || extractCustomerId());
       formData.append('device_id', currentFlow.deviceId);
       formData.append('surrender_text', currentFlow.steps[currentFlowStep - 1].surrender_text || surrenderText);
-      console.log('🎵 Sending audio with type:', audioBlob.type, 'extension:', fileExtension);
+      
+      console.log('🎵 Submitting audio:');
+      console.log('  - Type:', audioBlob.type);
+      console.log('  - Size:', audioBlob.size, 'bytes');
+      console.log('  - Extension:', fileExtension);
+      console.log('  - Headers: VALID ✅');
+      console.log('============================');
 
       // Submit to backend for ChatGPT validation
       const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/validate_surrender`, {
