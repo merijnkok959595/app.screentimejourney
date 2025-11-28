@@ -655,6 +655,10 @@ function App() {
     email_enabled: true,  // Email enabled by default
     whatsapp_enabled: false  // WhatsApp enabled when verified
   });
+  const [tempNotificationSettings, setTempNotificationSettings] = useState({
+    email_enabled: true,
+    whatsapp_enabled: false
+  });
   const [notificationsSubmitting, setNotificationsSubmitting] = useState(false);
 
   // Logs state
@@ -2713,15 +2717,19 @@ function App() {
 
   // Notification settings functions
   const startNotificationsFlow = () => {
+    // Copy current settings to temp state for editing
+    setTempNotificationSettings({...notificationSettings});
     setShowNotificationsFlow(true);
   };
 
   const closeNotificationsFlow = () => {
+    // Discard any changes made
     setShowNotificationsFlow(false);
   };
 
   const updateNotificationSetting = (key, value) => {
-    setNotificationSettings(prev => ({
+    // Update only the temporary state (not saved until "Save Settings" is clicked)
+    setTempNotificationSettings(prev => ({
       ...prev,
       [key]: value
     }));
@@ -2744,18 +2752,20 @@ function App() {
       
       if (isLocalDev) {
         // Mock submission for local development
-        console.log('🔧 Local dev: Mock notification settings saved', notificationSettings);
+        console.log('🔧 Local dev: Mock notification settings saved', tempNotificationSettings);
         await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API delay
         
+        // Save temp settings to real settings
+        setNotificationSettings({...tempNotificationSettings});
         closeNotificationsFlow();
         return;
       }
 
-      // Send simplified notification preferences
+      // Send simplified notification preferences from temp state
       const notificationPayload = {
         customer_id: customerId,
-        email_enabled: notificationSettings.email_enabled,
-        whatsapp_enabled: notificationSettings.whatsapp_enabled
+        email_enabled: tempNotificationSettings.email_enabled,
+        whatsapp_enabled: tempNotificationSettings.whatsapp_enabled
       };
 
       console.log('📤 Sending notification settings:', notificationPayload);
@@ -2781,10 +2791,14 @@ function App() {
 
       if (response.ok && result.success) {
         console.log('✅ Notification settings saved successfully');
+        // Save temp settings to real settings on success
+        setNotificationSettings({...tempNotificationSettings});
         closeNotificationsFlow();
       } else if (response.status === 404) {
         // Endpoint not implemented yet - save locally for now
         console.log('⚠️ Notification endpoint not implemented, saving locally');
+        // Save temp settings to real settings
+        setNotificationSettings({...tempNotificationSettings});
         closeNotificationsFlow();
       } else {
         const errorMessage = result?.error || result?.message || `Server error: ${response.status}`;
@@ -3135,10 +3149,12 @@ function App() {
         
         // Load notification settings from profile
         if (result.profile.email_enabled !== undefined || result.profile.whatsapp_enabled !== undefined) {
-          setNotificationSettings({
+          const loadedSettings = {
             email_enabled: result.profile.email_enabled !== undefined ? result.profile.email_enabled : true,
             whatsapp_enabled: result.profile.whatsapp_enabled !== undefined ? result.profile.whatsapp_enabled : false
-          });
+          };
+          setNotificationSettings(loadedSettings);
+          setTempNotificationSettings(loadedSettings); // Initialize temp state with loaded settings
           console.log('✅ Notification settings loaded:', {
             email: result.profile.email_enabled,
             whatsapp: result.profile.whatsapp_enabled
@@ -7421,7 +7437,7 @@ function App() {
                     <label style={{position: 'relative', display: 'inline-block', width: '44px', height: '24px', flexShrink: 0, marginLeft: '16px'}}>
                       <input
                         type="checkbox"
-                        checked={notificationSettings.email_enabled}
+                        checked={tempNotificationSettings.email_enabled}
                         onChange={(e) => updateNotificationSetting('email_enabled', e.target.checked)}
                         style={{opacity: 0, width: 0, height: 0}}
                       />
@@ -7432,7 +7448,7 @@ function App() {
                         left: 0,
                         right: 0,
                         bottom: 0,
-                        backgroundColor: notificationSettings.email_enabled ? '#2E0456' : '#ccc',
+                        backgroundColor: tempNotificationSettings.email_enabled ? '#2E0456' : '#ccc',
                         transition: '0.3s',
                         borderRadius: '24px'
                       }}>
@@ -7441,7 +7457,7 @@ function App() {
                           content: '',
                           height: '18px',
                           width: '18px',
-                          left: notificationSettings.email_enabled ? '23px' : '3px',
+                          left: tempNotificationSettings.email_enabled ? '23px' : '3px',
                           bottom: '3px',
                           backgroundColor: 'white',
                           transition: '0.3s',
@@ -7466,7 +7482,7 @@ function App() {
                     <label style={{position: 'relative', display: 'inline-block', width: '44px', height: '24px', flexShrink: 0, marginLeft: '16px'}}>
                       <input
                         type="checkbox"
-                        checked={notificationSettings.whatsapp_enabled}
+                        checked={tempNotificationSettings.whatsapp_enabled}
                         onChange={(e) => updateNotificationSetting('whatsapp_enabled', e.target.checked)}
                         style={{opacity: 0, width: 0, height: 0}}
                       />
@@ -7477,7 +7493,7 @@ function App() {
                         left: 0,
                         right: 0,
                         bottom: 0,
-                        backgroundColor: notificationSettings.whatsapp_enabled ? '#2E0456' : '#ccc',
+                        backgroundColor: tempNotificationSettings.whatsapp_enabled ? '#2E0456' : '#ccc',
                         transition: '0.3s',
                         borderRadius: '24px'
                       }}>
@@ -7486,7 +7502,7 @@ function App() {
                           content: '',
                           height: '18px',
                           width: '18px',
-                          left: notificationSettings.whatsapp_enabled ? '23px' : '3px',
+                          left: tempNotificationSettings.whatsapp_enabled ? '23px' : '3px',
                           bottom: '3px',
                           backgroundColor: 'white',
                           transition: '0.3s',
