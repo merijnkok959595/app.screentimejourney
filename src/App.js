@@ -2322,10 +2322,6 @@ function App() {
   const stopRecording = () => {
     console.log('🛑 Stopping RecordRTC recording...');
     
-    // Capture scroll position BEFORE any state changes
-    const scrollY = window.scrollY;
-    console.log('📍 Captured scroll position:', scrollY);
-    
     if (recordRTC && isRecording) {
       // Stop animation
       if (animationId) {
@@ -2350,16 +2346,12 @@ function App() {
         if (!blob || blob.size === 0) {
           console.error('❌ Empty WAV blob from RecordRTC!');
           alert('Recording failed - empty audio file. Please try again.');
-          // Restore scroll even on error
-          window.scrollTo({ top: scrollY, behavior: 'instant' });
           return;
         }
 
         if (blob.size < 8000) {
           console.error('❌ WAV file too small:', blob.size, 'bytes');
           alert('Recording too short. Please record for at least 5 seconds and try again.');
-          // Restore scroll even on error
-          window.scrollTo({ top: scrollY, behavior: 'instant' });
           return;
         }
 
@@ -2390,16 +2382,14 @@ function App() {
 
         console.log('✅ Recording stopped and cleaned up');
 
-        // Restore scroll position with multiple attempts to ensure it sticks
-        const restoreScroll = () => {
-          window.scrollTo({ top: scrollY, behavior: 'instant' });
-          console.log('📍 Restored scroll to:', scrollY);
-        };
-        
-        restoreScroll();
-        requestAnimationFrame(restoreScroll);
-        setTimeout(restoreScroll, 0);
-        setTimeout(restoreScroll, 50);
+        // Scroll to bottom of the modal to show the submit button
+        setTimeout(() => {
+          const modal = document.querySelector('.modal__content');
+          if (modal) {
+            modal.scrollTo({ top: modal.scrollHeight, behavior: 'smooth' });
+            console.log('📍 Scrolled to bottom of modal');
+          }
+        }, 100);
 
         console.log('🛑 Stop recording completed');
       });
@@ -6244,12 +6234,6 @@ function App() {
                                       </div>
                                     </div>
                                   )}
-                                  
-                                  <div style={{background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '7px', padding: '12px', marginTop: '16px', textAlign: 'center'}}>
-                                    <p style={{margin: 0, fontSize: '13px', color: '#16a34a', fontWeight: '500', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
-                                      ✅ Device unlocked and removed from monitoring
-                                    </p>
-                                  </div>
                                 </>
                               );
                             })()}
@@ -6550,7 +6534,8 @@ function App() {
                         border: '1px solid #bbf7d0',
                         borderRadius: '7px',
                         padding: '12px',
-                        marginBottom: '16px',
+                        marginTop: '12px',
+                        marginBottom: '20px',
                         textAlign: 'center'
                       }}>
                         <p style={{
