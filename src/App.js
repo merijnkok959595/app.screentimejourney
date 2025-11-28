@@ -4627,8 +4627,7 @@ function App() {
                 >
                   Return to Home
                 </button>
-              </div>
-              
+
                 <details style={{
                   marginTop: '20px', 
                   padding: '16px', 
