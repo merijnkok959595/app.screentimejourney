@@ -2153,12 +2153,21 @@ function App() {
     
     console.log('🌐 Browser detection - isSafari:', isSafari);
     
+    // Log all supported formats for debugging
+    const formats = ['audio/wav', 'audio/mp4', 'audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus', 'audio/ogg'];
+    console.log('📊 Supported formats:', formats.map(f => `${f}: ${MediaRecorder.isTypeSupported(f)}`).join(', '));
+    
     if (isSafari) {
-      // Safari MUST use audio/wav (uncompressed)
-      // Safari's WebM and MP4 both produce corrupted/unsupported files
-      // Only WAV works reliably across Safari and Whisper API
-      console.log('🍎 Safari detected - forcing audio/wav (ONLY format that works)');
-      return { mimeType: 'audio/wav' };
+      // Safari: Try formats that work with backend conversion
+      // Safari's MediaRecorder doesn't support WAV, so we use MP4 but rely on backend FFmpeg
+      if (MediaRecorder.isTypeSupported('audio/mp4')) {
+        console.log('🍎 Safari - using audio/mp4 (backend will convert via FFmpeg)');
+        return { mimeType: 'audio/mp4' };
+      }
+      
+      // Fallback: no format specified, let Safari choose default
+      console.log('🍎 Safari - using browser default (backend will convert)');
+      return {};
     }
     
     // Chrome, Firefox, Edge, Android: Use WebM Opus (best Whisper compatibility)
@@ -2173,8 +2182,8 @@ function App() {
     }
     
     // Final fallback
-    console.log('⚠️ Fallback to audio/wav');
-    return { mimeType: 'audio/wav' };
+    console.log('⚠️ Fallback to browser default');
+    return {};
   };
 
   const startRecording = async () => {
@@ -2189,10 +2198,22 @@ function App() {
       console.log('✅ Got media stream');
       
       // Get the best audio format for this browser/platform
-      const options = getBestAudioFormat();
+      let options = getBestAudioFormat();
       
-      console.log('🎙️ Using audio format:', options.mimeType || 'browser default');
-      const recorder = new MediaRecorder(stream, options);
+      console.log('🎙️ Attempting audio format:', options.mimeType || 'browser default');
+      
+      // Try to create MediaRecorder with the preferred format
+      let recorder;
+      try {
+        recorder = new MediaRecorder(stream, options);
+        console.log('✅ MediaRecorder created with format:', recorder.mimeType);
+      } catch (formatError) {
+        console.warn('⚠️ Format not supported, trying browser default:', formatError);
+        // If the format fails, try with no format specified (browser default)
+        recorder = new MediaRecorder(stream);
+        console.log('✅ MediaRecorder created with browser default:', recorder.mimeType);
+        options = {}; // Update options to reflect what we're using
+      }
       const chunks = [];
 
       // Reset recording time
@@ -2254,19 +2275,23 @@ function App() {
 
       recorder.onstop = () => {
         // Use the same mimeType as recording for consistency
-        const mimeType = options.mimeType || 'audio/mp4';
+        // If no mimeType was set, use the actual recorded type
+        const mimeType = options.mimeType || recorder.mimeType || 'audio/mp4';
         
         const blob = new Blob(chunks, { type: mimeType });
         console.log('🎵 Audio blob created with type:', mimeType, 'size:', blob.size);
+        console.log('🎵 Actual recorder mimeType:', recorder.mimeType);
         
         // Determine file extension based on MIME type for backend processing
         let extension = 'webm';
-        if (mimeType.includes('mp4')) {
+        if (mimeType.includes('mp4') || mimeType.includes('mp4a') || mimeType.includes('m4a')) {
           extension = 'm4a';
         } else if (mimeType.includes('wav')) {
           extension = 'wav';
         } else if (mimeType.includes('ogg')) {
           extension = 'ogg';
+        } else if (mimeType.includes('webm')) {
+          extension = 'webm';
         }
         
         console.log('📁 Audio file extension:', extension);
@@ -2301,7 +2326,18 @@ function App() {
       console.log('🎤 Recording started with audio visualization');
     } catch (error) {
       console.error('❌ Error starting recording:', error);
-      alert('Failed to start recording. Please check microphone permissions.');
+      console.error('Error name:', error.name);
+      console.error('Error message:', error.message);
+      
+      if (error.name === 'NotAllowedError') {
+        alert('Microphone access denied. Please allow microphone access in your browser settings.');
+      } else if (error.name === 'NotFoundError') {
+        alert('No microphone found. Please connect a microphone and try again.');
+      } else if (error.name === 'NotSupportedError') {
+        alert('Audio recording is not supported in this browser. Please try Chrome or Firefox.');
+      } else {
+        alert('Failed to start recording: ' + error.message);
+      }
     }
   };
 
