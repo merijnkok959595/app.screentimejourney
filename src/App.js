@@ -2199,27 +2199,21 @@ function App() {
       setAudioContext(audioCtx);
       setAnalyser(analyserNode);
 
-      // Animation function for audio bars
+      // Animation function for single connected audio bar
       const updateAudioLevels = () => {
         if (analyserNode) {
           analyserNode.getByteFrequencyData(dataArray);
           
-          // Create audio level bars (20 bars for visualization)
-          const bars = [];
-          const barCount = 20;
-          const samplesPerBar = Math.floor(bufferLength / barCount);
-          
-          for (let i = 0; i < barCount; i++) {
-            let sum = 0;
-            for (let j = 0; j < samplesPerBar; j++) {
-              sum += dataArray[i * samplesPerBar + j];
-            }
-            const average = sum / samplesPerBar;
-            const height = Math.max(5, (average / 255) * 100); // Minimum 5%, max 100%
-            bars.push(height);
+          // Calculate average audio level across all frequencies
+          let sum = 0;
+          for (let i = 0; i < bufferLength; i++) {
+            sum += dataArray[i];
           }
+          const average = sum / bufferLength;
+          const normalizedLevel = Math.max(5, (average / 255) * 100); // Minimum 5%, max 100%
           
-          setAudioLevels(bars);
+          // Store as single value instead of array
+          setAudioLevels([normalizedLevel]);
           
           // Continue animation while recording
           const newAnimationId = requestAnimationFrame(updateAudioLevels);
@@ -5579,17 +5573,26 @@ function App() {
                                     {recordingTime}s
                                   </div>
                                   
-                                  {/* Audio Visualizer */}
-                                  <div className="audio-visualizer">
-                                    {[...Array(24)].map((_, i) => (
-                                      <div
-                                        key={i}
-                                        className="audio-visualizer-bar"
-                                        style={{
-                                          height: `${Math.min(40, Math.max(3, (audioLevels[i % audioLevels.length] || 3)))}px`
-                                        }}
-                                      ></div>
-                                    ))}
+                                  {/* Audio Visualizer - Single Connected Bar */}
+                                  <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    width: '100%',
+                                    maxWidth: '500px',
+                                    height: '40px',
+                                    margin: '16px auto'
+                                  }}>
+                                    <div
+                                      style={{
+                                        width: '100%',
+                                        maxWidth: '400px',
+                                        height: `${Math.min(40, Math.max(4, audioLevels[0] || 4))}px`,
+                                        background: 'linear-gradient(90deg, #8B5CF6, #A78BFA)',
+                                        borderRadius: '20px',
+                                        transition: 'height 0.05s ease-out'
+                                      }}
+                                    ></div>
                                   </div>
                                 </div>
                               </div>
@@ -5857,17 +5860,26 @@ function App() {
                                     {recordingTime}s
                                   </div>
                                   
-                                  {/* Audio Visualizer */}
-                                  <div className="audio-visualizer">
-                                    {[...Array(24)].map((_, i) => (
-                                      <div
-                                        key={i}
-                                        className="audio-visualizer-bar"
-                                        style={{
-                                          height: `${Math.min(40, Math.max(3, (audioLevels[i % audioLevels.length] || 3)))}px`
-                                        }}
-                                      ></div>
-                                    ))}
+                                  {/* Audio Visualizer - Single Connected Bar */}
+                                  <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    width: '100%',
+                                    maxWidth: '500px',
+                                    height: '40px',
+                                    margin: '16px auto'
+                                  }}>
+                                    <div
+                                      style={{
+                                        width: '100%',
+                                        maxWidth: '400px',
+                                        height: `${Math.min(40, Math.max(4, audioLevels[0] || 4))}px`,
+                                        background: 'linear-gradient(90deg, #8B5CF6, #A78BFA)',
+                                        borderRadius: '20px',
+                                        transition: 'height 0.05s ease-out'
+                                      }}
+                                    ></div>
                                   </div>
                                 </div>
                               </div>
@@ -6779,7 +6791,7 @@ function App() {
               </div>
               <div style={{marginTop: 'auto', position: 'relative'}}>
                 <button 
-                  className={`btn-secondary ${devices.length > 0 && devices.length < 3 ? 'btn-primary--animated' : ''}`}
+                  className="btn-secondary"
                   style={{
                     width: '100%',
                     ...(devices.length >= 3 && {
