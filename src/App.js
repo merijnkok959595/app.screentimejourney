@@ -5709,17 +5709,6 @@ function App() {
                                       </>
                                     )}
                                   </button>
-                                  
-                                  {/* Microphone permission hint */}
-                                  {!isRecording && (
-                                    <div className="account-text" style={{textAlign: 'center', marginTop: '12px', fontSize: '13px'}}>
-                                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{verticalAlign: 'middle', marginRight: '4px'}}>
-                                        <circle cx="12" cy="12" r="10"/>
-                                        <path d="M12 6v6l4 2"/>
-                                      </svg>
-                                      Click to allow microphone access and start recording
-                                    </div>
-                                  )}
                                 </div>
                               ) : (
                                 <div style={{
@@ -6001,17 +5990,6 @@ function App() {
                                       </>
                                     )}
                                   </button>
-                                  
-                                  {/* Microphone permission hint */}
-                                  {!isRecording && (
-                                    <div className="account-text" style={{textAlign: 'center', marginTop: '12px', fontSize: '13px'}}>
-                                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{verticalAlign: 'middle', marginRight: '4px'}}>
-                                        <circle cx="12" cy="12" r="10"/>
-                                        <path d="M12 6v6l4 2"/>
-                                      </svg>
-                                      Click to allow microphone access and start recording
-                                    </div>
-                                  )}
                                 </div>
                               ) : (
                                 <div style={{
@@ -6450,43 +6428,58 @@ function App() {
                     
                     {/* Primary Action Button - hide for pincode display */}
                     {currentFlow.steps[currentFlowStep - 1]?.step_type !== 'pincode_display' && (
-                      <button
-                        className="btn-primary"
-                        onClick={nextFlowStep}
-                        disabled={
-                          surrenderSubmitting || 
-                          ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) ||
-                          (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && !audioGuideData)
-                        }
-                        style={{
-                          width: '100%',
-                          opacity: surrenderSubmitting || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && !audioGuideData) ? 0.7 : 1,
-                          cursor: surrenderSubmitting || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && !audioGuideData) ? 'not-allowed' : 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: '8px'
-                        }}
-                      >
-                        {surrenderSubmitting ? (
+                      <div style={{position: 'relative', width: '100%'}}>
+                        <button
+                          className="btn-primary"
+                          onClick={nextFlowStep}
+                          disabled={
+                            surrenderSubmitting || 
+                            ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) ||
+                            (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && !audioGuideData)
+                          }
+                          style={{
+                            width: '100%',
+                            cursor: (surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && !audioGuideData)) ? 'not-allowed' : 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '8px',
+                            pointerEvents: (surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && !audioGuideData)) ? 'none' : 'auto'
+                          }}
+                        >
+                          {surrenderSubmitting ? (
+                            <div style={{
+                              width: '20px',
+                              height: '20px',
+                              border: '2px solid transparent',
+                              borderTop: '2px solid white',
+                              borderRadius: '50%',
+                              animation: 'spin 1s linear infinite',
+                              margin: '0 auto'
+                            }}></div>
+                          ) : (
+                            <>
+                              <span>{currentFlow.steps && currentFlow.steps[currentFlowStep - 1] 
+                                ? currentFlow.steps[currentFlowStep - 1].action_button 
+                                : 'Next step'}</span>
+                              <span>→</span>
+                            </>
+                          )}
+                        </button>
+                        {/* Disabled overlay effect (like Maximum Reached) */}
+                        {(((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && !audioGuideData)) && (
                           <div style={{
-                            width: '20px',
-                            height: '20px',
-                            border: '2px solid transparent',
-                            borderTop: '2px solid white',
-                            borderRadius: '50%',
-                            animation: 'spin 1s linear infinite',
-                            margin: '0 auto'
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            background: 'rgba(255, 255, 255, 0.35)',
+                            borderRadius: '7px',
+                            pointerEvents: 'none'
                           }}></div>
-                        ) : (
-                          <>
-                            <span>{currentFlow.steps && currentFlow.steps[currentFlowStep - 1] 
-                              ? currentFlow.steps[currentFlowStep - 1].action_button 
-                              : 'Next step'}</span>
-                            <span>→</span>
-                          </>
                         )}
-                      </button>
+                      </div>
                     )}
                     
                     {/* Surrender Error Message */}
