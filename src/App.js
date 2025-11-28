@@ -4536,74 +4536,48 @@ function App() {
     console.error('❌ Error state:', error);
     return (
       <div className="App" style={{ background: 'var(--page-bg)', minHeight: '100vh' }}>
-        {/* Sticky Dashboard Header */}
-        <header className="dashboard-header">
-          <div className="dashboard-header-content">
+        {/* Announcement Bar */}
+        <div className="announcement-bar">
+          <div className="container" style={{
+            fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+            color: '#ffffff',
+            fontWeight: 600
+          }}>
+            🔒 Authentication Required
+          </div>
+        </div>
+
+        <header className="header">
+          <div className="header-inner">
             {/* Logo */}
-            <div className="dashboard-header-logo">
-              <a href="https://www.screentimejourney.com" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-                <img 
-                  src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/stj_favi_inverted_yellow_extra.png?v=1757864432" 
-                  alt="Screen Time Journey" 
-                  style={{
-                    width: '40px',
-                    height: '40px',
-                    transition: 'all 0.5s ease-in-out'
-                  }}
-                />
-              </a>
-            </div>
-
-            {/* Center - Empty for auth page */}
-            <div style={{ flex: 1 }}></div>
-
-            {/* Right - Login Button */}
-            <div className="dashboard-header-actions">
-              <a 
-                href="https://www.screentimejourney.com/account/login"
-                className="btn-primary"
-                style={{
-                  padding: '10px 20px',
-                  borderRadius: '8px',
-                  textDecoration: 'none',
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  whiteSpace: 'nowrap'
-                }}
-              >
-                Login
-              </a>
+            <a className="header-logo" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">
+              <img 
+                src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/stj_trimmed_png.png?v=1757864303" 
+                alt="Screen Time Journey Logo"
+              />
+            </a>
+            
+            {/* Navigation Links - Empty for auth page */}
+            <nav className="header-nav">
+            </nav>
+            
+            {/* Action Buttons */}
+            <div className="header-actions">
+              <div className="header-buttons-desktop">
+                <a className="btn-outline-primary" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">Home</a>
+                <a className="btn-primary" href="https://www.screentimejourney.com/account/login" target="_self" rel="noopener noreferrer">Login</a>
+              </div>
             </div>
           </div>
         </header>
 
-        <div className="container" style={{ marginTop: '100px' }}>
+        <div className="container" style={{ marginTop: '40px' }}>
           <main className="dashboard">
             <div className="card" style={{ 
               maxWidth: '600px', 
-              margin: '0 auto', 
-              textAlign: 'center',
-              border: '1px solid #e2e8f0',
-              borderRadius: '12px',
-              boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
+              margin: '0 auto'
             }}>
-              <div className="card-header" style={{ 
-                padding: '32px 24px 24px',
-                borderBottom: '1px solid #e2e8f0'
-              }}>
-                <div style={{
-                  width: '64px',
-                  height: '64px',
-                  margin: '0 auto 20px',
-                  background: 'linear-gradient(135deg, #2E0456 0%, #4A0E7A 100%)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '32px'
-                }}>
-                  🔒
-                </div>
+              <div className="card-header">
                 <h3 className="card-title" style={{ 
                   fontSize: '24px',
                   fontWeight: '600',
@@ -4615,7 +4589,7 @@ function App() {
                 </h3>
               </div>
               
-              <div style={{ padding: '32px 24px' }}>
+              <div style={{ padding: 'var(--spacing-lg)' }}>
                 <p style={{ 
                   fontSize: '16px', 
                   color: '#64748B', 
@@ -4635,39 +4609,32 @@ function App() {
                   For security purposes, you must authenticate through your Screen Time Journey account to access the dashboard.
                 </p>
 
-                <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: '12px', justifyContent: 'stretch' }}>
                   <button 
                     className="btn-primary"
                     onClick={() => {
-                      // Try to extract shop domain from URL params or use fallback
                       const urlParams = new URLSearchParams(window.location.search);
                       const shop = urlParams.get('shop');
                       const storeUrl = shop ? `https://${shop}/account/login` : 'https://www.screentimejourney.com/account/login';
                       window.location.href = storeUrl;
                     }}
                     style={{ 
-                      minWidth: '160px',
-                      padding: '12px 24px',
-                      fontSize: '15px',
-                      fontWeight: '500',
+                      flex: 1,
                       fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                     }}
                   >
-                    Go to Login
+                    Login
                   </button>
                   
                   <button 
                     className="btn-secondary"
-                    onClick={() => window.location.reload()}
+                    onClick={() => window.location.href = 'https://www.screentimejourney.com'}
                     style={{ 
-                      minWidth: '160px',
-                      padding: '12px 24px',
-                      fontSize: '15px',
-                      fontWeight: '500',
+                      flex: 1,
                       fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                     }}
                   >
-                    Retry Connection
+                    Return to Home
                   </button>
                 </div>
 
