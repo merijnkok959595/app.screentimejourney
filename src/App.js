@@ -634,6 +634,7 @@ function App() {
   const [audioStream, setAudioStream] = useState(null); // Store stream for cleanup
   const [surrenderSubmitting, setSurrenderSubmitting] = useState(false);
   const [surrenderError, setSurrenderError] = useState('');
+  const [surrenderSuccess, setSurrenderSuccess] = useState('');
   const [audioLevels, setAudioLevels] = useState([]);
   const [audioContext, setAudioContext] = useState(null);
   const [analyser, setAnalyser] = useState(null);
@@ -1420,7 +1421,7 @@ function App() {
             },
             {
               step: 2,
-              title: '🔓 Unlock Code',
+              title: 'Device Unlocked',
               body: 'Your surrender has been approved. Use the code below to unlock your device for 15 minutes.',
               step_type: 'pincode_display',
               action_button: 'Complete Unlock'
@@ -2478,14 +2479,17 @@ function App() {
           console.log('🔓 Surrender approved! Pincode generated:', result.pincode);
           console.log('📝 Transcript:', result.transcript);
           
-          // Show success feedback
-          alert(`✅ ${result.feedback}`);
+          // Show success feedback in green box
+          setSurrenderSuccess(result.feedback || '✅ You spoke it with weight. That matters. The surrender was real — and now, a new chapter begins. Choose what comes next with clarity.');
           
           // Send email with pincode
           await sendUnlockEmail(result.pincode);
           
-          // Move to step 2 (pincode display)
-          setCurrentFlowStep(2);
+          // Navigate to step 2 after 3 seconds
+          setTimeout(() => {
+            setCurrentFlowStep(2);
+            setSurrenderSuccess(''); // Clear success message
+          }, 3000);
         } else {
           // Show actual ChatGPT feedback (e.g., "Audio didn't match text" or "Recording unclear")
           setSurrenderError(result.feedback || result.message || 'Your recording did not match the required text. Please try again.');
@@ -2850,7 +2854,7 @@ function App() {
             },
             {
               step: 2,
-              title: '🔓 Unlock Code',
+              title: 'Device Unlocked',
               body: 'Your surrender has been approved. Use the code below to unlock your device for 15 minutes.',
               step_type: 'pincode_display',
               action_button: 'Complete Unlock'
@@ -6528,6 +6532,30 @@ function App() {
                       </p>
                     )}
                     
+                    {/* Surrender Success Message - Green Box */}
+                    {surrenderSuccess && (currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && (
+                      <div style={{
+                        width: '100%',
+                        background: '#10b981',
+                        border: '1px solid #059669',
+                        borderRadius: '7px',
+                        padding: '16px 20px',
+                        marginBottom: '16px'
+                      }}>
+                        <p style={{
+                          margin: 0,
+                          color: '#ffffff',
+                          fontSize: '15px',
+                          lineHeight: '1.6',
+                          textAlign: 'center',
+                          fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                          fontWeight: '500'
+                        }}>
+                          {surrenderSuccess}
+                        </p>
+                      </div>
+                    )}
+                    
                     {/* Cancel/Back Button - Centered Below */}
                     <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
                       <button 
@@ -6564,7 +6592,7 @@ function App() {
                           }
                         }}
                       >
-                        {currentFlowStep === 1 ? 'Cancel' : 'Back'}
+                        {currentFlowStep === 1 ? 'Cancel' : (currentFlowStep === 2 && currentFlow.steps[currentFlowStep - 1]?.step_type === 'pincode_display' ? 'Close' : 'Back')}
                       </button>
                     </div>
                   </div>
