@@ -796,10 +796,10 @@ function App() {
   }, [customerData?.customerId]);
 
   useEffect(() => {
-    // Load milestone data, percentile, and device flows when app starts
+    // Load milestone data and device flows when app starts
     fetchMilestoneData();
-    fetchPercentile();
     fetchDeviceFlows();
+    // Note: Percentile is calculated after devices are loaded (see devices useEffect)
     
     // Debug: Log current URL and authentication state
     console.log('🌐 App initialization debug:', {
@@ -1141,11 +1141,18 @@ function App() {
   };
 
   // Function to fetch user's percentile ranking
-  const fetchPercentile = async () => {
+  const fetchPercentile = async (devicesArray) => {
     try {
       const customerId = extractCustomerId();
       if (!customerId) {
-        console.log('⚠️ No customer ID, skipping percentile calculation');
+        console.log('ℹ️ No customer ID, using default percentile');
+        return;
+      }
+
+      // Only calculate percentile if user has devices
+      // Otherwise it returns 400 because there's no data to rank
+      if (!devicesArray || devicesArray.length === 0) {
+        console.log('ℹ️ No devices yet, using default percentile (will calculate after first device)');
         return;
       }
 
@@ -1159,7 +1166,7 @@ function App() {
       });
 
       if (!response.ok) {
-        console.log(`⚠️ Percentile API returned ${response.status}, using default 6%`);
+        console.log(`ℹ️ Percentile calculation unavailable, using default 6%`);
         return;
       }
 
@@ -1169,11 +1176,11 @@ function App() {
         setPercentile(result.percentile);
         console.log(`✅ Percentile calculated: Top ${result.percentile}%`);
       } else {
-        console.log('⚠️ Failed to calculate percentile, using default 6%');
+        console.log('ℹ️ No percentile data available, using default 6%');
       }
       
     } catch (error) {
-      console.error('❌ Error fetching percentile (non-critical):', error.message);
+      console.log('ℹ️ Percentile calculation unavailable, using default 6%');
       // Keep default percentile of 6% - this is non-critical, app continues to work
     }
   };
@@ -1311,11 +1318,13 @@ function App() {
               
               console.log(`✅ Loaded ${flowKey}:`, result.data.flow_name, `(${result.data.steps.length} steps)`);
             } else {
-              console.error(`❌ Invalid flow structure for ${flowKey}:`, result.data);
+              console.log(`ℹ️ ${flowKey} has invalid structure from API, will use fallback`);
             }
+          } else {
+            console.log(`ℹ️ ${flowKey} not available from API, will use fallback`);
           }
         } catch (error) {
-          console.error(`❌ Error fetching ${flowKey}:`, error);
+          console.log(`ℹ️ Could not fetch ${flowKey}, will use fallback`);
         }
       }
       
@@ -2845,8 +2854,7 @@ function App() {
     
     const flow = deviceFlows[flowType];
     if (!flow || !flow.steps || !Array.isArray(flow.steps) || flow.steps.length === 0) {
-      console.error('❌ Flow not found or invalid:', flowType, flow);
-      console.warn('⚠️ Flow not found in deviceFlows or invalid structure, using fallback:', flowType);
+      console.log(`ℹ️ Using fallback flow for ${flowType} (API flow not available)`);
       
       // Check if we have fallback flows available
       if (flowType === 'device_unlock_flow') {
@@ -2948,7 +2956,7 @@ function App() {
         return;
       }
       
-      console.error('❌ Flow not found even in fallback:', flowType);
+      console.log(`ℹ️ Flow ${flowType} not available (no API data and no fallback)`);
       alert('Sorry, the device flow is temporarily unavailable. Please try again later.');
       return;
     }
@@ -3955,10 +3963,14 @@ function App() {
         if (typeof result.percentile === 'number') {
           setPercentile(result.percentile);
           console.log(`📊 Real-time percentile updated: Top ${result.percentile}%`);
+        } else if (result.devices.length > 0) {
+          // If devices exist but percentile wasn't returned, calculate it
+          console.log('📊 Percentile not in response, calculating separately...');
+          fetchPercentile(result.devices);
         } else {
           // Default to 0% if no devices
           setPercentile(0);
-          console.log('📊 No percentile data, defaulting to 0%');
+          console.log('📊 No devices yet, percentile: 0%');
         }
         
         return result.devices; // Return the loaded devices
