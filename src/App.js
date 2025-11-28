@@ -4565,7 +4565,7 @@ function App() {
             <div className="header-actions">
               <div className="header-buttons-desktop">
                 <a className="btn-outline-primary" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">Home</a>
-                <a className="btn-primary" href="https://www.screentimejourney.com/account/login" target="_self" rel="noopener noreferrer">Login</a>
+                <a className="btn-primary" href="https://www.screentimejourney.com/customer_authentication/login?return_to=%2Fapps%2Fscreen-time-journey%3Fsource%3Dheader%26from%3D%2F" target="_self" rel="noopener noreferrer">Login</a>
               </div>
             </div>
           </div>
@@ -4613,10 +4613,7 @@ function App() {
                   <button 
                     className="btn-primary"
                     onClick={() => {
-                      const urlParams = new URLSearchParams(window.location.search);
-                      const shop = urlParams.get('shop');
-                      const storeUrl = shop ? `https://${shop}/account/login` : 'https://www.screentimejourney.com/account/login';
-                      window.location.href = storeUrl;
+                      window.location.href = 'https://www.screentimejourney.com/customer_authentication/login?return_to=%2Fapps%2Fscreen-time-journey%3Fsource%3Dheader%26from%3D%2F';
                     }}
                     style={{ 
                       flex: 1,
