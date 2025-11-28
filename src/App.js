@@ -1957,29 +1957,43 @@ function App() {
       return;
     }
     
-    console.log('📥 Downloading Cloudflare WARP profile:', vpnProfileData.filename);
+    console.log('📥 Opening profile for installation:', vpnProfileData.filename);
     console.log('🆔 Profile UUID:', vpnProfileData.profileUUID);
     console.log('🔑 PIN:', vpnProfileData.pincode);
     
-    // Generate and download profile directly from frontend
-      const blob = new Blob([vpnProfileData.profileContent], { 
-        type: 'application/x-apple-aspen-config' 
-      });
-      const url = window.URL.createObjectURL(blob);
+    // Create blob with correct MIME type for iOS/macOS profile
+    const blob = new Blob([vpnProfileData.profileContent], { 
+      type: 'application/x-apple-aspen-config' 
+    });
+    const url = window.URL.createObjectURL(blob);
+    
+    // Open in new window/tab to trigger iOS/macOS installation prompt
+    // This works better than download on iOS - it prompts for profile installation
+    window.open(url, '_blank');
+    
+    // Also create a fallback download link for desktop browsers
+    setTimeout(() => {
       const link = document.createElement('a');
       link.href = url;
       link.download = vpnProfileData.filename;
+      link.style.display = 'none';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
       
-    console.log('✅ Profile downloaded successfully!');
+      // Clean up after a delay
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+      }, 1000);
+    }, 100);
+      
+    console.log('✅ Profile opened for installation!');
     console.log('📝 User should:');
-    console.log('   1. Install profile on device');
-    console.log('   2. Download WARP app from App Store');
-    console.log('   3. Login with: screentimejourney');
-    console.log('   4. Save PIN for support:', vpnProfileData.pincode);
+    console.log('   1. Tap "Allow" when prompted to install profile');
+    console.log('   2. Go to Settings > Profile Downloaded > Install');
+    console.log('   3. Download WARP app from App Store');
+    console.log('   4. Login with: screentimejourney');
+    console.log('   5. Save PIN for support:', vpnProfileData.pincode);
   };
 
   // Audio Guide generation functions
