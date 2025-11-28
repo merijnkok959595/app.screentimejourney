@@ -6330,7 +6330,7 @@ function App() {
                           </div>
                           
                           {/* Body Text for video steps */}
-                          {(currentFlow.steps[currentFlowStep - 1].body || currentFlowStep === 3) && (
+                          {(currentFlow.steps[currentFlowStep - 1].body || currentFlowStep === 3) && currentFlowStep !== 4 && (
                             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px'}}>
                               <p style={{margin: 0, fontSize: '16px', lineHeight: '1.5', color: '#374151'}}>
                                 {currentFlowStep === 3 
