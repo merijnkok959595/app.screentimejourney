@@ -664,34 +664,51 @@ function App() {
   // Payment wall state
   const [showPaymentWall, setShowPaymentWall] = useState(false);
 
-  // Geo-IP detection for automatic country selection
+  // Set country code from user's existing WhatsApp number in DynamoDB
   useEffect(() => {
-    const detectCountry = async () => {
-      try {
-        // Use ipapi.co for free geo-IP detection
-        const response = await fetch('https://ipapi.co/json/', {
-          signal: AbortSignal.timeout(3000) // 3 second timeout
-        });
-        
-        // Check for rate limit or error status
-        if (response.status === 429 || response.status >= 400) {
-          console.warn('⚠️ Country detection unavailable (rate limited or error), using default');
+    if (profileData?.whatsapp) {
+      // Extract country code from existing WhatsApp number (e.g., "+31627207989" → "NL")
+      const phoneWithCode = profileData.whatsapp;
+      
+      // Common country code to country mapping
+      const countryCodeMap = {
+        '+1': 'US',
+        '+31': 'NL',
+        '+32': 'BE',
+        '+33': 'FR',
+        '+34': 'ES',
+        '+39': 'IT',
+        '+41': 'CH',
+        '+43': 'AT',
+        '+44': 'GB',
+        '+45': 'DK',
+        '+46': 'SE',
+        '+47': 'NO',
+        '+48': 'PL',
+        '+49': 'DE',
+        '+351': 'PT',
+        '+352': 'LU',
+        '+353': 'IE',
+        '+358': 'FI',
+        '+420': 'CZ',
+        '+61': 'AU',
+        '+81': 'JP',
+        '+86': 'CN',
+        '+91': 'IN'
+      };
+      
+      // Try to match country code from WhatsApp number
+      for (const [code, country] of Object.entries(countryCodeMap)) {
+        if (phoneWithCode.startsWith(code)) {
+          setDetectedCountry(country);
+          console.log(`✅ Country detected from profile: ${country} (${code})`);
           return;
         }
-        
-        const data = await response.json();
-        if (data.country_code) {
-          setDetectedCountry(data.country_code);
-          console.log('✅ Detected country:', data.country_code);
-        }
-      } catch (error) {
-        // Silently fail - user can manually select country
-        console.log('ℹ️ Country detection unavailable, using default (NL)');
-        // Keep default country (NL)
       }
-    };
-    detectCountry();
-  }, []);
+    }
+    // Default to NL if no WhatsApp or country code not recognized
+    console.log('ℹ️ Using default country: NL');
+  }, [profileData]);
 
   // Countdown timer for resend cooldown
   useEffect(() => {
