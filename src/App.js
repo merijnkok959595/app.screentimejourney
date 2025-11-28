@@ -353,7 +353,7 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
 };
 
 // Audio Player Component
-function AudioPlayer({ audioUrl }) {
+function AudioPlayer({ audioUrl, onPlay }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -411,6 +411,10 @@ function AudioPlayer({ audioUrl }) {
         await audio.play();
         setIsPlaying(true);
         console.log('✅ Audio playing');
+        // Call onPlay callback when audio starts playing
+        if (onPlay) {
+          onPlay();
+        }
       }
     } catch (error) {
       console.error('❌ Audio playback error:', error);
@@ -612,6 +616,7 @@ function App() {
   // Audio Guide state
   const [audioGuideData, setAudioGuideData] = useState(null);
   const [audioGenerating, setAudioGenerating] = useState(false);
+  const [audioHasBeenPlayed, setAudioHasBeenPlayed] = useState(false);
   
   // Shared pincode state - ONE pincode for both VPN and audio
   const [sharedPincode, setSharedPincode] = useState(null);
@@ -2382,9 +2387,13 @@ function App() {
       }
       
       // Restore scroll position after state update to prevent page jump
-      setTimeout(() => {
-        window.scrollTo(0, scrollY);
-      }, 0);
+      // Use requestAnimationFrame to ensure DOM has updated before restoring scroll
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          window.scrollTo(0, scrollY);
+          console.log('📍 Scroll position restored to:', scrollY);
+        });
+      });
       
       console.log('🛑 Recording stopped successfully');
     } else {
@@ -3010,6 +3019,7 @@ function App() {
     });
     setVpnProfileData(null);
     setAudioGuideData(null);
+    setAudioHasBeenPlayed(false);
     setSharedPincode(null);
     setAudioBlob(null);
     setIsRecording(false);
@@ -4184,6 +4194,7 @@ function App() {
         device_type: ''
       });
       setAudioGuideData(null);
+      setAudioHasBeenPlayed(false);
       setVpnProfileData(null);
       setSharedPincode(null);
       setCurrentDeviceId(null);
@@ -6312,6 +6323,7 @@ function App() {
                                 <button
                                   onClick={() => {
                                     setAudioGuideData(null);
+                                    setAudioHasBeenPlayed(false);
                                     console.log('🔄 Regenerating audio guide');
                                   }}
                                   style={{
@@ -6360,12 +6372,18 @@ function App() {
                                 <div>
                                   {/* Audio player */}
                                   {(audioGuideData?.audioUrl || audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url) ? (
-                                    <AudioPlayer audioUrl={(() => {
-                                      const url = audioGuideData?.audioUrl || audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url;
-                                      console.log('🎵 AudioPlayer props - audioGuideData:', audioGuideData);
-                                      console.log('🎵 AudioPlayer props - resolved URL:', url);
-                                      return url;
-                                    })()} />
+                                    <AudioPlayer 
+                                      audioUrl={(() => {
+                                        const url = audioGuideData?.audioUrl || audioGuideData?.tts_result?.public_url || audioGuideData?.audio_url;
+                                        console.log('🎵 AudioPlayer props - audioGuideData:', audioGuideData);
+                                        console.log('🎵 AudioPlayer props - resolved URL:', url);
+                                        return url;
+                                      })()} 
+                                      onPlay={() => {
+                                        console.log('✅ Audio has been played - enabling Complete Setup button');
+                                        setAudioHasBeenPlayed(true);
+                                      }}
+                                    />
                                   ) : (
                                     <div style={{
                                       background: 'rgba(255, 193, 7, 0.1)',
@@ -6435,16 +6453,16 @@ function App() {
                           disabled={
                             surrenderSubmitting || 
                             ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) ||
-                            (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && !audioGuideData)
+                            (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed))
                           }
                           style={{
                             width: '100%',
-                            cursor: (surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && !audioGuideData)) ? 'not-allowed' : 'pointer',
+                            cursor: (surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed))) ? 'not-allowed' : 'pointer',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             gap: '8px',
-                            pointerEvents: (surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && !audioGuideData)) ? 'none' : 'auto'
+                            pointerEvents: (surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed))) ? 'none' : 'auto'
                           }}
                         >
                           {surrenderSubmitting ? (
@@ -6467,7 +6485,7 @@ function App() {
                           )}
                         </button>
                         {/* Disabled overlay effect (like Maximum Reached) */}
-                        {(((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && !audioGuideData)) && (
+                        {(((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed))) && (
                           <div style={{
                             position: 'absolute',
                             top: 0,
@@ -6511,6 +6529,7 @@ function App() {
                             setDeviceFormErrors({});
                             setVpnProfileData(null);
                             setAudioGuideData(null);
+                            setAudioHasBeenPlayed(false);
                             setSharedPincode(null);
                             setAudioBlob(null);
                             setIsRecording(false);
