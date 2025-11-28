@@ -4536,125 +4536,163 @@ function App() {
     console.error('❌ Error state:', error);
     return (
       <div className="App" style={{ background: 'var(--page-bg)', minHeight: '100vh' }}>
-        <header className="header">
-          <div className="container header-inner">
-            <a className="header-logo" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">
-              <img 
-                src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/stj_favi_inverted_yellow_extra.png?v=1757864432" 
-                alt="Screen Time Journey Logo" 
-                style={{maxHeight: '64px', marginBottom: '8px'}}
-              />
-            </a>
-            <h1 className="header-title">Authentication Error</h1>
-            <div className="header-actions">
-              <div className="header-buttons-desktop" style={{ display: 'flex', gap: '8px' }}>
-                <a className="btn-inverted" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">Return to website</a>
-              </div>
-              
-              {/* Mobile hamburger menu */}
-              <div className="header-mobile-menu">
-                <button 
-                  className="mobile-menu-toggle"
-                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  aria-label="Toggle menu"
-                >
-                  {!mobileMenuOpen ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="icon icon-hamburger" viewBox="0 0 18 16">
-                      <path fill="currentColor" d="M1 .5a.5.5 0 1 0 0 1h15.71a.5.5 0 0 0 0-1zM.5 8a.5.5 0 0 1 .5-.5h15.71a.5.5 0 0 1 0 1H1A.5.5 0 0 1 .5 8m0 7a.5.5 0 0 1 .5-.5h15.71a.5.5 0 0 1 0 1H1a.5.5 0 0 1-.5-.5"></path>
-                    </svg>
-                  ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="icon icon-close" viewBox="0 0 18 17">
-                      <path fill="currentColor" d="M.865 15.978a.5.5 0 0 0 .707.707l7.433-7.431 7.579 7.282a.501.501 0 0 0 .846-.37.5.5 0 0 0-.153-.351L9.712 8.546l7.417-7.416a.5.5 0 1 0-.707-.708L8.991 7.853 1.413.573a.5.5 0 1 0-.693.72l7.563 7.268z"></path>
-                    </svg>
-                  )}
-                </button>
-                
-                <div className={`mobile-menu-dropdown ${mobileMenuOpen ? 'mobile-menu-open' : ''}`}>
-                  <div className="mobile-menu-nav">
-                    <a 
-                      className="mobile-menu-item" 
-                      href="https://www.screentimejourney.com" 
-                      target="_self" 
-                      rel="noopener noreferrer"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Return to website
-                    </a>
-                  </div>
-                  <div className="mobile-menu-actions">
-                    {/* Empty actions section for consistency */}
-                  </div>
-                </div>
-              </div>
+        {/* Sticky Dashboard Header */}
+        <header className="dashboard-header">
+          <div className="dashboard-header-content">
+            {/* Logo */}
+            <div className="dashboard-header-logo">
+              <a href="https://www.screentimejourney.com" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+                <img 
+                  src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/stj_favi_inverted_yellow_extra.png?v=1757864432" 
+                  alt="Screen Time Journey" 
+                  style={{
+                    width: '40px',
+                    height: '40px',
+                    transition: 'all 0.5s ease-in-out'
+                  }}
+                />
+              </a>
+            </div>
+
+            {/* Center - Empty for auth page */}
+            <div style={{ flex: 1 }}></div>
+
+            {/* Right - Login Button */}
+            <div className="dashboard-header-actions">
+              <a 
+                href="https://www.screentimejourney.com/account/login"
+                className="btn-primary"
+                style={{
+                  padding: '10px 20px',
+                  borderRadius: '8px',
+                  textDecoration: 'none',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                Login
+              </a>
             </div>
           </div>
         </header>
 
-        <div className="container">
+        <div className="container" style={{ marginTop: '100px' }}>
           <main className="dashboard">
-            <div className="card" style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
-              <div className="card-header">
-                <h3 className="card-title" style={{ color: 'var(--destructive)', marginBottom: 'var(--spacing-md)' }}>
-                  🔒 Access Denied
+            <div className="card" style={{ 
+              maxWidth: '600px', 
+              margin: '0 auto', 
+              textAlign: 'center',
+              border: '1px solid #e2e8f0',
+              borderRadius: '12px',
+              boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
+            }}>
+              <div className="card-header" style={{ 
+                padding: '32px 24px 24px',
+                borderBottom: '1px solid #e2e8f0'
+              }}>
+                <div style={{
+                  width: '64px',
+                  height: '64px',
+                  margin: '0 auto 20px',
+                  background: 'linear-gradient(135deg, #2E0456 0%, #4A0E7A 100%)',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '32px'
+                }}>
+                  🔒
+                </div>
+                <h3 className="card-title" style={{ 
+                  fontSize: '24px',
+                  fontWeight: '600',
+                  color: '#0F172A',
+                  marginBottom: '8px',
+                  fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
+                }}>
+                  Authentication Required
                 </h3>
               </div>
               
-              <div style={{ padding: 'var(--spacing-lg)' }}>
+              <div style={{ padding: '32px 24px' }}>
                 <p style={{ 
-                  fontSize: '1.1rem', 
-                  color: 'var(--brand-text)', 
-                  marginBottom: 'var(--spacing-lg)',
-                  lineHeight: '1.6'
+                  fontSize: '16px', 
+                  color: '#64748B', 
+                  marginBottom: '24px',
+                  lineHeight: '1.6',
+                  fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                 }}>
-                  {error}
+                  Your session has expired or could not be verified. Please log in through your store to access your dashboard.
                 </p>
                 
                 <p style={{ 
-                  fontSize: '0.95rem', 
-                  color: 'var(--text-muted)', 
-                  marginBottom: 'var(--spacing-xl)' 
+                  fontSize: '14px', 
+                  color: '#94A3B8', 
+                  marginBottom: '32px',
+                  fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
                 }}>
-                  Please return to your store and try accessing the dashboard again through the customer account area.
+                  For security purposes, you must authenticate through your Screen Time Journey account to access the dashboard.
                 </p>
 
-                <div style={{ display: 'flex', gap: 'var(--spacing-md)', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
                   <button 
-                    className="btn btn--primary"
+                    className="btn-primary"
                     onClick={() => {
                       // Try to extract shop domain from URL params or use fallback
                       const urlParams = new URLSearchParams(window.location.search);
                       const shop = urlParams.get('shop');
-                      const storeUrl = shop ? `https://${shop}` : 'https://www.screentimejourney.com';
+                      const storeUrl = shop ? `https://${shop}/account/login` : 'https://www.screentimejourney.com/account/login';
                       window.location.href = storeUrl;
                     }}
-                    style={{ minWidth: '140px' }}
+                    style={{ 
+                      minWidth: '160px',
+                      padding: '12px 24px',
+                      fontSize: '15px',
+                      fontWeight: '500',
+                      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
+                    }}
                   >
-                    Return to Store
+                    Go to Login
                   </button>
                   
                   <button 
                     className="btn-secondary"
                     onClick={() => window.location.reload()}
-                    style={{ minWidth: '140px' }}
+                    style={{ 
+                      minWidth: '160px',
+                      padding: '12px 24px',
+                      fontSize: '15px',
+                      fontWeight: '500',
+                      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
+                    }}
                   >
-                    Try Again
+                    Retry Connection
                   </button>
                 </div>
 
                 <details style={{
-                  marginTop: 'var(--spacing-xl)', 
-                  padding: 'var(--spacing-md)', 
-                  backgroundColor: '#f8f9fa', 
-                  border: '1px solid var(--brand-separator)', 
-                  borderRadius: 'var(--radius-md)',
-                  textAlign: 'center'
+                  marginTop: '32px', 
+                  padding: '16px', 
+                  backgroundColor: '#F8FAFC', 
+                  border: '1px solid #E2E8F0', 
+                  borderRadius: '8px',
+                  textAlign: 'left'
                 }}>
-                  <summary style={{ cursor: 'pointer', fontWeight: '500', color: 'var(--text-muted)' }}>
+                  <summary style={{ 
+                    cursor: 'pointer', 
+                    fontWeight: '500', 
+                    color: '#64748B',
+                    fontSize: '14px',
+                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                    textAlign: 'center'
+                  }}>
                     Technical Details
                   </summary>
                   <pre style={{
                     fontSize: '12px', 
-                    marginTop: 'var(--spacing-sm)', 
+                    marginTop: '12px',
+                    fontFamily: 'Monaco, Courier, monospace', 
                     color: 'var(--text-muted)',
                     whiteSpace: 'pre-wrap',
                     wordBreak: 'break-word'
