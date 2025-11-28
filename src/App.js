@@ -4569,7 +4569,7 @@ function App() {
             <div className="header-actions">
               <div className="header-buttons-desktop">
                 <a className="btn-primary" href="https://www.screentimejourney.com" target="_self" rel="noopener noreferrer">Home</a>
-                <a className="btn-outline-primary" href="https://www.screentimejourney.com/customer_authentication/login?return_to=%2Fapps%2Fscreen-time-journey%3Fsource%3Dheader%26from%3D%2F" target="_self" rel="noopener noreferrer">Login</a>
+                <a className="btn-secondary" href="https://www.screentimejourney.com/customer_authentication/login?return_to=%2Fapps%2Fscreen-time-journey%3Fsource%3Dheader%26from%3D%2F" target="_self" rel="noopener noreferrer">Login</a>
               </div>
             </div>
           </div>
@@ -4582,7 +4582,7 @@ function App() {
               margin: '0 auto'
             }}>
               <div className="modal__header">
-                <h3 className="modal__title">
+                <h3 className="modal__title" style={{ textAlign: 'center' }}>
                   Authentication Required
                 </h3>
               </div>
@@ -4608,28 +4608,9 @@ function App() {
                 }}>
                   For security purposes, you must authenticate through your Screen Time Journey account to access the dashboard.
                 </p>
-              </div>
-
-              <div className="modal__footer">
-                <button 
-                  className="btn-primary"
-                  onClick={() => {
-                    window.location.href = 'https://www.screentimejourney.com/customer_authentication/login?return_to=%2Fapps%2Fscreen-time-journey%3Fsource%3Dheader%26from%3D%2F';
-                  }}
-                  style={{ width: '100%' }}
-                >
-                  Login
-                </button>
-                
-                <button 
-                  className="link-back"
-                  onClick={() => window.location.href = 'https://www.screentimejourney.com'}
-                >
-                  Return to Home
-                </button>
 
                 <details style={{
-                  marginTop: '20px', 
+                  marginBottom: '24px', 
                   padding: '16px', 
                   backgroundColor: 'var(--card-bg)', 
                   border: '1px solid var(--brand-separator)', 
@@ -4660,6 +4641,26 @@ function App() {
                     User Agent: {navigator.userAgent}
                   </pre>
                 </details>
+              </div>
+
+              <div className="modal__footer">
+                <button 
+                  className="btn-primary"
+                  onClick={() => {
+                    window.location.href = 'https://www.screentimejourney.com/customer_authentication/login?return_to=%2Fapps%2Fscreen-time-journey%3Fsource%3Dheader%26from%3D%2F';
+                  }}
+                  style={{ width: '100%' }}
+                >
+                  Login
+                </button>
+                
+                <button 
+                  className="btn-secondary"
+                  onClick={() => window.location.href = 'https://www.screentimejourney.com'}
+                  style={{ width: '100%', marginTop: '12px' }}
+                >
+                  Return to Home
+                </button>
               </div>
             </div>
           </main>
