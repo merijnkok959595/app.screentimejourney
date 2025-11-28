@@ -669,14 +669,24 @@ function App() {
     const detectCountry = async () => {
       try {
         // Use ipapi.co for free geo-IP detection
-        const response = await fetch('https://ipapi.co/json/');
+        const response = await fetch('https://ipapi.co/json/', {
+          signal: AbortSignal.timeout(3000) // 3 second timeout
+        });
+        
+        // Check for rate limit or error status
+        if (response.status === 429 || response.status >= 400) {
+          console.warn('⚠️ Country detection unavailable (rate limited or error), using default');
+          return;
+        }
+        
         const data = await response.json();
         if (data.country_code) {
           setDetectedCountry(data.country_code);
-          console.log('Detected country:', data.country_code);
+          console.log('✅ Detected country:', data.country_code);
         }
       } catch (error) {
-        console.error('Failed to detect country:', error);
+        // Silently fail - user can manually select country
+        console.log('ℹ️ Country detection unavailable, using default (NL)');
         // Keep default country (NL)
       }
     };
@@ -1134,9 +1144,14 @@ function App() {
         signal: AbortSignal.timeout(5000) // 5 second timeout
       });
 
+      if (!response.ok) {
+        console.log(`⚠️ Percentile API returned ${response.status}, using default 6%`);
+        return;
+      }
+
       const result = await response.json();
 
-      if (response.ok && result.success) {
+      if (result.success && result.percentile !== undefined) {
         setPercentile(result.percentile);
         console.log(`✅ Percentile calculated: Top ${result.percentile}%`);
       } else {
@@ -1199,7 +1214,7 @@ function App() {
                 title: 'Setup Screentime',
                 body: '‼️ Setup dummy pincode first.',
                 step_type: 'video',
-                media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
+                media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
                 action_button: 'Next Step'
               },
               {
@@ -1207,7 +1222,7 @@ function App() {
                 title: 'Setup Profile',
                 body: '‼️ Extra optional protection against porn',
                 step_type: 'video',
-                media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
+                media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
                 action_button: 'Next Step'
               },
               {
@@ -1215,7 +1230,7 @@ function App() {
                 title: 'Setup Pincode',
                 body: '',
                 step_type: 'video',
-                media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
+                media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
                 action_button: 'Complete Setup'
               }
             ]
@@ -1230,7 +1245,7 @@ function App() {
                 title: 'Unlock Device',
                 body: '',
                 step_type: 'video_surrender',
-                media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
+                media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
                 surrender_text: 'I hereby give up on changing my screen time habits. I give up the chance to be a present family man, live with more presence and purpose, and give attention to my wife and children. I choose distraction over discipline, and I surrender my intention to grow.',
                 action_button: 'Submit Surrender'
               },
@@ -1338,7 +1353,7 @@ function App() {
               title: 'Setup Screentime',
               body: '‼️ Setup dummy pincode first.',
               step_type: 'video',
-              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
+              media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
               action_button: 'Next Step'
             },
             {
@@ -1346,7 +1361,7 @@ function App() {
               title: 'Setup Profile',
               body: '‼️ Extra optional protection against porn',
               step_type: 'video',
-              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
+              media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
               action_button: 'Next Step'
             },
             {
@@ -1354,7 +1369,7 @@ function App() {
               title: 'Setup Pincode',
               body: '',
               step_type: 'video',
-              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
+              media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
               action_button: 'Complete Setup'
             }
           ]
@@ -1369,7 +1384,7 @@ function App() {
               title: 'Unlock Device',
               body: '',
               step_type: 'video_surrender',
-              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
+              media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
               surrender_text: 'I hereby give up on changing my screen time habits. I give up the chance to be a present family man, live with more presence and purpose, and give attention to my wife and children. I choose distraction over discipline, and I surrender my intention to grow.',
               action_button: 'Submit Surrender'
             },
@@ -1442,18 +1457,18 @@ function App() {
               customer_id: customerData?.customerId || extractCustomerId(),
               method: 'create',
               purpose: 'device_setup'
-            })
+            }),
+            signal: AbortSignal.timeout(5000) // 5 second timeout
           });
           
           if (!response.ok) {
-            const errorText = await response.text();
-            console.error('❌ API response error:', errorText);
-            throw new Error(`Failed to store pincode: ${response.status} ${errorText}`);
+            console.log(`⚠️ PIN storage API returned ${response.status}, continuing with local pincode`);
+            throw new Error(`PIN storage failed: ${response.status}`);
           }
           
           console.log('✅ Pincode stored in stj_password table');
         } catch (apiError) {
-          console.error('❌ API call failed, continuing with local pincode:', apiError);
+          console.log('ℹ️ PIN storage unavailable, continuing with local pincode');
           // Continue with local pincode even if API fails - don't block user
         }
       } else {
@@ -1560,19 +1575,20 @@ function App() {
           const storeResponse = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/store_pincode`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(pincodePayload)
+            body: JSON.stringify(pincodePayload),
+            signal: AbortSignal.timeout(5000) // 5 second timeout
           });
           
           if (storeResponse.ok) {
             console.log('✅ PIN stored successfully in stj_password');
           } else {
-            console.warn('⚠️ Failed to store PIN in database, but continuing...');
+            console.log(`ℹ️ PIN storage returned ${storeResponse.status}, continuing...`);
           }
         } else {
           console.log('🔧 Local dev: Skipping PIN storage');
         }
       } catch (storeError) {
-        console.error('❌ Error storing PIN:', storeError);
+        console.log('ℹ️ PIN storage unavailable, continuing with profile generation');
         // Continue anyway - don't block profile generation
       }
       
@@ -2817,7 +2833,7 @@ function App() {
               title: 'Unlock Device',
               body: '',
               step_type: 'video_surrender',
-              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
+              media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
               surrender_text: 'I hereby give up on changing my screen time habits. I give up the chance to be a present family man, live with more presence and purpose, and give attention to my wife and children. I choose distraction over discipline, and I surrender my intention to grow.',
               action_button: 'Submit Surrender'
             },
@@ -2877,7 +2893,7 @@ function App() {
               title: 'Understanding Digital Wellness',
               body: 'Before we proceed, please watch this important video about your Screen Time Journey.',
               step_type: 'video',
-              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/S1.mp4',
+              media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
               action_button: 'I\'ve Watched the Video'
             },
             {
