@@ -2154,10 +2154,11 @@ function App() {
     console.log('🌐 Browser detection - isSafari:', isSafari);
     
     if (isSafari) {
-      // Safari MUST use audio/mp4 with AAC
-      // WebM on Safari produces corrupted files with EBML header errors
-      console.log('🍎 Safari detected - forcing audio/mp4 (ONLY reliable Safari format)');
-      return { mimeType: 'audio/mp4' };
+      // Safari MUST use audio/wav (uncompressed)
+      // Safari's WebM and MP4 both produce corrupted/unsupported files
+      // Only WAV works reliably across Safari and Whisper API
+      console.log('🍎 Safari detected - forcing audio/wav (ONLY format that works)');
+      return { mimeType: 'audio/wav' };
     }
     
     // Chrome, Firefox, Edge, Android: Use WebM Opus (best Whisper compatibility)
@@ -2172,8 +2173,8 @@ function App() {
     }
     
     // Final fallback
-    console.log('⚠️ Fallback to audio/mp4');
-    return { mimeType: 'audio/mp4' };
+    console.log('⚠️ Fallback to audio/wav');
+    return { mimeType: 'audio/wav' };
   };
 
   const startRecording = async () => {
