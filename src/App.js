@@ -2389,24 +2389,27 @@ function App() {
 
         console.log('✅ Recording stopped and cleaned up');
 
-        // Prevent any scroll changes - lock scroll position
-        const preventScroll = () => {
-          const currentModal = document.querySelector('.modal__content');
-          if (currentModal) {
-            currentModal.scrollTop = modalScrollY;
-            console.log('🔒 Locked modal scroll at:', modalScrollY);
+        // Scroll to show the Submit button at the bottom
+        const scrollToSubmitButton = () => {
+          // Find the primary action button (Submit Surrender)
+          const submitButton = document.querySelector('.modal__content .btn-primary');
+          if (submitButton) {
+            submitButton.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
+            console.log('📍 Scrolled to Submit button');
+          } else {
+            console.log('⚠️ Submit button not found');
+            // Fallback: scroll modal to bottom
+            const currentModal = document.querySelector('.modal__content');
+            if (currentModal) {
+              currentModal.scrollTo({ top: currentModal.scrollHeight, behavior: 'smooth' });
+              console.log('📍 Scrolled modal to bottom');
+            }
           }
-          window.scrollTo({ top: windowScrollY, behavior: 'instant' });
-          console.log('🔒 Locked window scroll at:', windowScrollY);
         };
         
-        // Execute immediately and after React re-renders
-        preventScroll();
-        requestAnimationFrame(preventScroll);
-        setTimeout(preventScroll, 0);
-        setTimeout(preventScroll, 50);
-        setTimeout(preventScroll, 100);
-        setTimeout(preventScroll, 200);
+        // Execute after React re-renders the UI with the audio player
+        setTimeout(scrollToSubmitButton, 100);
+        setTimeout(scrollToSubmitButton, 300);
 
         console.log('🛑 Stop recording completed');
       });
