@@ -5766,7 +5766,7 @@ function App() {
                   className="btn-primary"
                   style={{width: '100%'}}
                   disabled={
-                    profileLoading || 
+                    profileSaving || 
                     !profileEditData.username.trim() || 
                     !profileEditData.gender ||
                     profileEditData.usernameValidationState === 'taken' ||
