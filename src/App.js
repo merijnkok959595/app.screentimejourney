@@ -4791,7 +4791,7 @@ function App() {
 
             {onboardStep === 1 && (
               <div>
-                <div style={{marginBottom: '20px'}}>
+                <div style={{marginBottom: '0'}}>
                   <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Username</label>
                   <div className="input-wrapper" style={{ position: 'relative' }}>
                     <input 
@@ -4847,7 +4847,7 @@ function App() {
 
             {onboardStep === 2 && (
               <div>
-                <div style={{marginBottom: '20px'}}>
+                <div style={{marginBottom: '0'}}>
                   <div className="radio-group">
                     <label className="radio-option">
                       <input 
@@ -4903,7 +4903,7 @@ function App() {
 
             {onboardStep === 3 && (
               <div>
-                <div style={{marginBottom: '20px'}}>
+                <div style={{marginBottom: '0'}}>
                   <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Why do you want to change your screentime habits?</label>
                   <div className="input-wrapper">
                     <input 
@@ -4992,7 +4992,7 @@ function App() {
 
             {onboardStep === 4 && (
               <div>
-                <div style={{marginBottom: '20px'}}>
+                <div style={{marginBottom: '0'}}>
                   <p className="helper">Get daily motivation and accountability messages.</p>
                   <div style={{ marginBottom: '1rem' }}>
                     <PhoneInput
@@ -5042,7 +5042,7 @@ function App() {
 
             {onboardStep === 5 && (
               <div>
-                <div style={{marginBottom: '20px'}}>
+                <div style={{marginBottom: '0'}}>
                   <p className="helper">
                     We sent a 6-digit code to {newCountryCode}{newWhatsapp}
                     <button className="link-inline" onClick={() => setOnboardStep(4)}>Wrong number?</button>
@@ -5212,7 +5212,7 @@ function App() {
               </div>
 
               {/* WhatsApp */}
-              <div style={{ marginBottom: '24px' }}>
+              <div style={{ marginBottom: '20px' }}>
                 <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>WhatsApp</label>
                 
                 {/* Current WhatsApp Display */}
@@ -5413,7 +5413,7 @@ function App() {
               </div>
 
               {/* Commitment Data Section */}
-              <div style={{ marginBottom: '24px' }}>
+              <div style={{ marginBottom: '0' }}>
                 <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Your Commitment</label>
                 
                 {/* Current Commitment Display */}
@@ -5782,7 +5782,7 @@ function App() {
                           <div style={{marginBottom: '0'}}>
                             
                             {/* Video */}
-                            <div style={{marginBottom: '20px'}}>
+                            <div style={{marginBottom: '16px'}}>
                               <video 
                                 key={`video-${currentFlowStep}-${currentFlow.steps[currentFlowStep - 1].media_url}`}
                                 controls 
