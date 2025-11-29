@@ -4760,14 +4760,26 @@ function App() {
                 {usernameError && <p className="error-message">{usernameError}</p>}
                 <p className="helper">3-20 characters, letters and numbers only. This will be shown in your journey, messages and leaderboard.</p>
                 <div className="modal__footer">
-                  <button
+                  <button 
                     className="btn-primary"
-                    style={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'}}
+                    style={{width: '100%', position: 'relative'}}
                     disabled={!newUsername.trim() || (usernameValid !== null && usernameValid !== true)}
                     onClick={() => setOnboardStep(2)}
                   >
-                    <span>Next</span>
-                    <span>→</span>
+                    <span style={{
+                      position: 'absolute',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      whiteSpace: 'nowrap'
+                    }}>Next</span>
+                    <span style={{
+                      position: 'absolute',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      marginLeft: 'calc((100% / 2) + 8px)',
+                      whiteSpace: 'nowrap'
+                    }}>→</span>
+                    <span style={{visibility: 'hidden'}}>Next</span>
                   </button>
                 </div>
               </div>
@@ -4803,12 +4815,24 @@ function App() {
                 <div className="modal__footer">
                   <button
                     className="btn-primary"
-                    style={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'}}
+                    style={{width: '100%', position: 'relative'}}
                     disabled={!newGender} 
                     onClick={() => setOnboardStep(3)}
                   >
-                    <span>Next</span>
-                    <span>→</span>
+                    <span style={{
+                      position: 'absolute',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      whiteSpace: 'nowrap'
+                    }}>Next</span>
+                    <span style={{
+                      position: 'absolute',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      marginLeft: 'calc((100% / 2) + 8px)',
+                      whiteSpace: 'nowrap'
+                    }}>→</span>
+                    <span style={{visibility: 'hidden'}}>Next</span>
                   </button>
                   <button className="link-back" onClick={() => setOnboardStep(1)}>Back</button>
                 </div>
@@ -4869,7 +4893,7 @@ function App() {
                   <button
                     type="button"
                     className="btn-primary"
-                    style={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'}}
+                    style={{width: '100%', position: 'relative'}}
                     disabled={!whatToChange.trim() || !whatToGain.trim() || !doingThisFor.trim() || commitmentValidating} 
                     onClick={(e) => {
                       e.preventDefault();
@@ -4880,8 +4904,20 @@ function App() {
                       'Validating...'
                     ) : (
                       <>
-                        <span>Next</span>
-                        <span>→</span>
+                        <span style={{
+                          position: 'absolute',
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          whiteSpace: 'nowrap'
+                        }}>Next</span>
+                        <span style={{
+                          position: 'absolute',
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          marginLeft: 'calc((100% / 2) + 8px)',
+                          whiteSpace: 'nowrap'
+                        }}>→</span>
+                        <span style={{visibility: 'hidden'}}>Next</span>
                       </>
                     )}
                   </button>
@@ -7424,10 +7460,22 @@ function App() {
                   <button
                     className="btn-primary"
                     onClick={nextCancelStep}
-                    style={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'}}
+                    style={{width: '100%', position: 'relative'}}
                   >
-                    <span>Continue</span>
-                    <span>→</span>
+                    <span style={{
+                      position: 'absolute',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      whiteSpace: 'nowrap'
+                    }}>Continue</span>
+                    <span style={{
+                      position: 'absolute',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      marginLeft: 'calc((100% / 2) + 8px)',
+                      whiteSpace: 'nowrap'
+                    }}>→</span>
+                    <span style={{visibility: 'hidden'}}>Continue</span>
                   </button>
                   
                   <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
