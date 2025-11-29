@@ -6692,7 +6692,7 @@ function App() {
                     </div>
                   )}
 
-                  <div className="modal__footer modal__footer--device-flow">
+                  <div className="modal__footer">
                     {/* Step 3: Profile Generation & WARP Client Download */}
                     {currentFlowStep === 3 && currentFlow.flowType === 'device_setup_flow' && currentFlow.steps[currentFlowStep - 1]?.step_type !== 'pincode_display' && (
                       <div style={{width: '100%'}}>

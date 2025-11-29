@@ -1160,15 +1160,10 @@ p, span, div {
 .modal__footer { 
   display: flex; 
   flex-direction: column; 
-  gap: 0px; 
+  gap: 20px; 
   justify-content: center; 
   align-items: center; 
   margin-top: 20px; 
-}
-
-/* Device flow modal footer with multiple buttons needs gap */
-.modal__footer--device-flow {
-  gap: 20px;
 }
 
 /* === BADGES === */
