@@ -6537,11 +6537,15 @@ function App() {
                       ) : (
                         <>
                           {/* Video Player for video steps */}
+                          {console.log('🎥 Rendering video step:', currentFlowStep, 'URL:', currentFlow.steps[currentFlowStep - 1].media_url, 'Type:', currentFlow.steps[currentFlowStep - 1].step_type)}
                           <div style={{marginBottom: '16px'}}>
                             <video 
                               controls 
                               style={{width: '100%', height: 'auto', borderRadius: '8px', backgroundColor: '#EEEEEE'}}
                               poster=""
+                              onError={(e) => console.error('❌ Video error:', e, 'URL:', currentFlow.steps[currentFlowStep - 1].media_url)}
+                              onLoadStart={() => console.log('🔄 Video loading started')}
+                              onCanPlay={() => console.log('✅ Video can play')}
                             >
                               <source src={currentFlow.steps[currentFlowStep - 1].media_url} type="video/quicktime" />
                               Your browser does not support the video tag.
