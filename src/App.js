@@ -5834,7 +5834,7 @@ function App() {
                                 controls 
                                 preload="none"
                                 playsInline
-                                poster={`${currentFlow.steps[currentFlowStep - 1].media_url.replace('.mov', '').replace('unlock', 'thumbnail_unlock').replace('screentime', 'thumbnail_screentime').replace('profile', 'thumbnail+profile').replace('pincode', 'thumbnail_pincode')}.jpg?v=${Date.now()}`}
+                                poster={`${currentFlow.steps[currentFlowStep - 1].media_url.replace('.mov', '').replace('unlock', 'thumbnail_unlock').replace('screentime', 'thumbnail_screentime').replace('profile', 'thumbnail_profile').replace('pincode', 'thumbnail_pincode')}.jpg?v=${Date.now()}`}
                                 style={{width: '100%', borderRadius: '8px', backgroundColor: '#EEEEEE'}}
                                 onLoadStart={() => console.log('🔄 Unlock video loading:', currentFlow.steps[currentFlowStep - 1].media_url)}
                                 onCanPlay={() => console.log('✅ Unlock video ready:', currentFlow.steps[currentFlowStep - 1].media_url)}
