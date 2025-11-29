@@ -4891,7 +4891,7 @@ function App() {
                     }}>→</span>
                     <span style={{visibility: 'hidden'}}>Next</span>
                   </button>
-                  <button className="link-back" onClick={() => setOnboardStep(1)}>Back</button>
+                  <button className="btn-tertiary" onClick={() => setOnboardStep(1)}>Back</button>
                 </div>
               </div>
             )}
@@ -4980,7 +4980,7 @@ function App() {
                       </>
                     )}
                   </button>
-                  <button type="button" className="link-back" onClick={() => setOnboardStep(2)}>Back</button>
+                  <button type="button" className="btn-tertiary" onClick={() => setOnboardStep(2)}>Back</button>
                 </div>
               </div>
             )}
@@ -5030,7 +5030,7 @@ function App() {
                   >
                     {profileLoading ? 'Saving profile...' : whatsappLoading ? 'Please wait...' : 'Skip (not recommended)'}
                   </button>
-                  <button className="link-back" onClick={() => setOnboardStep(3)}>Back</button>
+                  <button className="btn-tertiary" onClick={() => setOnboardStep(3)}>Back</button>
                 </div>
               </div>
             )}
@@ -5062,7 +5062,7 @@ function App() {
                     {profileLoading ? 'Saving profile...' : whatsappLoading ? 'Verifying...' : 'Verify & Complete'}
                   </button>
                   <button 
-                    className="link-back" 
+                    className="btn-tertiary" 
                     disabled={resendCooldown > 0}
                     onClick={() => {
                       if (resendCooldown === 0) {
@@ -5735,19 +5735,16 @@ function App() {
                   {profileLoading ? 'Saving...' : 'Save Changes'}
                 </button>
                 
-                {/* Cancel button - centered below */}
-                <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
-                  <button 
-                    className="btn-tertiary"
-                    onClick={() => {
-                      setShowProfileEdit(false);
-                      setProfileError('');
-                    }}
-                    disabled={profileLoading}
-                  >
-                    Cancel
-                  </button>
-                </div>
+                <button 
+                  className="btn-tertiary"
+                  onClick={() => {
+                    setShowProfileEdit(false);
+                    setProfileError('');
+                  }}
+                  disabled={profileLoading}
+                >
+                  Cancel
+                </button>
               </div>
             </div>
           </div>
@@ -6735,23 +6732,22 @@ function App() {
                     
                     {/* Primary Action Button - hide for pincode display */}
                     {currentFlow.steps[currentFlowStep - 1]?.step_type !== 'pincode_display' && (
-                      <div style={{position: 'relative', width: '100%'}}>
-                        <button
-                          className="btn-primary"
-                          onClick={nextFlowStep}
-                          disabled={
-                            surrenderSubmitting || 
-                            ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) ||
-                            (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed)) ||
-                            (currentFlow.steps[currentFlowStep - 1]?.step_type === 'form' && (!deviceFormData.device_name.trim() || !deviceFormData.device_type || !deviceFormData.terms_accepted))
-                          }
-                          style={{
-                            width: '100%',
-                            cursor: (surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed)) || (currentFlow.steps[currentFlowStep - 1]?.step_type === 'form' && (!deviceFormData.device_name.trim() || !deviceFormData.device_type || !deviceFormData.terms_accepted))) ? 'not-allowed' : 'pointer',
-                            position: 'relative',
-                            pointerEvents: (surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed)) || (currentFlow.steps[currentFlowStep - 1]?.step_type === 'form' && (!deviceFormData.device_name.trim() || !deviceFormData.device_type || !deviceFormData.terms_accepted))) ? 'none' : 'auto'
-                          }}
-                        >
+                      <button
+                        className="btn-primary"
+                        onClick={nextFlowStep}
+                        disabled={
+                          surrenderSubmitting || 
+                          ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) ||
+                          (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed)) ||
+                          (currentFlow.steps[currentFlowStep - 1]?.step_type === 'form' && (!deviceFormData.device_name.trim() || !deviceFormData.device_type || !deviceFormData.terms_accepted))
+                        }
+                        style={{
+                          width: '100%',
+                          cursor: (surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed)) || (currentFlow.steps[currentFlowStep - 1]?.step_type === 'form' && (!deviceFormData.device_name.trim() || !deviceFormData.device_type || !deviceFormData.terms_accepted))) ? 'not-allowed' : 'pointer',
+                          position: 'relative',
+                          pointerEvents: (surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed)) || (currentFlow.steps[currentFlowStep - 1]?.step_type === 'form' && (!deviceFormData.device_name.trim() || !deviceFormData.device_type || !deviceFormData.terms_accepted))) ? 'none' : 'auto'
+                        }}
+                      >
                           {surrenderSubmitting ? (
                             <div style={{
                               width: '20px',
@@ -6790,20 +6786,6 @@ function App() {
                             </>
                           )}
                         </button>
-                        {/* Disabled overlay effect (like Maximum Reached) */}
-                        {(((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed)) || (currentFlow.steps[currentFlowStep - 1]?.step_type === 'form' && (!deviceFormData.device_name.trim() || !deviceFormData.device_type || !deviceFormData.terms_accepted))) && (
-                          <div style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            background: 'rgba(255, 255, 255, 0.35)',
-                            borderRadius: '7px',
-                            pointerEvents: 'none'
-                          }}></div>
-                        )}
-                      </div>
                     )}
                     
                     {/* Surrender Error Message */}
@@ -6837,11 +6819,10 @@ function App() {
                       </div>
                     )}
                     
-                    {/* Cancel/Back Button - Centered Below */}
-                    <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
-                      <button 
-                        className="btn-tertiary"
-                        onClick={() => {
+                    {                    /* Cancel/Back Button */}
+                    <button 
+                      className="btn-tertiary"
+                      onClick={() => {
                           // Check if this is Step 2 with pincode display (Close button)
                           if (currentFlowStep === 2 && currentFlow.steps[currentFlowStep - 1]?.step_type === 'pincode_display') {
                             // Trigger device removal immediately when user closes modal
@@ -6908,8 +6889,7 @@ function App() {
                         }}
                       >
                         {currentFlowStep === 1 ? 'Cancel' : (currentFlowStep === 2 && currentFlow.steps[currentFlowStep - 1]?.step_type === 'pincode_display' ? 'Close' : 'Back')}
-                      </button>
-                    </div>
+                    </button>
                   </div>
                 </div>
               </>
@@ -7705,14 +7685,12 @@ function App() {
                     <span style={{visibility: 'hidden'}}>Continue</span>
                   </button>
                   
-                  <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
-                    <button
-                      className="btn-tertiary"
-                      onClick={closeCancelFlow}
-                    >
-                      Cancel
-                    </button>
-                  </div>
+                  <button
+                    className="btn-tertiary"
+                    onClick={closeCancelFlow}
+                  >
+                    Cancel
+                  </button>
                 </>
               )}
 
@@ -7740,27 +7718,23 @@ function App() {
                     )}
                   </button>
                   
-                  <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
-                    <button
-                      className="btn-tertiary"
-                      onClick={() => setCancelStep(2)}
-                      disabled={cancelSubmitting}
-                    >
-                      Back
-                    </button>
-                  </div>
+                  <button
+                    className="btn-tertiary"
+                    onClick={() => setCancelStep(2)}
+                    disabled={cancelSubmitting}
+                  >
+                    Back
+                  </button>
                 </>
               )}
 
               {cancelStep === 4 && (
-                <div style={{textAlign: 'center'}}>
-                  <button
-                    onClick={closeCancelFlow}
-                    style={{background: 'none', border: 'none', color: '#2E0456', fontSize: '14px', cursor: 'pointer', textDecoration: 'underline', padding: '8px'}}
-                  >
-                    Close
-                  </button>
-                </div>
+                <button
+                  className="btn-tertiary"
+                  onClick={closeCancelFlow}
+                >
+                  Close
+                </button>
               )}
             </div>
           </>
@@ -7901,15 +7875,13 @@ function App() {
                 )}
               </button>
               
-              <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
-                <button
-                  className="btn-tertiary"
-                  onClick={closeNotificationsFlow}
-                  disabled={notificationsSubmitting}
-                >
-                  Cancel
-                </button>
-              </div>
+              <button
+                className="btn-tertiary"
+                onClick={closeNotificationsFlow}
+                disabled={notificationsSubmitting}
+              >
+                Cancel
+              </button>
             </div>
           </>
         </div>
@@ -7991,15 +7963,13 @@ function App() {
               </div>
             </div>
 
-            <div className="modal__footer" style={{marginBottom: window.innerWidth <= 768 ? '16px' : '0'}}>
-              <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
-                <button
-                  className="btn-tertiary"
-                  onClick={closeLogsFlow}
-                >
-                  Cancel
-                </button>
-              </div>
+            <div className="modal__footer">
+              <button
+                className="btn-tertiary"
+                onClick={closeLogsFlow}
+              >
+                Cancel
+              </button>
             </div>
           </>
         </div>
@@ -8088,45 +8058,21 @@ function App() {
               </div>
             </div>
 
-            <div className="modal__footer" style={{display: 'flex', flexDirection: 'column', gap: '12px', width: '100%'}}>
+            <div className="modal__footer">
               <a
                 href="https://www.screentimejourney.com/products/screentimejourney"
                 className="btn-primary"
-                style={{
-                  width: '100%', 
-                  textAlign: 'center', 
-                  textDecoration: 'none', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  minHeight: '48px',
-                  fontSize: '16px'
-                }}
+                style={{width: '100%', textAlign: 'center', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center'}}
               >
                 Subscribe Now
               </a>
               
-              <a
-                href="https://www.screentimejourney.com"
-                style={{
-                  width: '100%', 
-                  textAlign: 'center', 
-                  textDecoration: 'underline', 
-                  textUnderlineOffset: '4px',
-                  textDecorationThickness: '1px',
-                  display: 'block', 
-                  padding: '12px 0',
-                  color: '#0F172A',
-                  fontSize: '15px',
-                  fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
-                  fontWeight: '500',
-                  transition: 'color 0.2s ease'
-                }}
-                onMouseEnter={(e) => e.target.style.color = '#6b7280'}
-                onMouseLeave={(e) => e.target.style.color = '#0F172A'}
+              <button
+                className="btn-tertiary"
+                onClick={() => window.location.href = 'https://www.screentimejourney.com'}
               >
                 Return to home
-              </a>
+              </button>
             </div>
           </>
         </div>

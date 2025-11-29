@@ -543,14 +543,6 @@ html, #root {
   }
 }
 
-/* Modal Footer Improvements */
-.modal__footer {
-  margin-top: 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
 /* Verification Options */
 .verification-options {
   display: flex;
@@ -785,13 +777,6 @@ html, #root {
 /* Modal structure spacing */
 .modal__header {
   margin-bottom: 1.5rem !important;
-}
-
-.modal__footer {
-  margin-top: 12px !important;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 /* Input and form elements spacing */
