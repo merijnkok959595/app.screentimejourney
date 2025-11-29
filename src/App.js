@@ -6436,10 +6436,10 @@ function App() {
                       ) : (
                         <>
                           {/* Video Player for video steps */}
-                          <div style={{borderRadius: '8px', overflow: 'hidden', backgroundColor: '#EEEEEE', marginBottom: '16px'}}>
+                          <div style={{textAlign: 'center', marginBottom: '16px'}}>
                             <video 
                               controls 
-                              style={{width: '100%', height: 'auto', maxHeight: '300px'}}
+                              style={{width: '100%', maxWidth: '500px', height: 'auto', borderRadius: '8px', backgroundColor: '#EEEEEE'}}
                               poster=""
                             >
                               <source src={currentFlow.steps[currentFlowStep - 1].media_url} type="video/mp4" />
