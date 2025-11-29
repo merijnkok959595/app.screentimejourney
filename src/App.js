@@ -4736,32 +4736,34 @@ function App() {
 
             {onboardStep === 1 && (
               <div>
-                <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Username</label>
-                <div className="input-wrapper" style={{ position: 'relative' }}>
-                  <input 
-                    className={`input ${usernameValid === true ? 'input--valid' : usernameValid === false ? 'input--invalid' : ''}`}
-                    placeholder=" " 
-                    value={newUsername} 
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      // Apply username validation rules
-                      const sanitizedValue = value
-                        .toLowerCase() // Convert to lowercase
-                        .replace(/[^a-z0-9]/g, '') // Remove non-alphanumeric characters
-                        .slice(0, 20); // Max 20 characters
-                      setNewUsername(sanitizedValue);
-                      setUsernameValid(null); // Reset validation state
-                      setUsernameError(''); // Clear any error messages
-                    }}
-                    onFocus={handleInputFocus}
-                  />
-                  <label className="form-label">theking</label>
-                  {usernameChecking && <span className="input-icon">⏳</span>}
-                  {usernameValid === true && <span className="input-icon valid">✅</span>}
-                  {usernameValid === false && <span className="input-icon invalid">❌</span>}
+                <div style={{marginBottom: '20px'}}>
+                  <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Username</label>
+                  <div className="input-wrapper" style={{ position: 'relative' }}>
+                    <input 
+                      className={`input ${usernameValid === true ? 'input--valid' : usernameValid === false ? 'input--invalid' : ''}`}
+                      placeholder=" " 
+                      value={newUsername} 
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        // Apply username validation rules
+                        const sanitizedValue = value
+                          .toLowerCase() // Convert to lowercase
+                          .replace(/[^a-z0-9]/g, '') // Remove non-alphanumeric characters
+                          .slice(0, 20); // Max 20 characters
+                        setNewUsername(sanitizedValue);
+                        setUsernameValid(null); // Reset validation state
+                        setUsernameError(''); // Clear any error messages
+                      }}
+                      onFocus={handleInputFocus}
+                    />
+                    <label className="form-label">theking</label>
+                    {usernameChecking && <span className="input-icon">⏳</span>}
+                    {usernameValid === true && <span className="input-icon valid">✅</span>}
+                    {usernameValid === false && <span className="input-icon invalid">❌</span>}
+                  </div>
+                  {usernameError && <p className="error-message">{usernameError}</p>}
+                  <p className="helper">3-20 characters, letters and numbers only. This will be shown in your journey, messages and leaderboard.</p>
                 </div>
-                {usernameError && <p className="error-message">{usernameError}</p>}
-                <p className="helper">3-20 characters, letters and numbers only. This will be shown in your journey, messages and leaderboard.</p>
                 <div className="modal__footer">
                   <button 
                     className="btn-primary"
@@ -4790,31 +4792,33 @@ function App() {
 
             {onboardStep === 2 && (
               <div>
-                <div className="radio-group">
-                  <label className="radio-option">
-                    <input 
-                      type="radio" 
-                      name="gender" 
-                      value="male" 
-                      checked={newGender === 'male'} 
-                      onChange={(e) => setNewGender(e.target.value)} 
-                    />
-                    <span className="radio-custom"></span>
-                    <span className="radio-label">🙋‍♂️ Man</span>
-                  </label>
-                  <label className="radio-option">
-                    <input 
-                      type="radio" 
-                      name="gender" 
-                      value="female" 
-                      checked={newGender === 'female'} 
-                      onChange={(e) => setNewGender(e.target.value)} 
-                    />
-                    <span className="radio-custom"></span>
-                    <span className="radio-label">🙋‍♀️ Woman</span>
-                  </label>
+                <div style={{marginBottom: '20px'}}>
+                  <div className="radio-group">
+                    <label className="radio-option">
+                      <input 
+                        type="radio" 
+                        name="gender" 
+                        value="male" 
+                        checked={newGender === 'male'} 
+                        onChange={(e) => setNewGender(e.target.value)} 
+                      />
+                      <span className="radio-custom"></span>
+                      <span className="radio-label">🙋‍♂️ Man</span>
+                    </label>
+                    <label className="radio-option">
+                      <input 
+                        type="radio" 
+                        name="gender" 
+                        value="female" 
+                        checked={newGender === 'female'} 
+                        onChange={(e) => setNewGender(e.target.value)} 
+                      />
+                      <span className="radio-custom"></span>
+                      <span className="radio-label">🙋‍♀️ Woman</span>
+                    </label>
+                  </div>
+                  <p className="helper">This sets visuals and milestones. You can change it later.</p>
                 </div>
-                <p className="helper">This sets visuals and milestones. You can change it later.</p>
                 <div className="modal__footer">
                   <button
                     className="btn-primary"
@@ -4844,54 +4848,56 @@ function App() {
 
             {onboardStep === 3 && (
               <div>
-                <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Why do you want to change your screentime habits?</label>
-                <div className="input-wrapper">
-                  <input 
-                    className="input" 
-                    placeholder=" " 
-                    value={whatToChange}
-                    onChange={(e) => {
-                      setWhatToChange(e.target.value);
-                      setCommitmentError(''); // Clear error on input
-                    }}
-                    onFocus={handleInputFocus}
-                    maxLength="200"
-                  />
-                  <label className="form-label">I want to be more present with my family</label>
+                <div style={{marginBottom: '20px'}}>
+                  <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Why do you want to change your screentime habits?</label>
+                  <div className="input-wrapper">
+                    <input 
+                      className="input" 
+                      placeholder=" " 
+                      value={whatToChange}
+                      onChange={(e) => {
+                        setWhatToChange(e.target.value);
+                        setCommitmentError(''); // Clear error on input
+                      }}
+                      onFocus={handleInputFocus}
+                      maxLength="200"
+                    />
+                    <label className="form-label">I want to be more present with my family</label>
+                  </div>
+                  
+                  <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', marginTop: '1.5rem', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>How will this change your life?</label>
+                  <div className="input-wrapper">
+                    <input 
+                      className="input" 
+                      placeholder=" " 
+                      value={whatToGain}
+                      onChange={(e) => {
+                        setWhatToGain(e.target.value);
+                        setCommitmentError(''); // Clear error on input
+                      }}
+                      onFocus={handleInputFocus}
+                      maxLength="200"
+                    />
+                    <label className="form-label">I'll have more energy and focus for what matters</label>
+                  </div>
+                  
+                  <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', marginTop: '1.5rem', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Who in your life will be affected by these changes?</label>
+                  <div className="input-wrapper">
+                    <input 
+                      className="input" 
+                      placeholder=" " 
+                      value={doingThisFor}
+                      onChange={(e) => {
+                        setDoingThisFor(e.target.value);
+                        setCommitmentError(''); // Clear error on input
+                      }}
+                      onFocus={handleInputFocus}
+                      maxLength="200"
+                    />
+                    <label className="form-label">My partner and children</label>
+                  </div>
+                  {commitmentError && <p className="error-message">{commitmentError}</p>}
                 </div>
-                
-                <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', marginTop: '1.5rem', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>How will this change your life?</label>
-                <div className="input-wrapper">
-                  <input 
-                    className="input" 
-                    placeholder=" " 
-                    value={whatToGain}
-                    onChange={(e) => {
-                      setWhatToGain(e.target.value);
-                      setCommitmentError(''); // Clear error on input
-                    }}
-                    onFocus={handleInputFocus}
-                    maxLength="200"
-                  />
-                  <label className="form-label">I'll have more energy and focus for what matters</label>
-                </div>
-                
-                <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', marginTop: '1.5rem', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Who in your life will be affected by these changes?</label>
-                <div className="input-wrapper">
-                  <input 
-                    className="input" 
-                    placeholder=" " 
-                    value={doingThisFor}
-                    onChange={(e) => {
-                      setDoingThisFor(e.target.value);
-                      setCommitmentError(''); // Clear error on input
-                    }}
-                    onFocus={handleInputFocus}
-                    maxLength="200"
-                  />
-                  <label className="form-label">My partner and children</label>
-                </div>
-                {commitmentError && <p className="error-message">{commitmentError}</p>}
                 <div className="modal__footer">
                   <button
                     type="button"
@@ -4931,28 +4937,30 @@ function App() {
 
             {onboardStep === 4 && (
               <div>
-                <p className="helper">Get daily motivation and accountability messages.</p>
-                <div style={{ marginBottom: '1rem' }}>
-                  <PhoneInput
-                    international
-                    defaultCountry={detectedCountry}
-                    value={phoneNumber}
-                    onChange={(value) => {
-                      setPhoneNumber(value || '');
-                      // Extract country code and phone number
-                      if (value) {
-                        const match = value.match(/^\+(\d+)/);
-                        if (match) {
-                          setNewCountryCode('+' + match[1].split(/[^\d]/)[0]);
-                          setNewWhatsapp(value.replace(/^\+\d+/, '').replace(/\D/g, ''));
+                <div style={{marginBottom: '20px'}}>
+                  <p className="helper">Get daily motivation and accountability messages.</p>
+                  <div style={{ marginBottom: '1rem' }}>
+                    <PhoneInput
+                      international
+                      defaultCountry={detectedCountry}
+                      value={phoneNumber}
+                      onChange={(value) => {
+                        setPhoneNumber(value || '');
+                        // Extract country code and phone number
+                        if (value) {
+                          const match = value.match(/^\+(\d+)/);
+                          if (match) {
+                            setNewCountryCode('+' + match[1].split(/[^\d]/)[0]);
+                            setNewWhatsapp(value.replace(/^\+\d+/, '').replace(/\D/g, ''));
+                          }
                         }
-                      }
-                    }}
-                    className="phone-input-international"
-                    placeholder="Enter phone number"
-                  />
+                      }}
+                      className="phone-input-international"
+                      placeholder="Enter phone number"
+                    />
+                  </div>
+                  {whatsappError && <p className="error-message">{whatsappError}</p>}
                 </div>
-                {whatsappError && <p className="error-message">{whatsappError}</p>}
                 <div className="modal__footer">
                   <button
                     className="btn-primary"
@@ -4979,19 +4987,21 @@ function App() {
 
             {onboardStep === 5 && (
               <div>
-                <p className="helper">
-                  We sent a 6-digit code to {newCountryCode}{newWhatsapp}
-                  <button className="link-inline" onClick={() => setOnboardStep(4)}>Wrong number?</button>
-                </p>
-                <input 
-                  className="input code-input" 
-                  placeholder="123456" 
-                  value={whatsappCode}
-                  onChange={(e) => setWhatsappCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                  onFocus={handleInputFocus}
-                  maxLength="6"
-                />
-                {whatsappError && <p className="error-message">{whatsappError}</p>}
+                <div style={{marginBottom: '20px'}}>
+                  <p className="helper">
+                    We sent a 6-digit code to {newCountryCode}{newWhatsapp}
+                    <button className="link-inline" onClick={() => setOnboardStep(4)}>Wrong number?</button>
+                  </p>
+                  <input 
+                    className="input code-input" 
+                    placeholder="123456" 
+                    value={whatsappCode}
+                    onChange={(e) => setWhatsappCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                    onFocus={handleInputFocus}
+                    maxLength="6"
+                  />
+                  {whatsappError && <p className="error-message">{whatsappError}</p>}
+                </div>
                 <div className="modal__footer">
                   <button
                     className="btn-primary"
