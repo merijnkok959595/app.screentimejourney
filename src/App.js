@@ -2713,8 +2713,8 @@ function App() {
           subscription_cancelled_at: new Date().toISOString()
         }));
         
-        // Refresh profile data to get updated status from backend
-        await fetchProfileData();
+        // Refresh profile data to get updated status from backend (silently)
+        await fetchProfileData(true);
         
         // Show success step
         setCancelStep(4);
@@ -3252,6 +3252,7 @@ function App() {
   // Function to update profile data
   const updateProfileData = async (updatedData) => {
     try {
+      // ✅ Use button-level loading only (not dashboard spinner)
       setProfileLoading(true);
       setProfileError('');
       
@@ -3297,9 +3298,14 @@ function App() {
       const result = await response.json();
       
       if (response.ok && result.success) {
-        setProfileData(result.profile);
+        // ✅ Smooth UX: Close modal immediately, refresh in background
+        setProfileLoading(false);
         setShowProfileEdit(false);
-        console.log('✅ Profile updated successfully');
+        console.log('✅ Profile updated successfully - refreshing data silently...');
+        
+        // Silent background refresh (no loading spinner)
+        await fetchProfileData(true);
+        console.log('✅ Profile data refreshed silently');
       } else {
         throw new Error(result.error || 'Failed to update profile');
       }
@@ -3307,7 +3313,6 @@ function App() {
     } catch (error) {
       console.error('❌ Error updating profile:', error);
       setProfileError(error.message || 'Failed to update profile');
-    } finally {
       setProfileLoading(false);
     }
   };
@@ -5375,8 +5380,8 @@ function App() {
                                     verificationError: ''
                                   }));
                                   setProfileError('');
-                                  // Refresh profile data
-                                  fetchProfileData();
+                                  // Refresh profile data (silently, no spinner)
+                                  fetchProfileData(true);
                                 } else {
                                   setProfileEditData(prev => ({...prev, verificationError: result.error || 'Invalid verification code'}));
                                 }
@@ -5646,8 +5651,8 @@ function App() {
                                     commitmentQ3: ''
                                   }));
                                   setProfileError('');
-                                  // Refresh profile data to show updated values
-                                  fetchProfileData();
+                                  // Refresh profile data to show updated values (silently, no spinner)
+                                  fetchProfileData(true);
                                 } else {
                                   setProfileError(result.error || 'Failed to save commitment');
                                   setProfileEditData(prev => ({...prev, commitmentSaving: false}));
