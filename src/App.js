@@ -3100,9 +3100,11 @@ function App() {
 
 
   // Function to fetch complete profile data from backend
-  const fetchProfileData = async () => {
+  const fetchProfileData = async (silent = false) => {
     try {
-      setProfileLoading(true);
+      if (!silent) {
+        setProfileLoading(true);
+      }
       setProfileError('');
       
       // CRITICAL: Use centralized customer ID extraction
@@ -3129,7 +3131,9 @@ function App() {
             subscription_status: 'active'
           };
           setProfileData(mockProfile);
-          setProfileLoading(false);
+          if (!silent) {
+            setProfileLoading(false);
+          }
           console.log('🔧 Local dev: Mock profile data loaded');
         }, 500);
         return;
@@ -3215,7 +3219,9 @@ function App() {
       console.error('❌ Error fetching profile data:', error);
       setProfileError(error.message || 'Failed to load profile data');
     } finally {
-      setProfileLoading(false);
+      if (!silent) {
+        setProfileLoading(false);
+      }
     }
   };
 
@@ -4250,8 +4256,8 @@ function App() {
       console.log('✅ Device added from flow and reloaded from backend. Reloaded devices:', reloadedDevices.length);
       console.log('✅ Reloaded devices:', reloadedDevices);
       
-      // Reload profile data to refresh activity logs
-      await fetchProfileData();
+      // Reload profile data to refresh activity logs (silently, no spinner)
+      await fetchProfileData(true);
       
       // Success: Close the flow and return to dashboard (no alert)
       console.log(`🎉 Device "${newDevice.name}" successfully added. Returning to dashboard.`);
@@ -4382,8 +4388,8 @@ function App() {
                 setDevices(prev => prev.filter(d => d.id !== deviceIdToRemove));
                 console.log('🗑️ Device removed from local state');
                 
-                // Now reload profile data to refresh activity logs
-                await fetchProfileData();
+                // Now reload profile data to refresh activity logs (silently, no spinner)
+                await fetchProfileData(true);
                 console.log('🔄 Profile data reloaded after device removal');
               } catch (error) {
                 console.error('❌ Error removing device:', error);
@@ -4501,8 +4507,8 @@ function App() {
           // Reload devices from backend to ensure persistence
           await loadDevicesFromBackend();
           
-          // Reload profile data to refresh activity logs
-          await fetchProfileData();
+          // Reload profile data to refresh activity logs (silently, no spinner)
+          await fetchProfileData(true);
           
           console.log('🔓 Device unlocked:', device.name);
           alert(`${device.name} has been unlocked for ${result.unlock_duration_minutes} minutes`);
