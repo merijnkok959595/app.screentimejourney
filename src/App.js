@@ -6447,43 +6447,81 @@ function App() {
                               <div style={{marginTop: '12px', marginBottom: '12px'}}>
                                 <label style={{
                                   display: 'flex',
-                                  alignItems: 'flex-start',
+                                  alignItems: 'center',
                                   cursor: 'pointer',
+                                  padding: '14px 16px',
+                                  border: '1px solid #0F172A',
+                                  borderRadius: '7px',
                                   fontSize: '14px',
                                   fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
-                                  color: '#0F172A'
+                                  color: '#0F172A',
+                                  transition: 'all 0.2s ease',
+                                  backgroundColor: deviceFormData.terms_accepted ? 'rgba(46, 4, 86, 0.02)' : 'transparent'
                                 }}>
-                                  <input
-                                    type="checkbox"
-                                    checked={deviceFormData.terms_accepted}
-                                    onChange={(e) => {
-                                      setDeviceFormData(prev => ({
-                                        ...prev,
-                                        terms_accepted: e.target.checked
-                                      }));
-                                      // Clear error when user checks
-                                      if (deviceFormErrors.terms_accepted) {
-                                        setDeviceFormErrors(prev => ({
+                                  <div style={{
+                                    position: 'relative',
+                                    width: '20px',
+                                    height: '20px',
+                                    marginRight: '12px',
+                                    flexShrink: 0
+                                  }}>
+                                    <input
+                                      type="checkbox"
+                                      checked={deviceFormData.terms_accepted}
+                                      onChange={(e) => {
+                                        setDeviceFormData(prev => ({
                                           ...prev,
-                                          terms_accepted: ''
+                                          terms_accepted: e.target.checked
                                         }));
-                                      }
-                                    }}
-                                    style={{
-                                      marginRight: '8px',
-                                      marginTop: '2px',
-                                      width: '16px',
-                                      height: '16px',
-                                      cursor: 'pointer',
-                                      flexShrink: 0
-                                    }}
-                                  />
-                                  <span>
+                                        // Clear error when user checks
+                                        if (deviceFormErrors.terms_accepted) {
+                                          setDeviceFormErrors(prev => ({
+                                            ...prev,
+                                            terms_accepted: ''
+                                          }));
+                                        }
+                                      }}
+                                      style={{
+                                        position: 'absolute',
+                                        opacity: 0,
+                                        width: '100%',
+                                        height: '100%',
+                                        cursor: 'pointer',
+                                        margin: 0
+                                      }}
+                                    />
+                                    <div style={{
+                                      width: '20px',
+                                      height: '20px',
+                                      border: '1.5px solid #0F172A',
+                                      borderRadius: '4px',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      backgroundColor: deviceFormData.terms_accepted ? '#2E0456' : 'transparent',
+                                      transition: 'all 0.2s ease',
+                                      pointerEvents: 'none'
+                                    }}>
+                                      {deviceFormData.terms_accepted && (
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                          <path
+                                            d="M11.6666 3.5L5.24992 9.91667L2.33325 7"
+                                            stroke="white"
+                                            strokeWidth="1.5"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                          />
+                                        </svg>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <span style={{lineHeight: '1.5'}}>
                                     I agree with the{' '}
                                     <a
                                       href="https://www.screentimejourney.com/policies/terms-of-service"
                                       target="_blank"
                                       rel="noopener noreferrer"
+                                      onClick={(e) => e.stopPropagation()}
                                       style={{
                                         color: '#2E0456',
                                         textDecoration: 'underline',
@@ -6491,7 +6529,7 @@ function App() {
                                       }}
                                     >
                                       terms of service
-                                    </a>
+                                    </a>.
                                   </span>
                                 </label>
                                 {deviceFormErrors.terms_accepted && (
@@ -6655,13 +6693,14 @@ function App() {
                           disabled={
                             surrenderSubmitting || 
                             ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) ||
-                            (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed))
+                            (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed)) ||
+                            (currentFlow.steps[currentFlowStep - 1]?.step_type === 'form' && (!deviceFormData.device_name.trim() || !deviceFormData.device_type || !deviceFormData.terms_accepted))
                           }
                           style={{
                             width: '100%',
-                            cursor: (surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed))) ? 'not-allowed' : 'pointer',
+                            cursor: (surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed)) || (currentFlow.steps[currentFlowStep - 1]?.step_type === 'form' && (!deviceFormData.device_name.trim() || !deviceFormData.device_type || !deviceFormData.terms_accepted))) ? 'not-allowed' : 'pointer',
                             position: 'relative',
-                            pointerEvents: (surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed))) ? 'none' : 'auto'
+                            pointerEvents: (surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed)) || (currentFlow.steps[currentFlowStep - 1]?.step_type === 'form' && (!deviceFormData.device_name.trim() || !deviceFormData.device_type || !deviceFormData.terms_accepted))) ? 'none' : 'auto'
                           }}
                         >
                           {surrenderSubmitting ? (
@@ -6703,7 +6742,7 @@ function App() {
                           )}
                         </button>
                         {/* Disabled overlay effect (like Maximum Reached) */}
-                        {(((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed))) && (
+                        {(((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed)) || (currentFlow.steps[currentFlowStep - 1]?.step_type === 'form' && (!deviceFormData.device_name.trim() || !deviceFormData.device_type || !deviceFormData.terms_accepted))) && (
                           <div style={{
                             position: 'absolute',
                             top: 0,
