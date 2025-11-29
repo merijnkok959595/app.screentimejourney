@@ -2009,12 +2009,16 @@ function App() {
     });
     const url = window.URL.createObjectURL(blob);
     
-    // Open in new window/tab to trigger iOS/macOS installation prompt
-    // This works better than download on iOS - it prompts for profile installation
-    window.open(url, '_blank');
+    // ✅ FIX: Only use window.open() for mobile devices to trigger native installation
+    // Desktop browsers will still download the file normally
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     
-    // Also create a fallback download link for desktop browsers
-    setTimeout(() => {
+    if (isMobile) {
+      // Mobile: Open in new window to trigger iOS/macOS installation prompt
+      window.open(url, '_blank');
+      console.log('📱 Mobile: Opened profile for installation');
+    } else {
+      // Desktop: Direct download
       const link = document.createElement('a');
       link.href = url;
       link.download = vpnProfileData.filename;
@@ -2022,14 +2026,15 @@ function App() {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      console.log('💻 Desktop: Downloaded profile');
+    }
+    
+    // Clean up after a delay
+    setTimeout(() => {
+      window.URL.revokeObjectURL(url);
+    }, 1000);
       
-      // Clean up after a delay
-      setTimeout(() => {
-        window.URL.revokeObjectURL(url);
-      }, 1000);
-    }, 100);
-      
-    console.log('✅ Profile opened for installation!');
+    console.log('✅ Profile ready for installation!');
     console.log('📝 User should:');
     console.log('   1. Tap "Allow" when prompted to install profile');
     console.log('   2. Go to Settings > Profile Downloaded > Install');
@@ -5761,6 +5766,8 @@ function App() {
                               <video 
                                 key={`video-${currentFlowStep}-${currentFlow.steps[currentFlowStep - 1].media_url}`}
                                 controls 
+                                preload="metadata"
+                                playsInline
                                 style={{width: '100%', borderRadius: '8px', backgroundColor: '#EEEEEE'}}
                                 onLoadStart={() => console.log('🔄 Unlock video loading:', currentFlow.steps[currentFlowStep - 1].media_url)}
                                 onCanPlay={() => console.log('✅ Unlock video ready:', currentFlow.steps[currentFlowStep - 1].media_url)}
@@ -6563,8 +6570,9 @@ function App() {
                             <video 
                               key={`video-${currentFlowStep}-${currentFlow.steps[currentFlowStep - 1].media_url}`}
                               controls 
+                              preload="metadata"
+                              playsInline
                               style={{width: '100%', height: 'auto', borderRadius: '8px', backgroundColor: '#EEEEEE'}}
-                              poster=""
                               onError={(e) => console.error('❌ Video error:', e, 'URL:', currentFlow.steps[currentFlowStep - 1].media_url)}
                               onLoadStart={() => console.log('🔄 Video loading started:', currentFlow.steps[currentFlowStep - 1].media_url)}
                               onCanPlay={() => console.log('✅ Video can play:', currentFlow.steps[currentFlowStep - 1].media_url)}
@@ -6670,14 +6678,14 @@ function App() {
                   <div className="modal__footer">
                     {/* Step 3: Profile Generation & WARP Client Download */}
                     {currentFlowStep === 3 && currentFlow.flowType === 'device_setup_flow' && currentFlow.steps[currentFlowStep - 1]?.step_type !== 'pincode_display' && (
-                      <div style={{width: '100%', marginBottom: '12px'}}>
+                      <div style={{width: '100%'}}>
                         {/* Generate/Download Profile Button */}
                         {!vpnProfileData ? (
                           <button
                             className="btn-secondary"
                             onClick={generateVPNProfile}
                             disabled={profileGenerating || !deviceFormData.device_type}
-                            style={{width: '100%', marginBottom: '0px'}}
+                            style={{width: '100%', marginBottom: '12px'}}
                           >
                             {profileGenerating ? 'Generating...' : (
                               <>
@@ -6692,7 +6700,7 @@ function App() {
                           <button
                             className="btn-secondary"
                             onClick={downloadProfile}
-                            style={{width: '100%', marginBottom: '0px'}}
+                            style={{width: '100%', marginBottom: '12px'}}
                           >
                             <>
                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}>
