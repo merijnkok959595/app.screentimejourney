@@ -2306,17 +2306,20 @@ function App() {
       setIsRecording(true);
       updateAudioLevels();
       
-      // Scroll modal to bottom to show recording bar and submit button
+      // Scroll modal to bottom AFTER React re-renders with recording bar
+      // Need longer delay to ensure DOM has updated with new elements
       setTimeout(() => {
         const modal = document.querySelector('.modal');
         if (modal) {
+          // Force recalculation of scrollHeight after DOM update
+          const maxScroll = modal.scrollHeight - modal.clientHeight;
           modal.scrollTo({
-            top: modal.scrollHeight,
+            top: maxScroll,
             behavior: 'smooth'
           });
-          console.log('📜 Scrolled modal to bottom to show recording controls');
+          console.log('📜 Scrolled modal to bottom:', maxScroll, 'px');
         }
-      }, 100);
+      }, 300); // Increased delay to ensure React has re-rendered
       
       console.log('✅ Recording initialized successfully');
     } catch (error) {
