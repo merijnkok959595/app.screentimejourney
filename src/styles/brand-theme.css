@@ -665,7 +665,7 @@ p, span, div {
   color: var(--brand-primary);
   border: none;
   padding: 8px 0;
-  margin-top: 12px;
+  margin-top: 0px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 500;
   font-size: 14px;
