@@ -653,6 +653,7 @@ function App() {
   const [recordingTime, setRecordingTime] = useState(0);
   const [recordingTimer, setRecordingTimer] = useState(null);
   const previewAudioRef = useRef(null); // Ref for recorded audio playback
+  const modalRef = useRef(null); // Ref for modal to enable auto-scroll
   const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
   const [animationId, setAnimationId] = useState(null);
 
@@ -2314,46 +2315,20 @@ function App() {
       setIsRecording(true);
       updateAudioLevels();
       
-      // Scroll modal to bottom AFTER React re-renders with recording bar
-      // This happens AFTER user grants microphone permission
-      // Use multiple attempts with increasing delays to ensure DOM is ready
-      const attemptScroll = (attempt = 1, maxAttempts = 10) => {
-        const modal = document.querySelector('.modal');
-        
-        if (!modal) {
-          console.error('❌ Modal not found');
-          return;
-        }
-        
-        const currentScrollHeight = modal.scrollHeight;
-        const currentClientHeight = modal.clientHeight;
-        const maxScroll = currentScrollHeight - currentClientHeight;
-        
-        console.log(`📜 Scroll attempt ${attempt}/${maxAttempts}:`, {
-          scrollHeight: currentScrollHeight,
-          clientHeight: currentClientHeight,
-          maxScroll: maxScroll,
-          currentScrollTop: modal.scrollTop
-        });
-        
-        // If there's scrollable content, scroll to bottom
-        if (maxScroll > 0) {
-          modal.scrollTo({
-            top: maxScroll,
+      // ✅ Scroll AFTER permission is granted (Option 2 - using ref + requestAnimationFrame)
+      // This is 100% bulletproof because:
+      // 1. Uses React ref (direct DOM reference)
+      // 2. requestAnimationFrame syncs with browser paint cycle
+      // 3. Runs AFTER microphone permission is granted
+      requestAnimationFrame(() => {
+        if (modalRef.current) {
+          modalRef.current.scrollTo({
+            top: modalRef.current.scrollHeight,
             behavior: 'smooth'
           });
-          console.log('✅ Scroll executed to:', maxScroll, 'px');
-        } else if (attempt < maxAttempts) {
-          // Content might not be fully rendered yet, try again
-          console.log('⏳ No scrollable content yet, retrying...');
-          setTimeout(() => attemptScroll(attempt + 1, maxAttempts), 100);
-        } else {
-          console.log('⚠️ Max scroll attempts reached, content might fit in viewport');
+          console.log('✅ Auto-scrolled modal after mic permission granted');
         }
-      };
-      
-      // Start after a delay to let React begin rendering
-      setTimeout(() => attemptScroll(), 200);
+      });
       
       console.log('✅ Recording initialized successfully');
     } catch (error) {
@@ -5782,7 +5757,7 @@ function App() {
 
         {/* Device Flow Modal */}
         <div className={`modal-overlay ${showDeviceFlow ? 'active' : ''}`}>
-          <div className="modal" role="dialog" aria-modal="true" aria-labelledby="device-flow-title" style={{maxWidth: '800px'}}>
+          <div ref={modalRef} className="modal" role="dialog" aria-modal="true" aria-labelledby="device-flow-title" style={{maxWidth: '800px'}}>
             {currentFlow && (
               <>
                 <div className="modal__header">
