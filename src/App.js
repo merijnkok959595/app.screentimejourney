@@ -6467,7 +6467,7 @@ function App() {
                           
                           {/* Audio Guide for Setup Pincode step (step 4) */}
                           {currentFlowStep === 4 && (
-                            <div style={{marginBottom: '24px'}}>
+                            <div>
                               {!audioGuideData ? (
                                 <div>
                                   <button
@@ -6528,7 +6528,7 @@ function App() {
                   <div className="modal__footer">
                     {/* Step 3: Profile Generation & WARP Client Download */}
                     {currentFlowStep === 3 && currentFlow.flowType === 'device_setup_flow' && currentFlow.steps[currentFlowStep - 1]?.step_type !== 'pincode_display' && (
-                      <div style={{marginBottom: '24px', width: '100%'}}>
+                      <div style={{width: '100%', marginBottom: '12px'}}>
                         {/* Generate/Download Profile Button */}
                         {!vpnProfileData ? (
                           <button
