@@ -2307,12 +2307,23 @@ function App() {
       updateAudioLevels();
       
       // Scroll modal to bottom AFTER React re-renders with recording bar
-      // Use polling to wait for recording bar to actually appear in DOM
+      // This happens AFTER user grants microphone permission
       const scrollToRecordingBar = () => {
         const modal = document.querySelector('.modal');
-        const recordingBar = modal?.querySelector('[style*="Recording"]'); // Find recording status element
         
-        console.log('📜 Scroll attempt - Modal:', !!modal, 'Recording bar:', !!recordingBar);
+        // Look for the recording status by finding text content "Recording..."
+        const allDivs = modal?.querySelectorAll('div');
+        let recordingBar = null;
+        if (allDivs) {
+          for (let div of allDivs) {
+            if (div.textContent?.includes('Recording...')) {
+              recordingBar = div.closest('[style*="background: #ffffff"]'); // Find the white card container
+              break;
+            }
+          }
+        }
+        
+        console.log('📜 Scroll attempt - Modal:', !!modal, 'Recording bar found:', !!recordingBar);
         
         if (modal && recordingBar) {
           // Recording bar exists, now scroll
@@ -2325,15 +2336,16 @@ function App() {
           console.log('✅ Scroll executed successfully');
         } else if (modal) {
           // Modal exists but recording bar not yet rendered, try again
-          console.log('⏳ Recording bar not yet in DOM, retrying...');
+          console.log('⏳ Recording bar not yet in DOM, retrying in 50ms...');
           setTimeout(scrollToRecordingBar, 50); // Try again in 50ms
         } else {
           console.error('❌ Modal not found');
         }
       };
       
-      // Start polling after a short delay to let React start rendering
-      setTimeout(scrollToRecordingBar, 100);
+      // Start polling AFTER permission granted and recording started
+      // Give React time to render the recording bar
+      setTimeout(scrollToRecordingBar, 150);
       
       console.log('✅ Recording initialized successfully');
     } catch (error) {
