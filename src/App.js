@@ -4647,49 +4647,51 @@ function App() {
               </div>
               
               <div className="modal__content">
-                <p style={{ 
-                  fontSize: '16px', 
-                  color: 'var(--brand-text)', 
-                  marginBottom: '24px',
-                  lineHeight: '1.6',
-                  fontFamily: 'var(--font-body)',
-                  textAlign: 'center'
-                }}>
-                  Your session has expired or could not be verified. Please log in through your store to access your dashboard.
-                </p>
-
-                <details style={{
-                  marginBottom: '24px', 
-                  padding: '16px', 
-                  backgroundColor: 'var(--card-bg)', 
-                  border: '1px solid var(--brand-separator)', 
-                  borderRadius: 'var(--radius-md)',
-                  textAlign: 'left'
-                }}>
-                  <summary style={{ 
-                    cursor: 'pointer', 
-                    fontWeight: '500', 
-                    color: 'var(--text-muted)',
-                    fontSize: '14px',
+                <div style={{marginBottom: '20px'}}>
+                  <p style={{ 
+                    fontSize: '16px', 
+                    color: 'var(--brand-text)', 
+                    marginBottom: '24px',
+                    lineHeight: '1.6',
                     fontFamily: 'var(--font-body)',
                     textAlign: 'center'
                   }}>
-                    Technical Details
-                  </summary>
-                  <pre style={{
-                    fontSize: '12px', 
-                    marginTop: '12px',
-                    fontFamily: 'var(--font-mono)', 
-                    color: 'var(--text-muted)',
-                    whiteSpace: 'pre-wrap',
-                    wordBreak: 'break-word'
+                    Your session has expired or could not be verified. Please log in through your store to access your dashboard.
+                  </p>
+
+                  <details style={{
+                    marginBottom: '0', 
+                    padding: '16px', 
+                    backgroundColor: 'var(--card-bg)', 
+                    border: '1px solid var(--brand-separator)', 
+                    borderRadius: 'var(--radius-md)',
+                    textAlign: 'left'
                   }}>
-                    Path: {window.location.pathname}{'\n'}
-                    Search: {window.location.search}{'\n'}
-                    Full URL: {window.location.href}{'\n'}
-                    User Agent: {navigator.userAgent}
-                  </pre>
-                </details>
+                    <summary style={{ 
+                      cursor: 'pointer', 
+                      fontWeight: '500', 
+                      color: 'var(--text-muted)',
+                      fontSize: '14px',
+                      fontFamily: 'var(--font-body)',
+                      textAlign: 'center'
+                    }}>
+                      Technical Details
+                    </summary>
+                    <pre style={{
+                      fontSize: '12px', 
+                      marginTop: '12px',
+                      fontFamily: 'var(--font-mono)', 
+                      color: 'var(--text-muted)',
+                      whiteSpace: 'pre-wrap',
+                      wordBreak: 'break-word'
+                    }}>
+                      Path: {window.location.pathname}{'\n'}
+                      Search: {window.location.search}{'\n'}
+                      Full URL: {window.location.href}{'\n'}
+                      User Agent: {navigator.userAgent}
+                    </pre>
+                  </details>
+                </div>
               </div>
 
               <div className="modal__footer">
@@ -7712,7 +7714,7 @@ function App() {
             </div>
 
             <div className="modal__content">
-              <div style={{marginBottom: '16px'}}>
+              <div style={{marginBottom: '20px'}}>
                 <p className="account-text" style={{fontSize: '16px', marginBottom: '24px'}}>
                   Complete history of your account activity. Unlock codes are preserved here for easy access.
                 </p>
@@ -7802,7 +7804,7 @@ function App() {
             </div>
 
             <div className="modal__content">
-              <div style={{marginBottom: '16px'}}>
+              <div style={{marginBottom: '20px'}}>
                 <p className="modal__desc" style={{fontSize: '15px', color: 'var(--text-muted)', marginBottom: '24px', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'}}>
                   Your subscription has been cancelled. Below are the pincodes for your devices in case you need them.
                 </p>
