@@ -1301,10 +1301,12 @@ function App() {
       
       for (const flowKey of flowKeys) {
         try {
-          const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/get_system_config`, {
+          const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/get_system_config?v=${Date.now()}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              'Pragma': 'no-cache'
             },
             body: JSON.stringify({ config_key: flowKey })
           });
@@ -5749,8 +5751,14 @@ function App() {
                             
                             {/* Video */}
                             <div style={{marginBottom: '20px'}}>
-                              <video controls style={{width: '100%', borderRadius: '8px', backgroundColor: '#EEEEEE'}}>
-                                <source src={currentFlow.steps[currentFlowStep - 1].media_url} type="video/quicktime" />
+                              <video 
+                                key={`video-${currentFlowStep}-${currentFlow.steps[currentFlowStep - 1].media_url}`}
+                                controls 
+                                style={{width: '100%', borderRadius: '8px', backgroundColor: '#EEEEEE'}}
+                                onLoadStart={() => console.log('🔄 Unlock video loading:', currentFlow.steps[currentFlowStep - 1].media_url)}
+                                onCanPlay={() => console.log('✅ Unlock video ready:', currentFlow.steps[currentFlowStep - 1].media_url)}
+                              >
+                                <source src={`${currentFlow.steps[currentFlowStep - 1].media_url}?v=${Date.now()}`} type="video/quicktime" />
                                 Your browser does not support the video tag.
                               </video>
                             </div>
@@ -6546,14 +6554,15 @@ function App() {
                           {console.log('🎥 Rendering video step:', currentFlowStep, 'URL:', currentFlow.steps[currentFlowStep - 1].media_url, 'Type:', currentFlow.steps[currentFlowStep - 1].step_type)}
                           <div style={{marginBottom: '16px'}}>
                             <video 
+                              key={`video-${currentFlowStep}-${currentFlow.steps[currentFlowStep - 1].media_url}`}
                               controls 
                               style={{width: '100%', height: 'auto', borderRadius: '8px', backgroundColor: '#EEEEEE'}}
                               poster=""
                               onError={(e) => console.error('❌ Video error:', e, 'URL:', currentFlow.steps[currentFlowStep - 1].media_url)}
-                              onLoadStart={() => console.log('🔄 Video loading started')}
-                              onCanPlay={() => console.log('✅ Video can play')}
+                              onLoadStart={() => console.log('🔄 Video loading started:', currentFlow.steps[currentFlowStep - 1].media_url)}
+                              onCanPlay={() => console.log('✅ Video can play:', currentFlow.steps[currentFlowStep - 1].media_url)}
                             >
-                              <source src={currentFlow.steps[currentFlowStep - 1].media_url} type="video/quicktime" />
+                              <source src={`${currentFlow.steps[currentFlowStep - 1].media_url}?v=${Date.now()}`} type="video/quicktime" />
                               Your browser does not support the video tag.
                             </video>
                           </div>
