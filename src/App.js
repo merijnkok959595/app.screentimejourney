@@ -2315,20 +2315,19 @@ function App() {
       setIsRecording(true);
       updateAudioLevels();
       
-      // ✅ Scroll AFTER permission is granted (Option 2 - using ref + requestAnimationFrame)
-      // This is 100% bulletproof because:
-      // 1. Uses React ref (direct DOM reference)
-      // 2. requestAnimationFrame syncs with browser paint cycle
-      // 3. Runs AFTER microphone permission is granted
-      requestAnimationFrame(() => {
-        if (modalRef.current) {
-          modalRef.current.scrollTo({
-            top: modalRef.current.scrollHeight,
-            behavior: 'smooth'
-          });
-          console.log('✅ Auto-scrolled modal after mic permission granted');
-        }
-      });
+      // ✅ Scroll AFTER recording card renders (wait for React to render the card)
+      // Small delay ensures the recording card is in the DOM before scrolling
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          if (modalRef.current) {
+            modalRef.current.scrollTo({
+              top: modalRef.current.scrollHeight,
+              behavior: 'smooth'
+            });
+            console.log('✅ Auto-scrolled modal after recording card appeared');
+          }
+        });
+      }, 150); // 150ms delay for React to render the recording card
       
       console.log('✅ Recording initialized successfully');
     } catch (error) {
