@@ -6639,7 +6639,7 @@ function App() {
                               controls 
                               preload="none"
                               playsInline
-                              poster={`${currentFlow.steps[currentFlowStep - 1].media_url.replace('.mov', '').replace('unlock', 'thumbnail_unlock').replace('screentime', 'thumbnail_screentime').replace('profile', 'thumbnail+profile').replace('pincode', 'thumbnail_pincode')}.jpg?v=${Date.now()}`}
+                              poster={`${currentFlow.steps[currentFlowStep - 1].media_url.replace('.mov', '').replace('unlock', 'thumbnail_unlock').replace('screentime', 'thumbnail_screentime').replace('profile', 'thumbnail_profile').replace('pincode', 'thumbnail_pincode')}.jpg?v=${Date.now()}`}
                               style={{width: '100%', height: 'auto', borderRadius: '8px', backgroundColor: '#EEEEEE'}}
                               onError={(e) => console.error('❌ Video error:', e, 'URL:', currentFlow.steps[currentFlowStep - 1].media_url)}
                               onLoadStart={() => console.log('🔄 Video loading started:', currentFlow.steps[currentFlowStep - 1].media_url)}
