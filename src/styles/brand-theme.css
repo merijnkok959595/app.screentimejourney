@@ -1799,7 +1799,7 @@ p, span, div {
   .btn-tertiary {
     font-size: 14px; /* Consistent with desktop */
     font-weight: 500;
-    margin-top: 12px;
+    margin-top: 0px; /* Better alignment with primary buttons on mobile */
   }
   
   .btn-danger,
@@ -1927,7 +1927,7 @@ p, span, div {
   
   .modal__footer {
     gap: var(--mobile-spacing-sm);
-    margin-top: 20px;
+    margin-top: 12px !important; /* Standardized 12px for all modals on mobile */
     padding-bottom: env(safe-area-inset-bottom, 0px); /* Account for iPhone home indicator */
   }
   

@@ -4994,7 +4994,7 @@ function App() {
                 <div className="modal__footer">
                   <button
                     className="btn-primary"
-                    style={{width: '100%', marginBottom: '12px'}}
+                    style={{width: '100%'}}
                     disabled={!phoneNumber || whatsappLoading}
                     onClick={sendWhatsAppCode}
                   >
@@ -6683,7 +6683,7 @@ function App() {
                             className="btn-secondary"
                             onClick={generateVPNProfile}
                             disabled={profileGenerating || !deviceFormData.device_type}
-                            style={{width: '100%', marginBottom: '12px'}}
+                            style={{width: '100%'}}
                           >
                             {profileGenerating ? 'Generating...' : (
                               <>
@@ -6698,7 +6698,7 @@ function App() {
                           <button
                             className="btn-secondary"
                             onClick={downloadProfile}
-                            style={{width: '100%', marginBottom: '12px'}}
+                            style={{width: '100%'}}
                           >
                             <>
                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}>
