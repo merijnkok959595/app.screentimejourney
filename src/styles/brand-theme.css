@@ -1166,6 +1166,11 @@ p, span, div {
   margin-top: 20px; 
 }
 
+/* Device flow modal footer with multiple buttons needs gap */
+.modal__footer--device-flow {
+  gap: 20px;
+}
+
 /* === BADGES === */
 .badge { 
   display: inline-flex; 
