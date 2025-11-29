@@ -6541,10 +6541,7 @@ function App() {
                           style={{
                             width: '100%',
                             cursor: (surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed))) ? 'not-allowed' : 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '8px',
+                            position: 'relative',
                             pointerEvents: (surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed))) ? 'none' : 'auto'
                           }}
                         >
@@ -6560,10 +6557,29 @@ function App() {
                             }}></div>
                           ) : (
                             <>
-                              <span>{currentFlow.steps && currentFlow.steps[currentFlowStep - 1] 
-                                ? currentFlow.steps[currentFlowStep - 1].action_button 
-                                : 'Next step'}</span>
-                              <span>→</span>
+                              <span style={{
+                                position: 'absolute',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                whiteSpace: 'nowrap'
+                              }}>
+                                {currentFlow.steps && currentFlow.steps[currentFlowStep - 1] 
+                                  ? currentFlow.steps[currentFlowStep - 1].action_button 
+                                  : 'Next step'}
+                              </span>
+                              <span style={{
+                                position: 'absolute',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                marginLeft: 'calc((100% / 2) + 8px)',
+                                whiteSpace: 'nowrap'
+                              }}>→</span>
+                              {/* Invisible spacer to maintain button height */}
+                              <span style={{visibility: 'hidden'}}>
+                                {currentFlow.steps && currentFlow.steps[currentFlowStep - 1] 
+                                  ? currentFlow.steps[currentFlowStep - 1].action_button 
+                                  : 'Next step'}
+                              </span>
                             </>
                           )}
                         </button>
