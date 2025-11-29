@@ -6529,7 +6529,7 @@ function App() {
                     
                     {/* Primary Action Button - hide for pincode display */}
                     {currentFlow.steps[currentFlowStep - 1]?.step_type !== 'pincode_display' && (
-                      <div style={{position: 'relative', width: '100%'}}>
+                      <div style={{position: 'relative', width: '100%', marginTop: '12px'}}>
                         <button
                           className="btn-primary"
                           onClick={nextFlowStep}
