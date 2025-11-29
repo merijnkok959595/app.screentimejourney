@@ -3344,14 +3344,23 @@ function App() {
       const result = await response.json();
       
       if (response.ok && result.success) {
-        // ✅ Smooth UX: Close modal immediately, refresh in background
+        // ✅ Smooth UX: Update local state immediately, close modal
+        setProfileData(prev => ({
+          ...prev,
+          ...updatedData,
+          updated_at: new Date().toISOString()
+        }));
+        
+        // Update cache with new data
+        profileCache.set({
+          ...profileData,
+          ...updatedData,
+          updated_at: new Date().toISOString()
+        });
+        
         setProfileSaving(false);
         setShowProfileEdit(false);
-        console.log('✅ Profile updated successfully - refreshing data silently...');
-        
-        // Silent background refresh (no loading spinner)
-        await fetchProfileData(true);
-        console.log('✅ Profile data refreshed silently');
+        console.log('✅ Profile updated successfully - local state updated');
       } else {
         throw new Error(result.error || 'Failed to update profile');
       }
