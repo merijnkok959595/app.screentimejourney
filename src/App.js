@@ -6347,7 +6347,7 @@ function App() {
                           </p>
                           
                           {/* Form Fields */}
-                          <div style={{marginBottom: '24px'}}>
+                          <div>
                             {currentFlow.steps[currentFlowStep - 1].form_fields.map((field, index) => (
                               <div key={index} style={{marginBottom: index === currentFlow.steps[currentFlowStep - 1].form_fields.length - 1 ? '0' : '20px'}}>
                                 {field.field_type === 'text' && (
@@ -6421,7 +6421,7 @@ function App() {
                       ) : (
                         <>
                           {/* Video Player for video steps */}
-                          <div style={{marginBottom: '24px', borderRadius: '8px', overflow: 'hidden', backgroundColor: '#EEEEEE'}}>
+                          <div style={{borderRadius: '8px', overflow: 'hidden', backgroundColor: '#EEEEEE'}}>
                             <video 
                               controls 
                               style={{width: '100%', height: 'auto', maxHeight: '300px'}}
