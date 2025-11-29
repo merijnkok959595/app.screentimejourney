@@ -2007,25 +2007,15 @@ function App() {
     });
     const url = window.URL.createObjectURL(blob);
     
-    // ✅ FIX: Only use window.open() for mobile devices to trigger native installation
-    // Desktop browsers will still download the file normally
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    
-    if (isMobile) {
-      // Mobile: Open in new window to trigger iOS/macOS installation prompt
-      window.open(url, '_blank');
-      console.log('📱 Mobile: Opened profile for installation');
-    } else {
-      // Desktop: Direct download
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = vpnProfileData.filename;
-      link.style.display = 'none';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      console.log('💻 Desktop: Downloaded profile');
-    }
+    // ✅ FIX: Use direct download link for all devices to trigger installation
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = vpnProfileData.filename;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    console.log('📥 Profile download triggered:', vpnProfileData.filename);
     
     // Clean up after a delay
     setTimeout(() => {
