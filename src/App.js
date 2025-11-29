@@ -1304,9 +1304,7 @@ function App() {
           const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/get_system_config?v=${Date.now()}`, {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
-              'Cache-Control': 'no-cache, no-store, must-revalidate',
-              'Pragma': 'no-cache'
+              'Content-Type': 'application/json'
             },
             body: JSON.stringify({ config_key: flowKey })
           });
