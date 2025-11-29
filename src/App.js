@@ -1325,7 +1325,13 @@ function App() {
                 }
               }
               
+              // DEBUG: Log all video URLs
               console.log(`✅ Loaded ${flowKey}:`, result.data.flow_name, `(${result.data.steps.length} steps)`);
+              result.data.steps.forEach(step => {
+                if (step.media_url) {
+                  console.log(`  📹 Step ${step.step} (${step.title}): ${step.media_url}`);
+                }
+              });
             } else {
               console.log(`ℹ️ ${flowKey} has invalid structure from API, will use fallback`);
             }
