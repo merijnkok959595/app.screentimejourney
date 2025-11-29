@@ -5732,8 +5732,8 @@ function App() {
                           <div style={{marginBottom: '20px'}}>
                             
                             {/* Video */}
-                            <div style={{marginBottom: '20px', textAlign: 'center'}}>
-                              <video controls style={{width: '100%', maxWidth: '500px', borderRadius: '8px', marginBottom: '20px'}}>
+                            <div style={{marginBottom: '20px'}}>
+                              <video controls style={{width: '100%', borderRadius: '8px', backgroundColor: '#EEEEEE'}}>
                                 <source src={currentFlow.steps[currentFlowStep - 1].media_url} type="video/mp4" />
                                 Your browser does not support the video tag.
                               </video>
@@ -6436,10 +6436,10 @@ function App() {
                       ) : (
                         <>
                           {/* Video Player for video steps */}
-                          <div style={{textAlign: 'center', marginBottom: '16px'}}>
+                          <div style={{marginBottom: '16px'}}>
                             <video 
                               controls 
-                              style={{width: '100%', maxWidth: '500px', height: 'auto', borderRadius: '8px', backgroundColor: '#EEEEEE'}}
+                              style={{width: '100%', height: 'auto', borderRadius: '8px', backgroundColor: '#EEEEEE'}}
                               poster=""
                             >
                               <source src={currentFlow.steps[currentFlowStep - 1].media_url} type="video/mp4" />
