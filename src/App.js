@@ -6313,7 +6313,7 @@ function App() {
                           {/* Form Fields */}
                           <div style={{marginBottom: '24px'}}>
                             {currentFlow.steps[currentFlowStep - 1].form_fields.map((field, index) => (
-                              <div key={index} style={{marginBottom: '20px'}}>
+                              <div key={index} style={{marginBottom: index === currentFlow.steps[currentFlowStep - 1].form_fields.length - 1 ? '0' : '20px'}}>
                                 {field.field_type === 'text' && (
                                   <>
                                     <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>{field.label}</label>
