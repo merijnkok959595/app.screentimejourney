@@ -2316,44 +2316,44 @@ function App() {
       
       // Scroll modal to bottom AFTER React re-renders with recording bar
       // This happens AFTER user grants microphone permission
-      const scrollToRecordingBar = () => {
+      // Use multiple attempts with increasing delays to ensure DOM is ready
+      const attemptScroll = (attempt = 1, maxAttempts = 10) => {
         const modal = document.querySelector('.modal');
         
-        // Look for the recording status by finding text content "Recording..."
-        const allDivs = modal?.querySelectorAll('div');
-        let recordingBar = null;
-        if (allDivs) {
-          for (let div of allDivs) {
-            if (div.textContent?.includes('Recording...')) {
-              recordingBar = div.closest('[style*="background: #ffffff"]'); // Find the white card container
-              break;
-            }
-          }
+        if (!modal) {
+          console.error('❌ Modal not found');
+          return;
         }
         
-        console.log('📜 Scroll attempt - Modal:', !!modal, 'Recording bar found:', !!recordingBar);
+        const currentScrollHeight = modal.scrollHeight;
+        const currentClientHeight = modal.clientHeight;
+        const maxScroll = currentScrollHeight - currentClientHeight;
         
-        if (modal && recordingBar) {
-          // Recording bar exists, now scroll
-          const maxScroll = modal.scrollHeight - modal.clientHeight;
-          console.log('📜 Scrolling to:', maxScroll, 'px (scrollHeight:', modal.scrollHeight, 'clientHeight:', modal.clientHeight, ')');
+        console.log(`📜 Scroll attempt ${attempt}/${maxAttempts}:`, {
+          scrollHeight: currentScrollHeight,
+          clientHeight: currentClientHeight,
+          maxScroll: maxScroll,
+          currentScrollTop: modal.scrollTop
+        });
+        
+        // If there's scrollable content, scroll to bottom
+        if (maxScroll > 0) {
           modal.scrollTo({
             top: maxScroll,
             behavior: 'smooth'
           });
-          console.log('✅ Scroll executed successfully');
-        } else if (modal) {
-          // Modal exists but recording bar not yet rendered, try again
-          console.log('⏳ Recording bar not yet in DOM, retrying in 50ms...');
-          setTimeout(scrollToRecordingBar, 50); // Try again in 50ms
+          console.log('✅ Scroll executed to:', maxScroll, 'px');
+        } else if (attempt < maxAttempts) {
+          // Content might not be fully rendered yet, try again
+          console.log('⏳ No scrollable content yet, retrying...');
+          setTimeout(() => attemptScroll(attempt + 1, maxAttempts), 100);
         } else {
-          console.error('❌ Modal not found');
+          console.log('⚠️ Max scroll attempts reached, content might fit in viewport');
         }
       };
       
-      // Start polling AFTER permission granted and recording started
-      // Give React time to render the recording bar
-      setTimeout(scrollToRecordingBar, 150);
+      // Start after a delay to let React begin rendering
+      setTimeout(() => attemptScroll(), 200);
       
       console.log('✅ Recording initialized successfully');
     } catch (error) {
