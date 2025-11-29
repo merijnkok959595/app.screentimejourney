@@ -1373,8 +1373,8 @@ function App() {
                   required: true,
                   help_text: 'Select the type of device you\'re adding',
                   options: [
-                    {value: 'iOS', label: 'iPhone/iPad'},
-                    {value: 'macOS', label: 'MacBook/iMac'}
+                    {value: 'iOS', label: '📱 iPhone/iPad'},
+                    {value: 'macOS', label: '💻 MacBook/iMac'}
                   ]
                 }
               ],
@@ -2920,8 +2920,8 @@ function App() {
                   required: true,
                   help_text: 'Select the type of device you\'re adding',
                   options: [
-                    {value: 'iOS', label: 'iPhone/iPad'},
-                    {value: 'macOS', label: 'MacBook/iMac'}
+                    {value: 'iOS', label: '📱 iPhone/iPad'},
+                    {value: 'macOS', label: '💻 MacBook/iMac'}
                   ]
                 }
               ],
@@ -6449,14 +6449,9 @@ function App() {
                                   display: 'flex',
                                   alignItems: 'center',
                                   cursor: 'pointer',
-                                  padding: '14px 16px',
-                                  border: '1px solid #0F172A',
-                                  borderRadius: '7px',
                                   fontSize: '14px',
                                   fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
-                                  color: '#0F172A',
-                                  transition: 'all 0.2s ease',
-                                  backgroundColor: deviceFormData.terms_accepted ? 'rgba(46, 4, 86, 0.02)' : 'transparent'
+                                  color: '#0F172A'
                                 }}>
                                   <div style={{
                                     position: 'relative',
