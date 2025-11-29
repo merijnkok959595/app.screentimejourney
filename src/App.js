@@ -6798,20 +6798,20 @@ function App() {
                               </span>
                             </>
                           )}
+                          {/* Disabled overlay for better UX - INSIDE button */}
+                          {(surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed)) || (currentFlow.steps[currentFlowStep - 1]?.step_type === 'form' && (!deviceFormData.device_name.trim() || !deviceFormData.device_type || !deviceFormData.terms_accepted))) && (
+                            <div style={{
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              background: 'rgba(255, 255, 255, 0.4)',
+                              borderRadius: '8px',
+                              pointerEvents: 'none'
+                            }} />
+                          )}
                         </button>
-                        {/* Disabled overlay for better UX */}
-                        {(surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed)) || (currentFlow.steps[currentFlowStep - 1]?.step_type === 'form' && (!deviceFormData.device_name.trim() || !deviceFormData.device_type || !deviceFormData.terms_accepted))) && (
-                          <div style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            background: 'rgba(255, 255, 255, 0.4)',
-                            borderRadius: '8px',
-                            pointerEvents: 'none'
-                          }} />
-                        )}
                       </>
                     )}
                     
