@@ -588,6 +588,7 @@ function App() {
     usernameValidationState: null // null, 'checking', 'available', 'taken'
   });
   const [profileLoading, setProfileLoading] = useState(false);
+  const [profileSaving, setProfileSaving] = useState(false); // Separate state for save button
   const [profileError, setProfileError] = useState('');
   const [usernameCheckTimeout, setUsernameCheckTimeout] = useState(null);
   
@@ -3252,7 +3253,7 @@ function App() {
   const updateProfileData = async (updatedData) => {
     try {
       // ✅ Use button-level loading only (not dashboard spinner)
-      setProfileLoading(true);
+      setProfileSaving(true);
       setProfileError('');
       
       // CRITICAL: Use centralized customer ID extraction
@@ -3278,7 +3279,7 @@ function App() {
             ...updatedData,
             updated_at: new Date().toISOString()
           }));
-          setProfileLoading(false);
+          setProfileSaving(false);
           setShowProfileEdit(false);
           console.log('🔧 Local dev: Profile updated successfully');
         }, 500);
@@ -3298,7 +3299,7 @@ function App() {
       
       if (response.ok && result.success) {
         // ✅ Smooth UX: Close modal immediately, refresh in background
-        setProfileLoading(false);
+        setProfileSaving(false);
         setShowProfileEdit(false);
         console.log('✅ Profile updated successfully - refreshing data silently...');
         
@@ -3312,7 +3313,7 @@ function App() {
     } catch (error) {
       console.error('❌ Error updating profile:', error);
       setProfileError(error.message || 'Failed to update profile');
-      setProfileLoading(false);
+      setProfileSaving(false);
     }
   };
 
@@ -5736,7 +5737,7 @@ function App() {
                     updateProfileData(updatedData);
                   }}
                 >
-                  {profileLoading ? 'Saving...' : 'Save Changes'}
+                  {profileSaving ? 'Saving...' : 'Save Changes'}
                 </button>
                 
                 <button 
@@ -5745,7 +5746,7 @@ function App() {
                     setShowProfileEdit(false);
                     setProfileError('');
                   }}
-                  disabled={profileLoading}
+                  disabled={profileSaving}
                 >
                   Cancel
                 </button>
