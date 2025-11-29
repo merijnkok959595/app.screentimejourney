@@ -1243,7 +1243,7 @@ function App() {
                 title: 'Setup Screentime',
                 body: '‼️ Setup dummy pincode first.',
                 step_type: 'video',
-                media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/screentime.mov',
                 action_button: 'Next Step'
               },
               {
@@ -1251,7 +1251,7 @@ function App() {
                 title: 'Setup Profile',
                 body: '‼️ Extra optional protection against porn',
                 step_type: 'video',
-                media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/profile.mov',
                 action_button: 'Next Step'
               },
               {
@@ -1259,7 +1259,7 @@ function App() {
                 title: 'Setup Pincode',
                 body: '',
                 step_type: 'video',
-                media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/pincode.mov',
                 action_button: 'Complete Setup'
               }
             ]
@@ -1274,7 +1274,7 @@ function App() {
                 title: 'Unlock Device',
                 body: '',
                 step_type: 'video_surrender',
-                media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/unlock.mov',
                 surrender_text: 'I hereby give up on changing my screen time habits. I give up the chance to be a present family man, live with more presence and purpose, and give attention to my wife and children. I choose distraction over discipline, and I surrender my intention to grow.',
                 action_button: 'Submit Surrender'
               },
@@ -1384,7 +1384,7 @@ function App() {
               title: 'Setup Screentime',
               body: '‼️ Setup dummy pincode first.',
               step_type: 'video',
-              media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/screentime.mov',
               action_button: 'Next Step'
             },
             {
@@ -1392,7 +1392,7 @@ function App() {
               title: 'Setup Profile',
               body: '‼️ Extra optional protection against porn',
               step_type: 'video',
-              media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/profile.mov',
               action_button: 'Next Step'
             },
             {
@@ -1400,7 +1400,7 @@ function App() {
               title: 'Setup Pincode',
               body: '',
               step_type: 'video',
-              media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/pincode.mov',
               action_button: 'Complete Setup'
             }
           ]
@@ -1415,7 +1415,7 @@ function App() {
               title: 'Unlock Device',
               body: '',
               step_type: 'video_surrender',
-              media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/unlock.mov',
               surrender_text: 'I hereby give up on changing my screen time habits. I give up the chance to be a present family man, live with more presence and purpose, and give attention to my wife and children. I choose distraction over discipline, and I surrender my intention to grow.',
               action_button: 'Submit Surrender'
             },
@@ -2869,7 +2869,7 @@ function App() {
               title: 'Unlock Device',
               body: '',
               step_type: 'video_surrender',
-              media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/unlock.mov',
               surrender_text: 'I hereby give up on changing my screen time habits. I give up the chance to be a present family man, live with more presence and purpose, and give attention to my wife and children. I choose distraction over discipline, and I surrender my intention to grow.',
               action_button: 'Submit Surrender'
             },
@@ -2926,24 +2926,26 @@ function App() {
             },
             {
               step: 2,
-              title: 'Understanding Digital Wellness',
-              body: 'Before we proceed, please watch this important video about your Screen Time Journey.',
+              title: 'Setup Screentime',
+              body: '‼️ Setup dummy pincode first.',
               step_type: 'video',
-              media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-              action_button: 'I\'ve Watched the Video'
+              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/screentime.mov',
+              action_button: 'Next Step'
             },
             {
               step: 3,
-              title: 'Download Profile',
-              body: 'Download and install the configuration profile on your device to start your Screen Time Journey.',
-              step_type: 'download',
-              action_button: 'Generate Profile'
+              title: 'Setup Profile',
+              body: '‼️ Extra optional protection against porn',
+              step_type: 'video',
+              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/profile.mov',
+              action_button: 'Next Step'
             },
             {
               step: 4,
-              title: 'Setup Complete',
-              body: 'Congratulations! Your device has been added to your Screen Time Journey. You can now monitor and manage your digital wellness.',
-              step_type: 'confirmation',
+              title: 'Setup Pincode',
+              body: '',
+              step_type: 'video',
+              media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/pincode.mov',
               action_button: 'Complete Setup'
             }
           ]
