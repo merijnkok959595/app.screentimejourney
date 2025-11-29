@@ -272,12 +272,20 @@ const ProgressSection = ({ latestDevice, customerName = "Merijn", customerEmail 
   const progress = calculateProgress(deviceData, userGender, milestones);
   const { daysInFocus, progressPercentage, currentLevel, daysToNext, finalGoalDays } = progress;
   
-  // Extract first name - only use if customerFirstName exists
-  let firstName = ""; // Default to empty (will just show "Hi,")
+  // Extract first name - prioritize actual first_name, then username, then email
+  let firstName = "Friend"; // Default fallback
   
   if (customerFirstName && customerFirstName.trim()) {
     // Use actual first name if provided
     firstName = customerFirstName.charAt(0).toUpperCase() + customerFirstName.slice(1);
+  } else if (customerName && customerName.trim()) {
+    // Fallback to username without @ if present, capitalize first letter
+    firstName = customerName.replace('@', '');
+    firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+  } else if (customerEmail && customerEmail.includes('@')) {
+    // Fallback to email prefix (before @)
+    firstName = customerEmail.split('@')[0];
+    firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
   }
   
   // Calculate percentile based on devices - 0% if no devices

@@ -1160,7 +1160,7 @@ p, span, div {
 .modal__footer { 
   display: flex; 
   flex-direction: column; 
-  gap: 20px; 
+  gap: 15px; 
   justify-content: center; 
   align-items: center; 
   margin-top: 20px; 
