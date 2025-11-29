@@ -6610,36 +6610,42 @@ function App() {
                               <p style={{margin: 0, fontSize: '16px', lineHeight: '1.5', color: '#374151'}}>
                                 {currentFlow.steps[currentFlowStep - 1].body}
                               </p>
-                              {currentFlowStep === 4 && audioGuideData && (
-                                <button
-                                  onClick={() => {
-                                    setAudioGuideData(null);
-                                    setAudioHasBeenPlayed(false);
-                                    console.log('🔄 Regenerating audio guide');
-                                  }}
-                                  style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    color: 'var(--brand-primary)',
-                                    textDecoration: 'underline',
-                                    cursor: 'pointer',
-                                    fontSize: '14px',
-                                    padding: '4px 0',
-                                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
-                                    fontWeight: 500,
-                                    whiteSpace: 'nowrap',
-                                    marginLeft: '16px'
-                                  }}
-                                >
-                                  New code
-                                </button>
-                              )}
                             </div>
                           )}
                           
                           {/* Audio Guide for Setup Pincode step (step 4) */}
                           {currentFlowStep === 4 && (
-                            <div>
+                            <div style={{position: 'relative'}}>
+                              {/* New code button - positioned top right above audio player */}
+                              {audioGuideData && (
+                                <div style={{
+                                  display: 'flex',
+                                  justifyContent: 'flex-end',
+                                  marginBottom: '8px'
+                                }}>
+                                  <button
+                                    onClick={() => {
+                                      setAudioGuideData(null);
+                                      setAudioHasBeenPlayed(false);
+                                      console.log('🔄 Regenerating audio guide');
+                                    }}
+                                    style={{
+                                      background: 'transparent',
+                                      border: 'none',
+                                      color: 'var(--brand-primary)',
+                                      textDecoration: 'underline',
+                                      cursor: 'pointer',
+                                      fontSize: '14px',
+                                      padding: '4px 0',
+                                      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                                      fontWeight: 500
+                                    }}
+                                  >
+                                    New code
+                                  </button>
+                                </div>
+                              )}
+                              
                               {!audioGuideData ? (
                                 <div>
                                   <button
@@ -6737,6 +6743,7 @@ function App() {
                     
                     {/* Primary Action Button - hide for pincode display */}
                     {currentFlow.steps[currentFlowStep - 1]?.step_type !== 'pincode_display' && (
+                      <>
                       <button
                         className="btn-primary"
                         onClick={nextFlowStep}
@@ -6750,6 +6757,7 @@ function App() {
                           width: '100%',
                           cursor: (surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed)) || (currentFlow.steps[currentFlowStep - 1]?.step_type === 'form' && (!deviceFormData.device_name.trim() || !deviceFormData.device_type || !deviceFormData.terms_accepted))) ? 'not-allowed' : 'pointer',
                           position: 'relative',
+                          opacity: (surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed)) || (currentFlow.steps[currentFlowStep - 1]?.step_type === 'form' && (!deviceFormData.device_name.trim() || !deviceFormData.device_type || !deviceFormData.terms_accepted))) ? 0.6 : 1,
                           pointerEvents: (surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed)) || (currentFlow.steps[currentFlowStep - 1]?.step_type === 'form' && (!deviceFormData.device_name.trim() || !deviceFormData.device_type || !deviceFormData.terms_accepted))) ? 'none' : 'auto'
                         }}
                       >
@@ -6791,6 +6799,20 @@ function App() {
                             </>
                           )}
                         </button>
+                        {/* Disabled overlay for better UX */}
+                        {(surrenderSubmitting || ((currentFlow.steps[currentFlowStep - 1]?.step_type === 'surrender' || currentFlow.steps[currentFlowStep - 1]?.step_type === 'video_surrender') && !audioBlob) || (currentFlow.flowType === 'device_setup_flow' && currentFlowStep === 4 && (!audioGuideData || !audioHasBeenPlayed)) || (currentFlow.steps[currentFlowStep - 1]?.step_type === 'form' && (!deviceFormData.device_name.trim() || !deviceFormData.device_type || !deviceFormData.terms_accepted))) && (
+                          <div style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            background: 'rgba(255, 255, 255, 0.4)',
+                            borderRadius: '8px',
+                            pointerEvents: 'none'
+                          }} />
+                        )}
+                      </>
                     )}
                     
                     {/* Surrender Error Message */}
