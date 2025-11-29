@@ -6422,7 +6422,7 @@ function App() {
                       ) : (
                         <>
                           {/* Video Player for video steps */}
-                          <div style={{borderRadius: '8px', overflow: 'hidden', backgroundColor: '#EEEEEE'}}>
+                          <div style={{borderRadius: '8px', overflow: 'hidden', backgroundColor: '#EEEEEE', marginBottom: '16px'}}>
                             <video 
                               controls 
                               style={{width: '100%', height: 'auto', maxHeight: '300px'}}
@@ -6435,7 +6435,7 @@ function App() {
                           
                           {/* Body Text for video steps */}
                           {currentFlow.steps[currentFlowStep - 1].body && currentFlowStep !== 3 && currentFlowStep !== 4 && (
-                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px'}}>
+                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                               <p style={{margin: 0, fontSize: '16px', lineHeight: '1.5', color: '#374151'}}>
                                 {currentFlow.steps[currentFlowStep - 1].body}
                               </p>
