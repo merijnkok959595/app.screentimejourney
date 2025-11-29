@@ -1,0 +1,1 @@
+{"statusCode": 200, "headers": {"Content-Type": "application/json", "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*", "Access-Control-Allow-Methods": "*"}, "body": "{\"success\": true, \"mode\": \"test_email\", \"message_id\": \"0110019a73c5215c-b52669d9-fc58-4099-b94c-6156dc49ab6a-000000\", \"recipient\": \"merijn@risottini.com\"}"}

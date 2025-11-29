@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        <!-- CleanBrowsing DNS/VPN Configuration -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.dnsSettings.managed</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.cleanbrowsing.dns.adult</string>
+            <key>PayloadUUID</key>
+            <string>CLEANBROWSING-DNS-001</string>
+            <key>PayloadDisplayName</key>
+            <string>CleanBrowsing Adult Filter DNS</string>
+            <key>PayloadDescription</key>
+            <string>CleanBrowsing DNS for blocking adult content</string>
+            <key>DNSSettings</key>
+            <dict>
+                <key>DNSProtocol</key>
+                <string>HTTPS</string>
+                <key>ServerURL</key>
+                <string>https://doh.cleanbrowsing.org/doh/adult-filter/</string>
+            </dict>
+        </dict>
+        
+        <!-- Restrictions Payload for Social Media Blocking -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.applicationaccess</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.restrictions.socialmedia</string>
+            <key>PayloadUUID</key>
+            <string>RESTRICTIONS-001</string>
+            <key>PayloadDisplayName</key>
+            <string>Social Media Restrictions</string>
+            <key>PayloadDescription</key>
+            <string>Blocks access to social media apps and adult content</string>
+            
+            <!-- Block specific apps -->
+            <key>blacklistedAppBundleIDs</key>
+            <array>
+                <!-- Social Media Apps -->
+                <string>com.burbn.instagram</string>
+                <string>com.facebook.Facebook</string>
+                <string>com.atebits.Tweetie2</string>
+                <string>com.zhiliaoapp.musically</string>
+                <string>com.snapchat.snapchat</string>
+                <string>com.linkedin.LinkedIn</string>
+                <string>com.toyopagroup.picaboo</string>
+                <string>pinterest</string>
+                <string>com.reddit.Reddit</string>
+                <string>com.getwhatsapp.WhatsApp</string>
+                <string>net.whatsapp.WhatsApp</string>
+                <string>com.discord</string>
+                <string>org.telegram.Telegram</string>
+            </array>
+            
+            <!-- Content Restrictions -->
+            <key>allowExplicitContent</key>
+            <false/>
+            <key>allowSafari</key>
+            <true/>
+            <key>safariAllowAutoFill</key>
+            <true/>
+            <key>safariAcceptCookies</key>
+            <integer>2</integer>
+            <key>safariAllowPopups</key>
+            <false/>
+            <key>ratingRegion</key>
+            <string>us</string>
+            <key>ratingMovies</key>
+            <integer>1000</integer>
+            <key>ratingTVShows</key>
+            <integer>1000</integer>
+            <key>ratingApps</key>
+            <integer>600</integer>
+            
+            <!-- Additional Restrictions -->
+            <key>allowAssistantWhileLocked</key>
+            <false/>
+            <key>allowScreenShot</key>
+            <true/>
+            <key>allowVideoConferencing</key>
+            <true/>
+            <key>allowInAppPurchases</key>
+            <false/>
+            <key>allowUIAppInstallation</key>
+            <false/>
+            <key>allowAppRemoval</key>
+            <false/>
+        </dict>
+        
+        <!-- Web Content Filter -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.webcontent-filter</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.webcontentfilter.001</string>
+            <key>PayloadUUID</key>
+            <string>WEBFILTER-001</string>
+            <key>PayloadDisplayName</key>
+            <string>Web Content Filter</string>
+            <key>FilterType</key>
+            <string>BuiltIn</string>
+            <key>AutoFilterEnabled</key>
+            <true/>
+            <key>PermittedURLs</key>
+            <array>
+                <string>apple.com</string>
+                <string>icloud.com</string>
+            </array>
+            <key>DenyListURLs</key>
+            <array>
+                <!-- Social Media Sites -->
+                <string>facebook.com</string>
+                <string>instagram.com</string>
+                <string>twitter.com</string>
+                <string>x.com</string>
+                <string>tiktok.com</string>
+                <string>snapchat.com</string>
+                <string>reddit.com</string>
+                <string>pinterest.com</string>
+                <string>linkedin.com</string>
+                <string>tumblr.com</string>
+                <string>discord.com</string>
+                <string>telegram.org</string>
+            </array>
+        </dict>
+    </array>
+    
+    <!-- Root Profile Settings -->
+    <key>PayloadDisplayName</key>
+    <string>Content Filter & Social Media Block</string>
+    <key>PayloadIdentifier</key>
+    <string>com.mdm.contentfilter.profile</string>
+    <key>PayloadRemovalDisallowed</key>
+    <true/>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>MAIN-PROFILE-UUID-001</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+    <key>PayloadDescription</key>
+    <string>Blocks adult content, social media apps and websites using CleanBrowsing DNS</string>
+    <key>PayloadOrganization</key>
+    <string>Personal MDM</string>
+</dict>
+</plist>
+
+
+

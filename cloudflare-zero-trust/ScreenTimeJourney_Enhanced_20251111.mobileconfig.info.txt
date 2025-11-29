@@ -1,0 +1,71 @@
+Screen Time Journey - ENHANCED Protection Profile
+Generated: 2025-11-11 16:26:38
+
+Profile UUID: 20386EA9-A9D4-41C2-95C1-0A5A7D47C476
+WARP UUID: BB6D6217-E2AC-439A-BEC8-CCC4D2CA72E6
+Organization: screentimejourney
+
+MAXIMUM SECURITY CONFIGURATION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Always-on WARP connection
+✅ User cannot disable WARP
+✅ Full VPN mode (not DNS-only)
+✅ No fallback to unprotected mode
+✅ DNS and firewall filtering enabled
+✅ Manual VPN creation blocked
+✅ Profile installation blocked
+✅ Profile removal restricted
+
+PROTECTION LAYERS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Cloudflare Anonymizer Category (auto-updated)
+   → Blocks ALL VPNs, proxies, Tor, anonymizers
+   → New VPN services blocked automatically
+
+2. Cloudflare Adult Content Categories (AI-powered)
+   → Blocks pornography, adult content, nudity
+   → Cloudflare AI detects new sites automatically
+
+3. SafeSearch Enforcement
+   → Google, Bing, DuckDuckGo filtered
+   → YouTube Restricted Mode enforced
+
+4. Domain Blocklists (backup layer)
+   → Top 10 adult sites explicitly blocked
+   → Belt-and-suspenders approach
+
+5. Device-Level Restrictions
+   → Cannot create manual VPNs
+   → Cannot install bypass profiles
+   → WARP toggle locked
+
+DEPLOYMENT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Transfer this .mobileconfig to iOS device
+2. Install via Settings > Profile Downloaded
+3. Install Cloudflare WARP app from App Store
+4. Sign in with: screentimejourney.cloudflareaccess.com
+5. Verify WARP is connected and locked
+
+VERIFICATION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Test these to confirm blocking works:
+• pornhub.com → Should be BLOCKED
+• nordvpn.com → Should be BLOCKED
+• google.com/search?q=porn → SafeSearch ON
+• Settings > VPN → Cannot add manual VPN
+• 1.1.1.1/cdn-cgi/trace → Shows warp=on
+
+BYPASS PREVENTION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+This profile prevents common bypass methods:
+✓ Cannot disable WARP
+✓ Cannot install VPN apps (domains blocked)
+✓ Cannot configure manual VPN
+✓ Cannot use alternative DNS
+✓ Cannot install other profiles
+✓ Cannot use proxy/Tor
+✓ Profile removal requires password
+
+For support: info@screentimejourney.com
+Dashboard: https://one.dash.cloudflare.com/

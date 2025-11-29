@@ -1,0 +1,12 @@
+# Requirements for Milestone Video Generation Lambda
+boto3>=1.28.0
+
+
+
+
+
+
+
+
+
+

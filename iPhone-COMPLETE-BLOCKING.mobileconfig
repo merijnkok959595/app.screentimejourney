@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        
+        <!-- ========================================== -->
+        <!-- 1. CleanBrowsing DNS - Blocks Adult Sites -->
+        <!-- ========================================== -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.dnsSettings.managed</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.cleanbrowsing.dns.adult</string>
+            <key>PayloadUUID</key>
+            <string>DNS-CLEANBROWSING-001</string>
+            <key>PayloadDisplayName</key>
+            <string>CleanBrowsing Adult Filter</string>
+            <key>PayloadDescription</key>
+            <string>Blocks adult and pornographic content at DNS level</string>
+            <key>DNSSettings</key>
+            <dict>
+                <key>DNSProtocol</key>
+                <string>HTTPS</string>
+                <key>ServerURL</key>
+                <string>https://doh.cleanbrowsing.org/doh/adult-filter/</string>
+            </dict>
+        </dict>
+        
+        <!-- ========================================== -->
+        <!-- 2. APPLICATION & CONTENT RESTRICTIONS     -->
+        <!-- ========================================== -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.applicationaccess</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentime.restrictions</string>
+            <key>PayloadUUID</key>
+            <string>RESTRICTIONS-SCREENTIME-001</string>
+            <key>PayloadDisplayName</key>
+            <string>Screen Time Restrictions</string>
+            <key>PayloadDescription</key>
+            <string>Enforces app and content restrictions via MDM</string>
+            
+            <!-- === BLOCK SOCIAL MEDIA APPS === -->
+            <!-- Note: Works best on supervised, but still adds friction on unsupervised -->
+            <key>blacklistedAppBundleIDs</key>
+            <array>
+                <string>com.burbn.instagram</string>
+                <string>com.facebook.Facebook</string>
+                <string>com.facebook.Messenger</string>
+                <string>com.atebits.Tweetie2</string>
+                <string>com.zhiliaoapp.musically</string>
+                <string>com.snapchat.snapchat</string>
+                <string>com.linkedin.LinkedIn</string>
+                <string>pinterest</string>
+                <string>com.reddit.Reddit</string>
+                <string>org.telegram.Telegram</string>
+                <string>ph.telegra.Telegraph</string>
+                <string>com.discord</string>
+                <string>com.tiktok.tiktokv</string>
+                <string>com.toyopagroup.picaboo</string>
+            </array>
+            
+            <!-- === PREVENT APP INSTALLATION === -->
+            <key>allowUIAppInstallation</key>
+            <false/>
+            <key>allowAppInstallation</key>
+            <false/>
+            
+            <!-- === PREVENT APP REMOVAL (Can't delete to bypass) === -->
+            <key>allowAppRemoval</key>
+            <false/>
+            
+            <!-- === BLOCK EXPLICIT CONTENT === -->
+            <key>allowExplicitContent</key>
+            <false/>
+            
+            <!-- === AGE RATINGS === -->
+            <key>ratingRegion</key>
+            <string>us</string>
+            <key>ratingApps</key>
+            <integer>200</integer> <!-- 4+ apps only -->
+            <key>ratingMovies</key>
+            <integer>1000</integer> <!-- PG-13 and below -->
+            <key>ratingTVShows</key>
+            <integer>1000</integer>
+            
+            <!-- === SAFARI RESTRICTIONS === -->
+            <key>allowSafari</key>
+            <true/>
+            <key>safariAllowPopups</key>
+            <false/>
+            <key>safariAllowAutoFill</key>
+            <true/>
+            <key>safariAcceptCookies</key>
+            <integer>2</integer>
+            <key>safariForceFraudWarning</key>
+            <true/>
+            
+            <!-- === PREVENT VPN INSTALLATION (Can't bypass with VPN) === -->
+            <key>allowVPNCreation</key>
+            <false/>
+            
+            <!-- === PREVENT SETTINGS CHANGES === -->
+            <key>allowAccountModification</key>
+            <false/>
+            <key>allowPasscodeModification</key>
+            <false/>
+            
+            <!-- === PREVENT FACTORY RESET BYPASS === -->
+            <key>allowEraseContentAndSettings</key>
+            <false/>
+            
+            <!-- === PREVENT IN-APP PURCHASES === -->
+            <key>allowInAppPurchases</key>
+            <false/>
+            
+            <!-- === BLOCK CAMERA (Optional - remove if you want camera) === -->
+            <!-- <key>allowCamera</key>
+            <false/> -->
+            
+            <!-- === SIRI RESTRICTIONS === -->
+            <key>allowAssistant</key>
+            <true/>
+            <key>allowAssistantWhileLocked</key>
+            <false/>
+        </dict>
+        
+        <!-- ========================================== -->
+        <!-- 3. WEB CONTENT FILTER - Block Social Sites -->
+        <!-- ========================================== -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.webcontent-filter</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.webfilter.socialmedia</string>
+            <key>PayloadUUID</key>
+            <string>WEBFILTER-SOCIAL-001</string>
+            <key>PayloadDisplayName</key>
+            <string>Web Content Filter</string>
+            <key>PayloadDescription</key>
+            <string>Blocks social media websites and adult content</string>
+            
+            <!-- Use Apple's built-in filter -->
+            <key>FilterType</key>
+            <string>BuiltIn</string>
+            
+            <!-- Auto-filter adult content -->
+            <key>AutoFilterEnabled</key>
+            <true/>
+            
+            <!-- === WHITELIST (Always Allowed) === -->
+            <key>PermittedURLs</key>
+            <array>
+                <string>apple.com</string>
+                <string>icloud.com</string>
+            </array>
+            
+            <!-- === BLACKLIST (Never Allowed) === -->
+            <key>DenyListURLs</key>
+            <array>
+                <!-- Social Media Sites -->
+                <string>facebook.com</string>
+                <string>*.facebook.com</string>
+                <string>m.facebook.com</string>
+                <string>mobile.facebook.com</string>
+                <string>instagram.com</string>
+                <string>*.instagram.com</string>
+                <string>twitter.com</string>
+                <string>*.twitter.com</string>
+                <string>mobile.twitter.com</string>
+                <string>x.com</string>
+                <string>*.x.com</string>
+                <string>tiktok.com</string>
+                <string>*.tiktok.com</string>
+                <string>snapchat.com</string>
+                <string>*.snapchat.com</string>
+                <string>reddit.com</string>
+                <string>*.reddit.com</string>
+                <string>old.reddit.com</string>
+                <string>pinterest.com</string>
+                <string>*.pinterest.com</string>
+                <string>linkedin.com</string>
+                <string>*.linkedin.com</string>
+                <string>tumblr.com</string>
+                <string>*.tumblr.com</string>
+                <string>discord.com</string>
+                <string>*.discord.com</string>
+                <string>telegram.org</string>
+                <string>*.telegram.org</string>
+                <string>web.telegram.org</string>
+                <string>t.me</string>
+                <string>web.whatsapp.com</string>
+                <string>whatsapp.com</string>
+                <string>twitch.tv</string>
+                <string>*.twitch.tv</string>
+                
+                <!-- Alternative Mobile URLs -->
+                <string>m.facebook.com</string>
+                <string>m.twitter.com</string>
+                <string>mobile.twitter.com</string>
+            </array>
+            
+            <!-- Use whitelist and blacklist -->
+            <key>UseContentFiltersList</key>
+            <true/>
+        </dict>
+        
+        <!-- ========================================== -->
+        <!-- 4. PARENTAL CONTROLS RESTRICTIONS          -->
+        <!-- ========================================== -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.applicationaccess</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.parental.controls</string>
+            <key>PayloadUUID</key>
+            <string>PARENTAL-CONTROLS-001</string>
+            <key>PayloadDisplayName</key>
+            <string>Additional Content Controls</string>
+            
+            <!-- Restrict Adult Content in Apps -->
+            <key>allowBookstore</key>
+            <true/>
+            <key>allowBookstoreErotica</key>
+            <false/>
+            
+            <!-- Multiplayer Gaming Restrictions -->
+            <key>allowMultiplayerGaming</key>
+            <true/>
+            <key>allowAddingGameCenterFriends</key>
+            <false/>
+            
+            <!-- Privacy -->
+            <key>allowDiagnosticSubmission</key>
+            <true/>
+            <key>allowDiagnosticSubmissionModification</key>
+            <false/>
+            
+            <!-- Siri Web Search -->
+            <key>allowAssistantUserGeneratedContent</key>
+            <false/>
+        </dict>
+        
+    </array>
+    
+    <!-- ========================================== -->
+    <!-- ROOT PROFILE CONFIGURATION                 -->
+    <!-- ========================================== -->
+    <key>PayloadDisplayName</key>
+    <string>🛡️ Complete Protection: Apps + Websites + Adult Content</string>
+    
+    <key>PayloadIdentifier</key>
+    <string>com.screentime.complete.protection</string>
+    
+    <key>PayloadUUID</key>
+    <string>COMPLETE-PROTECTION-MAIN-001</string>
+    
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+    
+    <key>PayloadDescription</key>
+    <string>Complete protection system: Blocks social media apps (Instagram, Facebook, TikTok, Twitter, Snapchat, Reddit), blocks social media websites in Safari, blocks adult/porn content via CleanBrowsing DNS. Profile cannot be removed without device wipe. Install once and you're protected.</string>
+    
+    <key>PayloadOrganization</key>
+    <string>Personal Accountability System</string>
+    
+    <!-- CANNOT BE REMOVED WITHOUT PASSWORD/WIPE -->
+    <key>PayloadRemovalDisallowed</key>
+    <true/>
+    
+    <!-- Optionally require password to remove (not supported on all iOS versions) -->
+    <key>ConsentText</key>
+    <dict>
+        <key>en</key>
+        <string>⚠️ WARNING: This profile enforces strict content and app restrictions. Once installed:
+
+✅ Social media apps BLOCKED (Instagram, Facebook, TikTok, Twitter, Snapchat, Reddit, etc.)
+✅ Social media websites BLOCKED (facebook.com, instagram.com, etc.)
+✅ Adult/porn sites BLOCKED (CleanBrowsing DNS filter)
+✅ Cannot install new apps from App Store
+✅ Cannot remove this profile without factory reset
+
+This is designed for accountability and self-discipline. Only install if you are committed to these restrictions.
+
+For time-based blocking (e.g., 22:00-09:00), combine with Screen Time Downtime settings after installation.</string>
+    </dict>
+    
+</dict>
+</plist>
+
+
+

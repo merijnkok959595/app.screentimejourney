@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        
+        <!-- CleanBrowsing DNS Filter -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.dnsSettings.managed</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.dns.macos</string>
+            <key>PayloadUUID</key>
+            <string>DNS-MACOS-2024-001</string>
+            <key>PayloadDisplayName</key>
+            <string>CleanBrowsing DNS</string>
+            <key>DNSSettings</key>
+            <dict>
+                <key>DNSProtocol</key>
+                <string>HTTPS</string>
+                <key>ServerURL</key>
+                <string>https://doh.cleanbrowsing.org/doh/adult-filter/</string>
+            </dict>
+        </dict>
+        
+        <!-- Web Content Filter -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.webcontent-filter</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.webfilter.macos</string>
+            <key>PayloadUUID</key>
+            <string>WEBFILTER-MACOS-2024-001</string>
+            <key>PayloadDisplayName</key>
+            <string>Web Content Filter</string>
+            <key>FilterType</key>
+            <string>BuiltIn</string>
+            <key>AutoFilterEnabled</key>
+            <true/>
+            <key>PermittedURLs</key>
+            <array>
+                <string>apple.com</string>
+                <string>icloud.com</string>
+            </array>
+            <key>DenyListURLs</key>
+            <array>
+                <string>facebook.com</string>
+                <string>*.facebook.com</string>
+                <string>instagram.com</string>
+                <string>*.instagram.com</string>
+                <string>twitter.com</string>
+                <string>*.twitter.com</string>
+                <string>x.com</string>
+                <string>*.x.com</string>
+                <string>tiktok.com</string>
+                <string>*.tiktok.com</string>
+                <string>snapchat.com</string>
+                <string>*.snapchat.com</string>
+                <string>reddit.com</string>
+                <string>*.reddit.com</string>
+                <string>discord.com</string>
+                <string>*.discord.com</string>
+            </array>
+        </dict>
+        
+        <!-- Content Restrictions -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.applicationaccess</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.restrictions.macos</string>
+            <key>PayloadUUID</key>
+            <string>RESTRICTIONS-MACOS-2024-001</string>
+            <key>PayloadDisplayName</key>
+            <string>Content Restrictions</string>
+            <key>allowExplicitContent</key>
+            <false/>
+            <key>ratingRegion</key>
+            <string>us</string>
+            <key>ratingApps</key>
+            <integer>600</integer>
+        </dict>
+        
+    </array>
+    
+    <key>PayloadDisplayName</key>
+    <string>ScreenTime Journey - macOS Protection</string>
+    
+    <key>PayloadIdentifier</key>
+    <string>com.screentimejourney.macos</string>
+    
+    <key>PayloadUUID</key>
+    <string>MAIN-MACOS-2024-001</string>
+    
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+    
+    <key>PayloadDescription</key>
+    <string>Blocks porn (CleanBrowsing DNS), enforces adult content filter, blocks social media websites. Works with Cloudflare WARP for time-based app blocking (22:00-09:00). PIN: 1234</string>
+    
+    <key>PayloadOrganization</key>
+    <string>ScreenTime Journey</string>
+    
+    <key>PayloadRemovalDisallowed</key>
+    <true/>
+    
+    <key>RemovalPassword</key>
+    <string>1234</string>
+    
+</dict>
+</plist>
+
+
+

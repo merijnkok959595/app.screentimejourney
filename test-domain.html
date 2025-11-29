@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domain Test - Screen Time Journey</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2E0456;
+            margin-top: 0;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        button {
+            background: #2E0456;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 10px 10px 0;
+        }
+        button:hover {
+            background: #1a0230;
+        }
+        .log {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🔍 Domain & Session Test</h1>
+        <p>This page helps diagnose the "No active session" issue.</p>
+    </div>
+
+    <div class="card">
+        <h2>Current Location</h2>
+        <div class="status info">
+            <strong>URL:</strong> <code id="current-url"></code><br>
+            <strong>Hostname:</strong> <code id="current-hostname"></code><br>
+            <strong>Protocol:</strong> <code id="current-protocol"></code>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>URL Parameters</h2>
+        <div id="url-params"></div>
+    </div>
+
+    <div class="card">
+        <h2>Cookies</h2>
+        <div id="cookies-info"></div>
+    </div>
+
+    <div class="card">
+        <h2>SSO Token Detection</h2>
+        <div id="sso-detection"></div>
+    </div>
+
+    <div class="card">
+        <h2>Test Actions</h2>
+        <button onclick="testAppProxy()">Test App Proxy URL</button>
+        <button onclick="testDirectDomain()">Test Direct Domain</button>
+        <button onclick="clearCookies()">Clear Cookies</button>
+    </div>
+
+    <div class="card">
+        <h2>Console Log</h2>
+        <div class="log" id="console-log"></div>
+    </div>
+
+    <script>
+        // Capture console logs
+        const logDiv = document.getElementById('console-log');
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const message = args.map(arg => 
+                typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+            ).join(' ');
+            logDiv.innerHTML += `<div>${new Date().toLocaleTimeString()}: ${message}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        };
+
+        // Display current location
+        document.getElementById('current-url').textContent = window.location.href;
+        document.getElementById('current-hostname').textContent = window.location.hostname;
+        document.getElementById('current-protocol').textContent = window.location.protocol;
+
+        // Display URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const paramsDiv = document.getElementById('url-params');
+        if (urlParams.toString()) {
+            let paramsHTML = '<div class="status info">';
+            for (const [key, value] of urlParams.entries()) {
+                paramsHTML += `<strong>${key}:</strong> <code>${value.substring(0, 50)}${value.length > 50 ? '...' : ''}</code><br>`;
+            }
+            paramsHTML += '</div>';
+            paramsDiv.innerHTML = paramsHTML;
+        } else {
+            paramsDiv.innerHTML = '<div class="status error">No URL parameters found</div>';
+        }
+
+        // Display cookies
+        const cookiesDiv = document.getElementById('cookies-info');
+        if (document.cookie) {
+            const cookies = document.cookie.split('; ');
+            let cookiesHTML = '<div class="status success">';
+            cookies.forEach(cookie => {
+                const [name, value] = cookie.split('=');
+                cookiesHTML += `<strong>${name}:</strong> <code>${value.substring(0, 50)}${value.length > 50 ? '...' : ''}</code><br>`;
+            });
+            cookiesHTML += '</div>';
+            cookiesDiv.innerHTML = cookiesHTML;
+        } else {
+            cookiesDiv.innerHTML = '<div class="status error">No cookies found</div>';
+        }
+
+        // SSO Token Detection (same logic as React app)
+        const ssoDiv = document.getElementById('sso-detection');
+        const hasToken = urlParams.has('token');
+        const hasShop = urlParams.has('shop');
+        const hasCid = urlParams.has('cid');
+        const hasSSOnToken = hasToken && hasShop && hasCid;
+
+        console.log('🔍 SSO Detection:', { hasToken, hasShop, hasCid, hasSSOnToken });
+
+        if (hasSSOnToken) {
+            ssoDiv.innerHTML = `
+                <div class="status success">
+                    ✅ SSO Token Detected!<br>
+                    <strong>Token:</strong> ${urlParams.get('token').substring(0, 20)}...<br>
+                    <strong>Shop:</strong> ${urlParams.get('shop')}<br>
+                    <strong>Customer ID:</strong> ${urlParams.get('cid')}
+                </div>
+            `;
+        } else {
+            ssoDiv.innerHTML = `
+                <div class="status error">
+                    ❌ SSO Token NOT Detected<br>
+                    <strong>Has token:</strong> ${hasToken ? '✅' : '❌'}<br>
+                    <strong>Has shop:</strong> ${hasShop ? '✅' : '❌'}<br>
+                    <strong>Has cid:</strong> ${hasCid ? '✅' : '❌'}
+                </div>
+            `;
+        }
+
+        // Test functions
+        function testAppProxy() {
+            const shop = prompt('Enter your shop domain (e.g., xpvznx-9w.myshopify.com):', 'xpvznx-9w.myshopify.com');
+            if (shop) {
+                const url = `https://${shop}/apps/screen-time-journey`;
+                console.log('🔗 Testing App Proxy URL:', url);
+                window.location.href = url;
+            }
+        }
+
+        function testDirectDomain() {
+            const url = 'https://app.screentimejourney.com';
+            console.log('🔗 Testing Direct Domain:', url);
+            window.location.href = url;
+        }
+
+        function clearCookies() {
+            document.cookie.split(";").forEach(function(c) {
+                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            });
+            console.log('🍪 Cookies cleared');
+            location.reload();
+        }
+
+        // Log initial state
+        console.log('📍 Page loaded');
+        console.log('🌐 Location:', window.location.href);
+        console.log('🔑 URL Params:', Object.fromEntries(urlParams));
+        console.log('🍪 Cookies:', document.cookie);
+    </script>
+</body>
+</html>
+
+

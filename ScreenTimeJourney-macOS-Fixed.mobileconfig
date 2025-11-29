@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        
+        <!-- CleanBrowsing DNS Filter -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.dnsSettings.managed</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.dns.macos</string>
+            <key>PayloadUUID</key>
+            <string>DNS-MACOS-FIXED-001</string>
+            <key>PayloadDisplayName</key>
+            <string>CleanBrowsing DNS</string>
+            <key>DNSSettings</key>
+            <dict>
+                <key>DNSProtocol</key>
+                <string>HTTPS</string>
+                <key>ServerURL</key>
+                <string>https://doh.cleanbrowsing.org/doh/adult-filter/</string>
+            </dict>
+        </dict>
+        
+        <!-- Profile Removal Password -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.profileRemovalPassword</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.removalpassword</string>
+            <key>PayloadUUID</key>
+            <string>REMOVAL-MACOS-FIXED-001</string>
+            <key>PayloadDisplayName</key>
+            <string>Profile Removal Password</string>
+            <key>RemovalPassword</key>
+            <string>1234</string>
+        </dict>
+        
+    </array>
+    
+    <key>PayloadDisplayName</key>
+    <string>ScreenTime Journey - macOS Protection</string>
+    
+    <key>PayloadIdentifier</key>
+    <string>com.screentimejourney.macos.fixed</string>
+    
+    <key>PayloadUUID</key>
+    <string>MAIN-MACOS-FIXED-001</string>
+    
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+    
+    <key>PayloadDescription</key>
+    <string>Blocks porn and adult content using CleanBrowsing DNS. Works with Cloudflare WARP for social media blocking. Removal PIN: 1234</string>
+    
+    <key>PayloadOrganization</key>
+    <string>ScreenTime Journey</string>
+    
+    <key>PayloadRemovalDisallowed</key>
+    <false/>
+    
+</dict>
+</plist>
+
+

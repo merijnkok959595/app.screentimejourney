@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        
+        <!-- ========================================== -->
+        <!-- 1. CleanBrowsing DNS - Blocks Porn 24/7   -->
+        <!-- ========================================== -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.dnsSettings.managed</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.cleanbrowsing.dns</string>
+            <key>PayloadUUID</key>
+            <string>DNS-001</string>
+            <key>PayloadDisplayName</key>
+            <string>CleanBrowsing DNS Filter</string>
+            <key>DNSSettings</key>
+            <dict>
+                <key>DNSProtocol</key>
+                <string>HTTPS</string>
+                <key>ServerURL</key>
+                <string>https://doh.cleanbrowsing.org/doh/adult-filter/</string>
+            </dict>
+        </dict>
+        
+        <!-- ========================================== -->
+        <!-- 2. SCREEN TIME CONFIGURATION WITH DOWNTIME -->
+        <!-- ========================================== -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.familycontrols</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentime.downtime</string>
+            <key>PayloadUUID</key>
+            <string>SCREENTIME-001</string>
+            <key>PayloadDisplayName</key>
+            <string>Screen Time with Downtime</string>
+            
+            <!-- Enable Screen Time -->
+            <key>familyControlsEnabled</key>
+            <true/>
+            
+            <!-- ===== DOWNTIME: 22:00 to 09:00 ===== -->
+            <key>downtimeEnabled</key>
+            <true/>
+            
+            <!-- Downtime Schedule -->
+            <key>downtimeSchedule</key>
+            <dict>
+                <!-- Start time: 22:00 (10 PM) -->
+                <key>start</key>
+                <dict>
+                    <key>hour</key>
+                    <integer>22</integer>
+                    <key>minute</key>
+                    <integer>0</integer>
+                </dict>
+                
+                <!-- End time: 09:00 (9 AM) -->
+                <key>end</key>
+                <dict>
+                    <key>hour</key>
+                    <integer>9</integer>
+                    <key>minute</key>
+                    <integer>0</integer>
+                </dict>
+            </dict>
+            
+            <!-- Apply to all days -->
+            <key>downtimeScheduleDays</key>
+            <array>
+                <integer>1</integer> <!-- Sunday -->
+                <integer>2</integer> <!-- Monday -->
+                <integer>3</integer> <!-- Tuesday -->
+                <integer>4</integer> <!-- Wednesday -->
+                <integer>5</integer> <!-- Thursday -->
+                <integer>6</integer> <!-- Friday -->
+                <integer>7</integer> <!-- Saturday -->
+            </array>
+            
+            <!-- ===== ALWAYS ALLOWED APPS (During Downtime) ===== -->
+            <key>alwaysAllowedBundleIDs</key>
+            <array>
+                <string>com.apple.mobilephone</string>      <!-- Phone -->
+                <string>com.apple.MobileSMS</string>        <!-- Messages -->
+                <string>com.apple.mobiletimer</string>      <!-- Clock -->
+                <string>com.apple.mobilecal</string>        <!-- Calendar -->
+                <string>com.apple.Health</string>           <!-- Health -->
+                <string>com.apple.Maps</string>             <!-- Maps -->
+                <string>com.apple.mobilenotes</string>      <!-- Notes -->
+                <string>com.apple.weather</string>          <!-- Weather -->
+                <string>com.apple.camera</string>           <!-- Camera -->
+                <string>com.apple.Photos</string>           <!-- Photos -->
+            </array>
+            
+            <!-- ===== APP LIMITS - Social Media Category ===== -->
+            <key>appLimitsEnabled</key>
+            <true/>
+            
+            <key>appLimits</key>
+            <dict>
+                <!-- Social Networking Category -->
+                <key>social</key>
+                <dict>
+                    <key>categoryIdentifiers</key>
+                    <array>
+                        <string>social-networking</string>
+                    </array>
+                    <key>dailyLimit</key>
+                    <integer>60</integer> <!-- 1 minute = effectively blocked -->
+                    <key>enabled</key>
+                    <true/>
+                </dict>
+            </dict>
+            
+            <!-- Block at Downtime -->
+            <key>blockAtDowntime</key>
+            <true/>
+            
+            <!-- Prevent modifications -->
+            <key>allowScreenTimeModification</key>
+            <false/>
+        </dict>
+        
+        <!-- ========================================== -->
+        <!-- 3. APPLICATION ACCESS RESTRICTIONS         -->
+        <!-- ========================================== -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.applicationaccess</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.restrictions.apps</string>
+            <key>PayloadUUID</key>
+            <string>RESTRICTIONS-001</string>
+            <key>PayloadDisplayName</key>
+            <string>App and Content Restrictions</string>
+            
+            <!-- ===== BLOCK SOCIAL MEDIA APPS ===== -->
+            <key>blacklistedAppBundleIDs</key>
+            <array>
+                <string>com.burbn.instagram</string>
+                <string>com.facebook.Facebook</string>
+                <string>com.facebook.Messenger</string>
+                <string>com.atebits.Tweetie2</string>
+                <string>com.zhiliaoapp.musically</string>
+                <string>com.snapchat.snapchat</string>
+                <string>com.linkedin.LinkedIn</string>
+                <string>pinterest</string>
+                <string>com.reddit.Reddit</string>
+                <string>org.telegram.Telegram</string>
+                <string>com.discord</string>
+                <string>com.tiktok.tiktokv</string>
+            </array>
+            
+            <!-- ===== PREVENT BYPASSING ===== -->
+            <key>allowUIAppInstallation</key>
+            <false/>
+            <key>allowAppInstallation</key>
+            <false/>
+            <key>allowAppRemoval</key>
+            <false/>
+            <key>allowVPNCreation</key>
+            <false/>
+            
+            <!-- ===== EXPLICIT CONTENT BLOCKING ===== -->
+            <key>allowExplicitContent</key>
+            <false/>
+            <key>ratingRegion</key>
+            <string>us</string>
+            <key>ratingApps</key>
+            <integer>200</integer> <!-- 4+ only -->
+            
+            <!-- ===== SAFARI RESTRICTIONS ===== -->
+            <key>allowSafari</key>
+            <true/>
+            <key>safariAllowPopups</key>
+            <false/>
+            <key>safariForceFraudWarning</key>
+            <true/>
+            
+            <!-- ===== PREVENT SETTINGS CHANGES ===== -->
+            <key>allowAccountModification</key>
+            <false/>
+            <key>allowPasscodeModification</key>
+            <false/>
+            <key>allowEraseContentAndSettings</key>
+            <false/>
+        </dict>
+        
+        <!-- ========================================== -->
+        <!-- 4. WEB CONTENT FILTER - Block Social Sites -->
+        <!-- ========================================== -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.webcontent-filter</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.webfilter.social</string>
+            <key>PayloadUUID</key>
+            <string>WEBFILTER-001</string>
+            <key>PayloadDisplayName</key>
+            <string>Social Media Website Blocker</string>
+            <key>FilterType</key>
+            <string>BuiltIn</string>
+            <key>AutoFilterEnabled</key>
+            <true/>
+            
+            <!-- Whitelist -->
+            <key>PermittedURLs</key>
+            <array>
+                <string>apple.com</string>
+                <string>icloud.com</string>
+            </array>
+            
+            <!-- Blacklist - Social Media Sites -->
+            <key>DenyListURLs</key>
+            <array>
+                <string>facebook.com</string>
+                <string>*.facebook.com</string>
+                <string>instagram.com</string>
+                <string>*.instagram.com</string>
+                <string>twitter.com</string>
+                <string>*.twitter.com</string>
+                <string>x.com</string>
+                <string>*.x.com</string>
+                <string>tiktok.com</string>
+                <string>*.tiktok.com</string>
+                <string>snapchat.com</string>
+                <string>*.snapchat.com</string>
+                <string>reddit.com</string>
+                <string>*.reddit.com</string>
+                <string>pinterest.com</string>
+                <string>*.pinterest.com</string>
+                <string>linkedin.com</string>
+                <string>*.linkedin.com</string>
+                <string>discord.com</string>
+                <string>*.discord.com</string>
+                <string>telegram.org</string>
+                <string>*.telegram.org</string>
+                <string>web.whatsapp.com</string>
+                <string>web.telegram.org</string>
+                <string>m.facebook.com</string>
+                <string>m.twitter.com</string>
+            </array>
+        </dict>
+        
+    </array>
+    
+    <!-- ========================================== -->
+    <!-- ROOT PROFILE SETTINGS                      -->
+    <!-- ========================================== -->
+    <key>PayloadDisplayName</key>
+    <string>🛡️ Ultimate Protection: DNS + Apps + Downtime 22:00-09:00</string>
+    
+    <key>PayloadIdentifier</key>
+    <string>com.ultimate.protection.profile</string>
+    
+    <key>PayloadUUID</key>
+    <string>ULTIMATE-MAIN-001</string>
+    
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+    
+    <key>PayloadDescription</key>
+    <string>✅ CleanBrowsing DNS (blocks porn 24/7)
+✅ Screen Time Downtime (22:00-09:00 blocks all apps except Phone, Messages, Clock, Calendar)
+✅ Social media apps blocked (Instagram, Facebook, TikTok, Twitter, Snapchat, Reddit)
+✅ Social media websites blocked in Safari
+✅ Adult content blocked in Settings
+✅ Cannot install new apps or VPNs
+✅ Profile cannot be removed without factory reset
+
+Install once and everything is automatically configured!</string>
+    
+    <key>PayloadOrganization</key>
+    <string>Personal Protection System</string>
+    
+    <!-- Cannot be removed -->
+    <key>PayloadRemovalDisallowed</key>
+    <true/>
+    
+    <!-- Warning message before installation -->
+    <key>ConsentText</key>
+    <dict>
+        <key>en</key>
+        <string>⚠️ ULTIMATE PROTECTION PROFILE
+
+This profile automatically configures:
+
+1️⃣ CleanBrowsing DNS
+   → Blocks porn/adult sites 24/7
+
+2️⃣ Screen Time Downtime
+   → 22:00 to 09:00 (all apps blocked except Phone, Messages, Clock, Calendar, Health, Maps, Notes, Weather, Camera, Photos)
+
+3️⃣ Social Media Blocking
+   → Apps: Instagram, Facebook, TikTok, Twitter, Snapchat, Reddit - BLOCKED
+   → Websites: All social media sites - BLOCKED
+
+4️⃣ Security Locks
+   → Cannot install new apps
+   → Cannot create VPNs
+   → Cannot remove this profile
+   → Cannot modify Screen Time settings
+
+⚠️ Profile removal requires factory reset
+
+Only install if you're fully committed to these restrictions!</string>
+    </dict>
+    
+</dict>
+</plist>
+
+
+

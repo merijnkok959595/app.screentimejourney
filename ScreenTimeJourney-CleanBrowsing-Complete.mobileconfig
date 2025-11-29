@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        
+        <!-- CleanBrowsing DNS (Adult Filter) -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.dnsSettings.managed</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.cleanbrowsing</string>
+            <key>PayloadUUID</key>
+            <string>CB-DNS-2024-001</string>
+            <key>PayloadDisplayName</key>
+            <string>CleanBrowsing Adult Filter</string>
+            <key>DNSSettings</key>
+            <dict>
+                <key>DNSProtocol</key>
+                <string>HTTPS</string>
+                <key>ServerURL</key>
+                <string>https://doh.cleanbrowsing.org/doh/adult-filter/</string>
+                <key>ServerName</key>
+                <string>doh.cleanbrowsing.org</string>
+                <key>ServerAddresses</key>
+                <array>
+                    <string>185.228.168.10</string>
+                    <string>185.228.169.11</string>
+                </array>
+                <key>SupplementalMatchDomains</key>
+                <array>
+                    <string></string>
+                </array>
+            </dict>
+            <key>OnDemandEnabled</key>
+            <integer>1</integer>
+            <key>OnDemandRules</key>
+            <array>
+                <dict>
+                    <key>Action</key>
+                    <string>Connect</string>
+                </dict>
+            </array>
+        </dict>
+        
+        <!-- Web Content Filter (Built-in Screen Time Filter) -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.webcontent-filter</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.webfilter</string>
+            <key>PayloadUUID</key>
+            <string>WEB-FILTER-2024-001</string>
+            <key>PayloadDisplayName</key>
+            <string>Screen Time Web Filter</string>
+            <key>FilterType</key>
+            <string>BuiltIn</string>
+            <key>AutoFilterEnabled</key>
+            <true/>
+            <key>FilterBrowsers</key>
+            <true/>
+            <key>FilterSockets</key>
+            <true/>
+            <key>UserDefinedName</key>
+            <string>ScreenTime Journey Adult Content Filter</string>
+            <key>PermittedURLs</key>
+            <array>
+                <string>apple.com</string>
+                <string>icloud.com</string>
+                <string>google.com</string>
+                <string>youtube.com</string>
+                <string>wikipedia.org</string>
+            </array>
+            <key>DenyListURLs</key>
+            <array>
+                <string>facebook.com</string>
+                <string>*.facebook.com</string>
+                <string>instagram.com</string>
+                <string>*.instagram.com</string>
+                <string>twitter.com</string>
+                <string>*.twitter.com</string>
+                <string>x.com</string>
+                <string>*.x.com</string>
+                <string>tiktok.com</string>
+                <string>*.tiktok.com</string>
+                <string>snapchat.com</string>
+                <string>*.snapchat.com</string>
+                <string>reddit.com</string>
+                <string>*.reddit.com</string>
+                <string>discord.com</string>
+                <string>*.discord.com</string>
+            </array>
+        </dict>
+        
+        <!-- Screen Time Content Restrictions -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.applicationaccess</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.restrictions</string>
+            <key>PayloadUUID</key>
+            <string>RESTRICTIONS-2024-001</string>
+            <key>PayloadDisplayName</key>
+            <string>Screen Time Content Restrictions</string>
+            
+            <!-- Block Explicit Content -->
+            <key>allowExplicitContent</key>
+            <false/>
+            
+            <!-- App Store Ratings -->
+            <key>ratingRegion</key>
+            <string>us</string>
+            <key>ratingApps</key>
+            <integer>600</integer>
+            <key>ratingMovies</key>
+            <integer>1000</integer>
+            <key>ratingTVShows</key>
+            <integer>1000</integer>
+            
+            <!-- Force Safe Search -->
+            <key>forceGoogleSafeSearch</key>
+            <integer>1</integer>
+            <key>forceBingSafeSearch</key>
+            <integer>1</integer>
+            <key>forceYahooSafeSearch</key>
+            <integer>1</integer>
+            
+            <!-- Block Adult Content -->
+            <key>allowAdultContent</key>
+            <false/>
+            <key>forceWebContentFilterAutoFilter</key>
+            <true/>
+            
+            <!-- Additional Safety -->
+            <key>allowBookstore</key>
+            <true/>
+            <key>allowBookstoreErotica</key>
+            <false/>
+            <key>allowPodcasts</key>
+            <true/>
+            <key>allowPodcastsExplicit</key>
+            <false/>
+            <key>allowMusicService</key>
+            <true/>
+            <key>allowExplicitMusic</key>
+            <false/>
+            
+        </dict>
+        
+    </array>
+    
+    <key>PayloadDisplayName</key>
+    <string>ScreenTime Journey - CleanBrowsing Complete Protection</string>
+    
+    <key>PayloadIdentifier</key>
+    <string>com.screentimejourney.cleanbrowsing.complete</string>
+    
+    <key>PayloadUUID</key>
+    <string>MAIN-CLEANBROWSING-2024-001</string>
+    
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+    
+    <key>PayloadDescription</key>
+    <string>Complete protection using CleanBrowsing DNS for adult content blocking, Screen Time built-in web filter enforcement, content restrictions with explicit content blocking and safe search enforcement, social media website blocking, and App Store 12+ ratings only. No enrollment required - direct installation.</key>
+    
+    <key>PayloadOrganization</key>
+    <string>ScreenTime Journey</string>
+    
+    <key>PayloadRemovalDisallowed</key>
+    <false/>
+    
+</dict>
+</plist>
+
+

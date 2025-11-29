@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        
+        <!-- DNS Settings - CleanBrowsing -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.dnsSettings.managed</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.dns.cleanbrowsing</string>
+            <key>PayloadUUID</key>
+            <string>A1B2C3D4-E5F6-G7H8-I9J0-K1L2M3N4O5P6</string>
+            <key>PayloadDisplayName</key>
+            <string>CleanBrowsing DNS</string>
+            <key>DNSSettings</key>
+            <dict>
+                <key>DNSProtocol</key>
+                <string>HTTPS</string>
+                <key>ServerURL</key>
+                <string>https://doh.cleanbrowsing.org/doh/adult-filter/</string>
+            </dict>
+        </dict>
+        
+        <!-- Web Content Filter -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.webcontent-filter</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.webfilter.content</string>
+            <key>PayloadUUID</key>
+            <string>B2C3D4E5-F6G7-H8I9-J0K1-L2M3N4O5P6Q7</string>
+            <key>PayloadDisplayName</key>
+            <string>Web Filter</string>
+            <key>FilterType</key>
+            <string>BuiltIn</string>
+            <key>AutoFilterEnabled</key>
+            <true/>
+            <key>PermittedURLs</key>
+            <array>
+                <string>apple.com</string>
+            </array>
+            <key>DenyListURLs</key>
+            <array>
+                <string>facebook.com</string>
+                <string>instagram.com</string>
+                <string>twitter.com</string>
+                <string>x.com</string>
+                <string>tiktok.com</string>
+                <string>snapchat.com</string>
+                <string>reddit.com</string>
+            </array>
+        </dict>
+        
+        <!-- Restrictions -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.applicationaccess</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.restrictions.basic</string>
+            <key>PayloadUUID</key>
+            <string>C3D4E5F6-G7H8-I9J0-K1L2-M3N4O5P6Q7R8</string>
+            <key>PayloadDisplayName</key>
+            <string>Restrictions</string>
+            <key>allowExplicitContent</key>
+            <false/>
+            <key>ratingRegion</key>
+            <string>us</string>
+            <key>ratingApps</key>
+            <integer>600</integer>
+        </dict>
+        
+    </array>
+    
+    <key>PayloadDisplayName</key>
+    <string>Content Protection</string>
+    
+    <key>PayloadIdentifier</key>
+    <string>com.protection.basic</string>
+    
+    <key>PayloadUUID</key>
+    <string>D4E5F6G7-H8I9-J0K1-L2M3-N4O5P6Q7R8S9</string>
+    
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+    
+    <key>PayloadDescription</key>
+    <string>Blocks adult content and social media websites</string>
+    
+    <key>PayloadOrganization</key>
+    <string>Personal</string>
+    
+</dict>
+</plist>

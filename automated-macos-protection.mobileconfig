@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        <!-- Global DNS Settings (System-wide enforcement) -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.dnsSettings.managed</string>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.global.dns</string>
+            <key>PayloadUUID</key>
+            <string>MACOS-DNS-GLOBAL-123456789012</string>
+            <key>PayloadDisplayName</key>
+            <string>Global DNS Protection</string>
+            <key>PayloadDescription</key>
+            <string>System-wide DNS filtering - automatically enforced</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>DNSSettings</key>
+            <dict>
+                <key>DNSProtocol</key>
+                <string>HTTPS</string>
+                <key>ServerAddresses</key>
+                <array>
+                    <string>185.228.168.168</string>
+                    <string>185.228.169.168</string>
+                </array>
+                <key>ServerURL</key>
+                <string>https://doh.cleanbrowsing.org/doh/adult-filter</string>
+                <key>SupplementalMatchDomains</key>
+                <array>
+                    <string>*</string>
+                </array>
+                <key>ProhibitDisablement</key>
+                <true/>
+                <key>OnDemandEnabled</key>
+                <integer>1</integer>
+                <key>OnDemandRules</key>
+                <array>
+                    <dict>
+                        <key>Action</key>
+                        <string>EvaluateConnection</string>
+                    </dict>
+                </array>
+            </dict>
+        </dict>
+        
+        <!-- Network Configuration Override -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.network.identification</string>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.network.override</string>
+            <key>PayloadUUID</key>
+            <string>MACOS-NETWORK-OVERRIDE-123456789013</string>
+            <key>PayloadDisplayName</key>
+            <string>Network DNS Override</string>
+            <key>PayloadDescription</key>
+            <string>Forces DNS on all network interfaces</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>IPConfiguration</key>
+            <dict>
+                <key>OverridePrimary</key>
+                <integer>1</integer>
+            </dict>
+        </dict>
+        
+        <!-- System Configuration -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.SystemConfiguration</string>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.system.dns</string>
+            <key>PayloadUUID</key>
+            <string>MACOS-SYSCFG-DNS-123456789014</string>
+            <key>PayloadDisplayName</key>
+            <string>System DNS Configuration</string>
+            <key>PayloadDescription</key>
+            <string>System-level DNS enforcement</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>NetworkServices</key>
+            <dict>
+                <key>__PRESET__</key>
+                <dict>
+                    <key>DNS</key>
+                    <dict>
+                        <key>ServerAddresses</key>
+                        <array>
+                            <string>185.228.168.168</string>
+                            <string>185.228.169.168</string>
+                        </array>
+                        <key>SearchDomains</key>
+                        <array/>
+                    </dict>
+                </dict>
+            </dict>
+        </dict>
+        
+        <!-- Content Filter (BuiltIn Web Filter) -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.webcontent-filter</string>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.builtin.filter</string>
+            <key>PayloadUUID</key>
+            <string>MACOS-BUILTIN-FILTER-123456789015</string>
+            <key>PayloadDisplayName</key>
+            <string>Built-in Content Filter</string>
+            <key>PayloadDescription</key>
+            <string>macOS built-in web content filtering</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>FilterType</key>
+            <string>BuiltIn</string>
+            <key>AutoFilterEnabled</key>
+            <true/>
+            <key>RestrictWeb</key>
+            <true/>
+            <key>UseContentFilter</key>
+            <true/>
+            <key>WhitelistedBookmarks</key>
+            <array>
+                <dict>
+                    <key>URL</key>
+                    <string>https://www.google.com</string>
+                    <key>BookmarkPath</key>
+                    <string>/Google</string>
+                </dict>
+            </array>
+        </dict>
+        
+        <!-- Parental Controls -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.applicationaccess</string>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.parental.controls</string>
+            <key>PayloadUUID</key>
+            <string>MACOS-PARENTAL-CONTROLS-123456789016</string>
+            <key>PayloadDisplayName</key>
+            <string>Parental Controls</string>
+            <key>PayloadDescription</key>
+            <string>Content and privacy restrictions</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>allowExplicitContent</key>
+            <false/>
+            <key>allowBookstore</key>
+            <true/>
+            <key>allowBookstoreErotica</key>
+            <false/>
+            <key>ratingRegion</key>
+            <string>us</string>
+            <key>ratingApps</key>
+            <integer>600</integer>
+            <key>ratingMovies</key>
+            <integer>600</integer>
+            <key>ratingTVShows</key>
+            <integer>600</integer>
+            <key>allowWebContentFilter</key>
+            <true/>
+            <key>forceRestrictedNetworking</key>
+            <true/>
+        </dict>
+    </array>
+    
+    <key>PayloadDisplayName</key>
+    <string>ScreenTime Journey - Automated Protection</string>
+    <key>PayloadDescription</key>
+    <string>Fully automated parental control - no user interaction required</string>
+    <key>PayloadIdentifier</key>
+    <string>com.screentimejourney.automated.protection</string>
+    <key>PayloadRemovalDisallowed</key>
+    <true/>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>MACOS-AUTOMATED-MAIN-123456789011</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+    <key>PayloadScope</key>
+    <string>System</string>
+</dict>
+</plist>

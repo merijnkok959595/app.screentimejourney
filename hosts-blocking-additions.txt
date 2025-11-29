@@ -1,0 +1,23 @@
+# ScreenTime Journey - Adult Content Blocking
+# Add these lines to /etc/hosts
+
+127.0.0.1 pornhub.com
+::1 pornhub.com
+127.0.0.1 www.pornhub.com
+::1 www.pornhub.com
+127.0.0.1 xvideos.com
+::1 xvideos.com
+127.0.0.1 www.xvideos.com
+::1 www.xvideos.com
+127.0.0.1 redtube.com
+::1 redtube.com
+127.0.0.1 www.redtube.com
+::1 www.redtube.com
+127.0.0.1 xnxx.com
+::1 xnxx.com
+127.0.0.1 www.xnxx.com
+::1 www.xnxx.com
+127.0.0.1 youporn.com
+::1 youporn.com
+127.0.0.1 www.youporn.com
+::1 www.youporn.com

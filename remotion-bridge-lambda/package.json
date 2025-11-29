@@ -1,0 +1,23 @@
+{
+  "name": "remotion-bridge-lambda",
+  "version": "1.0.0",
+  "description": "Node.js bridge to call Remotion Lambda from Python",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "deploy": "npm install && zip -r function.zip . -x '*.git*' && aws lambda update-function-code --function-name remotion-bridge --zip-file fileb://function.zip --region eu-north-1"
+  },
+  "dependencies": {
+    "@remotion/lambda": "^4.0.373"
+  }
+}
+
+
+
+
+
+
+
+
+
+

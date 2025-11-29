@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>AutoConnect</key>
+			<integer>2</integer>
+			<key>DisableAutoFallback</key>
+			<true/>
+			<key>EnableDNSFiltering</key>
+			<true/>
+			<key>EnableFirewallFiltering</key>
+			<true/>
+			<key>Organization</key>
+			<string>screentimejourney</string>
+			<key>PayloadDescription</key>
+			<string>Configures Cloudflare WARP with Zero Trust</string>
+			<key>PayloadDisplayName</key>
+			<string>WARP VPN Configuration</string>
+			<key>PayloadIdentifier</key>
+			<string>com.screentimejourney.warp.BB6D6217-E2AC-439A-BEC8-CCC4D2CA72E6</string>
+			<key>PayloadType</key>
+			<string>com.cloudflare.warp</string>
+			<key>PayloadUUID</key>
+			<string>BB6D6217-E2AC-439A-BEC8-CCC4D2CA72E6</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>ServiceMode</key>
+			<string>warp</string>
+			<key>SupportURL</key>
+			<string>https://screentimejourney.com/support</string>
+			<key>SwitchLocked</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>PayloadDescription</key>
+			<string>Restricts VPN and network bypass attempts</string>
+			<key>PayloadDisplayName</key>
+			<string>Network Restrictions</string>
+			<key>PayloadIdentifier</key>
+			<string>com.screentimejourney.restrictions.B48F0CC6-8255-43DD-9A91-0F6A37DDFC69</string>
+			<key>PayloadType</key>
+			<string>com.apple.applicationaccess</string>
+			<key>PayloadUUID</key>
+			<string>B48F0CC6-8255-43DD-9A91-0F6A37DDFC69</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>allowAccountModification</key>
+			<false/>
+			<key>allowAppInstallation</key>
+			<true/>
+			<key>allowDiagnosticSubmission</key>
+			<true/>
+			<key>allowUIConfigurationProfileInstallation</key>
+			<false/>
+			<key>allowVPNCreation</key>
+			<false/>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>Enforces content filtering and prevents bypass via VPN. Required for Screen Time Journey protection.</string>
+	<key>PayloadDisplayName</key>
+	<string>Screen Time Journey Protection</string>
+	<key>PayloadIdentifier</key>
+	<string>com.screentimejourney.profile.20386EA9-A9D4-41C2-95C1-0A5A7D47C476</string>
+	<key>PayloadOrganization</key>
+	<string>Screen Time Journey</string>
+	<key>PayloadRemovalDisallowed</key>
+	<true/>
+	<key>PayloadScope</key>
+	<string>User</string>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>20386EA9-A9D4-41C2-95C1-0A5A7D47C476</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>

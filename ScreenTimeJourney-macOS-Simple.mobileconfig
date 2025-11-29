@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        
+        <!-- CleanBrowsing DNS Settings -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.dnsSettings.managed</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.dns</string>
+            <key>PayloadUUID</key>
+            <string>DNS-SIMPLE-001</string>
+            <key>PayloadDisplayName</key>
+            <string>CleanBrowsing DNS</string>
+            <key>DNSSettings</key>
+            <dict>
+                <key>ServerAddresses</key>
+                <array>
+                    <string>185.228.168.10</string>
+                    <string>185.228.169.11</string>
+                </array>
+            </dict>
+        </dict>
+        
+        <!-- Profile Removal Password -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.profileRemovalPassword</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.removal</string>
+            <key>PayloadUUID</key>
+            <string>REMOVAL-SIMPLE-001</string>
+            <key>PayloadDisplayName</key>
+            <string>Profile Removal Password</string>
+            <key>RemovalPassword</key>
+            <string>1234</string>
+        </dict>
+        
+    </array>
+    
+    <key>PayloadDisplayName</key>
+    <string>ScreenTime Journey - macOS Simple</string>
+    
+    <key>PayloadIdentifier</key>
+    <string>com.screentimejourney.macos.simple</string>
+    
+    <key>PayloadUUID</key>
+    <string>MAIN-SIMPLE-001</string>
+    
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+    
+    <key>PayloadDescription</key>
+    <string>Basic DNS filtering using CleanBrowsing Adult Filter. PIN: 1234. Use with Cloudflare WARP for complete protection.</string>
+    
+    <key>PayloadOrganization</key>
+    <string>ScreenTime Journey</string>
+    
+</dict>
+</plist>
+
+

@@ -1,0 +1,35 @@
+Subject: ScreenTime Journey - Parental Control Profile
+
+Hi [Customer Name],
+
+Your parental control profile is ready! 
+
+📎 ATTACHMENT: ScreenTime-Journey-PIN-1234-Direct.mobileconfig
+
+📱 INSTALLATION (2 minutes):
+1. Save the attached .mobileconfig file
+2. Double-click it on your Mac/iPhone/iPad
+3. Click "Install" in System Preferences
+4. Enter device admin password if prompted
+5. Profile installs with PIN 1234 protection
+
+🛡️ WHAT'S PROTECTED:
+✅ Adult websites blocked (CleanBrowsing DNS)
+✅ Inappropriate content filtered
+✅ In-app purchases disabled
+✅ Content ratings restricted (12+ only)
+✅ All settings protected by PIN 1234
+
+🔒 PIN INFORMATION:
+• Profile removal PIN: 1234
+• Restrictions PIN: 1234
+• Keep this PIN secure!
+
+🧪 TEST:
+After installation, try visiting an adult website - it should be blocked!
+
+📧 SUPPORT:
+Reply to this email if you need help with installation.
+
+Best regards,
+ScreenTime Journey Team

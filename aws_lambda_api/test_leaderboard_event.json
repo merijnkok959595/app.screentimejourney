@@ -1,0 +1,9 @@
+{
+  "requestContext": {
+    "http": {
+      "method": "POST",
+      "path": "/get_leaderboard"
+    }
+  },
+  "body": "{\"page\": 1, \"page_size\": 10, \"gender_filter\": \"male\"}"
+}

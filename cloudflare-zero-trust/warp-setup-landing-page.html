@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Up Protection - Screen Time Journey</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .step:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .step-number {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            margin-right: 20px;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+
+        .step-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .app-store-badge {
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .app-store-badge img {
+            height: 50px;
+            width: auto;
+        }
+
+        .info-box {
+            background: #f8f9ff;
+            border-left: 4px solid #667eea;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .success-icon {
+            font-size: 60px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .feature-icon {
+            font-size: 24px;
+            margin-right: 15px;
+        }
+
+        .feature-text {
+            font-size: 14px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .step-number {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+            }
+        }
+
+        /* iOS-specific styles */
+        .ios-only {
+            display: none;
+        }
+
+        @supports (-webkit-touch-callout: none) {
+            .ios-only {
+                display: block;
+            }
+            .non-ios {
+                display: none;
+            }
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="card">
+            <div class="header">
+                <div class="logo">🛡️</div>
+                <h1>Set Up Protection</h1>
+                <p class="subtitle">Follow these simple steps to enable content filtering and bypass prevention</p>
+            </div>
+
+            <!-- What You'll Get -->
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">🚫</div>
+                    <div class="feature-text">Blocks adult content automatically</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
+                    <div class="feature-text">Prevents VPN bypass attempts</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🤖</div>
+                    <div class="feature-text">AI-powered filtering (auto-updated)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 1: Download Profile -->
+        <div class="card">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <div class="step-title">Download Protection Profile</div>
+                    <p class="step-description">Download the configuration profile to your iPhone or iPad</p>
+                    <a href="https://wati-mobconfigs.s3.eu-north-1.amazonaws.com/screentimejourney-warp-protection.mobileconfig" class="btn" download>
+                        📥 Download Profile
+                    </a>
+                    <div class="info-box">
+                        <strong>✓ Safe to install:</strong> This profile enforces content filtering through Cloudflare WARP. You can remove it anytime in Settings.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Install Profile -->
+        <div class="card">
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <div class="step-title">Install Profile</div>
+                    <p class="step-description">
+                        After downloading, go to:<br>
+                        <strong>Settings → Profile Downloaded → Install</strong>
+                    </p>
+                    <div class="info-box">
+                        You'll need to enter your device passcode and tap "Install" twice to confirm.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Install WARP -->
+        <div class="card">
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <div class="step-title">Install Cloudflare WARP App</div>
+                    <p class="step-description">Download the free WARP app from the App Store</p>
+                    <a href="https://apps.apple.com/us/app/1-1-1-1-faster-internet/id1423538627" class="btn" target="_blank">
+                        📱 Open App Store
+                    </a>
+                    <div class="info-box">
+                        Search for "Cloudflare WARP" or "1.1.1.1" in the App Store
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Connect to Zero Trust -->
+        <div class="card">
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <div class="step-title">Connect to Screen Time Journey</div>
+                    <p class="step-description">
+                        1. Open WARP app<br>
+                        2. Tap the gear icon ⚙️ (settings)<br>
+                        3. Tap "Account"<br>
+                        4. Tap "Login with Cloudflare Zero Trust"<br>
+                        5. Enter: <strong>screentimejourney</strong><br>
+                        6. Toggle WARP <strong>ON</strong>
+                    </p>
+                    <div class="info-box">
+                        ✓ You should see "Connected" with a green checkmark when successful
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: Done! -->
+        <div class="card">
+            <div class="success-icon">✅</div>
+            <div class="header">
+                <h1>You're Protected! <span class="badge">ACTIVE</span></h1>
+                <p class="subtitle">Your device is now protected with:</p>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">✅</div>
+                    <div class="feature-text">Adult content blocked (10,000+ sites)</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">✅</div>
+                    <div class="feature-text">VPN/Proxy bypass prevented</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">✅</div>
+                    <div class="feature-text">Always-on protection (locked)</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">✅</div>
+                    <div class="feature-text">SafeSearch enforced on all searches</div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="#test" class="btn">🧪 Test Protection</a>
+            </div>
+        </div>
+
+        <!-- Testing Section -->
+        <div class="card" id="test">
+            <div class="header">
+                <h1>Test Your Protection</h1>
+                <p class="subtitle">Verify everything is working correctly</p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <div class="step-title">Test Content Blocking</div>
+                    <p class="step-description">These sites should be BLOCKED:</p>
+                    <div style="margin-top: 15px;">
+                        <a href="https://pornhub.com" class="btn btn-secondary" style="margin: 5px;" target="_blank">Test Porn Blocking</a>
+                        <a href="https://nordvpn.com" class="btn btn-secondary" style="margin: 5px;" target="_blank">Test VPN Blocking</a>
+                    </div>
+                    <div class="info-box" style="margin-top: 15px;">
+                        If you see a Cloudflare block page or "connection refused", it's working! ✅
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <div class="step-title">Verify WARP Connection</div>
+                    <p class="step-description">Check that traffic is routing through Cloudflare:</p>
+                    <div style="margin-top: 15px;">
+                        <a href="https://1.1.1.1/cdn-cgi/trace" class="btn" target="_blank">Check Connection</a>
+                    </div>
+                    <div class="info-box" style="margin-top: 15px;">
+                        You should see <strong>warp=on</strong> and <strong>gateway=on</strong> in the results
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <div class="step-title">Test WARP Lock</div>
+                    <p class="step-description">Try to disable WARP in the app - the toggle should be locked (grayed out)</p>
+                    <div class="info-box" style="margin-top: 15px;">
+                        This ensures protection cannot be easily bypassed
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Troubleshooting -->
+        <div class="card">
+            <div class="header">
+                <h1>Need Help?</h1>
+            </div>
+
+            <details style="margin-bottom: 15px; cursor: pointer;">
+                <summary style="font-weight: 600; padding: 10px; background: #f8f9ff; border-radius: 8px;">Profile won't install</summary>
+                <div style="padding: 15px; color: #666; font-size: 14px;">
+                    • Make sure you're on iOS 14 or later<br>
+                    • Remove any existing VPN profiles first<br>
+                    • Try restarting your device and downloading again
+                </div>
+            </details>
+
+            <details style="margin-bottom: 15px; cursor: pointer;">
+                <summary style="font-weight: 600; padding: 10px; background: #f8f9ff; border-radius: 8px;">WARP won't connect</summary>
+                <div style="padding: 15px; color: #666; font-size: 14px;">
+                    • Make sure the profile is installed<br>
+                    • Verify you entered: <strong>screentimejourney</strong><br>
+                    • Try closing and reopening the WARP app<br>
+                    • Check your internet connection
+                </div>
+            </details>
+
+            <details style="margin-bottom: 15px; cursor: pointer;">
+                <summary style="font-weight: 600; padding: 10px; background: #f8f9ff; border-radius: 8px;">Sites aren't being blocked</summary>
+                <div style="padding: 15px; color: #666; font-size: 14px;">
+                    • Make sure WARP is connected (green checkmark)<br>
+                    • Check that it says "Zero Trust" in the WARP app<br>
+                    • Try toggling WARP off and back on<br>
+                    • Wait a few minutes for policies to propagate
+                </div>
+            </details>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="mailto:info@screentimejourney.com" class="btn">📧 Contact Support</a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Protected by <strong>Screen Time Journey</strong></p>
+            <p style="margin-top: 10px; font-size: 12px; opacity: 0.8;">
+                Powered by Cloudflare Zero Trust<br>
+                <a href="https://screentimejourney.com/privacy">Privacy Policy</a> • 
+                <a href="https://screentimejourney.com/terms">Terms of Service</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Auto-scroll to hash on load
+        if (window.location.hash) {
+            setTimeout(() => {
+                document.querySelector(window.location.hash)?.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+
+        // Track step completion (optional - you can hook this up to analytics)
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                console.log('Button clicked:', this.textContent.trim());
+                // Add your analytics tracking here
+            });
+        });
+    </script>
+</body>
+</html>
+

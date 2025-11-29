@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        
+        <!-- CleanBrowsing DNS Settings -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.dnsSettings.managed</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.dns.macos</string>
+            <key>PayloadUUID</key>
+            <string>DNS-MACOS-COMPLETE-001</string>
+            <key>PayloadDisplayName</key>
+            <string>CleanBrowsing DNS</string>
+            <key>DNSSettings</key>
+            <dict>
+                <key>DNSProtocol</key>
+                <string>HTTPS</string>
+                <key>ServerURL</key>
+                <string>https://doh.cleanbrowsing.org/doh/adult-filter/</string>
+                <key>ServerAddresses</key>
+                <array>
+                    <string>185.228.168.10</string>
+                    <string>185.228.169.11</string>
+                </array>
+                <key>SupplementalMatchDomains</key>
+                <array>
+                    <string></string>
+                </array>
+            </dict>
+            <key>OnDemandEnabled</key>
+            <integer>1</integer>
+            <key>OnDemandRules</key>
+            <array>
+                <dict>
+                    <key>Action</key>
+                    <string>Connect</string>
+                </dict>
+            </array>
+        </dict>
+        
+        <!-- Web Content Filter for macOS -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.webcontent-filter</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.webfilter.macos</string>
+            <key>PayloadUUID</key>
+            <string>WEBFILTER-MACOS-COMPLETE-001</string>
+            <key>PayloadDisplayName</key>
+            <string>Web Content Filter</string>
+            <key>FilterType</key>
+            <string>BuiltIn</string>
+            <key>AutoFilterEnabled</key>
+            <true/>
+            <key>FilterBrowsers</key>
+            <true/>
+            <key>FilterSockets</key>
+            <true/>
+            <key>FilterPackets</key>
+            <false/>
+            <key>UserDefinedName</key>
+            <string>ScreenTime Journey Filter</string>
+            <key>PermittedURLs</key>
+            <array>
+                <string>apple.com</string>
+                <string>icloud.com</string>
+            </array>
+            <key>DenyListURLs</key>
+            <array>
+                <string>facebook.com</string>
+                <string>*.facebook.com</string>
+                <string>instagram.com</string>
+                <string>*.instagram.com</string>
+                <string>twitter.com</string>
+                <string>*.twitter.com</string>
+                <string>x.com</string>
+                <string>*.x.com</string>
+                <string>tiktok.com</string>
+                <string>*.tiktok.com</string>
+                <string>snapchat.com</string>
+                <string>*.snapchat.com</string>
+                <string>reddit.com</string>
+                <string>*.reddit.com</string>
+                <string>discord.com</string>
+                <string>*.discord.com</string>
+                <string>pornhub.com</string>
+                <string>*.pornhub.com</string>
+                <string>xvideos.com</string>
+                <string>*.xvideos.com</string>
+                <string>xnxx.com</string>
+                <string>*.xnxx.com</string>
+                <string>redtube.com</string>
+                <string>*.redtube.com</string>
+                <string>tube8.com</string>
+                <string>*.tube8.com</string>
+                <string>youporn.com</string>
+                <string>*.youporn.com</string>
+            </array>
+        </dict>
+        
+        <!-- Screen Time / Parental Controls for macOS -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.applicationaccess</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.screentime.macos</string>
+            <key>PayloadUUID</key>
+            <string>SCREENTIME-MACOS-COMPLETE-001</string>
+            <key>PayloadDisplayName</key>
+            <string>Screen Time Controls</string>
+            <key>allowExplicitContent</key>
+            <false/>
+            <key>ratingRegion</key>
+            <string>us</string>
+            <key>ratingApps</key>
+            <integer>600</integer>
+            <key>ratingMovies</key>
+            <integer>1000</integer>
+            <key>forceGoogleSafeSearch</key>
+            <integer>1</integer>
+            <key>forceYahooSafeSearch</key>
+            <integer>1</integer>
+            <key>forceBingSafeSearch</key>
+            <integer>1</integer>
+        </dict>
+        
+        <!-- Profile Removal Password -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.profileRemovalPassword</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.removalpassword</string>
+            <key>PayloadUUID</key>
+            <string>REMOVAL-MACOS-COMPLETE-001</string>
+            <key>PayloadDisplayName</key>
+            <string>Profile Removal Password</string>
+            <key>RemovalPassword</key>
+            <string>1234</string>
+        </dict>
+        
+    </array>
+    
+    <key>PayloadDisplayName</key>
+    <string>ScreenTime Journey - macOS Complete Protection</string>
+    
+    <key>PayloadIdentifier</key>
+    <string>com.screentimejourney.macos.complete</string>
+    
+    <key>PayloadUUID</key>
+    <string>MAIN-MACOS-COMPLETE-001</string>
+    
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+    
+    <key>PayloadDescription</key>
+    <string>Complete macOS protection: CleanBrowsing DNS (porn blocking), Web Content Filter (adult sites + social media), Safe Search enforcement, Screen Time controls. PIN: 1234</string>
+    
+    <key>PayloadOrganization</key>
+    <string>ScreenTime Journey</string>
+    
+    <key>PayloadRemovalDisallowed</key>
+    <false/>
+    
+</dict>
+</plist>
+
+

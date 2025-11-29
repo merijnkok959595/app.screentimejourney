@@ -1,0 +1,92 @@
+# .cursorrules
+# === HEADER DESIGN RULES ===
+
+system:
+  - Always structure the website header with three clearly defined horizontal sections:
+    1. **Left:** Logo (usually an image or icon).
+    2. **Center:** Navigation menu items (e.g., About Me, Start Now, Milestones, Leaderboard).
+    3. **Right:** Action buttons (e.g., Home, Logout).
+
+  - Use Tailwind CSS utility classes for all styling.
+  - Maintain a **horizontal flex layout** using:
+      ```html
+      <div class="flex items-center justify-between">
+      ```
+  - Center the middle menu perfectly between the logo and the right buttons.
+  - Use `max-w-7xl mx-auto px-6 py-4` for consistent horizontal spacing.
+  - Ensure equal vertical alignment across all elements with `items-center`.
+  - Buttons on the right:
+      - "Home" → filled with brand color (`bg-purple-900 text-white hover:bg-purple-800`)
+      - "Logout" → outlined with border (`border border-purple-900 text-purple-900 hover:bg-purple-50`)
+  - Menu links:
+      - Font: medium weight (`font-medium`)
+      - Color: neutral gray (`text-gray-800`)
+      - Hover color: brand purple (`hover:text-purple-700`)
+      - Equal spacing between items (`space-x-8`)
+  - Logo:
+      - Size around `w-10 h-10` with small spacing to the right (`space-x-2`).
+
+  - Keep the header background white (`bg-white`) and optionally add a subtle shadow (`shadow-sm`).
+  - The design must be **responsive**:
+      - Collapse menu into a hamburger button on small screens (`md:flex hidden` for desktop, `flex md:hidden` for mobile icon).
+
+  - Always ensure visual balance between the left, center, and right sections.
+  - When in doubt, match the reference layout where:
+      - Logo is aligned left,
+      - Menu is centered,
+      - Buttons are right-aligned.
+
+
+# === HEADER DESIGN ENHANCEMENTS ===
+
+  ## 1. Logo Resize Animation
+  - Keep the logo scaling animation on hover or scroll, but make the **resize speed incremental**:
+      - Use a smooth transition timing function like `ease-in-out`.
+      - Duration: around `300–500ms`.
+      - Use Tailwind utility: `transition-all duration-500 ease-in-out`.
+      - This ensures the logo smoothly grows and shrinks without snapping.
+      - Example:
+        ```html
+        <img src="logo.png" class="w-10 h-10 transition-all duration-500 ease-in-out hover:scale-110" />
+        ```
+
+  ## 2. Menu Hover Style
+  - For all navigation menu links (About Me, Start Now, Milestones, Leaderboard):
+      - On hover, add an **underline animation** using a custom underline transition with `after:` pseudo-element for smooth line-in effect.
+      - Maintain `hover:text-purple-700` for color consistency.
+      - Example structure:
+        ```html
+        <a href="#" class="relative font-medium text-gray-800 hover:text-purple-700 after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-0 after:bg-purple-700 after:transition-all after:duration-300 hover:after:w-full">
+          Start Now
+        </a>
+        ```
+
+  ## 3. Announcement Bar — "Account Dashboard"
+  - The top announcement text should visually stand out more:
+      - Increase font size (`text-lg md:text-xl`).
+      - Add **extra letter spacing** (`tracking-wide` or `tracking-wider`).
+      - Keep the emoji as-is.
+      - Use `font-semibold` or `font-bold` for more prominence.
+      - Center the text horizontally and vertically if in a bar.
+      - Example:
+        ```html
+        <div class="bg-purple-900 text-white text-lg md:text-xl tracking-wider font-semibold flex items-center justify-center py-2">
+          👑 Account Dashboard
+        </div>
+        ```
+
+  ## 4. Font System — Inter
+  - Use the **Inter** font family globally or at least for all header text.
+  - Apply **font weight 500** for balance and clarity (`font-medium` in Tailwind).
+  - Desktop font size: `text-[14px]`
+  - Mobile font size: `text-[12px] md:text-[14px]`
+  - Add slight letter spacing: `tracking-wide`.
+  - Ensure all text maintains good vertical rhythm (consistent line height).
+  - Import Inter font in your HTML or CSS:
+      ```html
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+      ```
+  - Configure in Tailwind config or use `font-['Inter']` utility class.
+

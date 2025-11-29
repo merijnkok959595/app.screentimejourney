@@ -1,0 +1,36 @@
+Subject: ScreenTime Journey - Parental Control Profile (PIN 1234)
+
+Dear Customer,
+
+Your supervised parental control profile is attached to this email.
+
+📎 ATTACHMENT: ScreenTime-Journey-PIN-1234-Direct.mobileconfig
+
+📱 INSTALLATION (30 seconds):
+1. Save the attached .mobileconfig file
+2. Double-click it on your device  
+3. Click "Install" in System Preferences
+4. Profile installs with PIN 1234 protection
+
+🛡️ PROTECTION ACTIVE:
+✅ Adult websites blocked (CleanBrowsing DNS)
+✅ Inappropriate content filtered
+✅ In-app purchases disabled  
+✅ Content ratings restricted (12+ only)
+✅ All settings protected by PIN 1234
+
+🔒 SECURITY:
+• Profile removal PIN: 1234
+• Settings changes PIN: 1234
+• Keep this PIN secure!
+
+🧪 TEST:
+After installation, try visiting an adult website - it should be blocked immediately!
+
+💬 SUPPORT:
+Reply to this email if you need installation help.
+
+Best regards,
+ScreenTime Journey Team
+
+P.S. This profile works on both supervised and regular devices!

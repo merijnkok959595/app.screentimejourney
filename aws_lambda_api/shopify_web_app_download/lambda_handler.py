@@ -2648,112 +2648,204 @@ def validate_surrender(form_data) -> Dict[str, Any]:
         headers = {'Authorization': f'Bearer {api_key}'}
         
         # Detect audio format from magic bytes
-        audio_extension = 'webm'  # Default
+        audio_extension = 'wav'  # Default to WAV since that's what RecordRTC sends
         if isinstance(audio_file, bytes) and len(audio_file) > 12:
-            if audio_file[4:8] == b'ftyp':
-                audio_extension = 'mp4'
-            elif audio_file[:4] == b'RIFF' and audio_file[8:12] == b'WAVE':
+            # Check WAV first (most common now)
+            if audio_file[:4] == b'RIFF' and audio_file[8:12] == b'WAVE':
                 audio_extension = 'wav'
+                print(f"✅ Detected RIFF/WAVE header - WAV file")
+            elif audio_file[4:8] == b'ftyp':
+                audio_extension = 'mp4'
             elif audio_file[:4] == b'OggS':
                 audio_extension = 'ogg'
             elif audio_file[:4] == b'\x1aE\xdf\xa3':  # WebM/Matroska
                 audio_extension = 'webm'
+            else:
+                # Log the first 20 bytes to help debug
+                header_hex = ' '.join([f'{b:02x}' for b in audio_file[:20]])
+                print(f"⚠️ Unknown audio format. First 20 bytes: {header_hex}")
         
         print(f"🎵 Audio format detected: {audio_extension}")
+        print(f"📦 Audio file size: {len(audio_file)} bytes")
+        print(f"📦 Audio file type: {type(audio_file)}")
         
-        # Helper function to try transcription
-        def try_transcription(audio_data, filename, mime):
+        # ✅ Safety guard: Reject files that are too small (likely corrupted)
+        MIN_AUDIO_SIZE = 8000  # 8KB minimum
+        if len(audio_file) < MIN_AUDIO_SIZE:
+            print(f"❌ Audio file too small: {len(audio_file)} bytes (minimum: {MIN_AUDIO_SIZE} bytes)")
+            return json_resp({
+                'success': False,
+                'error': f'Audio file too small ({len(audio_file)} bytes)',
+                'feedback': 'Audio file is too small or corrupted. Please record for at least 3-5 seconds and try again.'
+            }, 400)
+        
+        print(f"✅ Audio file size OK ({len(audio_file)} bytes)")
+        print(f"🔄 Converting to MP3 for Whisper (universal compatibility)...")
+        
+        # ✅ ALWAYS CONVERT TO MP3 FIRST - Universal compatibility
+        try:
+            import subprocess
+            import tempfile
+            import shutil
+            
+            print(f"📝 Writing audio to temp file...")
+            # Write original audio to temp file
+            with tempfile.NamedTemporaryFile(delete=False, suffix=f'.{audio_extension}') as temp_input:
+                bytes_written = temp_input.write(audio_file)
+                temp_input_path = temp_input.name
+                print(f"✅ Wrote {bytes_written} bytes to {temp_input_path}")
+            
+            # Verify file was written
+            if not os.path.exists(temp_input_path):
+                raise Exception(f"Temp file not created: {temp_input_path}")
+            
+            file_size = os.path.getsize(temp_input_path)
+            print(f"✅ Temp file exists, size: {file_size} bytes")
+            
+            # ✅ Smart FFmpeg path detection
+            FFMPEG_PATHS = [
+                '/opt/bin/ffmpeg',        # Lambda Layer standard location
+                '/opt/layer/bin/ffmpeg',  # Alternative layer structure
+                '/usr/bin/ffmpeg',        # System location
+                'ffmpeg'                   # PATH fallback
+            ]
+            
+            # Find first existing FFmpeg binary
+            ffmpeg_path = 'ffmpeg'  # Default fallback
+            for path in FFMPEG_PATHS:
+                if os.path.exists(path):
+                    ffmpeg_path = path
+                    print(f"✅ Found FFmpeg at: {ffmpeg_path}")
+                    break
+                elif path == 'ffmpeg':
+                    # Check if ffmpeg is in PATH
+                    if shutil.which('ffmpeg'):
+                        ffmpeg_path = 'ffmpeg'
+                        print(f"✅ Found FFmpeg in PATH")
+                        break
+            
+            # ✅ Safe filename handling + Convert to MP3 (universally supported)
+            temp_output_path = os.path.splitext(temp_input_path)[0] + '.mp3'
+            
+            # Convert to MP3 (universally supported by Whisper)
+            ffmpeg_cmd = [
+                ffmpeg_path,
+                '-y',
+                '-i', temp_input_path,
+                '-vn',
+                '-c:a', 'libmp3lame',
+                '-b:a', '64k',
+                '-ar', '16000',
+                '-ac', '1',
+                temp_output_path
+            ]
+            
+            print(f"🎬 Running FFmpeg command:")
+            print(f"   {' '.join(ffmpeg_cmd)}")
+            print(f"🕐 Starting FFmpeg process...")
+            
+            result = subprocess.run(
+                ffmpeg_cmd,
+                capture_output=True,
+                text=True,
+                timeout=30
+            )
+            
+            print(f"🏁 FFmpeg process completed with return code: {result.returncode}")
+            
+            if result.returncode != 0:
+                print(f"❌ FFmpeg conversion failed!")
+                print(f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                print(f"📤 STDOUT:")
+                print(result.stdout if result.stdout else "(empty)")
+                print(f"📤 STDERR:")
+                print(result.stderr if result.stderr else "(empty)")
+                print(f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                # Clean up and return error
+                print(f"🧹 Cleaning up temp files...")
+                if os.path.exists(temp_input_path):
+                    os.remove(temp_input_path)
+                    print(f"   Removed: {temp_input_path}")
+                if os.path.exists(temp_output_path):
+                    os.remove(temp_output_path)
+                    print(f"   Removed: {temp_output_path}")
+                return json_resp({
+                    'success': False,
+                    'error': 'Audio conversion failed',
+                    'feedback': 'Your audio recording could not be processed. Please try recording again using the built-in recorder.'
+                }, 500)
+            
+            # Check if output file exists
+            if not os.path.exists(temp_output_path):
+                print(f"❌ Output file not created: {temp_output_path}")
+                os.remove(temp_input_path)
+                return json_resp({
+                    'success': False,
+                    'error': 'FFmpeg output file not created',
+                    'feedback': 'Audio conversion failed. Please try again.'
+                }, 500)
+            
+            output_size = os.path.getsize(temp_output_path)
+            print(f"✅ Output MP3 file exists: {temp_output_path}")
+            print(f"✅ Output file size: {output_size} bytes")
+            
+            # Read converted MP3 file
+            print(f"📖 Reading converted MP3 file...")
+            with open(temp_output_path, 'rb') as f:
+                converted_audio = f.read()
+            
+            print(f"✅ FFmpeg conversion successful: {len(converted_audio)} bytes MP3")
+            print(f"✅ Input: {file_size} bytes {audio_extension} → Output: {len(converted_audio)} bytes MP3")
+            
+            # Transcribe the MP3 with Whisper
+            print(f"🎙️ Sending audio to OpenAI Whisper API...")
+            print(f"   File: surrender.mp3")
+            print(f"   Size: {len(converted_audio)} bytes")
+            print(f"   Model: whisper-1")
+            print(f"   Language: en")
+            
             files = {
-                'file': (filename, audio_data, mime),
+                'file': ('surrender.mp3', converted_audio, 'audio/mpeg'),
                 'model': (None, 'whisper-1'),
                 'response_format': (None, 'json'),
                 'language': (None, 'en')
             }
-            return requests.post(
+            
+            print(f"📡 Making POST request to Whisper API...")
+            transcription_response = requests.post(
                 'https://api.openai.com/v1/audio/transcriptions',
                 headers=headers,
-                files=files
+                files=files,
+                timeout=60
             )
-        
-        # Try transcription with original format
-        transcription_response = try_transcription(
-            audio_file,
-            f'surrender.{audio_extension}',
-            f'audio/{audio_extension}'
-        )
-        
-        # If transcription failed with 400 (format issue), try auto-conversion with FFmpeg
-        if not transcription_response.ok and transcription_response.status_code == 400:
-            error_msg = transcription_response.text
-            print(f"⚠️ First attempt failed (HTTP 400): {error_msg}")
-            print("🔄 Attempting auto-conversion with FFmpeg to OGG Opus...")
             
-            try:
-                import subprocess
-                import tempfile
-                
-                # Write original audio to temp file
-                with tempfile.NamedTemporaryFile(delete=False, suffix=f'.{audio_extension}') as temp_input:
-                    temp_input.write(audio_file)
-                    temp_input_path = temp_input.name
-                
-                # Create output file path
-                temp_output_path = temp_input_path.replace(f'.{audio_extension}', '.ogg')
-                
-                # Convert to OGG Opus (widely supported by Whisper)
-                # -y: overwrite output
-                # -i: input file
-                # -vn: no video
-                # -c:a libopus: use Opus codec
-                # -b:a 96k: audio bitrate
-                # -ar 16000: sample rate (Whisper prefers 16kHz)
-                ffmpeg_cmd = [
-                    'ffmpeg',
-                    '-y',
-                    '-i', temp_input_path,
-                    '-vn',
-                    '-c:a', 'libopus',
-                    '-b:a', '96k',
-                    '-ar', '16000',
-                    temp_output_path
-                ]
-                
-                result = subprocess.run(
-                    ffmpeg_cmd,
-                    capture_output=True,
-                    text=True,
-                    timeout=30
-                )
-                
-                if result.returncode == 0 and os.path.exists(temp_output_path):
-                    # Read converted file
-                    with open(temp_output_path, 'rb') as f:
-                        converted_audio = f.read()
-                    
-                    print(f"✅ FFmpeg conversion successful: {len(converted_audio)} bytes")
-                    
-                    # Retry transcription with converted audio
-                    transcription_response = try_transcription(
-                        converted_audio,
-                        'surrender.ogg',
-                        'audio/ogg'
-                    )
-                    
-                    # Clean up temp files
-                    os.remove(temp_input_path)
-                    os.remove(temp_output_path)
-                else:
-                    print(f"❌ FFmpeg conversion failed: {result.stderr}")
-                    # Clean up temp files
-                    os.remove(temp_input_path)
-                    if os.path.exists(temp_output_path):
-                        os.remove(temp_output_path)
+            print(f"📬 Whisper API response status: {transcription_response.status_code}")
             
-            except Exception as ffmpeg_error:
-                print(f"❌ FFmpeg conversion error: {str(ffmpeg_error)}")
-                # Continue with original error handling
+            # Clean up temp files
+            print(f"🧹 Cleaning up temp files...")
+            if os.path.exists(temp_input_path):
+                os.remove(temp_input_path)
+                print(f"   Removed: {temp_input_path}")
+            if os.path.exists(temp_output_path):
+                os.remove(temp_output_path)
+                print(f"   Removed: {temp_output_path}")
         
-        # Final error handling after potential conversion attempt
+        except Exception as ffmpeg_error:
+            print(f"❌❌❌ EXCEPTION in FFmpeg conversion ❌❌❌")
+            print(f"Exception type: {type(ffmpeg_error).__name__}")
+            print(f"Exception message: {str(ffmpeg_error)}")
+            import traceback
+            print(f"Full traceback:")
+            print(traceback.format_exc())
+            print(f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+            return json_resp({
+                'success': False,
+                'error': f'Audio conversion error: {str(ffmpeg_error)}',
+                'feedback': 'Your audio recording could not be processed. Please try recording again.'
+            }, 500)
+        
+        # Final error handling after transcription
+        print(f"🔍 Checking transcription response...")
         if not transcription_response.ok:
             error_msg = transcription_response.text
             status_code = transcription_response.status_code
@@ -2788,10 +2880,23 @@ def validate_surrender(form_data) -> Dict[str, Any]:
                     'feedback': 'Failed to process your recording. Please try again.'
                 }, 500)
         
-        transcription_result = transcription_response.json()
+        print(f"✅ Transcription successful! Parsing response...")
+        try:
+            transcription_result = transcription_response.json()
+            print(f"📄 Whisper response JSON: {transcription_result}")
+        except Exception as json_error:
+            print(f"❌ Failed to parse Whisper response as JSON: {json_error}")
+            print(f"   Raw response: {transcription_response.text[:500]}")
+            return json_resp({
+                'success': False,
+                'error': 'Invalid transcription response',
+                'feedback': 'Audio processing failed. Please try again.'
+            }, 500)
+        
         user_transcript = transcription_result.get('text', '').strip()
         
-        print(f"📝 Transcript: {user_transcript[:100]}...")
+        print(f"📝 Extracted transcript: '{user_transcript}'")
+        print(f"📝 Transcript length: {len(user_transcript)} characters")
         
         if not user_transcript:
             return json_resp({
@@ -2842,7 +2947,7 @@ Please respond in JSON format with the following structure:
 ❌ If user has not surrendered:
 {{
   "has_surrendered": false,
-  "feedback": "Your voice message didn't reflect the surrender text. You must read it out loud — not casually, but with presence. Try again and let the words land fully as your own."
+  "feedback": "Read the exact text out loud."
 }}"""
         
         validation_headers = {
@@ -5492,11 +5597,24 @@ def handler(event, context):
                     form_data = {}
                     
                     try:
-                        # Get the body content
+                        # ✅ CORRECT FIX: Handle base64-encoded binary from API Gateway
+                        raw_body = event.get('body', '')
+                        
+                        # When API Gateway has Binary Media Types enabled, it base64-encodes the body
                         if event.get('isBase64Encoded', False):
-                            body_content = base64.b64decode(event['body'])
+                            # ✅ Base64-encoded binary (correct path for multipart/form-data)
+                            body_content = base64.b64decode(raw_body)
+                            print(f"✅ Decoded base64 body: {len(body_content)} bytes (BINARY MODE)")
                         else:
-                            body_content = event['body'].encode('utf-8') if isinstance(event['body'], str) else event['body']
+                            # ⚠️ Fallback for JSON/text requests (NOT for multipart!)
+                            if isinstance(raw_body, str):
+                                body_content = raw_body.encode('utf-8')
+                                print(f"⚠️ Body is plain string (not base64): {len(body_content)} bytes - audio may be corrupted!")
+                            elif isinstance(raw_body, bytes):
+                                body_content = raw_body
+                                print(f"📦 Body already bytes: {len(body_content)} bytes")
+                            else:
+                                raise ValueError(f"Unexpected body type: {type(raw_body)}")
                         
                         # Extract boundary from content-type header
                         content_type = headers.get('content-type', '')

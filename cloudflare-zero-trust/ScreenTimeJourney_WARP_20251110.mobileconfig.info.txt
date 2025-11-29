@@ -1,0 +1,37 @@
+Screen Time Journey - WARP Configuration Profile
+Generated: 2025-11-10 09:19:18
+
+Profile UUID: 0EA57F3D-47CC-45C1-9A5E-AA30504CA33E
+WARP Payload UUID: 3CDB9554-E337-4696-91AF-51778CC592D6
+Organization: screentimejourney
+
+CONFIGURATION:
+- Mode: Always-On WARP
+- Switch Locked: Yes (user cannot disable)
+- Service Mode: Full WARP VPN
+- Auto-Fallback: Disabled
+- DNS Filtering: Enabled
+- Firewall Filtering: Enabled
+- Profile Removal: Restricted
+
+DEPLOYMENT:
+1. Transfer this .mobileconfig file to target iOS device
+2. Install via Settings > Profile Downloaded
+3. Install Cloudflare WARP from App Store
+4. Authenticate with: screentimejourney.cloudflareaccess.com
+
+VPN DETECTION:
+This configuration works with Zero Trust Gateway policies to:
+- Block DNS queries to known VPN services
+- Detect VPN applications running on device
+- Require WARP connection for all traffic
+- Prevent bypass attempts
+
+TESTING VPN BLOCKING:
+1. Install profile on test device
+2. Try to install/run VPN apps (NordVPN, ExpressVPN, etc.)
+3. Check WARP logs for blocked connections
+4. Verify DNS queries to VPN domains are blocked
+5. Confirm device cannot access services without WARP
+
+For support: https://screentimejourney.com/support

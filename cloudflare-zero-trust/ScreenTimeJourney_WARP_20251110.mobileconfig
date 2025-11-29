@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>AutoConnect</key>
+			<integer>2</integer>
+			<key>DisableAutoFallback</key>
+			<true/>
+			<key>EnableDNSFiltering</key>
+			<true/>
+			<key>EnableFirewallFiltering</key>
+			<true/>
+			<key>Organization</key>
+			<string>screentimejourney</string>
+			<key>PayloadDescription</key>
+			<string>Configures Cloudflare WARP VPN</string>
+			<key>PayloadDisplayName</key>
+			<string>Screen Time Journey - WARP Configuration</string>
+			<key>PayloadIdentifier</key>
+			<string>com.screentimejourney.warp.3CDB9554-E337-4696-91AF-51778CC592D6</string>
+			<key>PayloadType</key>
+			<string>com.cloudflare.warp</string>
+			<key>PayloadUUID</key>
+			<string>3CDB9554-E337-4696-91AF-51778CC592D6</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>ServiceMode</key>
+			<string>warp</string>
+			<key>SupportURL</key>
+			<string>https://screentimejourney.com/support</string>
+			<key>SwitchLocked</key>
+			<true/>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>This profile enables Cloudflare WARP for Screen Time Journey with VPN detection and blocking.</string>
+	<key>PayloadDisplayName</key>
+	<string>Screen Time Journey Protection</string>
+	<key>PayloadIdentifier</key>
+	<string>com.screentimejourney.profile.0EA57F3D-47CC-45C1-9A5E-AA30504CA33E</string>
+	<key>PayloadOrganization</key>
+	<string>Screen Time Journey</string>
+	<key>PayloadRemovalDisallowed</key>
+	<true/>
+	<key>PayloadScope</key>
+	<string>User</string>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>0EA57F3D-47CC-45C1-9A5E-AA30504CA33E</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>

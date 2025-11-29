@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        
+        <!-- CleanBrowsing DNS -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.dnsSettings.managed</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.dns.mdm</string>
+            <key>PayloadUUID</key>
+            <string>A1B2C3D4-E5F6-7890-1234-567890ABCDEF</string>
+            <key>PayloadDisplayName</key>
+            <string>CleanBrowsing DNS Filter</string>
+            <key>DNSSettings</key>
+            <dict>
+                <key>DNSProtocol</key>
+                <string>HTTPS</string>
+                <key>ServerURL</key>
+                <string>https://doh.cleanbrowsing.org/doh/adult-filter/</string>
+                <key>ServerAddresses</key>
+                <array>
+                    <string>185.228.168.10</string>
+                    <string>185.228.169.11</string>
+                </array>
+            </dict>
+        </dict>
+        
+        <!-- Web Content Filter -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.webcontent-filter</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.webfilter.mdm</string>
+            <key>PayloadUUID</key>
+            <string>B2C3D4E5-F6G7-8901-2345-678901BCDEFG</string>
+            <key>PayloadDisplayName</key>
+            <string>Web Content Filter</string>
+            <key>FilterType</key>
+            <string>BuiltIn</string>
+            <key>AutoFilterEnabled</key>
+            <true/>
+            <key>FilterBrowsers</key>
+            <true/>
+            <key>FilterSockets</key>
+            <true/>
+            <key>DenyListURLs</key>
+            <array>
+                <string>facebook.com</string>
+                <string>*.facebook.com</string>
+                <string>instagram.com</string>
+                <string>*.instagram.com</string>
+                <string>twitter.com</string>
+                <string>*.twitter.com</string>
+                <string>x.com</string>
+                <string>*.x.com</string>
+                <string>tiktok.com</string>
+                <string>*.tiktok.com</string>
+                <string>snapchat.com</string>
+                <string>*.snapchat.com</string>
+                <string>reddit.com</string>
+                <string>*.reddit.com</string>
+                <string>discord.com</string>
+                <string>*.discord.com</string>
+            </array>
+        </dict>
+        
+        <!-- Enhanced Content & Privacy Restrictions -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.applicationaccess</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.restrictions.mdm</string>
+            <key>PayloadUUID</key>
+            <string>C3D4E5F6-G7H8-9012-3456-789012CDEFGH</string>
+            <key>PayloadDisplayName</key>
+            <string>Screen Time and Content Restrictions</string>
+            
+            <!-- Basic Content Restrictions -->
+            <key>allowExplicitContent</key>
+            <false/>
+            <key>ratingRegion</key>
+            <string>us</string>
+            <key>ratingApps</key>
+            <integer>600</integer>
+            <key>ratingMovies</key>
+            <integer>1000</integer>
+            
+            <!-- Safe Search Enforcement -->
+            <key>forceGoogleSafeSearch</key>
+            <integer>1</integer>
+            <key>forceBingSafeSearch</key>
+            <integer>1</integer>
+            <key>forceYahooSafeSearch</key>
+            <integer>1</integer>
+            
+            <!-- Screen Time Controls -->
+            <key>allowScreenTimeModification</key>
+            <false/>
+            <key>forceWebContentFilterAutoFilter</key>
+            <true/>
+            
+            <!-- App Store Controls -->
+            <key>allowInAppPurchases</key>
+            <false/>
+            <key>allowUIAppInstallation</key>
+            <true/>
+            <key>allowAppRemoval</key>
+            <true/>
+            
+            <!-- Block Social Media Apps (Bundle IDs) -->
+            <key>blacklistedAppBundleIDs</key>
+            <array>
+                <string>com.facebook.Facebook</string>
+                <string>com.burbn.instagram</string>
+                <string>com.atebits.Tweetie2</string>
+                <string>com.zhiliaoapp.musically</string>
+                <string>com.toyopagroup.picaboo</string>
+                <string>com.reddit.Reddit</string>
+                <string>com.hammerandchisel.discord</string>
+                <string>com.linkedin.LinkedIn</string>
+                <string>Pinterest</string>
+                <string>com.yahoo.Tumblr</string>
+            </array>
+            
+            <!-- Additional Social Media Controls -->
+            <key>allowSocialMedia</key>
+            <false/>
+            <key>allowVideoConferencing</key>
+            <true/>
+            <key>allowMessaging</key>
+            <true/>
+            
+        </dict>
+        
+    </array>
+    
+    <key>PayloadDisplayName</key>
+    <string>ScreenTime Journey - Enhanced MDM Protection</string>
+    
+    <key>PayloadIdentifier</key>
+    <string>com.screentimejourney.enhanced.mdm</string>
+    
+    <key>PayloadUUID</key>
+    <string>D4E5F6G7-H8I9-0123-4567-890123DEFGHI</string>
+    
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+    
+    <key>PayloadDescription</key>
+    <string>Enhanced MDM protection with CleanBrowsing DNS, web content filtering, social media app blocking, Screen Time restrictions, and content controls. Managed remotely via SimpleMDM.</string>
+    
+    <key>PayloadOrganization</key>
+    <string>ScreenTime Journey</string>
+    
+    <key>PayloadRemovalDisallowed</key>
+    <true/>
+    
+</dict>
+</plist>

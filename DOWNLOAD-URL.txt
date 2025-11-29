@@ -1,0 +1,7 @@
+Your CleanBrowsing DNS Profile Download URL:
+
+https://mdm-profiles-public-f3b79494.s3.amazonaws.com/ScreenTime-Journey-Mac-fb4f410f.mobileconfig
+
+PIN: 1234
+
+Click the URL in Safari to install!

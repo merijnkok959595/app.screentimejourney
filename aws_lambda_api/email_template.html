@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{focus_days}} Days in Focus - {{current_level}} {{current_emoji}}</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; background-color: #f9f9f9;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9f9f9; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <!-- Main Container -->
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden;">
+                    
+                    <!-- Announcement Bar -->
+                    <tr>
+                        <td style="background: #2E0456; padding: 7.5px 30px; text-align: center;">
+                            <p style="color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; font-weight: 500; margin: 0; letter-spacing: 0.5px;">
+                                &nbsp;
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: #ffffff; padding: 12px 30px; text-align: center; border-bottom: 1px solid #EEEEEE;">
+                            <img src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/stj_trimmed_png.png?v=1757864303" alt="SCREENTIMEJOURNEY" style="height: 70px; width: auto; margin: 0;" />
+                        </td>
+                    </tr>
+                    
+                    <!-- Square Image Section -->
+                    <tr>
+                        <td align="center" style="padding: 40px 40px 30px 40px;">
+                            <table width="100%" cellpadding="0" cellspacing="0" style="border-radius: 12px; overflow: hidden; border: 1px solid #eee;">
+                                <tr>
+                                    <td align="center" style="padding: 0;">
+                                        <img src="{{media_url}}" alt="{{current_level}} {{current_emoji}}" style="width: 100%; height: auto; display: block; max-width: 100%;" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- Content Section -->
+                    <tr>
+                        <td style="padding: 0 40px 40px 40px;">
+                            <h2 style="color: #0F172A; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 22px; font-weight: 600; margin: 0 0 16px 0;">
+                                Hi {{first_name}},
+                            </h2>
+                            <p style="color: #374151; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.7; margin: 0 0 12px 0;">
+                                You are among the <strong style="color: #0F172A;">top {{percentage}}%</strong> in the world 🌍
+                            </p>
+                            <p style="color: #374151; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.7; margin: 0 0 12px 0;">
+                                Right now, you are <strong style="color: #0F172A;">{{current_level}} {{current_emoji}}</strong> with <strong style="color: #0F172A;">{{focus_days}} days</strong> in focus.
+                            </p>
+                            <p style="color: #374151; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.7; margin: 0 0 12px 0;">
+                                Next up: <strong style="color: #0F172A;">{{next_level}} {{next_emoji}}</strong> in <strong style="color: #0F172A;">{{next_lvl_days}} days</strong>.
+                            </p>
+                            <p style="color: #374151; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.7; margin: 0;">
+                                You're on your path to <strong style="color: #0F172A;">{{king_queen}} 👑</strong> in <strong style="color: #0F172A;">{{king_queen_days}} days</strong>.
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    
+                    <!-- CTA Buttons -->
+                    <tr>
+                        <td style="padding: 0 40px 20px 40px;">
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <!-- Social Share Button -->
+                                <tr>
+                                    <td align="center" style="padding-bottom: 12px;">
+                                        <a href="https://www.screentimejourney.com/pages/social-share?{{social_query}}" style="display: block; width: 100%; max-width: 100%; padding: 14px 22px; background-color: transparent; color: #2E0456; text-decoration: none; border-radius: 8px; border: 2px solid #2E0456; font-weight: 500; font-size: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; text-align: center; box-sizing: border-box;">
+                                            Social Share ↗
+                                        </a>
+                                    </td>
+                                </tr>
+                                <!-- See All Milestones Button -->
+                                <tr>
+                                    <td align="center" style="padding-bottom: 12px;">
+                                        <a href="https://www.screentimejourney.com/pages/milestones" style="display: block; width: 100%; max-width: 100%; padding: 14px 22px; background-color: transparent; color: #2E0456; text-decoration: none; border-radius: 8px; border: 2px solid #2E0456; font-weight: 500; font-size: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; text-align: center; box-sizing: border-box;">
+                                            See All Milestones ↗
+                                        </a>
+                                    </td>
+                                </tr>
+                                <!-- Account Dashboard Button -->
+                                <tr>
+                                    <td align="center">
+                                        <a href="https://app.screentimejourney.com/" style="display: block; width: 100%; max-width: 100%; padding: 14px 22px; background-color: transparent; color: #2E0456; text-decoration: none; border-radius: 8px; border: 2px solid #2E0456; font-weight: 500; font-size: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; text-align: center; box-sizing: border-box;">
+                                            Account Dashboard ↗
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- Unsubscribe Link -->
+                    <tr>
+                        <td style="padding: 12px 40px 30px 40px; text-align: center;">
+                            <a href="https://www.screentimejourney.com/pages/unsubscribe?email={{to_email}}" style="color: #2E0456; text-decoration: underline; font-weight: 500; font-size: 13px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
+                                Unsubscribe
+                            </a>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding: 24px 30px; background-color: #f9f9f9; text-align: center; border-top: 1px solid #eee;">
+                            <p style="color: #6b7280; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 12px; margin: 0 0 12px 0;">
+                                © 2025, SCREENTIMEJOURNEY
+                            </p>
+                            <p style="color: #6b7280; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; line-height: 1.8; margin: 0;">
+                                <a href="https://www.screentimejourney.com/policies/privacy-policy" style="color: #2E0456; text-decoration: none;">Privacy policy</a> · 
+                                <a href="https://www.screentimejourney.com/policies/terms-of-service" style="color: #2E0456; text-decoration: none;">Terms of service</a> · 
+                                <a href="https://www.screentimejourney.com/policies/refund-policy" style="color: #2E0456; text-decoration: none;">Refund policy</a> · 
+                                <a href="https://www.screentimejourney.com/policies/shipping-policy" style="color: #2E0456; text-decoration: none;">Shipping policy</a> · 
+                                <a href="https://www.screentimejourney.com/pages/contact" style="color: #2E0456; text-decoration: none;">Contact information</a> · 
+                                <a href="https://www.screentimejourney.com#cookie-preferences" style="color: #2E0456; text-decoration: none;">Cookie preferences</a>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+
+

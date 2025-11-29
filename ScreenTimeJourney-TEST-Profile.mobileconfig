@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        
+        <!-- CleanBrowsing DNS Filter -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.dnsSettings.managed</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.dns.cleanbrowsing</string>
+            <key>PayloadUUID</key>
+            <string>CB-DNS-TEST-2024-001</string>
+            <key>PayloadDisplayName</key>
+            <string>CleanBrowsing Adult Filter</string>
+            <key>PayloadDescription</key>
+            <string>Blocks adult and pornographic content at DNS level</string>
+            <key>DNSSettings</key>
+            <dict>
+                <key>DNSProtocol</key>
+                <string>HTTPS</string>
+                <key>ServerURL</key>
+                <string>https://doh.cleanbrowsing.org/doh/adult-filter/</string>
+            </dict>
+        </dict>
+        
+        <!-- Web Content Filter (Adult Content + Social Media) -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.webcontent-filter</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.webfilter</string>
+            <key>PayloadUUID</key>
+            <string>WEBFILTER-TEST-2024-001</string>
+            <key>PayloadDisplayName</key>
+            <string>Web Content Filter</string>
+            <key>PayloadDescription</key>
+            <string>Blocks social media websites and enforces adult content filtering</string>
+            <key>FilterType</key>
+            <string>BuiltIn</string>
+            <key>AutoFilterEnabled</key>
+            <true/>
+            <key>PermittedURLs</key>
+            <array>
+                <string>apple.com</string>
+                <string>icloud.com</string>
+            </array>
+            <key>DenyListURLs</key>
+            <array>
+                <string>facebook.com</string>
+                <string>*.facebook.com</string>
+                <string>instagram.com</string>
+                <string>*.instagram.com</string>
+                <string>twitter.com</string>
+                <string>*.twitter.com</string>
+                <string>x.com</string>
+                <string>*.x.com</string>
+                <string>tiktok.com</string>
+                <string>*.tiktok.com</string>
+                <string>snapchat.com</string>
+                <string>*.snapchat.com</string>
+                <string>reddit.com</string>
+                <string>*.reddit.com</string>
+                <string>discord.com</string>
+                <string>*.discord.com</string>
+            </array>
+        </dict>
+        
+        <!-- Content Restrictions (Explicit Content Blocking) -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.applicationaccess</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.restrictions</string>
+            <key>PayloadUUID</key>
+            <string>RESTRICTIONS-TEST-2024-001</string>
+            <key>PayloadDisplayName</key>
+            <string>Content Restrictions</string>
+            <key>PayloadDescription</key>
+            <string>Enforces Screen Time content restrictions</string>
+            <key>allowExplicitContent</key>
+            <false/>
+            <key>ratingRegion</key>
+            <string>us</string>
+            <key>ratingApps</key>
+            <integer>600</integer>
+        </dict>
+        
+    </array>
+    
+    <key>PayloadDisplayName</key>
+    <string>ScreenTime Journey - TEST Profile</string>
+    
+    <key>PayloadIdentifier</key>
+    <string>com.screentimejourney.test.profile</string>
+    
+    <key>PayloadUUID</key>
+    <string>STJ-MAIN-TEST-2024-001</string>
+    
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+    
+    <key>PayloadDescription</key>
+    <string>TEST Profile - Blocks porn (CleanBrowsing DNS), enforces Screen Time adult content filter, blocks social media websites. Works with Cloudflare WARP for time-based app blocking.</string>
+    
+    <key>PayloadOrganization</key>
+    <string>ScreenTime Journey</string>
+    
+    <key>PayloadRemovalDisallowed</key>
+    <false/>
+    
+    <key>ConsentText</key>
+    <dict>
+        <key>en</key>
+        <string>TEST PROFILE - ScreenTime Journey
+
+This test profile will block porn sites via CleanBrowsing DNS, enforce Screen Time adult content filtering, block social media websites (facebook.com, instagram.com, twitter.com, tiktok.com, snapchat.com, reddit.com), and block explicit content in App Store.
+
+Works with your existing Cloudflare WARP setup. For time-based social media APP blocking (22:00-09:00), configure this in your Cloudflare Zero Trust Gateway policies.
+
+This test profile can be removed anytime from Settings - General - VPN &amp; Device Management.</string>
+    </dict>
+    
+</dict>
+</plist>
+

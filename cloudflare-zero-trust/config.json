@@ -1,0 +1,48 @@
+{
+  "cloudflare": {
+    "email": "info@screentimejourney.com",
+    "global_api_key": "ce63b47aa3a8810afa9bdb163fb02766620e6",
+    "account_id": "f9a4686c874f4d5be8af2f08610e5ec2",
+    "team_name": "screentimejourney",
+    "team_domain": "screentimejourney.cloudflareaccess.com"
+  },
+  "vpn_blocking": {
+    "enabled": true,
+    "detection_methods": [
+      "device_posture_check",
+      "gateway_policy",
+      "warp_enforcement"
+    ],
+    "blocked_vpn_services": [
+      "NordVPN",
+      "ExpressVPN",
+      "Surfshark",
+      "ProtonVPN",
+      "CyberGhost",
+      "Private Internet Access",
+      "Hotspot Shield",
+      "TunnelBear",
+      "IPVanish",
+      "Windscribe"
+    ]
+  },
+  "device_requirements": {
+    "require_warp": true,
+    "require_device_posture": true,
+    "allow_mode_switch": false
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

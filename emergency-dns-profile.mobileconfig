@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.dnsSettings.managed</string>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.dns.cleanbrowsing</string>
+            <key>PayloadUUID</key>
+            <string>12345678-1234-1234-1234-123456789012</string>
+            <key>PayloadDisplayName</key>
+            <string>CleanBrowsing Adult Filter</string>
+            <key>PayloadDescription</key>
+            <string>Blocks adult content via DNS</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>DNSSettings</key>
+            <dict>
+                <key>DNSProtocol</key>
+                <string>HTTPS</string>
+                <key>ServerAddresses</key>
+                <array>
+                    <string>185.228.168.168</string>
+                    <string>185.228.169.168</string>
+                </array>
+            </dict>
+        </dict>
+    </array>
+    <key>PayloadDisplayName</key>
+    <string>Emergency CleanBrowsing DNS</string>
+    <key>PayloadDescription</key>
+    <string>Direct DNS filtering for adult content blocking</string>
+    <key>PayloadIdentifier</key>
+    <string>com.screentimejourney.emergency.dns</string>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>12345678-1234-1234-1234-123456789999</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+</dict>
+</plist>

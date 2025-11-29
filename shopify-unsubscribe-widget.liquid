@@ -1,0 +1,254 @@
+{% comment %}
+  Shopify Theme Widget: Email Unsubscribe
+  Add this to: https://www.screentimejourney.com/pages/unsubscribe
+  
+  Usage:
+  1. Go to Shopify Admin → Online Store → Themes → Customize
+  2. Navigate to the "Unsubscribe" page
+  3. Add a "Custom Liquid" block
+  4. Paste this entire file
+  5. Save
+{% endcomment %}
+
+<div id="unsubscribe-widget" class="unsubscribe-container">
+  <div class="unsubscribe-card">
+    <div class="unsubscribe-logo">
+      <img src="https://cdn.shopify.com/s/files/1/0866/6749/3623/files/stj_trimmed_png.png?v=1757864303" 
+           alt="Screen Time Journey" 
+           style="height: 60px; width: auto;">
+    </div>
+    
+    <div id="unsubscribe-content">
+      <div class="unsubscribe-emoji spinning">⏳</div>
+      <h1 class="unsubscribe-title">Processing your request...</h1>
+      <p class="unsubscribe-text">Please wait while we unsubscribe you from milestone email notifications.</p>
+    </div>
+  </div>
+  
+  <div class="unsubscribe-footer">
+    <p>© 2025, SCREENTIMEJOURNEY</p>
+    <p>
+      <a href="/policies/privacy-policy">Privacy policy</a> · 
+      <a href="/policies/terms-of-service">Terms of service</a>
+    </p>
+  </div>
+</div>
+
+<style>
+  .unsubscribe-container {
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  }
+  
+  .unsubscribe-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 60px 40px;
+    text-align: center;
+  }
+  
+  .unsubscribe-logo {
+    margin-bottom: 40px;
+  }
+  
+  .unsubscribe-emoji {
+    font-size: 64px;
+    margin-bottom: 24px;
+    display: inline-block;
+  }
+  
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  .spinning {
+    animation: spin 2s linear infinite;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  
+  .fadeIn {
+    animation: fadeIn 0.5s ease-in;
+  }
+  
+  .unsubscribe-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #0F172A;
+    margin-bottom: 16px;
+  }
+  
+  .unsubscribe-text {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #64748B;
+    margin-bottom: 24px;
+  }
+  
+  .unsubscribe-countdown {
+    background: #F3F4F6;
+    padding: 16px;
+    border-radius: 8px;
+    margin: 24px 0;
+    font-size: 14px;
+    color: #6B7280;
+  }
+  
+  .unsubscribe-button {
+    display: inline-block;
+    padding: 14px 28px;
+    background: #2E0456;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin: 8px 4px;
+  }
+  
+  .unsubscribe-button:hover {
+    background: #1a0230;
+    color: white;
+  }
+  
+  .unsubscribe-button-secondary {
+    background: transparent;
+    color: #2E0456;
+    border: 2px solid #2E0456;
+  }
+  
+  .unsubscribe-button-secondary:hover {
+    background: #f9f9f9;
+    color: #2E0456;
+  }
+  
+  .unsubscribe-footer {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 14px;
+    color: #9CA3AF;
+  }
+  
+  .unsubscribe-footer a {
+    color: inherit;
+    text-decoration: underline;
+  }
+  
+  .unsubscribe-error-details {
+    margin-top: 16px;
+    padding: 12px;
+    background: #FEF2F2;
+    border-radius: 8px;
+    color: #991B1B;
+    font-size: 14px;
+  }
+</style>
+
+<script>
+(function() {
+  // Get email from URL parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const email = urlParams.get('email');
+  const contentDiv = document.getElementById('unsubscribe-content');
+
+  async function unsubscribe() {
+    if (!email) {
+      showError('No email address provided. Please use the link from your email.');
+      return;
+    }
+
+    try {
+      console.log('🔕 Unsubscribing:', email);
+      
+      const response = await fetch('https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws/unsubscribe_email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          notification_type: 'milestone'
+        })
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        showSuccess();
+      } else {
+        showError(result.error || 'Unable to process your request. Please try again.');
+      }
+    } catch (error) {
+      console.error('❌ Error:', error);
+      showError('Network error. Please check your connection and try again.');
+    }
+  }
+
+  function showSuccess() {
+    contentDiv.innerHTML = `
+      <div class="unsubscribe-emoji fadeIn">✅</div>
+      <h1 class="unsubscribe-title">You've been unsubscribed</h1>
+      <p class="unsubscribe-text">You will no longer receive milestone email notifications from Screen Time Journey.</p>
+      <p class="unsubscribe-text" style="color: #9CA3AF; font-size: 14px;">You can re-enable these notifications anytime in your account settings.</p>
+      <div class="unsubscribe-countdown">
+        ⏱️ Redirecting to homepage in <span id="countdown">5</span> seconds...
+      </div>
+      <a href="/" class="unsubscribe-button">Go to Homepage Now</a>
+    `;
+    
+    // Countdown and redirect
+    let seconds = 5;
+    const countdownEl = document.getElementById('countdown');
+    const interval = setInterval(() => {
+      seconds--;
+      if (countdownEl) countdownEl.textContent = seconds;
+      if (seconds <= 0) {
+        clearInterval(interval);
+        window.location.href = '/';
+      }
+    }, 1000);
+  }
+
+  function showError(message) {
+    contentDiv.innerHTML = `
+      <div class="unsubscribe-emoji fadeIn">❌</div>
+      <h1 class="unsubscribe-title">Something went wrong</h1>
+      <p class="unsubscribe-text">${message}</p>
+      <div class="unsubscribe-error-details">
+        Email: ${email || 'Not provided'}
+      </div>
+      <div style="margin-top: 24px;">
+        <a href="/pages/contact" class="unsubscribe-button">Contact Support</a>
+        <a href="/" class="unsubscribe-button unsubscribe-button-secondary">Go to Homepage</a>
+      </div>
+    `;
+  }
+
+  // Run unsubscribe on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', unsubscribe);
+  } else {
+    unsubscribe();
+  }
+})();
+</script>
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        <!-- ENFORCED DNS Settings -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.dnsSettings.managed</string>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.enforced.dns</string>
+            <key>PayloadUUID</key>
+            <string>A1B2C3D4-E5F6-7890-ABCD-EF1234567890</string>
+            <key>PayloadDisplayName</key>
+            <string>Enforced CleanBrowsing DNS</string>
+            <key>PayloadDescription</key>
+            <string>Forces CleanBrowsing DNS - Cannot be bypassed</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>DNSSettings</key>
+            <dict>
+                <key>DNSProtocol</key>
+                <string>HTTPS</string>
+                <key>ServerAddresses</key>
+                <array>
+                    <string>185.228.168.168</string>
+                    <string>185.228.169.168</string>
+                </array>
+                <key>ServerURL</key>
+                <string>https://doh.cleanbrowsing.org/doh/adult-filter/</string>
+                <key>SupplementalMatchDomains</key>
+                <array>
+                    <string></string>
+                </array>
+                <key>ProhibitDisablement</key>
+                <true/>
+            </dict>
+        </dict>
+        
+        <!-- Network Content Filter (Alternative approach) -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.webcontent-filter</string>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.enforced.filter</string>
+            <key>PayloadUUID</key>
+            <string>B2C3D4E5-F6G7-8901-BCDE-F23456789012</string>
+            <key>PayloadDisplayName</key>
+            <string>Enforced Content Filter</string>
+            <key>PayloadDescription</key>
+            <string>Network-level content filtering</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>FilterType</key>
+            <string>Plugin</string>
+            <key>UserDefinedName</key>
+            <string>ScreenTime Journey Filter</string>
+            <key>PluginBundleID</key>
+            <string>com.apple.NetworkExtension.filter-data</string>
+            <key>FilterSockets</key>
+            <true/>
+            <key>FilterPackets</key>
+            <false/>
+        </dict>
+        
+        <!-- System Configuration (Force settings) -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.systemconfiguration</string>
+            <key>PayloadIdentifier</key>
+            <string>com.screentimejourney.system.config</string>
+            <key>PayloadUUID</key>
+            <string>C3D4E5F6-G7H8-9012-CDEF-345678901234</string>
+            <key>PayloadDisplayName</key>
+            <string>System DNS Configuration</string>
+            <key>PayloadDescription</key>
+            <string>Forces system-wide DNS settings</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>NetworkServices</key>
+            <dict>
+                <key>Wi-Fi</key>
+                <dict>
+                    <key>DNS</key>
+                    <dict>
+                        <key>ServerAddresses</key>
+                        <array>
+                            <string>185.228.168.168</string>
+                            <string>185.228.169.168</string>
+                        </array>
+                    </dict>
+                </dict>
+            </dict>
+        </dict>
+    </array>
+    
+    <key>PayloadDisplayName</key>
+    <string>ScreenTime Journey - ENFORCED Protection</string>
+    <key>PayloadDescription</key>
+    <string>System-enforced parental controls that cannot be bypassed</string>
+    <key>PayloadIdentifier</key>
+    <string>com.screentimejourney.enforced.protection</string>
+    <key>PayloadRemovalDisallowed</key>
+    <true/>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>D4E5F6G7-H8I9-0123-DEFG-456789012345</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+</dict>
+</plist>

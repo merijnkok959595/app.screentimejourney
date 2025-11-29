@@ -1,0 +1,24 @@
+
+Subject: Set Up Parental Controls - Router Configuration
+
+Hi [Parent Name],
+
+Here's how to protect all devices on your home network:
+
+🔧 ROUTER SETUP (5 minutes):
+1. Open your web browser
+2. Go to your router's admin page (usually http://192.168.1.1)
+3. Login with admin credentials
+4. Find "DNS Settings" or "Internet Settings"
+5. Set Primary DNS: 185.228.168.168
+6. Set Secondary DNS: 185.228.169.168
+7. Save and restart router
+
+✅ PROTECTION ACTIVE:
+All devices will now have adult content blocked!
+No software installation required.
+
+Need help? Reply to this email.
+
+Best regards,
+ScreenTime Journey Team

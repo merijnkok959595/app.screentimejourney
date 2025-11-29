@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        <!-- CleanBrowsing DNS/VPN Configuration for Porn Blocking -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.dnsSettings.managed</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.cleanbrowsing.dns.adult</string>
+            <key>PayloadUUID</key>
+            <string>CLEANBROWSING-DNS-001</string>
+            <key>PayloadDisplayName</key>
+            <string>CleanBrowsing Adult Filter DNS</string>
+            <key>PayloadDescription</key>
+            <string>CleanBrowsing DNS for blocking adult content 24/7</string>
+            <key>DNSSettings</key>
+            <dict>
+                <key>DNSProtocol</key>
+                <string>HTTPS</string>
+                <key>ServerURL</key>
+                <string>https://doh.cleanbrowsing.org/doh/adult-filter/</string>
+            </dict>
+        </dict>
+        
+        <!-- ENFORCED Restrictions - Locks Screen Time Settings -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.applicationaccess</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.restrictions.enforced</string>
+            <key>PayloadUUID</key>
+            <string>RESTRICTIONS-ENFORCED-001</string>
+            <key>PayloadDisplayName</key>
+            <string>Enforced Content & App Restrictions</string>
+            <key>PayloadDescription</key>
+            <string>Enforces restrictions that cannot be bypassed without removing MDM profile</string>
+            
+            <!-- === FORCE DISABLE THESE APPS 24/7 === -->
+            <key>blacklistedAppBundleIDs</key>
+            <array>
+                <!-- Social Media Apps - These are ALWAYS blocked -->
+                <string>com.burbn.instagram</string>
+                <string>com.facebook.Facebook</string>
+                <string>com.atebits.Tweetie2</string>
+                <string>com.zhiliaoapp.musically</string>
+                <string>com.snapchat.snapchat</string>
+                <string>com.linkedin.LinkedIn</string>
+                <string>pinterest</string>
+                <string>com.reddit.Reddit</string>
+                <string>org.telegram.Telegram</string>
+                <string>ph.telegra.Telegraph</string>
+                <string>com.discord</string>
+            </array>
+            
+            <!-- === PREVENT BYPASSING RESTRICTIONS === -->
+            <!-- User CANNOT change Screen Time settings -->
+            <key>allowAccountModification</key>
+            <false/>
+            <key>allowPasscodeModification</key>
+            <false/>
+            
+            <!-- Prevent App Deletion (can't delete to bypass) -->
+            <key>allowAppRemoval</key>
+            <false/>
+            
+            <!-- Prevent Installing New Apps -->
+            <key>allowUIAppInstallation</key>
+            <false/>
+            
+            <!-- Block App Store (can't download VPNs or workarounds) -->
+            <key>allowAppInstallation</key>
+            <false/>
+            
+            <!-- Prevent Erasing Device (can't factory reset to bypass) -->
+            <key>allowEraseContentAndSettings</key>
+            <false/>
+            
+            <!-- === CONTENT FILTERING === -->
+            <key>allowExplicitContent</key>
+            <false/>
+            <key>allowSafari</key>
+            <true/>
+            <key>safariAllowPopups</key>
+            <false/>
+            <key>safariAllowAutoFill</key>
+            <true/>
+            <key>ratingRegion</key>
+            <string>us</string>
+            <key>ratingMovies</key>
+            <integer>1000</integer>
+            <key>ratingTVShows</key>
+            <integer>1000</integer>
+            <key>ratingApps</key>
+            <integer>600</integer>
+            
+            <!-- === PREVENT VPN BYPASS === -->
+            <key>allowVPNCreation</key>
+            <false/>
+            
+            <!-- === LOCK DOWN SETTINGS === -->
+            <key>allowDiagnosticSubmissionModification</key>
+            <false/>
+            <key>allowBluetoothModification</key>
+            <false/>
+        </dict>
+        
+        <!-- Web Content Filter - Blocks Social Media Sites -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.webcontent-filter</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.webcontentfilter.enforced</string>
+            <key>PayloadUUID</key>
+            <string>WEBFILTER-ENFORCED-001</string>
+            <key>PayloadDisplayName</key>
+            <string>Web Content Filter - Social Media Block</string>
+            <key>FilterType</key>
+            <string>BuiltIn</string>
+            <key>AutoFilterEnabled</key>
+            <true/>
+            
+            <!-- Always Allow These Sites -->
+            <key>PermittedURLs</key>
+            <array>
+                <string>apple.com</string>
+                <string>icloud.com</string>
+            </array>
+            
+            <!-- ALWAYS Block Social Media Sites -->
+            <key>DenyListURLs</key>
+            <array>
+                <string>facebook.com</string>
+                <string>*.facebook.com</string>
+                <string>instagram.com</string>
+                <string>*.instagram.com</string>
+                <string>twitter.com</string>
+                <string>*.twitter.com</string>
+                <string>x.com</string>
+                <string>*.x.com</string>
+                <string>tiktok.com</string>
+                <string>*.tiktok.com</string>
+                <string>snapchat.com</string>
+                <string>*.snapchat.com</string>
+                <string>reddit.com</string>
+                <string>*.reddit.com</string>
+                <string>pinterest.com</string>
+                <string>*.pinterest.com</string>
+                <string>linkedin.com</string>
+                <string>*.linkedin.com</string>
+                <string>tumblr.com</string>
+                <string>*.tumblr.com</string>
+                <string>discord.com</string>
+                <string>*.discord.com</string>
+                <string>telegram.org</string>
+                <string>*.telegram.org</string>
+                <string>web.telegram.org</string>
+                <string>web.whatsapp.com</string>
+            </array>
+        </dict>
+        
+        <!-- Restrictions Payload - Additional Security -->
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.screensaver</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.screensaver.lock</string>
+            <key>PayloadUUID</key>
+            <string>SCREENSAVER-001</string>
+            <key>PayloadDisplayName</key>
+            <string>Auto-Lock Settings</string>
+            <key>loginWindowIdleTime</key>
+            <integer>300</integer>
+        </dict>
+    </array>
+    
+    <!-- Root Profile Settings - CANNOT BE REMOVED -->
+    <key>PayloadDisplayName</key>
+    <string>🛡️ Enforced Content Filter (22:00-09:00)</string>
+    <key>PayloadIdentifier</key>
+    <string>com.mdm.enforced.contentfilter</string>
+    <key>PayloadRemovalDisallowed</key>
+    <true/>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>ENFORCED-MAIN-UUID-001</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+    <key>PayloadDescription</key>
+    <string>ENFORCED: Blocks social media apps and websites, adult content via CleanBrowsing DNS. Profile cannot be removed. Use with Screen Time Downtime (22:00-09:00) for time-based control.</string>
+    <key>PayloadOrganization</key>
+    <string>Personal Accountability MDM</string>
+</dict>
+</plist>
+
+
+

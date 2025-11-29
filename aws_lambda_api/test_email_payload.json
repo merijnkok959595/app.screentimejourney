@@ -1,0 +1,26 @@
+{
+  "test_email": true,
+  "to_email": "merijn@risottini.com",
+  "first_name": "Merijn",
+  "current_level": "Ground Zero",
+  "current_emoji": "🏁",
+  "focus_days": 7,
+  "percentage": 85,
+  "next_level": "Warrior",
+  "next_emoji": "⚔️",
+  "next_lvl_days": 7,
+  "king_queen": "King",
+  "king_queen_days": 83,
+  "social_query": "pages/social-share?first_name=Merijn&percentage=85&current_level=Ground%20Zero%20🏁&focus_days=7"
+}
+
+
+
+
+
+
+
+
+
+
+
