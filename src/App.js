@@ -6715,7 +6715,7 @@ function App() {
                   <div className="modal__footer">
                     {/* Step 3: Profile Generation & WARP Client Download */}
                     {currentFlowStep === 3 && currentFlow.flowType === 'device_setup_flow' && currentFlow.steps[currentFlowStep - 1]?.step_type !== 'pincode_display' && (
-                      <div style={{width: '100%'}}>
+                      <>
                         {/* Generate/Download Profile Button */}
                         {!vpnProfileData ? (
                           <button
@@ -6747,7 +6747,7 @@ function App() {
                             </>
                           </button>
                         )}
-                      </div>
+                      </>
                     )}
                     
                     {/* Primary Action Button - hide for pincode display */}
