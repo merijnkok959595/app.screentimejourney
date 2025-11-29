@@ -5779,7 +5779,7 @@ function App() {
                       {currentFlow.steps[currentFlowStep - 1].step_type === 'video_surrender' ? (
                         <>
                           {/* Video + Surrender Step Content - Merged */}
-                          <div style={{marginBottom: '20px'}}>
+                          <div style={{marginBottom: '0'}}>
                             
                             {/* Video */}
                             <div style={{marginBottom: '20px'}}>
@@ -6077,7 +6077,7 @@ function App() {
                       ) : currentFlow.steps[currentFlowStep - 1].step_type === 'surrender' ? (
                         <>
                           {/* Surrender Step Content - Simplified */}
-                          <div style={{marginBottom: '20px'}}>
+                          <div style={{marginBottom: '0'}}>
                             
                             {/* Surrender Text */}
                             <div style={{background: '#ffffff', padding: '20px', borderRadius: '7px', border: '1px solid #e2e8f0', marginBottom: '20px'}}>
@@ -6358,7 +6358,7 @@ function App() {
                       ) : currentFlow.steps[currentFlowStep - 1].step_type === 'pincode_display' ? (
                         <>
                           {/* Pincode Display Step */}
-                          <div style={{marginBottom: '20px'}}>
+                          <div style={{marginBottom: '0'}}>
                             {(() => {
                               // Use stored device data from currentFlow (stored before removal)
                               const unlockedDevice = currentFlow?.unlockedDeviceData;
