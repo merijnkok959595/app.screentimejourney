@@ -2306,9 +2306,17 @@ function App() {
       setIsRecording(true);
       updateAudioLevels();
       
+      // Scroll modal to bottom to show recording bar and submit button
       setTimeout(() => {
-        window.scrollTo(0, scrollY);
-      }, 0);
+        const modal = document.querySelector('.modal');
+        if (modal) {
+          modal.scrollTo({
+            top: modal.scrollHeight,
+            behavior: 'smooth'
+          });
+          console.log('📜 Scrolled modal to bottom to show recording controls');
+        }
+      }, 100);
       
       console.log('✅ Recording initialized successfully');
     } catch (error) {
@@ -6907,7 +6915,7 @@ function App() {
                   fontSize: '24px',
                   marginBottom: '16px'
                 }}>
-                  {surrenderResultModal.type === 'success' ? '✅ Surrender Approved' : '❌ Try Again'}
+                  {surrenderResultModal.type === 'success' ? '✅ Approved' : '❌ Denied'}
                 </h3>
               </div>
               
