@@ -2307,25 +2307,33 @@ function App() {
       updateAudioLevels();
       
       // Scroll modal to bottom AFTER React re-renders with recording bar
-      // Use requestAnimationFrame to ensure DOM has been painted
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          // Double RAF ensures layout has been calculated
-          const modal = document.querySelector('.modal');
-          if (modal) {
-            console.log('📜 Modal found, scrollHeight:', modal.scrollHeight, 'clientHeight:', modal.clientHeight);
-            const maxScroll = modal.scrollHeight - modal.clientHeight;
-            console.log('📜 Attempting scroll to:', maxScroll, 'px');
-            modal.scrollTo({
-              top: maxScroll,
-              behavior: 'smooth'
-            });
-            console.log('📜 Scroll command executed');
-          } else {
-            console.error('❌ Modal not found for scrolling');
-          }
-        });
-      });
+      // Use polling to wait for recording bar to actually appear in DOM
+      const scrollToRecordingBar = () => {
+        const modal = document.querySelector('.modal');
+        const recordingBar = modal?.querySelector('[style*="Recording"]'); // Find recording status element
+        
+        console.log('📜 Scroll attempt - Modal:', !!modal, 'Recording bar:', !!recordingBar);
+        
+        if (modal && recordingBar) {
+          // Recording bar exists, now scroll
+          const maxScroll = modal.scrollHeight - modal.clientHeight;
+          console.log('📜 Scrolling to:', maxScroll, 'px (scrollHeight:', modal.scrollHeight, 'clientHeight:', modal.clientHeight, ')');
+          modal.scrollTo({
+            top: maxScroll,
+            behavior: 'smooth'
+          });
+          console.log('✅ Scroll executed successfully');
+        } else if (modal) {
+          // Modal exists but recording bar not yet rendered, try again
+          console.log('⏳ Recording bar not yet in DOM, retrying...');
+          setTimeout(scrollToRecordingBar, 50); // Try again in 50ms
+        } else {
+          console.error('❌ Modal not found');
+        }
+      };
+      
+      // Start polling after a short delay to let React start rendering
+      setTimeout(scrollToRecordingBar, 100);
       
       console.log('✅ Recording initialized successfully');
     } catch (error) {
