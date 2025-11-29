@@ -5776,6 +5776,10 @@ function App() {
                   onClick={() => {
                     // Only update basic profile data (username, gender)
                     // WhatsApp is updated separately through verification flow
+                    console.log('💾 Saving profile changes:', {
+                      username: profileEditData.username.trim(),
+                      gender: profileEditData.gender
+                    });
                     const updatedData = {
                       username: profileEditData.username.trim(),
                       gender: profileEditData.gender
@@ -7267,9 +7271,10 @@ function App() {
                   className="btn-secondary"
                   style={{flex: 1}}
                   onClick={() => {
+                    console.log('🔍 Opening Edit Profile - Current gender:', profileData?.gender);
                     setProfileEditData({
                       username: profileData?.username || '@theking',
-                      gender: profileData?.gender || 'man',
+                      gender: profileData?.gender || 'male', // Fixed: use 'male' not 'man'
                       whatsapp: profileData?.whatsapp ? profileData.whatsapp.replace(/^\+\d{1,3}/, '') : '627207989',
                       country_code: profileData?.whatsapp ? profileData.whatsapp.match(/^\+\d{1,3}/)?.[0] || '+31' : '+31',
                       usernameValidationState: null,
