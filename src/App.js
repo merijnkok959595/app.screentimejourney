@@ -5734,7 +5734,7 @@ function App() {
                             {/* Video */}
                             <div style={{marginBottom: '20px'}}>
                               <video controls style={{width: '100%', borderRadius: '8px', backgroundColor: '#EEEEEE'}}>
-                                <source src={currentFlow.steps[currentFlowStep - 1].media_url} type="video/mp4" />
+                                <source src={currentFlow.steps[currentFlowStep - 1].media_url} type="video/quicktime" />
                                 Your browser does not support the video tag.
                               </video>
                             </div>
@@ -6442,7 +6442,7 @@ function App() {
                               style={{width: '100%', height: 'auto', borderRadius: '8px', backgroundColor: '#EEEEEE'}}
                               poster=""
                             >
-                              <source src={currentFlow.steps[currentFlowStep - 1].media_url} type="video/mp4" />
+                              <source src={currentFlow.steps[currentFlowStep - 1].media_url} type="video/quicktime" />
                               Your browser does not support the video tag.
                             </video>
                           </div>
