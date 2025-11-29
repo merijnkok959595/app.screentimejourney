@@ -2307,19 +2307,25 @@ function App() {
       updateAudioLevels();
       
       // Scroll modal to bottom AFTER React re-renders with recording bar
-      // Need longer delay to ensure DOM has updated with new elements
-      setTimeout(() => {
-        const modal = document.querySelector('.modal');
-        if (modal) {
-          // Force recalculation of scrollHeight after DOM update
-          const maxScroll = modal.scrollHeight - modal.clientHeight;
-          modal.scrollTo({
-            top: maxScroll,
-            behavior: 'smooth'
-          });
-          console.log('📜 Scrolled modal to bottom:', maxScroll, 'px');
-        }
-      }, 300); // Increased delay to ensure React has re-rendered
+      // Use requestAnimationFrame to ensure DOM has been painted
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          // Double RAF ensures layout has been calculated
+          const modal = document.querySelector('.modal');
+          if (modal) {
+            console.log('📜 Modal found, scrollHeight:', modal.scrollHeight, 'clientHeight:', modal.clientHeight);
+            const maxScroll = modal.scrollHeight - modal.clientHeight;
+            console.log('📜 Attempting scroll to:', maxScroll, 'px');
+            modal.scrollTo({
+              top: maxScroll,
+              behavior: 'smooth'
+            });
+            console.log('📜 Scroll command executed');
+          } else {
+            console.error('❌ Modal not found for scrolling');
+          }
+        });
+      });
       
       console.log('✅ Recording initialized successfully');
     } catch (error) {
