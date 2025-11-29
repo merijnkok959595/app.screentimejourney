@@ -6493,7 +6493,7 @@ function App() {
                             
                             {/* Terms & Conditions Checkbox - Only show on Step 1 (form step) */}
                             {currentFlowStep === 1 && (
-                              <div style={{marginTop: '12px', marginBottom: '12px'}}>
+                              <div style={{marginTop: '20px', marginBottom: '0'}}>
                                 <label style={{
                                   display: 'flex',
                                   alignItems: 'center',
