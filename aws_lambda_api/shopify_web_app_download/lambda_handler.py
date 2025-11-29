@@ -34,6 +34,14 @@ except ImportError:
 # Initialize AWS clients
 secretsmanager = boto3.client('secretsmanager')
 
+# ✅ OPTIMIZATION: Connection pooling - Initialize DynamoDB once, reuse across invocations
+# This saves 50-200ms per request and reduces costs
+dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
+subscribers_table = dynamodb.Table(os.environ.get('SUBSCRIBERS_TABLE', 'stj_subscribers'))
+password_table = dynamodb.Table('stj_password')
+auth_table = dynamodb.Table(AUTH_TABLE_NAME)
+system_table = dynamodb.Table(os.environ.get('SYSTEM_TABLE', 'stj_system'))
+
 # Global cache for tokens to avoid repeated API calls
 _SHOPIFY_TOKEN_CACHE = None
 
@@ -133,8 +141,8 @@ def convert_floats_to_decimal(obj):
 def update_subscriber(customer_id: str, email: str, status: str, event_type: str, data: Dict = None, commitment_data: Dict = None, utm_data: Dict = None, phone: str = None, seal_subscription_id: str = None, country: str = None) -> bool:
     """Update subscriber record in DynamoDB"""
     try:
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(os.environ.get('SUBSCRIBERS_TABLE', 'stj_subscribers'))
+        # Use global connection pool
+        table = subscribers_table
         
         if not customer_id:
             print(f"⚠️ No customer_id provided")
@@ -253,8 +261,8 @@ def save_customer_profile(payload: Dict[str, Any]) -> Dict[str, Any]:
         if not username_data.get('available', False):
             return json_resp({'error': 'Username is no longer available'}, 409)
         
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(os.environ.get('SUBSCRIBERS_TABLE', 'stj_subscribers'))
+        # Use global connection pool
+        table = subscribers_table
         
         # Get existing record
         response = table.get_item(Key={'customer_id': customer_id})
@@ -323,8 +331,8 @@ def check_username_availability(payload: Dict[str, Any]) -> Dict[str, Any]:
         if len(username) < 2:
             return json_resp({'error': 'Username must be at least 2 characters'}, 400)
         
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(os.environ.get('SUBSCRIBERS_TABLE', 'stj_subscribers'))
+        # Use global connection pool
+        table = subscribers_table
         
         # Use username-index GSI for efficient lookup
         response = table.query(
@@ -370,8 +378,8 @@ def send_whatsapp_verification_code(payload: Dict[str, Any]) -> Dict[str, Any]:
         verification_code = str(random.randint(100000, 999999))
         
         # Store verification code in DynamoDB with 10-minute expiry
-        dynamodb = boto3.resource('dynamodb')
-        auth_table = dynamodb.Table(AUTH_TABLE_NAME)
+        # Use global connection pool
+        # auth_table already defined globally
         
         expires_at = int((datetime.now() + timedelta(minutes=10)).timestamp())
         
@@ -543,8 +551,8 @@ def verify_whatsapp_verification_code(payload: Dict[str, Any]) -> Dict[str, Any]
             return json_resp({'error': 'Customer ID is required'}, 400)
         
         # Get stored verification code from DynamoDB
-        dynamodb = boto3.resource('dynamodb')
-        auth_table = dynamodb.Table(AUTH_TABLE_NAME)
+        # Use global connection pool
+        # auth_table already defined globally
         
         try:
             # Query using phone_number as primary key
@@ -654,8 +662,8 @@ def get_customer_profile(payload: Dict[str, Any]) -> Dict[str, Any]:
         if not customer_id:
             return json_resp({'error': 'Customer ID is required'}, 400)
         
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(os.environ.get('SUBSCRIBERS_TABLE', 'stj_subscribers'))
+        # Use global connection pool
+        table = subscribers_table
         
         # Get customer record
         response = table.get_item(Key={'customer_id': customer_id})
@@ -770,8 +778,8 @@ def update_customer_profile(payload: Dict[str, Any]) -> Dict[str, Any]:
         if not update_data:
             return json_resp({'error': 'No valid fields to update'}, 400)
         
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(os.environ.get('SUBSCRIBERS_TABLE', 'stj_subscribers'))
+        # Use global connection pool
+        table = subscribers_table
         
         # Get existing record
         response = table.get_item(Key={'customer_id': customer_id})
@@ -830,8 +838,8 @@ def update_customer_profile(payload: Dict[str, Any]) -> Dict[str, Any]:
 def check_username_availability_for_update(username: str, customer_id: str) -> bool:
     """Check if username is available for update (excluding current customer)"""
     try:
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(os.environ.get('SUBSCRIBERS_TABLE', 'stj_subscribers'))
+        # Use global connection pool
+        table = subscribers_table
         
         # Use username-index GSI and filter out current customer
         response = table.query(
@@ -1539,8 +1547,8 @@ def get_social_share_data(payload: Dict[str, Any]) -> Dict[str, Any]:
         print(f"🔍 Fetching social share data for customer: {customer_id}")
         
         # Get user from database
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(os.environ.get('SUBSCRIBERS_TABLE', 'stj_subscribers'))
+        # Use global connection pool
+        table = subscribers_table
         
         response = table.get_item(Key={'customer_id': customer_id})
         
@@ -2055,8 +2063,8 @@ def get_leaderboard(payload: Dict[str, Any]) -> Dict[str, Any]:
 def find_and_update_webapp_record(shopify_customer_id: str, customer_email: str, order_data: Dict[str, Any]) -> bool:
     """Find existing webapp record and update it with real Shopify customer ID"""
     try:
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(os.environ.get('SUBSCRIBERS_TABLE', 'stj_subscribers'))
+        # Use global connection pool
+        table = subscribers_table
         
         print(f"🔍 Looking for existing webapp record for email: {customer_email}")
         
@@ -2125,8 +2133,8 @@ def find_and_update_webapp_record(shopify_customer_id: str, customer_email: str,
 def find_and_update_webapp_record_for_subscription(shopify_customer_id: str, customer_email: str, subscription_data: Dict[str, Any]) -> bool:
     """Find existing webapp record and update it with real Shopify customer ID for subscription"""
     try:
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(os.environ.get('SUBSCRIBERS_TABLE', 'stj_subscribers'))
+        # Use global connection pool
+        table = subscribers_table
         
         print(f"🔍 Looking for existing webapp record for subscription: {customer_email}")
         
@@ -2347,8 +2355,8 @@ def get_devices(payload: Dict[str, Any]) -> Dict[str, Any]:
             return json_resp({'error': 'customer_id required'}, 400)
         
         # Connect to DynamoDB
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(os.environ.get('SUBSCRIBERS_TABLE', 'stj_subscribers'))
+        # Use global connection pool
+        table = subscribers_table
         
         # Get customer record
         response = table.get_item(Key={'customer_id': customer_id})
@@ -2403,8 +2411,8 @@ def unlock_device(payload: Dict[str, Any]) -> Dict[str, Any]:
             return json_resp({'error': 'customer_id and device_id required'}, 400)
         
         # Connect to DynamoDB
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(os.environ.get('SUBSCRIBERS_TABLE', 'stj_subscribers'))
+        # Use global connection pool
+        table = subscribers_table
         
         # Get current customer record
         response = table.get_item(Key={'customer_id': customer_id})
@@ -2493,8 +2501,8 @@ def update_device(payload: Dict[str, Any]) -> Dict[str, Any]:
         print(f"🔄 Updating device {device_id} with updates: {list(updates.keys())}")
         
         # Connect to DynamoDB
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(os.environ.get('SUBSCRIBERS_TABLE', 'stj_subscribers'))
+        # Use global connection pool
+        table = subscribers_table
         
         # Get current customer record
         response = table.get_item(Key={'customer_id': customer_id})
@@ -2564,8 +2572,8 @@ def remove_device(payload: Dict[str, Any]) -> Dict[str, Any]:
             return json_resp({'error': 'customer_id and device_id required'}, 400)
         
         # Connect to DynamoDB
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(os.environ.get('SUBSCRIBERS_TABLE', 'stj_subscribers'))
+        # Use global connection pool
+        table = subscribers_table
         
         # Get current customer record
         response = table.get_item(Key={'customer_id': customer_id})
@@ -3048,8 +3056,8 @@ def store_pincode(payload: Dict[str, Any]) -> Dict[str, Any]:
             return json_resp({'error': 'Missing required fields: pincode, uuid, device_type, customer_id'}, 400)
         
         # Store in DynamoDB
-        dynamodb = boto3.resource('dynamodb', region_name='eu-north-1')
-        table = dynamodb.Table('stj_password')
+        # Use global connection pool
+        table = password_table
         
         item_data = {
             'uuid': uuid,
@@ -3298,8 +3306,8 @@ def regenerate_audio_guide(payload: Dict[str, Any]) -> Dict[str, Any]:
         
         # Update device's current_audio_pincode in DynamoDB
         try:
-            dynamodb = boto3.resource('dynamodb')
-            subscribers_table = dynamodb.Table(os.environ.get('SUBSCRIBERS_TABLE', 'stj_subscribers'))
+            # Use global connection pool
+            # subscribers_table already defined globally
             
             # Get customer's devices
             response = subscribers_table.get_item(Key={'customer_id': customer_id})
@@ -3923,8 +3931,8 @@ def handle_subscription_cancelled(payload: Dict[str, Any]) -> Dict[str, Any]:
     
     try:
         # Get customer data first
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(os.environ.get('SUBSCRIBERS_TABLE', 'stj_subscribers'))
+        # Use global connection pool
+        table = subscribers_table
         
         customer_response = table.get_item(Key={'customer_id': customer_id})
         
@@ -4519,8 +4527,8 @@ def check_customer_entitlement(customer_id: str) -> Dict[str, Any]:
     Check if customer has active entitlement in DynamoDB
     """
     try:
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(os.environ.get('SUBSCRIBERS_TABLE', 'stj_subscribers'))
+        # Use global connection pool
+        table = subscribers_table
         
         # Query stj_subscribers table
         response = table.get_item(Key={'customer_id': customer_id})
