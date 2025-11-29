@@ -636,6 +636,7 @@ function App() {
   const [surrenderSubmitting, setSurrenderSubmitting] = useState(false);
   const [surrenderError, setSurrenderError] = useState('');
   const [surrenderSuccess, setSurrenderSuccess] = useState('');
+  const [surrenderResultModal, setSurrenderResultModal] = useState(null); // {type: 'success'|'error', message: string}
   const [audioLevels, setAudioLevels] = useState([]);
   const [audioContext, setAudioContext] = useState(null);
   const [analyser, setAnalyser] = useState(null);
@@ -2511,20 +2512,20 @@ function App() {
           console.log('🔓 Surrender approved! Pincode generated:', result.pincode);
           console.log('📝 Transcript:', result.transcript);
           
-          // Show success feedback in green box
-          setSurrenderSuccess(result.feedback || '✅ You spoke it with weight. That matters. The surrender was real — and now, a new chapter begins. Choose what comes next with clarity.');
-          
           // Send email with pincode
           await sendUnlockEmail(result.pincode);
           
-          // Navigate to step 2 after 3 seconds
-          setTimeout(() => {
-            setCurrentFlowStep(2);
-            setSurrenderSuccess(''); // Clear success message
-          }, 3000);
+          // Show success modal popup
+          setSurrenderResultModal({
+            type: 'success',
+            message: result.feedback || '✅ You spoke it with weight. That matters. The surrender was real — and now, a new chapter begins. Choose what comes next with clarity.'
+          });
         } else {
-          // Show actual ChatGPT feedback (e.g., "Audio didn't match text" or "Recording unclear")
-          setSurrenderError(result.feedback || result.message || 'Your recording did not match the required text. Please try again.');
+          // Show error modal popup
+          setSurrenderResultModal({
+            type: 'error',
+            message: result.feedback || result.message || 'Your recording did not match the required text. Please try again.'
+          });
         }
       } else {
         // Show user-friendly feedback from API, fallback to error message
@@ -2534,8 +2535,11 @@ function App() {
 
     } catch (error) {
       console.error('❌ Error submitting surrender:', error);
-      // Show actual error message (could be network, format, or API error)
-      setSurrenderError(error.message || 'Unable to process your recording. Please try again.');
+      // Show error modal popup
+      setSurrenderResultModal({
+        type: 'error',
+        message: error.message || 'Unable to process your recording. Please try again.'
+      });
     } finally {
       setSurrenderSubmitting(false);
     }
@@ -6892,6 +6896,62 @@ function App() {
             )}
           </div>
         </div>
+
+        {/* Surrender Result Modal */}
+        {surrenderResultModal && (
+          <div className="modal-overlay active" style={{zIndex: 100000}}>
+            <div className="modal" role="dialog" aria-modal="true" style={{maxWidth: '500px'}}>
+              <div className="modal__header">
+                <h3 className="modal__title" style={{
+                  textAlign: 'center',
+                  fontSize: '24px',
+                  marginBottom: '16px'
+                }}>
+                  {surrenderResultModal.type === 'success' ? '✅ Surrender Approved' : '❌ Try Again'}
+                </h3>
+              </div>
+              
+              <div style={{
+                padding: '20px',
+                background: surrenderResultModal.type === 'success' ? '#f0fdf4' : '#fef2f2',
+                border: `1px solid ${surrenderResultModal.type === 'success' ? '#bbf7d0' : '#fecaca'}`,
+                borderRadius: '7px',
+                marginBottom: '20px'
+              }}>
+                <p className="account-text" style={{
+                  margin: 0,
+                  fontSize: '15px',
+                  lineHeight: '1.7',
+                  textAlign: 'center',
+                  color: surrenderResultModal.type === 'success' ? '#16a34a' : '#dc2626'
+                }}>
+                  {surrenderResultModal.message}
+                </p>
+              </div>
+              
+              <div className="modal__footer">
+                <button
+                  className="btn-primary"
+                  onClick={() => {
+                    if (surrenderResultModal.type === 'success') {
+                      // Move to pincode display step
+                      setCurrentFlowStep(2);
+                    } else {
+                      // Stay on current step, reset recording
+                      setAudioBlob(null);
+                      setIsRecording(false);
+                      setRecordingTime(0);
+                    }
+                    setSurrenderResultModal(null);
+                  }}
+                  style={{width: '100%'}}
+                >
+                  {surrenderResultModal.type === 'success' ? 'View Unlock Code' : 'Record Again'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Announcement Bar */}
         <div className="announcement-bar">
