@@ -2389,27 +2389,28 @@ function App() {
 
         console.log('✅ Recording stopped and cleaned up');
 
-        // Scroll to show the Submit button at the bottom
-        const scrollToSubmitButton = () => {
-          // Find the primary action button (Submit Surrender)
-          const submitButton = document.querySelector('.modal__content .btn-primary');
-          if (submitButton) {
-            submitButton.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
-            console.log('📍 Scrolled to Submit button');
+        // Prevent any automatic scrolling - lock scroll position
+        const preventScrollJump = () => {
+          const modal = document.querySelector('.modal__content');
+          const currentScrollTop = modal ? modal.scrollTop : window.scrollY;
+          
+          // Lock the scroll position
+          if (modal) {
+            modal.scrollTop = currentScrollTop;
+            console.log('🔒 Locked modal scroll at:', currentScrollTop);
           } else {
-            console.log('⚠️ Submit button not found');
-            // Fallback: scroll modal to bottom
-            const currentModal = document.querySelector('.modal__content');
-            if (currentModal) {
-              currentModal.scrollTo({ top: currentModal.scrollHeight, behavior: 'smooth' });
-              console.log('📍 Scrolled modal to bottom');
-            }
+            window.scrollTo({ top: currentScrollTop, behavior: 'instant' });
+            console.log('🔒 Locked window scroll at:', currentScrollTop);
           }
         };
         
-        // Execute after React re-renders the UI with the audio player
-        setTimeout(scrollToSubmitButton, 100);
-        setTimeout(scrollToSubmitButton, 300);
+        // Execute immediately and after React re-renders
+        preventScrollJump();
+        requestAnimationFrame(preventScrollJump);
+        setTimeout(preventScrollJump, 0);
+        setTimeout(preventScrollJump, 50);
+        setTimeout(preventScrollJump, 100);
+        setTimeout(preventScrollJump, 200);
 
         console.log('🛑 Stop recording completed');
       });
