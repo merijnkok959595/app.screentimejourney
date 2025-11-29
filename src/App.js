@@ -2333,99 +2333,106 @@ function App() {
   const stopRecording = () => {
     console.log('🛑 Stopping RecordRTC recording...');
     
-    // Capture current scroll positions BEFORE any changes
-    const modal = document.querySelector('.modal__content');
-    const modalScrollY = modal ? modal.scrollTop : 0;
-    const windowScrollY = window.scrollY;
-    
-    console.log('📍 Captured scroll - modal:', modalScrollY, 'window:', windowScrollY);
-    
-    if (recordRTC && isRecording) {
-      // Stop animation
-      if (animationId) {
-        cancelAnimationFrame(animationId);
-        setAnimationId(null);
-      }
-      
-      // Clear timer
-      if (recordingTimer) {
-        clearInterval(recordingTimer);
-        setRecordingTimer(null);
-      }
-      
-      setIsRecording(false);
-      
-      // ✅ STOP RECORDRTC AND GET WAV BLOB
-      recordRTC.stopRecording(() => {
-        console.log('🔄 RecordRTC stopped, getting WAV blob...');
-        const blob = recordRTC.getBlob();
-        console.log('🎵 WAV blob size:', blob?.size, 'bytes, type:', blob?.type);
-
-        if (!blob || blob.size === 0) {
-          console.error('❌ Empty WAV blob from RecordRTC!');
-          alert('Recording failed - empty audio file. Please try again.');
-          return;
-        }
-
-        if (blob.size < 8000) {
-          console.error('❌ WAV file too small:', blob.size, 'bytes');
-          alert('Recording too short. Please record for at least 5 seconds and try again.');
-          return;
-        }
-
-        // ✅ CREATE FILE WITH .WAV EXTENSION
-        const file = new File([blob], 'surrender.wav', {
-          type: 'audio/wav'
-        });
-
-        console.log('✅ WAV file created for upload:', file.name, file.size, 'bytes', file.type);
-        setAudioBlob(file);
-
-        // Clean up stream
-        if (audioStream) {
-          console.log('🧹 Stopping audio tracks...');
-          audioStream.getTracks().forEach(track => track.stop());
-          setAudioStream(null);
-        }
-
-        // Clean up audio context
-        if (audioContext) {
-          console.log('🧹 Closing audio context...');
-          audioContext.close();
-          setAudioContext(null);
-        }
-
-        setAudioLevels([]);
-        setRecordRTC(null);
-
-        console.log('✅ Recording stopped and cleaned up');
-
-        // Prevent any automatic scrolling - lock scroll position
-        const preventScrollJump = () => {
-          const modal = document.querySelector('.modal__content');
-          const currentScrollTop = modal ? modal.scrollTop : window.scrollY;
-          
-          // Lock the scroll position
-          if (modal) {
-            modal.scrollTop = currentScrollTop;
-            console.log('🔒 Locked modal scroll at:', currentScrollTop);
-          } else {
-            window.scrollTo({ top: currentScrollTop, behavior: 'instant' });
-            console.log('🔒 Locked window scroll at:', currentScrollTop);
-          }
-        };
-        
-        // Execute immediately and after React re-renders
-        preventScrollJump();
-        requestAnimationFrame(preventScrollJump);
-        setTimeout(preventScrollJump, 0);
-        setTimeout(preventScrollJump, 50);
-        setTimeout(preventScrollJump, 100);
-        setTimeout(preventScrollJump, 200);
-
-        console.log('🛑 Stop recording completed');
-      });
+    if (!recordRTC || !isRecording) {
+      console.log('⚠️ No active recording to stop');
+      return;
     }
+    
+    // ✅ CAPTURE SCROLL POSITION BEFORE ANY STATE CHANGES
+    const modal = document.querySelector('.modal__content');
+    const savedScrollTop = modal ? modal.scrollTop : window.scrollY;
+    console.log('📍 Captured scroll position BEFORE state changes:', savedScrollTop);
+    
+    // Stop animation
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+      setAnimationId(null);
+    }
+    
+    // Clear timer
+    if (recordingTimer) {
+      clearInterval(recordingTimer);
+      setRecordingTimer(null);
+    }
+    
+    // ✅ STOP RECORDRTC FIRST, THEN BATCH ALL STATE CHANGES
+    recordRTC.stopRecording(() => {
+      console.log('🔄 RecordRTC stopped, getting WAV blob...');
+      const blob = recordRTC.getBlob();
+      console.log('🎵 WAV blob size:', blob?.size, 'bytes, type:', blob?.type);
+
+      if (!blob || blob.size === 0) {
+        console.error('❌ Empty WAV blob from RecordRTC!');
+        setIsRecording(false); // Reset state on error
+        alert('Recording failed - empty audio file. Please try again.');
+        return;
+      }
+
+      if (blob.size < 8000) {
+        console.error('❌ WAV file too small:', blob.size, 'bytes');
+        setIsRecording(false); // Reset state on error
+        alert('Recording too short. Please record for at least 5 seconds and try again.');
+        return;
+      }
+
+      // ✅ CREATE FILE WITH .WAV EXTENSION
+      const file = new File([blob], 'surrender.wav', {
+        type: 'audio/wav'
+      });
+
+      console.log('✅ WAV file created for upload:', file.name, file.size, 'bytes', file.type);
+
+      // Clean up stream
+      if (audioStream) {
+        console.log('🧹 Stopping audio tracks...');
+        audioStream.getTracks().forEach(track => track.stop());
+        setAudioStream(null);
+      }
+
+      // Clean up audio context
+      if (audioContext) {
+        console.log('🧹 Closing audio context...');
+        audioContext.close();
+        setAudioContext(null);
+      }
+
+      setAudioLevels([]);
+      setRecordRTC(null);
+
+      // ✅ BATCH STATE CHANGES: This causes ONE re-render instead of two
+      // The key is to call setIsRecording(false) and setAudioBlob(file) together
+      setIsRecording(false);
+      setAudioBlob(file);
+
+      console.log('✅ Recording stopped, state updated');
+
+      // ✅ RESTORE SCROLL POSITION AFTER REACT RE-RENDERS
+      const restoreScroll = () => {
+        const modalElement = document.querySelector('.modal__content');
+        if (modalElement) {
+          modalElement.scrollTop = savedScrollTop;
+          console.log('🔒 Restored modal scroll to:', savedScrollTop, '(actual:', modalElement.scrollTop, ')');
+        } else {
+          window.scrollTo({ top: savedScrollTop, behavior: 'instant' });
+          console.log('🔒 Restored window scroll to:', savedScrollTop);
+        }
+      };
+      
+      // Execute multiple times across animation frames to ensure it sticks
+      requestAnimationFrame(() => {
+        restoreScroll();
+        requestAnimationFrame(() => {
+          restoreScroll();
+          setTimeout(restoreScroll, 0);
+          setTimeout(restoreScroll, 10);
+          setTimeout(restoreScroll, 50);
+          setTimeout(restoreScroll, 100);
+          setTimeout(restoreScroll, 150);
+        });
+      });
+
+      console.log('🛑 Stop recording completed');
+    });
   };
 
   const submitSurrender = async () => {
