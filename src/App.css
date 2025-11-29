@@ -283,7 +283,7 @@ html, #root {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin: 1rem 0;
+  margin: 0;
   align-items: flex-start; /* Align radio buttons to the left */
 }
 
@@ -545,7 +545,7 @@ html, #root {
 
 /* Modal Footer Improvements */
 .modal__footer {
-  margin-top: 2rem;
+  margin-top: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -659,7 +659,7 @@ html, #root {
   /* Radio groups - better spacing */
   .radio-group {
     gap: 12px;
-    margin: 1rem 0;
+    margin: 0;
   }
   
   .radio-option {
@@ -788,7 +788,7 @@ html, #root {
 }
 
 .modal__footer {
-  margin-top: 1.5rem !important;
+  margin-top: 12px !important;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -805,7 +805,7 @@ html, #root {
 
 /* Radio group spacing */
 .radio-group {
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 /* Phone input group spacing */
