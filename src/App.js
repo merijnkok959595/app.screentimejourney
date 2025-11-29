@@ -606,7 +606,8 @@ function App() {
   // Device form data state
   const [deviceFormData, setDeviceFormData] = useState({
     device_name: '',
-    device_type: ''
+    device_type: '',
+    terms_accepted: false
   });
   const [deviceFormErrors, setDeviceFormErrors] = useState({});
   
@@ -1487,7 +1488,9 @@ function App() {
               device_name: deviceFormData.device_name,
               customer_id: customerData?.customerId || extractCustomerId(),
               method: 'create',
-              purpose: 'device_setup'
+              purpose: 'device_setup',
+              terms_accepted: deviceFormData.terms_accepted,
+              terms_accepted_at: new Date().toISOString()
             }),
             signal: AbortSignal.timeout(5000) // 5 second timeout
           });
@@ -3000,6 +3003,10 @@ function App() {
         errors.device_type = 'Please select a device type';
       }
       
+      if (!deviceFormData.terms_accepted) {
+        errors.terms_accepted = 'You must agree to the terms of service to continue';
+      }
+      
       if (Object.keys(errors).length > 0) {
         setDeviceFormErrors(errors);
         return;
@@ -4068,6 +4075,9 @@ function App() {
       setup_completed_at: new Date().toISOString(),
       // Store pincode for all devices (used for audio guide)
       pincode: sharedPincode?.pincode || null,
+      // GDPR Compliance: Store terms acceptance
+      terms_accepted: deviceFormData.terms_accepted,
+      terms_accepted_at: new Date().toISOString(),
       // Store audio URL if generated (ONLY S3/HTTPS URLs, NEVER base64 data URLs!)
       audio_url: (() => {
         const url = audioGuideData?.audio_url || audioGuideData?.tts_result?.public_url || null;
@@ -6431,6 +6441,64 @@ function App() {
                                 )}
                               </div>
                             ))}
+                            
+                            {/* Terms & Conditions Checkbox - Only show on Step 1 (form step) */}
+                            {currentFlowStep === 1 && (
+                              <div style={{marginTop: '12px', marginBottom: '12px'}}>
+                                <label style={{
+                                  display: 'flex',
+                                  alignItems: 'flex-start',
+                                  cursor: 'pointer',
+                                  fontSize: '14px',
+                                  fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+                                  color: '#0F172A'
+                                }}>
+                                  <input
+                                    type="checkbox"
+                                    checked={deviceFormData.terms_accepted}
+                                    onChange={(e) => {
+                                      setDeviceFormData(prev => ({
+                                        ...prev,
+                                        terms_accepted: e.target.checked
+                                      }));
+                                      // Clear error when user checks
+                                      if (deviceFormErrors.terms_accepted) {
+                                        setDeviceFormErrors(prev => ({
+                                          ...prev,
+                                          terms_accepted: ''
+                                        }));
+                                      }
+                                    }}
+                                    style={{
+                                      marginRight: '8px',
+                                      marginTop: '2px',
+                                      width: '16px',
+                                      height: '16px',
+                                      cursor: 'pointer',
+                                      flexShrink: 0
+                                    }}
+                                  />
+                                  <span>
+                                    I agree with the{' '}
+                                    <a
+                                      href="https://www.screentimejourney.com/policies/terms-of-service"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      style={{
+                                        color: '#2E0456',
+                                        textDecoration: 'underline',
+                                        fontWeight: '500'
+                                      }}
+                                    >
+                                      terms of service
+                                    </a>
+                                  </span>
+                                </label>
+                                {deviceFormErrors.terms_accepted && (
+                                  <p className="error-message" style={{marginTop: '4px'}}>{deviceFormErrors.terms_accepted}</p>
+                                )}
+                              </div>
+                            )}
                           </div>
                         </>
                       ) : (
