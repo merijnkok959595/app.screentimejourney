@@ -5847,7 +5847,7 @@ function App() {
                                 controls 
                                 preload="none"
                                 playsInline
-                                poster={`${currentFlow.steps[currentFlowStep - 1].media_url.replace('.mov', '').replace('unlock', 'thumbnail_unlock').replace('screentime', 'thumbnail_screentime').replace('profile', 'thumbnailprofile').replace('pincode', 'thumbnail_pincode')}.jpg?v=${Date.now()}`}
+                                poster={`${currentFlow.steps[currentFlowStep - 1].media_url.replace('.mov', '').replace('unlock', 'tn_unlock').replace('screentime', 'tn_screentime').replace('profile', 'tn_profile').replace('pincode', 'tn_pincode')}.webp?v=${Date.now()}`}
                                 style={{width: '100%', borderRadius: '8px', backgroundColor: '#EEEEEE'}}
                                 onLoadStart={() => console.log('🔄 Unlock video loading:', currentFlow.steps[currentFlowStep - 1].media_url)}
                                 onCanPlay={() => console.log('✅ Unlock video ready:', currentFlow.steps[currentFlowStep - 1].media_url)}
@@ -6652,7 +6652,7 @@ function App() {
                               controls 
                               preload="none"
                               playsInline
-                              poster={`${currentFlow.steps[currentFlowStep - 1].media_url.replace('.mov', '').replace('unlock', 'thumbnail_unlock').replace('screentime', 'thumbnail_screentime').replace('profile', 'thumbnailprofile').replace('pincode', 'thumbnail_pincode')}.jpg?v=${Date.now()}`}
+                              poster={`${currentFlow.steps[currentFlowStep - 1].media_url.replace('.mov', '').replace('unlock', 'tn_unlock').replace('screentime', 'tn_screentime').replace('profile', 'tn_profile').replace('pincode', 'tn_pincode')}.webp?v=${Date.now()}`}
                               style={{width: '100%', height: 'auto', borderRadius: '8px', backgroundColor: '#EEEEEE'}}
                               onError={(e) => console.error('❌ Video error:', e, 'URL:', currentFlow.steps[currentFlowStep - 1].media_url)}
                               onLoadStart={() => console.log('🔄 Video loading started:', currentFlow.steps[currentFlowStep - 1].media_url)}
