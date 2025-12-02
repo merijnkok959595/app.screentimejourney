@@ -4894,7 +4894,7 @@ function App() {
             {onboardStep === 1 && (
               <div>
                 <div style={{marginBottom: '0'}}>
-                  <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Username</label>
+                  <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '0', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Username</label>
                   <div className="input-wrapper" style={{ position: 'relative' }}>
                     <input 
                       className={`input ${usernameValid === true ? 'input--valid' : usernameValid === false ? 'input--invalid' : ''}`}
@@ -5005,7 +5005,7 @@ function App() {
             {onboardStep === 3 && (
               <div>
                 <div style={{marginBottom: '0'}}>
-                  <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Why do you want to change your screentime habits?</label>
+                  <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '0', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Why do you want to change your screentime habits?</label>
                   <div className="input-wrapper">
                     <input 
                       className="input" 
@@ -5020,7 +5020,7 @@ function App() {
                     />
                   </div>
                   
-                  <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', marginTop: '1.5rem', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>How will this change your life?</label>
+                  <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '0', marginTop: '1.5rem', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>How will this change your life?</label>
                   <div className="input-wrapper">
                     <input 
                       className="input" 
@@ -5035,7 +5035,7 @@ function App() {
                     />
                   </div>
                   
-                  <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', marginTop: '1.5rem', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Who in your life will be affected by these changes?</label>
+                  <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '0', marginTop: '1.5rem', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Who in your life will be affected by these changes?</label>
                   <div className="input-wrapper">
                     <input 
                       className="input" 
@@ -5141,11 +5141,11 @@ function App() {
             {onboardStep === 5 && (
               <div>
                 <div style={{marginBottom: '0'}}>
-                  <p className="helper" style={{marginBottom: '4px'}}>
+                  <p style={{marginBottom: '4px', fontSize: '14px', color: '#6b7280', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', textAlign: 'left', marginLeft: '0', paddingLeft: '0'}}>
                     We sent a 6-digit code via WhatsApp to {newCountryCode}{newWhatsapp}
                   </p>
-                  <p style={{margin: '0 0 16px 0', textAlign: 'left'}}>
-                    <button className="link-inline" style={{marginLeft: '0'}} onClick={() => setOnboardStep(4)}>Wrong number?</button>
+                  <p style={{margin: '0 0 16px 0', textAlign: 'left', paddingLeft: '0'}}>
+                    <button className="link-inline" style={{marginLeft: '0', paddingLeft: '0', textAlign: 'left'}} onClick={() => setOnboardStep(4)}>Wrong number?</button>
                   </p>
                   <input 
                     className="input code-input" 
