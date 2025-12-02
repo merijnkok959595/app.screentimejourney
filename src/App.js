@@ -4923,7 +4923,7 @@ function App() {
                 <div className="modal__footer">
                   <button 
                     className="btn-primary"
-                    style={{width: '100%', position: 'relative'}}
+                    style={{width: '100%', position: 'relative', overflow: 'hidden'}}
                     disabled={!newUsername.trim() || (usernameValid !== null && usernameValid !== true)}
                     onClick={() => setOnboardStep(2)}
                   >
@@ -4941,6 +4941,19 @@ function App() {
                       whiteSpace: 'nowrap'
                     }}>→</span>
                     <span style={{visibility: 'hidden'}}>Next</span>
+                    {/* Disabled overlay - same as device flow */}
+                    {(!newUsername.trim() || (usernameValid !== null && usernameValid !== true)) && (
+                      <div style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'rgba(255, 255, 255, 0.4)',
+                        borderRadius: '7px',
+                        pointerEvents: 'none'
+                      }}></div>
+                    )}
                   </button>
                 </div>
               </div>
@@ -4978,7 +4991,7 @@ function App() {
                 <div className="modal__footer">
                   <button
                     className="btn-primary"
-                    style={{width: '100%', position: 'relative'}}
+                    style={{width: '100%', position: 'relative', overflow: 'hidden'}}
                     disabled={!newGender} 
                     onClick={() => setOnboardStep(3)}
                   >
@@ -4996,6 +5009,19 @@ function App() {
                       whiteSpace: 'nowrap'
                     }}>→</span>
                     <span style={{visibility: 'hidden'}}>Next</span>
+                    {/* Disabled overlay - same as device flow */}
+                    {!newGender && (
+                      <div style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'rgba(255, 255, 255, 0.4)',
+                        borderRadius: '7px',
+                        pointerEvents: 'none'
+                      }}></div>
+                    )}
                   </button>
                   <button className="btn-tertiary" onClick={() => setOnboardStep(1)}>Back</button>
                 </div>
@@ -5055,7 +5081,7 @@ function App() {
                   <button
                     type="button"
                     className="btn-primary"
-                    style={{width: '100%', position: 'relative'}}
+                    style={{width: '100%', position: 'relative', overflow: 'hidden'}}
                     disabled={!whatToChange.trim() || !whatToGain.trim() || !doingThisFor.trim() || commitmentValidating} 
                     onClick={(e) => {
                       e.preventDefault();
@@ -5081,6 +5107,19 @@ function App() {
                         }}>→</span>
                         <span style={{visibility: 'hidden'}}>Next</span>
                       </>
+                    )}
+                    {/* Disabled overlay - same as device flow */}
+                    {(!whatToChange.trim() || !whatToGain.trim() || !doingThisFor.trim()) && !commitmentValidating && (
+                      <div style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'rgba(255, 255, 255, 0.4)',
+                        borderRadius: '7px',
+                        pointerEvents: 'none'
+                      }}></div>
                     )}
                   </button>
                   <button type="button" className="btn-tertiary" onClick={() => setOnboardStep(2)}>Back</button>
@@ -5117,21 +5156,47 @@ function App() {
                 <div className="modal__footer">
                   <button
                     className="btn-primary"
-                    style={{width: '100%'}}
+                    style={{width: '100%', position: 'relative', overflow: 'hidden'}}
                     disabled={!phoneNumber || whatsappLoading}
                     onClick={sendWhatsAppCode}
                   >
                     {whatsappLoading ? 'Sending code...' : 'Validate'}
+                    {/* Disabled overlay - same as device flow */}
+                    {!phoneNumber && !whatsappLoading && (
+                      <div style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'rgba(255, 255, 255, 0.4)',
+                        borderRadius: '7px',
+                        pointerEvents: 'none'
+                      }}></div>
+                    )}
                   </button>
                   <button 
                     className="btn-secondary"
-                    style={{width: '100%'}} 
+                    style={{width: '100%', position: 'relative', overflow: 'hidden'}} 
                     disabled={whatsappLoading || profileLoading}
                     onClick={async () => {
                       await saveProfile(); // Save without WhatsApp
                     }}
                   >
                     {profileLoading ? 'Saving profile...' : whatsappLoading ? 'Please wait...' : 'Skip (not recommended)'}
+                    {/* Disabled overlay - same as device flow */}
+                    {(whatsappLoading || profileLoading) && (
+                      <div style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'rgba(255, 255, 255, 0.4)',
+                        borderRadius: '7px',
+                        pointerEvents: 'none'
+                      }}></div>
+                    )}
                   </button>
                   <button className="btn-tertiary" onClick={() => setOnboardStep(3)}>Back</button>
                 </div>
@@ -5160,11 +5225,24 @@ function App() {
                 <div className="modal__footer">
                   <button
                     className="btn-primary"
-                    style={{width: '100%'}}
+                    style={{width: '100%', position: 'relative', overflow: 'hidden'}}
                     disabled={whatsappCode.length !== 6 || whatsappLoading || profileLoading}
                     onClick={verifyWhatsAppCode}
                   >
                     {profileLoading ? 'Saving profile...' : whatsappLoading ? 'Verifying...' : 'Verify & Complete'}
+                    {/* Disabled overlay - same as device flow */}
+                    {(whatsappCode.length !== 6) && !whatsappLoading && !profileLoading && (
+                      <div style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'rgba(255, 255, 255, 0.4)',
+                        borderRadius: '7px',
+                        pointerEvents: 'none'
+                      }}></div>
+                    )}
                   </button>
                   <button 
                     className="btn-tertiary" 
