@@ -4898,7 +4898,7 @@ function App() {
                   <div className="input-wrapper" style={{ position: 'relative' }}>
                     <input 
                       className={`input ${usernameValid === true ? 'input--valid' : usernameValid === false ? 'input--invalid' : ''}`}
-                      placeholder=" " 
+                      placeholder="theking" 
                       value={newUsername} 
                       onChange={(e) => {
                         const value = e.target.value;
@@ -4913,7 +4913,6 @@ function App() {
                       }}
                       onFocus={handleInputFocus}
                     />
-                    <label className="form-label">theking</label>
                     {usernameChecking && <span className="input-icon">⏳</span>}
                     {usernameValid === true && <span className="input-icon valid">✅</span>}
                     {usernameValid === false && <span className="input-icon invalid">❌</span>}
@@ -5010,7 +5009,7 @@ function App() {
                   <div className="input-wrapper">
                     <input 
                       className="input" 
-                      placeholder=" " 
+                      placeholder="I want to be more present with my family"
                       value={whatToChange}
                       onChange={(e) => {
                         setWhatToChange(e.target.value);
@@ -5019,14 +5018,13 @@ function App() {
                       onFocus={handleInputFocus}
                       maxLength="200"
                     />
-                    <label className="form-label">I want to be more present with my family</label>
                   </div>
                   
                   <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', marginTop: '1.5rem', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>How will this change your life?</label>
                   <div className="input-wrapper">
                     <input 
                       className="input" 
-                      placeholder=" " 
+                      placeholder="I'll have more energy and focus for what matters"
                       value={whatToGain}
                       onChange={(e) => {
                         setWhatToGain(e.target.value);
@@ -5035,14 +5033,13 @@ function App() {
                       onFocus={handleInputFocus}
                       maxLength="200"
                     />
-                    <label className="form-label">I'll have more energy and focus for what matters</label>
                   </div>
                   
                   <label className="form-label" style={{position: 'static', transform: 'none', marginBottom: '8px', marginLeft: '8px', marginTop: '1.5rem', display: 'block', fontSize: '15px', color: '#0F172A', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: '400'}}>Who in your life will be affected by these changes?</label>
                   <div className="input-wrapper">
                     <input 
                       className="input" 
-                      placeholder=" " 
+                      placeholder="My partner and children"
                       value={doingThisFor}
                       onChange={(e) => {
                         setDoingThisFor(e.target.value);
@@ -5051,7 +5048,6 @@ function App() {
                       onFocus={handleInputFocus}
                       maxLength="200"
                     />
-                    <label className="form-label">My partner and children</label>
                   </div>
                   {commitmentError && <p className="error-message">{commitmentError}</p>}
                 </div>
@@ -5145,9 +5141,11 @@ function App() {
             {onboardStep === 5 && (
               <div>
                 <div style={{marginBottom: '0'}}>
-                  <p className="helper">
-                    We sent a 6-digit code to {newCountryCode}{newWhatsapp}
-                    <button className="link-inline" onClick={() => setOnboardStep(4)}>Wrong number?</button>
+                  <p className="helper" style={{marginBottom: '4px'}}>
+                    We sent a 6-digit code via WhatsApp to {newCountryCode}{newWhatsapp}
+                  </p>
+                  <p style={{margin: '0 0 16px 0', textAlign: 'left'}}>
+                    <button className="link-inline" style={{marginLeft: '0'}} onClick={() => setOnboardStep(4)}>Wrong number?</button>
                   </p>
                   <input 
                     className="input code-input" 
