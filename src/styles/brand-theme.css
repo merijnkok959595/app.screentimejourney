@@ -683,50 +683,37 @@ p, span, div {
   opacity: 0.7;
 }
 
-/* Disabled button states */
+/* Disabled button states - keep original colors, just prevent interaction */
 .btn-primary:disabled,
-.btn-outline-primary:disabled {
-  background: #d1d5db !important;
-  color: #9ca3af !important;
+.btn-outline-primary:disabled,
+.btn-secondary:disabled,
+.btn-outline-secondary:disabled {
   cursor: not-allowed;
   transform: none;
-  opacity: 0.7;
 }
 
 .btn-primary:disabled::before,
-.btn-outline-primary:disabled::before {
-  display: none;
-}
-
-.btn-primary:disabled:hover,
-.btn-outline-primary:disabled:hover {
-  transform: none;
-  box-shadow: none;
-}
-
-.btn-secondary:disabled,
-.btn-outline-secondary:disabled {
-  background: #f9fafb !important;
-  color: #d1d5db !important;
-  border-color: #e5e7eb !important;
-  cursor: not-allowed;
-  transform: none;
-  opacity: 0.7;
-}
-
+.btn-outline-primary:disabled::before,
 .btn-secondary:disabled::before,
 .btn-outline-secondary:disabled::before {
   display: none;
 }
 
+.btn-primary:disabled:hover,
+.btn-outline-primary:disabled:hover,
+.btn-secondary:disabled:hover,
+.btn-outline-secondary:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
 .btn-tertiary:disabled {
-  color: #d1d5db;
   cursor: not-allowed;
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 .btn-tertiary:disabled:hover {
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 .btn--full { 

@@ -1071,8 +1071,8 @@ html, #root {
 }
 
 .btn:disabled {
-  opacity: 0.6;
   cursor: not-allowed;
+  /* Opacity removed - using white overlay instead for disabled state */
 }
 
 .btn--primary {
