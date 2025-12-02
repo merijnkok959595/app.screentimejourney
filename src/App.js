@@ -83,9 +83,9 @@ const DEFAULT_MILESTONES = [
     "milestone_fact": "Dopamine sensitivity increases by ~15%.",
     "milestone_day": 7,
     "media_url": "https://wati-files.s3.eu-north-1.amazonaws.com/Milestones/male_level_1_fighter.jpg",
-    "next_level_title": "King",
-    "next_level_emoji": "👑",
-    "days_to_next": 351,
+    "next_level_title": "Resister",
+    "next_level_emoji": "🛡️",
+    "days_to_next": 8,
     "level_template": "m1"
   },
   {
@@ -129,9 +129,9 @@ const DEFAULT_MILESTONES = [
     "milestone_fact": "Dopamine sensitivity increases by ~15%.",
     "milestone_day": 7,
     "media_url": "https://wati-files.s3.eu-north-1.amazonaws.com/Milestones/female_level_1_blossoming.jpg",
-    "next_level_title": "Queen",
-    "next_level_emoji": "👑",
-    "days_to_next": 351,
+    "next_level_title": "Protector",
+    "next_level_emoji": "🛡️",
+    "days_to_next": 8,
     "level_template": "f1"
   },
   {
