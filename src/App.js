@@ -3273,12 +3273,46 @@ function App() {
         setShowOnboarding(!hasUsername);
         console.log(`🔍 Username check: ${hasUsername ? 'exists' : 'missing'} - Account wall: ${!hasUsername ? 'show' : 'hide'}`);
         
-        // Show payment wall if subscription is cancelled (check both profile and customerData)
-        const profileCancelled = result.profile?.subscription_status === 'cancelled' || result.profile?.subscription_status === 'cancel_scheduled';
-        const customerCancelled = customerData?.subscription_status === 'cancelled' || customerData?.subscription_status === 'cancel_scheduled';
-        const isCancelled = profileCancelled || customerCancelled;
-        setShowPaymentWall(isCancelled && hasUsername);
-        console.log(`💳 Payment wall: ${isCancelled && hasUsername ? 'show' : 'hide'} (profile: ${profileCancelled}, customer: ${customerCancelled})`);
+        // Show payment wall ONLY if subscription is fully cancelled OR cancel_scheduled AND past cancellation date
+        // Users with cancel_scheduled status should still have access until their billing period ends
+        const isSubscriptionExpired = () => {
+          const profileStatus = result.profile?.subscription_status;
+          const customerStatus = customerData?.subscription_status;
+          
+          // Fully cancelled = show wall
+          if (profileStatus === 'cancelled' || customerStatus === 'cancelled') {
+            console.log('💳 Subscription fully cancelled - showing payment wall');
+            return true;
+          }
+          
+          // Cancel scheduled - check if cancellation date has passed
+          if (profileStatus === 'cancel_scheduled' || customerStatus === 'cancel_scheduled') {
+            const cancellationDate = result.profile?.cancellation_date || customerData?.cancellation_date;
+            if (cancellationDate) {
+              const cancelDate = new Date(cancellationDate);
+              const today = new Date();
+              today.setHours(0, 0, 0, 0); // Reset time for date-only comparison
+              cancelDate.setHours(0, 0, 0, 0);
+              
+              if (today > cancelDate) {
+                console.log(`💳 Cancellation date ${cancellationDate} has passed - showing payment wall`);
+                return true;
+              } else {
+                console.log(`💳 User has cancel_scheduled but still has access until ${cancellationDate}`);
+                return false;
+              }
+            }
+            // No cancellation date but cancel_scheduled - allow access (shouldn't happen but be safe)
+            console.log('💳 cancel_scheduled without cancellation_date - allowing access');
+            return false;
+          }
+          
+          return false;
+        };
+        
+        const shouldShowPaymentWall = isSubscriptionExpired();
+        setShowPaymentWall(shouldShowPaymentWall && hasUsername);
+        console.log(`💳 Payment wall: ${shouldShowPaymentWall && hasUsername ? 'show' : 'hide'}`);
       } else {
         // If profile doesn't exist, show onboarding
         setShowOnboarding(true);
