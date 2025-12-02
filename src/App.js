@@ -5089,7 +5089,17 @@ function App() {
                     }}
                   >
                     {commitmentValidating ? (
-                      'Validating...'
+                      <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'}}>
+                        <div style={{
+                          width: '16px',
+                          height: '16px',
+                          border: '2px solid transparent',
+                          borderTop: '2px solid white',
+                          borderRadius: '50%',
+                          animation: 'spin 1s linear infinite'
+                        }}></div>
+                        Validating...
+                      </div>
                     ) : (
                       <>
                         <span style={{
@@ -5156,11 +5166,23 @@ function App() {
                 <div className="modal__footer">
                   <button
                     className="btn-primary"
-                    style={{width: '100%', position: 'relative', overflow: 'hidden'}}
+                    style={{width: '100%', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'}}
                     disabled={!phoneNumber || whatsappLoading}
                     onClick={sendWhatsAppCode}
                   >
-                    {whatsappLoading ? 'Sending code...' : 'Validate'}
+                    {whatsappLoading ? (
+                      <>
+                        <div style={{
+                          width: '16px',
+                          height: '16px',
+                          border: '2px solid transparent',
+                          borderTop: '2px solid white',
+                          borderRadius: '50%',
+                          animation: 'spin 1s linear infinite'
+                        }}></div>
+                        Sending...
+                      </>
+                    ) : 'Validate'}
                     {/* Disabled overlay - same as device flow */}
                     {!phoneNumber && !whatsappLoading && (
                       <div style={{
@@ -5225,11 +5247,23 @@ function App() {
                 <div className="modal__footer">
                   <button
                     className="btn-primary"
-                    style={{width: '100%', position: 'relative', overflow: 'hidden'}}
+                    style={{width: '100%', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'}}
                     disabled={whatsappCode.length !== 6 || whatsappLoading || profileLoading}
                     onClick={verifyWhatsAppCode}
                   >
-                    {profileLoading ? 'Saving profile...' : whatsappLoading ? 'Verifying...' : 'Verify & Complete'}
+                    {(profileLoading || whatsappLoading) ? (
+                      <>
+                        <div style={{
+                          width: '16px',
+                          height: '16px',
+                          border: '2px solid transparent',
+                          borderTop: '2px solid white',
+                          borderRadius: '50%',
+                          animation: 'spin 1s linear infinite'
+                        }}></div>
+                        {profileLoading ? 'Saving...' : 'Verifying...'}
+                      </>
+                    ) : 'Verify & Complete'}
                     {/* Disabled overlay - same as device flow */}
                     {(whatsappCode.length !== 6) && !whatsappLoading && !profileLoading && (
                       <div style={{
