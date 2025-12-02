@@ -156,18 +156,26 @@ const calculateProgress = (latestDevice, gender = 'male', milestones = DEFAULT_M
   console.log('📊 calculateProgress called with device:', latestDevice);
   console.log('📊 Milestones:', milestones);
   
+  // Get gender-specific milestones
+  const genderMilestones = milestones.filter(m => m.gene === gender);
+  
+  // Find the final goal (King/Queen) milestone day - the highest level milestone
+  const sortedMilestones = [...genderMilestones].sort((a, b) => 
+    parseInt(b.milestone_day || 0) - parseInt(a.milestone_day || 0)
+  );
+  const finalMilestoneDay = parseInt(sortedMilestones[0]?.milestone_day || 316);
+  
   // If no device, default to 0 days
   if (!latestDevice) {
     console.log('⚠️ No device provided, defaulting to 0 days');
-    const genderMilestones = milestones.filter(m => m.gene === gender);
     const currentLevel = genderMilestones[0] || milestones[0];
     
     return {
       daysInFocus: 0,
       progressPercentage: 0,
       currentLevel: currentLevel,
-      daysToNext: currentLevel?.days_to_next || 0,
-      finalGoalDays: 365
+      daysToNext: parseInt(currentLevel?.days_to_next) || 0,
+      finalGoalDays: finalMilestoneDay
     };
   }
 
@@ -180,7 +188,6 @@ const calculateProgress = (latestDevice, gender = 'male', milestones = DEFAULT_M
   console.log('📅 Device added:', deviceAddedDate, '→ Days in focus:', daysInFocus);
 
   // Find current level based on days in focus
-  const genderMilestones = milestones.filter(m => m.gene === gender);
   if (!genderMilestones.length) {
     console.error('❌ No milestones found for gender:', gender);
     return {
@@ -188,14 +195,14 @@ const calculateProgress = (latestDevice, gender = 'male', milestones = DEFAULT_M
       progressPercentage: 0,
       currentLevel: milestones[0] || DEFAULT_MILESTONES[0],
       daysToNext: 0,
-      finalGoalDays: 365 - daysInFocus
+      finalGoalDays: Math.max(0, finalMilestoneDay - daysInFocus)
     };
   }
   
   let currentLevel = genderMilestones[0]; // Default to level 0
   
   for (let i = genderMilestones.length - 1; i >= 0; i--) {
-    if (daysInFocus >= genderMilestones[i].milestone_day) {
+    if (daysInFocus >= parseInt(genderMilestones[i].milestone_day || 0)) {
       currentLevel = genderMilestones[i];
       break;
     }
@@ -204,26 +211,31 @@ const calculateProgress = (latestDevice, gender = 'male', milestones = DEFAULT_M
   console.log('🎯 Current level:', currentLevel.title, currentLevel.emoji);
 
   // Calculate days to next level
-  const daysToNext = currentLevel.days_to_next 
-    ? Math.max(0, currentLevel.days_to_next - (daysInFocus - currentLevel.milestone_day)) 
+  const daysToNextStored = parseInt(currentLevel.days_to_next) || 0;
+  const currentMilestoneDay = parseInt(currentLevel.milestone_day) || 0;
+  const daysToNext = daysToNextStored 
+    ? Math.max(0, daysToNextStored - (daysInFocus - currentMilestoneDay)) 
     : 0;
 
   // Calculate progress percentage to next level
   let progressPercentage = 0;
-  if (currentLevel.next_level_title && currentLevel.days_to_next) {
-    const daysFromCurrentLevel = daysInFocus - currentLevel.milestone_day;
-    progressPercentage = Math.min(100, Math.round((daysFromCurrentLevel / currentLevel.days_to_next) * 100));
+  if (currentLevel.next_level_title && daysToNextStored) {
+    const daysFromCurrentLevel = daysInFocus - currentMilestoneDay;
+    progressPercentage = Math.min(100, Math.round((daysFromCurrentLevel / daysToNextStored) * 100));
   } else {
     // At max level
     progressPercentage = 100;
   }
+
+  // Calculate days to King/Queen (final goal)
+  const finalGoalDays = Math.max(0, finalMilestoneDay - daysInFocus);
 
   return {
     daysInFocus,
     progressPercentage,
     currentLevel,
     daysToNext,
-    finalGoalDays: Math.max(0, 365 - daysInFocus)
+    finalGoalDays
   };
 };
 
