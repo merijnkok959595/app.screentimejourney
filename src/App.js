@@ -56,6 +56,7 @@ const handleInputFocus = (e) => {
 };
 
 // Default milestone data as fallback (will be replaced by API data)
+// New 52-week progression: 7→7→7→14→21→28→42→56→84→98 days = 364 total
 const DEFAULT_MILESTONES = [
   // Male milestones
   {
@@ -76,7 +77,7 @@ const DEFAULT_MILESTONES = [
   {
     "gene": "male",
     "level": 1,
-    "days_range": "7–14",
+    "days_range": "7–13",
     "title": "Fighter",
     "emoji": "🥊",
     "description": "You've stepped into the fight. Each day you stay the course, your strength builds silently.",
@@ -85,23 +86,23 @@ const DEFAULT_MILESTONES = [
     "media_url": "https://wati-files.s3.eu-north-1.amazonaws.com/Milestones/male_level_1_fighter.jpg",
     "next_level_title": "Resister",
     "next_level_emoji": "🛡️",
-    "days_to_next": 8,
-    "level_template": "m1"
+    "days_to_next": 7,
+    "level_template": "m_1"
   },
   {
     "gene": "male",
     "level": 10,
-    "days_range": "316–365+",
+    "days_range": "364+",
     "title": "King",
     "emoji": "👑",
     "description": "You've walked the path fully. Quiet strength and clarity mark the way you stand today.",
     "milestone_fact": "Complete dopamine receptor reset achieved.",
-    "milestone_day": 316,
+    "milestone_day": 364,
     "media_url": "https://wati-files.s3.eu-north-1.amazonaws.com/Milestones/male_level_10_theking.jpg",
     "next_level_title": null,
     "next_level_emoji": null,
     "days_to_next": null,
-    "level_template": "m10"
+    "level_template": "m_10"
   },
   // Female milestones
   {
@@ -122,7 +123,7 @@ const DEFAULT_MILESTONES = [
   {
     "gene": "female",
     "level": 1,
-    "days_range": "7–14",
+    "days_range": "7–13",
     "title": "Blossoming",
     "emoji": "🌺",
     "description": "You've stepped into the journey. Each day you stay the course, your strength builds silently.",
@@ -131,23 +132,23 @@ const DEFAULT_MILESTONES = [
     "media_url": "https://wati-files.s3.eu-north-1.amazonaws.com/Milestones/female_level_1_blossoming.jpg",
     "next_level_title": "Protector",
     "next_level_emoji": "🛡️",
-    "days_to_next": 8,
-    "level_template": "f1"
+    "days_to_next": 7,
+    "level_template": "f_1"
   },
   {
     "gene": "female",
     "level": 10,
-    "days_range": "316–365+",
+    "days_range": "364+",
     "title": "The Queen",
     "emoji": "👑",
     "description": "You've walked the path fully. Quiet strength and clarity mark the way you stand today.",
     "milestone_fact": "Complete dopamine receptor reset achieved.",
-    "milestone_day": 316,
+    "milestone_day": 364,
     "media_url": "https://wati-files.s3.eu-north-1.amazonaws.com/Milestones/female_level_10_thequeen.jpg",
     "next_level_title": null,
     "next_level_emoji": null,
     "days_to_next": null,
-    "level_template": "f10"
+    "level_template": "f_10"
   }
 ];
 
