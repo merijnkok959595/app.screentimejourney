@@ -1335,7 +1335,7 @@ function App() {
                 body: '',
                 step_type: 'video_surrender',
                 media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/unlock.mov',
-                surrender_text: 'I hereby give up on changing my screen time habits. I give up the chance to be a present family man, live with more presence and purpose, and give attention to my wife and children. I choose distraction over discipline, and I surrender my intention to grow.',
+                surrender_text: surrenderText || 'I hereby give up on changing my screen time habits. I give up the chance to be a present family man, live with more presence and purpose, and give attention to my wife and children. I choose distraction over discipline, and I surrender my intention to grow.',
                 action_button: 'Submit Surrender'
               },
               {
@@ -1482,7 +1482,7 @@ function App() {
               body: '',
               step_type: 'video_surrender',
               media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/unlock.mov',
-              surrender_text: 'I hereby give up on changing my screen time habits. I give up the chance to be a present family man, live with more presence and purpose, and give attention to my wife and children. I choose distraction over discipline, and I surrender my intention to grow.',
+              surrender_text: surrenderText || 'I hereby give up on changing my screen time habits. I give up the chance to be a present family man, live with more presence and purpose, and give attention to my wife and children. I choose distraction over discipline, and I surrender my intention to grow.',
               action_button: 'Submit Surrender'
             },
             {
@@ -2935,13 +2935,31 @@ function App() {
       console.log('✅ State should now be updated, devices.length:', devices.length);
     }
     
-    const flow = deviceFlows[flowType];
+    let flow = deviceFlows[flowType];
+    
+    // If this is an unlock flow and we have a flow, update surrender_text with current value
+    if (flowType === 'device_unlock_flow' && flow && flow.steps) {
+      console.log('🔄 Updating unlock flow with current surrender text');
+      console.log('📜 Current surrender text:', surrenderText);
+      
+      // Clone the flow to avoid mutating the original
+      flow = JSON.parse(JSON.stringify(flow));
+      
+      // Update the surrender_text in the video_surrender step
+      const surrenderStep = flow.steps.find(s => s.step_type === 'video_surrender');
+      if (surrenderStep) {
+        surrenderStep.surrender_text = surrenderText || 'I hereby give up on changing my screen time habits. I give up the chance to be a present family man, live with more presence and purpose, and give attention to my wife and children. I choose distraction over discipline, and I surrender my intention to grow.';
+        console.log('✅ Updated surrender step with current text');
+      }
+    }
+    
     if (!flow || !flow.steps || !Array.isArray(flow.steps) || flow.steps.length === 0) {
       console.log(`ℹ️ Using fallback flow for ${flowType} (API flow not available)`);
       
       // Check if we have fallback flows available
       if (flowType === 'device_unlock_flow') {
         console.log('🔄 Using fallback unlock flow');
+        console.log('📜 Using surrender text:', surrenderText);
         const fallbackFlow = {
           flow_id: 'device_unlock',
           flow_name: 'Unlock Device',
@@ -2953,7 +2971,7 @@ function App() {
               body: '',
               step_type: 'video_surrender',
               media_url: 'https://wati-files.s3.eu-north-1.amazonaws.com/unlock.mov',
-              surrender_text: 'I hereby give up on changing my screen time habits. I give up the chance to be a present family man, live with more presence and purpose, and give attention to my wife and children. I choose distraction over discipline, and I surrender my intention to grow.',
+              surrender_text: surrenderText || 'I hereby give up on changing my screen time habits. I give up the chance to be a present family man, live with more presence and purpose, and give attention to my wife and children. I choose distraction over discipline, and I surrender my intention to grow.',
               action_button: 'Submit Surrender'
             },
             {
