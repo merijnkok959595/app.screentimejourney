@@ -4986,7 +4986,6 @@ function App() {
                       <span className="radio-label">🙋‍♀️ Woman</span>
                     </label>
                   </div>
-                  <p className="helper">This sets visuals and milestones. You can change it later.</p>
                 </div>
                 <div className="modal__footer">
                   <button
@@ -5157,6 +5156,7 @@ function App() {
                           }
                         }
                       }}
+                      countrySelectProps={{ disabled: true }}
                       className="phone-input-international"
                       placeholder="Enter phone number"
                     />
