@@ -3686,17 +3686,16 @@ function App() {
           setCommitmentValidating(false);
         }
       } else {
-        // API error, but don't block user
+        // API error - show error message
         console.error('❌ Validation API error:', result);
+        setCommitmentError(result.error || 'Unable to validate your responses. Please try again.');
         setCommitmentValidating(false);
-        setOnboardStep(4); // Allow to proceed
       }
       
     } catch (error) {
       console.error('❌ Error validating commitment:', error);
+      setCommitmentError('Connection error. Please check your internet and try again.');
       setCommitmentValidating(false);
-      // On error, allow user to proceed (don't block onboarding)
-      setOnboardStep(4);
     }
   };
 
