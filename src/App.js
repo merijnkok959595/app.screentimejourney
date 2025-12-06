@@ -3251,6 +3251,12 @@ function App() {
           });
         }
         
+        // Load surrender_text from profile
+        if (result.profile.surrender_text) {
+          setSurrenderText(result.profile.surrender_text);
+          console.log('✅ Surrender text loaded from profile');
+        }
+        
         // Load activity logs from profile
         if (result.profile.activity_logs && Array.isArray(result.profile.activity_logs)) {
           const formattedLogs = result.profile.activity_logs.map(log => ({
@@ -3675,8 +3681,13 @@ function App() {
       
       if (response.ok && result.success) {
         if (result.is_valid) {
-          // Validation passed, move to next step
+          // Validation passed, store surrender_text and move to next step
           console.log('✅ Commitment validated successfully!');
+          console.log('📜 Surrender text:', result.surrender_text);
+          
+          // Store surrender_text in state for later use
+          setSurrenderText(result.surrender_text || 'I hereby give up on changing my screen time habits. I give up the chance to be a present family man, live with more presence and purpose, and give attention to my wife and children. I choose distraction over discipline, and I surrender my intention to grow.');
+          
           setCommitmentValidating(false);
           setOnboardStep(4);
         } else {
@@ -3953,7 +3964,8 @@ function App() {
         gender: newGender,
         what_to_change: whatToChange.trim(),
         what_to_gain: whatToGain.trim(),
-        doing_this_for: doingThisFor.trim()
+        doing_this_for: doingThisFor.trim(),
+        surrender_text: surrenderText || ''
       };
       
       // Only include WhatsApp data if user is skipping verification
@@ -5766,27 +5778,40 @@ function App() {
                               }
 
                               setProfileEditData(prev => ({...prev, commitmentValidating: true}));
+                              setProfileError('');
                               
                               try {
-                                // Validate with ChatGPT
-                                const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/evaluate_only`, {
+                                // Validate commitment and generate surrender text
+                                const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://ajvrzuyjarph5fvskles42g7ba0zxtxc.lambda-url.eu-north-1.on.aws'}/evaluate_commitment`, {
                                   method: 'POST',
                                   headers: { 'Content-Type': 'application/json' },
-                                  body: JSON.stringify({ q1, q2, q3 })
+                                  body: JSON.stringify({ 
+                                    what_to_change: q1,
+                                    what_to_gain: q2,
+                                    doing_this_for: q3
+                                  })
                                 });
                                 const result = await response.json();
                                 
-                                if (response.ok && result.ok) {
-                                  setProfileEditData(prev => ({
-                                    ...prev, 
-                                    commitmentValidation: result,
-                                    commitmentValidating: false
-                                  }));
-                                  setProfileError('');
-                                  
-                                  // If validation is successful, update the display values immediately
-                                  if (result.is_passionate) {
-                                    console.log('✅ Commitment validated successfully, updating preview');
+                                if (response.ok && result.success) {
+                                  if (result.is_valid) {
+                                    // Validation passed - store result with surrender_text
+                                    setProfileEditData(prev => ({
+                                      ...prev, 
+                                      commitmentValidation: {
+                                        is_valid: true,
+                                        is_passionate: true, // For backward compatibility with UI
+                                        surrender_text: result.surrender_text,
+                                        feedback: result.feedback
+                                      },
+                                      commitmentValidating: false
+                                    }));
+                                    setProfileError('');
+                                    console.log('✅ Commitment validated successfully with new surrender text');
+                                  } else {
+                                    // Validation failed - show error
+                                    setProfileError(result.feedback || 'Please provide genuine, thoughtful responses to show your commitment to this journey.');
+                                    setProfileEditData(prev => ({...prev, commitmentValidating: false}));
                                   }
                                 } else {
                                   setProfileError(result.error || 'Failed to validate commitment');
@@ -5794,7 +5819,7 @@ function App() {
                                 }
                               } catch (error) {
                                 console.error('Commitment validation error:', error);
-                                setProfileError('Failed to validate commitment');
+                                setProfileError('Failed to validate commitment. Please check your connection and try again.');
                                 setProfileEditData(prev => ({...prev, commitmentValidating: false}));
                               }
                             }}
