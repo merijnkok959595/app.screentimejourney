@@ -5139,7 +5139,7 @@ function App() {
             {onboardStep === 4 && (
               <div>
                 <div style={{marginBottom: '0'}}>
-                  <p className="helper">Get daily motivation and accountability messages.</p>
+                  <p className="helper">Receive weekly progress updates inside WhatsApp.</p>
                   <div style={{ marginBottom: '1rem' }}>
                     <PhoneInput
                       international
